@@ -5,8 +5,6 @@
 #include "PhysBody3D.h"
 
 #include "imgui-1.65\imgui.cpp"
-#include "imgui-1.65\imgui.h"
-#include "imgui-1.65\imconfig.h"
 #include "imgui-1.65\imstb_rectpack.h"
 #include "imgui-1.65\imstb_textedit.h"
 #include "imgui-1.65\imstb_truetype.h"
