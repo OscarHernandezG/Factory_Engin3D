@@ -6,6 +6,11 @@
 
 #include "imgui-1.65\imgui.h"
 #include "imgui-1.65\imconfig.h"
+#include "imgui-1.65\imgui_internal.h"
+#include "imgui-1.65\imstb_rectpack.h"
+#include "imgui-1.65\imstb_textedit.h"
+#include "imgui-1.65\imstb_truetype.h"
+#include "imgui-1.65\examples\imgui_impl_opengl2.h"
 
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
