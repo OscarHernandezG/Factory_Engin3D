@@ -5,6 +5,15 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
+
+
+#include "imgui-1.65\imgui.h"
+#include "imgui-1.65\examples\imgui_impl_sdl.h"
+#include "imgui-1.65\examples\imgui_impl_opengl2.h"
+
+
+#include <stdio.h>
+
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 
@@ -117,6 +126,11 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	for(uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
 
+	///***
+	//ImGui_ImplOpenGL2_NewFrame();
+	//ImGui_ImplSDL2_NewFrame(App->window->window);
+	//ImGui::NewFrame();
+
 	return UPDATE_CONTINUE;
 }
 
@@ -124,6 +138,15 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 	SDL_GL_SwapWindow(App->window->window);
+
+	/*ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+	ImGui::Render();
+	ImGuiIO& io = ImGui::GetIO();
+	(void)io;
+	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
+	SDL_GL_SwapWindow(App->window->window);
+*/
 	return UPDATE_CONTINUE;
 }
 

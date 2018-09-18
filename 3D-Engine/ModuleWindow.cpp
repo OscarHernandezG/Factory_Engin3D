@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleWindow.h"
 
+
 ModuleWindow::ModuleWindow(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	window = NULL;
@@ -69,7 +70,29 @@ bool ModuleWindow::Init()
 		}
 	}
 
+
+	///***
+
+	SDL_GLContext gl_context = SDL_GL_CreateContext(window);
+
+
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+
+	ImGuiIO& io = ImGui::GetIO();
+	(void)io;
+
+	ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
+	ImGui_ImplOpenGL2_Init();
+
+	ImGui::StyleColorsDark();
+
 	return ret;
+}
+
+bool ModuleWindow::Start()
+{
+	return true;
 }
 
 // Called before quitting
