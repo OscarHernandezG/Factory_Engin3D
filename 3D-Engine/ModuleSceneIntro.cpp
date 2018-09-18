@@ -8,6 +8,7 @@
 #include "imgui-1.65\imstb_rectpack.h"
 #include "imgui-1.65\imstb_textedit.h"
 #include "imgui-1.65\imstb_truetype.h"
+#include "imgui-1.65\examples\imgui_impl_opengl2.cpp"
 #include "imgui-1.65\examples\imgui_impl_opengl2.h"
 
 #include "imgui-1.65\imgui_demo.cpp"
@@ -15,8 +16,10 @@
 #include "imgui-1.65\imgui_widgets.cpp"
 
 #include "imgui-1.65\imgui.h"
+#include "imgui-1.65\imgui_internal.h"
+#include "imgui-1.65\imconfig.h"
 #include "imgui-1.65\examples\imgui_impl_sdl.h"
-#include "imgui-1.65\examples\imgui_impl_opengl2.h"
+#include "imgui-1.65\examples\imgui_impl_sdl.cpp"
 
 #include "SDL\include\SDL_opengl.h"
 
@@ -39,6 +42,19 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 
+	SDL_GLContext gl_context = SDL_GL_CreateContext(App->window->window);
+
+
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+
+	ImGuiIO& io = ImGui::GetIO();
+	(void)io;
+
+	ImGui_ImplSDL2_InitForOpenGL(App->window->window, gl_context);
+	ImGui_ImplOpenGL2_Init();
+
+	ImGui::StyleColorsDark();
 
 	return ret;
 }
@@ -49,7 +65,7 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 	ImGui_ImplOpenGL2_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
-
+	
 
 	return UPDATE_CONTINUE;
 }
@@ -95,7 +111,7 @@ update_status ModuleSceneIntro::Update(float dt)
 
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::End();
-
+	
 	return UPDATE_CONTINUE;
 }
 

@@ -7,6 +7,9 @@
 #define MAX_SNAKE 8
 
 struct PhysBody3D;
+struct ImVec2;
+struct ImVec3;
+struct ImVec4;
 
 class ModuleSceneIntro : public Module
 {
