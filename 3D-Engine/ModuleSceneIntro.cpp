@@ -4,6 +4,10 @@
 #include "Primitive.h"
 #include "PhysBody3D.h"
 
+#include "imgui-1.65\imgui.h"
+#include "imgui-1.65\imconfig.h"
+
+
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 }
@@ -20,6 +24,13 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 
+	ImGui::Text("Hello world %d", 123);
+	//if (ImGui::Button("Save"))
+	//{
+	//	// do stuff
+	//}
+//	ImGui::InputText("string", buf, IM_ARRAYSIZE(buf));
+//	ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
 
 	return ret;
 }
