@@ -19,6 +19,9 @@
     <Filter Include="Sources\Modules\Engine">
       <UniqueIdentifier>{83f46af7-e02f-40c0-9e56-41d76082527b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Modules\ImGui">
+      <UniqueIdentifier>{fd0e646b-03ed-4cff-8780-471f13b5527e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -81,6 +84,30 @@
     <ClInclude Include="ModuleImGui.h">
       <Filter>Sources\Modules\Engine</Filter>
     </ClInclude>
+    <ClInclude Include="imconfig.h">
+      <Filter>Sources\Modules\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui.h">
+      <Filter>Sources\Modules\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_opengl2.h">
+      <Filter>Sources\Modules\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_sdl.h">
+      <Filter>Sources\Modules\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_internal.h">
+      <Filter>Sources\Modules\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_rectpack.h">
+      <Filter>Sources\Modules\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_textedit.h">
+      <Filter>Sources\Modules\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_truetype.h">
+      <Filter>Sources\Modules\ImGui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -133,6 +160,24 @@
     </ClCompile>
     <ClCompile Include="ModuleImGui.cpp">
       <Filter>Sources\Modules\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui.cpp">
+      <Filter>Sources\Modules\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_demo.cpp">
+      <Filter>Sources\Modules\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_draw.cpp">
+      <Filter>Sources\Modules\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_opengl2.cpp">
+      <Filter>Sources\Modules\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_sdl.cpp">
+      <Filter>Sources\Modules\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_widgets.cpp">
+      <Filter>Sources\Modules\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
