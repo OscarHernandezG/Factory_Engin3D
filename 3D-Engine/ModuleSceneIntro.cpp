@@ -4,13 +4,17 @@
 #include "Primitive.h"
 #include "PhysBody3D.h"
 
+#include "imgui-1.65\imgui.cpp"
 #include "imgui-1.65\imgui.h"
 #include "imgui-1.65\imconfig.h"
-#include "imgui-1.65\imgui_internal.h"
 #include "imgui-1.65\imstb_rectpack.h"
 #include "imgui-1.65\imstb_textedit.h"
 #include "imgui-1.65\imstb_truetype.h"
 #include "imgui-1.65\examples\imgui_impl_opengl2.h"
+
+#include "imgui-1.65\imgui_demo.cpp"
+#include "imgui-1.65\imgui_draw.cpp"
+#include "imgui-1.65\imgui_widgets.cpp"
 
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -30,6 +34,7 @@ bool ModuleSceneIntro::Start()
 	App->camera->LookAt(vec3(0, 0, 0));
 
 	ImGui::Text("Hello world %d", 123);
+
 	//if (ImGui::Button("Save"))
 	//{
 	//	// do stuff
