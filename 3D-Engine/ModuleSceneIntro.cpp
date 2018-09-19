@@ -4,25 +4,15 @@
 #include "Primitive.h"
 #include "PhysBody3D.h"
 
-#include "imgui-1.65\imgui.cpp"
-#include "imgui-1.65\imstb_rectpack.h"
-#include "imgui-1.65\imstb_textedit.h"
-#include "imgui-1.65\imstb_truetype.h"
-#include "imgui-1.65\examples\imgui_impl_opengl2.cpp"
-#include "imgui-1.65\examples\imgui_impl_opengl2.h"
 
-#include "imgui-1.65\imgui_demo.cpp"
-#include "imgui-1.65\imgui_draw.cpp"
-#include "imgui-1.65\imgui_widgets.cpp"
 
-#include "imgui-1.65\imgui.h"
-#include "imgui-1.65\imgui_internal.h"
-#include "imgui-1.65\imconfig.h"
-#include "imgui-1.65\examples\imgui_impl_sdl.h"
-#include "imgui-1.65\examples\imgui_impl_sdl.cpp"
+
+#include "imgui.h"
+#include "imgui_impl_sdl.h"
+#include "imgui_impl_opengl2.h"
 
 #include "SDL\include\SDL_opengl.h"
-
+#include "SDL/include/SDL.h"
 
 #include <stdio.h>
 
@@ -124,7 +114,7 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 	ImGuiIO& io = ImGui::GetIO();
 	(void)io;
 	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
-	SDL_GL_SwapWindow(App->window->window);
+	//SDL_GL_SwapWindow(App->window->window);
 
 
 	return UPDATE_CONTINUE;

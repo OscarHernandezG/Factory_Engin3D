@@ -5,15 +5,6 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
-
-
-#include "imgui-1.65\imgui.h"
-//#include "imgui-1.65\examples\imgui_impl_sdl.h"
-#include "imgui-1.65\examples\imgui_impl_opengl2.h"
-
-
-#include <stdio.h>
-
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 

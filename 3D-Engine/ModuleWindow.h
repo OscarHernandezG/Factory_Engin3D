@@ -5,14 +5,6 @@
 #include "SDL/include/SDL.h"
 
 
-
-#include "imgui-1.65\imgui.h"
-//#include "imgui-1.65\examples\imgui_impl_sdl.h"
-#include "imgui-1.65\examples\imgui_impl_opengl2.h"
-
-#include <stdio.h>
-
-
 class Application;
 
 class ModuleWindow : public Module
