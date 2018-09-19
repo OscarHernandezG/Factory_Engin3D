@@ -4,9 +4,6 @@
 #include "Primitive.h"
 #include "PhysBody3D.h"
 
-
-
-
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl2.h"
