@@ -1,8 +1,8 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
-#include "p2List.h"
 #include "Primitive.h"
+#include <list>
 
 #include "Bullet/include/btBulletDynamicsCommon.h"
 
@@ -41,9 +41,9 @@ private:
 	btDiscreteDynamicsWorld*			world;
 	DebugDrawer*						debug_draw;
 
-	p2List<btCollisionShape*> shapes;
-	p2List<PhysBody3D*> bodies;
-	p2List<btDefaultMotionState*> motions;
+	std::list<btCollisionShape*> shapes;
+	std::list<PhysBody3D*> bodies;
+	std::list<btDefaultMotionState*> motions;
 };
 
 class DebugDrawer : public btIDebugDraw

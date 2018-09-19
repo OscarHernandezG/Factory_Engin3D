@@ -87,18 +87,18 @@ update_status ModulePhysics3D::PreUpdate(float dt)
 
 			if(pbodyA && pbodyB)
 			{
-				p2List_item<Module*>* item = pbodyA->collision_listeners.getFirst();
-				while(item)
+				std::list<Module*>::iterator item = pbodyA->collision_listeners.begin();
+				while(item != pbodyA->collision_listeners.end())
 				{
-					item->data->OnCollision(pbodyA, pbodyB);
-					item = item->next;
+					(*item)->OnCollision(pbodyA, pbodyB);
+					item++;
 				}
 
-				item = pbodyB->collision_listeners.getFirst();
-				while(item)
+				item = pbodyB->collision_listeners.begin();
+				while(item != pbodyB->collision_listeners.end())
 				{
-					item->data->OnCollision(pbodyB, pbodyA);
-					item = item->next;
+					(*item)->OnCollision(pbodyB, pbodyA);
+					item++;
 				}
 			}
 		}
@@ -139,27 +139,32 @@ bool ModulePhysics3D::CleanUp()
 		world->removeCollisionObject(obj);
 	}
 
-	p2List_item<btDefaultMotionState*>* m_item = motions.getFirst();
-	while(m_item)
+	std::list<btDefaultMotionState*>::const_iterator m_item = motions.begin();
+	while(m_item != motions.end())
 	{
-		delete m_item->data;
-		m_item = m_item->next;
+		delete (*m_item);
+		motions.erase(m_item);
+		m_item = motions.begin();
+
 	}
 	motions.clear();
 
-	p2List_item<btCollisionShape*>* s_item = shapes.getFirst();
-	while(s_item)
+	std::list<btCollisionShape*>::const_iterator s_item = shapes.begin();
+	while(s_item != shapes.end())
 	{
-		delete s_item->data;
-		s_item = s_item->next;
+		delete (*s_item);
+		shapes.erase(s_item);
+		s_item = shapes.begin();
 	}
 	shapes.clear();
 
-	p2List_item<PhysBody3D*>* b_item = bodies.getFirst();
-	while(b_item)
+	std::list<PhysBody3D*>::const_iterator b_item = bodies.begin();
+	while(b_item != bodies.end())
 	{
-		delete b_item->data;
-		b_item = b_item->next;
+		delete (*b_item);
+		bodies.erase(b_item);
+		b_item = bodies.begin();
+
 	}
 	bodies.clear();
 
@@ -174,7 +179,7 @@ bool ModulePhysics3D::CleanUp()
 PhysBody3D* ModulePhysics3D::AddBody(const Sphere& sphere, float mass)
 {
 	btCollisionShape* colShape = new btSphereShape(sphere.radius);
-	shapes.add(colShape);
+	shapes.push_back(colShape);
 
 	btTransform startTransform;
 	startTransform.setFromOpenGLMatrix(&sphere.transform);
@@ -184,7 +189,7 @@ PhysBody3D* ModulePhysics3D::AddBody(const Sphere& sphere, float mass)
 		colShape->calculateLocalInertia(mass, localInertia);
 
 	btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
-	motions.add(myMotionState);
+	motions.push_back(myMotionState);
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, colShape, localInertia);
 
 	btRigidBody* body = new btRigidBody(rbInfo);
@@ -192,7 +197,7 @@ PhysBody3D* ModulePhysics3D::AddBody(const Sphere& sphere, float mass)
 
 	body->setUserPointer(pbody);
 	world->addRigidBody(body);
-	bodies.add(pbody);
+	bodies.push_back(pbody);
 
 	return pbody;
 }

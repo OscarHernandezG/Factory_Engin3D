@@ -6,6 +6,8 @@
 
 #define DEFAULT_MUSIC_FADE_TIME 2.0f
 
+using namespace std;
+
 class ModuleAudio : public Module
 {
 public:
@@ -28,7 +30,7 @@ public:
 private:
 
 	Mix_Music*			music;
-	p2List<Mix_Chunk*>	fx;
+	list<Mix_Chunk*>	fx;
 };
 
 #endif // __ModuleAudio_H__
