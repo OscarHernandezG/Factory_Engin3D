@@ -1,14 +1,9 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
-//#include "glmath.h"
-#include "MathGeoLib/src/Math/float3x3.h"
-#include "MathGeoLib/src/Math/float4x4.h"
+#include "MathGeoLib/Math/float3x3.h"
+#include "MathGeoLib/Math/float4x4.h"
 #include "Light.h"
-
-
-
-
 
 #define MAX_LIGHTS 8
 

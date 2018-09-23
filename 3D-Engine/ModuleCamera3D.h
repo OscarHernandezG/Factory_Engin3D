@@ -1,10 +1,9 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
-//#include "glmath.h"
-#include "MathGeoLib/src/Math/float3.h"
-#include "MathGeoLib/src/Math/float4.h"
-#include "MathGeoLib/src/Math/float4x4.h"
+#include "MathGeoLib/Math/float3.h"
+#include "MathGeoLib/Math/float4.h"
+#include "MathGeoLib/Math/float4x4.h"
 
 class ModuleCamera3D : public Module
 {
