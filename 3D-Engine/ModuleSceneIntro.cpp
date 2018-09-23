@@ -1,7 +1,6 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleSceneIntro.h"
-#include "PhysBody3D.h"
 
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
@@ -22,7 +21,7 @@
 #include <cmath>
 
 
-#include "MathGeoLib/src/Geometry/GeometryAll.h"
+#include "MathGeoLib/Geometry/GeometryAll.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
