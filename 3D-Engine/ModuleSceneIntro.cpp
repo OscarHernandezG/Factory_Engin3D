@@ -88,7 +88,7 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 
 	if (exampleWindow)
 	{
-		ImGui::Begin("Hello World!", &exampleWindow);								// Create a window called "Hello, world!" and append into it.
+		ImGui::Begin("Hello World!", &exampleWindow);				// Create a window called "Hello, world!" and append into it.
 
 		ImGui::Checkbox("Demo Window", &showdemowindow);			// Edit bools storing our window open/close state
 		ImGui::Checkbox("Another Window", &show_another_window);
