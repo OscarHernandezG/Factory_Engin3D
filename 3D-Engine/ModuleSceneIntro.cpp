@@ -88,7 +88,7 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 
 	if (exampleWindow)
 	{
-		ImGui::Begin("Hello World!");								// Create a window called "Hello, world!" and append into it.
+		ImGui::Begin("Hello World!", &exampleWindow);								// Create a window called "Hello, world!" and append into it.
 
 		ImGui::Checkbox("Demo Window", &showdemowindow);			// Edit bools storing our window open/close state
 		ImGui::Checkbox("Another Window", &show_another_window);
@@ -209,6 +209,11 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 
 			if (ImGui::MenuItem("Random number window"))
 				randomNumberWindow = !randomNumberWindow;
+
+			if (ImGui::MenuItem("Open all windows"))
+			{
+				showdemowindow = exampleWindow = mathGeoLibWindow = randomNumberWindow = true;
+			}
 
 			ImGui::EndMenu();
 		}
