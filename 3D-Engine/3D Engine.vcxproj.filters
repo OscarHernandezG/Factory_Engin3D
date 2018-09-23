@@ -31,6 +31,15 @@
     <Filter Include="Sources\Containers\MathGeoLib\Geometry">
       <UniqueIdentifier>{86775c64-d5d3-4f00-b181-764d48671455}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Containers\MathGeoLib\Algorithm">
+      <UniqueIdentifier>{fd478ba8-e473-45a2-899b-e1c5f20f2d5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Containers\MathGeoLib\Time">
+      <UniqueIdentifier>{1db83627-47f6-4478-9b37-c7efcbc2b393}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Containers\MathGeoLib\Algorithm\Random">
+      <UniqueIdentifier>{d6852bca-c78f-4cb3-bd1f-ecff428d8032}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -264,7 +273,19 @@
     <ClInclude Include="MathGeoLib\src\Geometry\TriangleMesh.h">
       <Filter>Sources\Containers\MathGeoLib\Geometry</Filter>
     </ClInclude>
+    <ClInclude Include="MathGeoLib\src\Algorithm\Random\LCG.h">
+      <Filter>Sources\Containers\MathGeoLib\Algorithm\Random</Filter>
+    </ClInclude>
     <ClInclude Include="MathGeoLib\src\Time\Clock.h">
+      <Filter>Sources\Containers\MathGeoLib\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\src\MathBuildConfig.h">
+      <Filter>Sources\Containers\MathGeoLib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\src\MathGeoLib.h">
+      <Filter>Sources\Containers\MathGeoLib</Filter>
+    </ClInclude>
+    <ClInclude Include="MathGeoLib\src\MathGeoLibFwd.h">
       <Filter>Sources\Containers\MathGeoLib</Filter>
     </ClInclude>
   </ItemGroup>
@@ -419,8 +440,11 @@
     <ClCompile Include="MathGeoLib\src\Geometry\TriangleMesh.cpp">
       <Filter>Sources\Containers\MathGeoLib\Geometry</Filter>
     </ClCompile>
+    <ClCompile Include="MathGeoLib\src\Algorithm\Random\LCG.cpp">
+      <Filter>Sources\Containers\MathGeoLib\Algorithm\Random</Filter>
+    </ClCompile>
     <ClCompile Include="MathGeoLib\src\Time\Clock.cpp">
-      <Filter>Sources\Containers\MathGeoLib</Filter>
+      <Filter>Sources\Containers\MathGeoLib\Time</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

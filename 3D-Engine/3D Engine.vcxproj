@@ -87,6 +87,7 @@
     <ClInclude Include="imstb_textedit.h" />
     <ClInclude Include="imstb_truetype.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="MathGeoLib\src\Algorithm\Random\LCG.h" />
     <ClInclude Include="MathGeoLib\src\Geometry\AABB.h" />
     <ClInclude Include="MathGeoLib\src\Geometry\AABB2D.h" />
     <ClInclude Include="MathGeoLib\src\Geometry\Capsule.h" />
@@ -108,6 +109,9 @@
     <ClInclude Include="MathGeoLib\src\Geometry\Sphere.h" />
     <ClInclude Include="MathGeoLib\src\Geometry\Triangle.h" />
     <ClInclude Include="MathGeoLib\src\Geometry\TriangleMesh.h" />
+    <ClInclude Include="MathGeoLib\src\MathBuildConfig.h" />
+    <ClInclude Include="MathGeoLib\src\MathGeoLib.h" />
+    <ClInclude Include="MathGeoLib\src\MathGeoLibFwd.h" />
     <ClInclude Include="MathGeoLib\src\Math\assume.h" />
     <ClInclude Include="MathGeoLib\src\Math\BitOps.h" />
     <ClInclude Include="MathGeoLib\src\Math\Complex.h" />
@@ -166,6 +170,7 @@
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MathGeoLib\src\Algorithm\Random\LCG.cpp" />
     <ClCompile Include="MathGeoLib\src\Geometry\AABB.cpp" />
     <ClCompile Include="MathGeoLib\src\Geometry\Capsule.cpp" />
     <ClCompile Include="MathGeoLib\src\Geometry\Circle.cpp" />
