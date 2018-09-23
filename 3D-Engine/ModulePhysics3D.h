@@ -3,6 +3,7 @@
 #include "Globals.h"
 //#include "Primitive.h"
 #include "MathGeoLib/src/Geometry/GeometryAll.h"
+
 #include <list>
 
 #include "Bullet/include/btBulletDynamicsCommon.h"
@@ -26,10 +27,7 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
-	PhysBody3D* AddBody(const Sphere& sphere, float mass = 1.0f);
-
-	// TODO 1: Code a method that adds a point 2 point contraint between two bodies
-	// TODO 3: Code a method that adds a hinge constraint between two bodies
+//	PhysBody3D* AddBody(const Sphere& sphere, float mass = 1.0f);
 
 private:
 
@@ -50,7 +48,9 @@ private:
 class DebugDrawer : public btIDebugDraw
 {
 public:
+
 	DebugDrawer() : line(float3(0, 0, 0), float3(1, 1, 1))
+
 	{}
 
 	void drawLine(const btVector3& from, const btVector3& to, const btVector3& color);

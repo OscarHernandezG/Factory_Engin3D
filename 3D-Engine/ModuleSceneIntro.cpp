@@ -1,7 +1,6 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleSceneIntro.h"
-#include "Primitive.h"
 #include "PhysBody3D.h"
 
 #include "imgui.h"
@@ -12,6 +11,18 @@
 #include "SDL/include/SDL.h"
 
 #include <stdio.h>
+
+#include "pcg-c-0.94/extras/entropy.h"
+
+#include <iostream>
+#include <iomanip>
+#include <string>
+#include <map>
+#include <random>
+#include <cmath>
+
+
+#include "MathGeoLib/src/Geometry/GeometryAll.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -24,6 +35,7 @@ ModuleSceneIntro::~ModuleSceneIntro()
 bool ModuleSceneIntro::Start()
 {
 	LOGI("Loading Intro assets");
+
 	bool ret = true;
 
 	App->camera->Move(float3(1.0f, 1.0f, 0.0f));
@@ -43,6 +55,13 @@ bool ModuleSceneIntro::Start()
 
 	ImGui::StyleColorsDark();
 
+
+	//uint64_t seeds[2];
+	//entropy_getbytes((void*)seeds, sizeof(seeds));
+	//pcg32_srandom_r(&rng, seeds[0], seeds[1]);
+
+	pcg32_srandom_r(&rng, 42u, 54u);
+
 	return ret;
 }
 
@@ -52,6 +71,157 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 	ImGui_ImplOpenGL2_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
+
+
+	bool show_demo_window = true;
+	bool show_another_window = false;
+	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+	static float f = 0.0f;
+	static int counter = 0;
+
+	if (showdemowindow)
+		ImGui::ShowDemoWindow(&showdemowindow);
+
+
+
+
+	if (exampleWindow)
+	{
+		ImGui::Begin("Hello World!");								// Create a window called "Hello, world!" and append into it.
+
+		ImGui::Checkbox("Demo Window", &showdemowindow);			// Edit bools storing our window open/close state
+		ImGui::Checkbox("Another Window", &show_another_window);
+
+		ImGui::SliderFloat("float", &f, 0.0f, 1.0f);				// Edit 1 float using a slider from 0.0f to 1.0f    
+		ImGui::ColorEdit3("clear color", (float*)&clear_color);		// Edit 3 floats representing a color
+
+		if (ImGui::Button("Button"))								// Buttons return true when clicked (most widgets return true when edited/activated)
+			counter++;
+
+		ImGui::SameLine();
+		ImGui::Text("counter = %d", counter);
+
+		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+		ImGui::End();
+	}
+
+
+	if (mathGeoLibWindow)
+	{
+		ImGui::Begin("MathGeoLib", &mathGeoLibWindow);
+		ImGui::Text("Move the sliders to move the sphere in the X axis.");
+		ImGui::Text("Both spheres are 1 unit in radius");
+
+		ImGui::NewLine();
+
+		ImGui::SliderFloat("Sphere 1 position", &sphere1Pos, 0, 5);
+		ImGui::SliderFloat("Sphere 2 positon", &sphere2Pos, 0, 5);
+
+		Sphere sphere1;
+		sphere1.pos = { sphere1Pos,0,0 };
+		sphere1.r = 1;
+
+		Sphere sphere2;
+		sphere2.pos = { sphere2Pos,0,0 };
+		sphere2.r = 1;
+
+		spheresColliding = sphere1.Intersects(sphere2);
+
+
+		ImGui::NewLine();
+		if (spheresColliding)
+		{
+			ImGui::Text("The spheres are colliding");
+		}
+		else
+		{
+			ImGui::Text("The spheres are not colliding");
+		}
+		ImGui::End();
+	}
+
+
+	if (randomNumberWindow)
+	{
+		ImGui::Begin("PCG", &mathGeoLibWindow);
+		ImGui::Text("Create random numbers.");
+
+		if (ImGui::Button("Get a random number (0.0-1.0)", ImVec2(300, 50)))
+		{
+			randomDoubleNum = ldexp(pcg32_random_r(&rng), -32);
+			//int randNum = pcg32_boundedrand_r(&rng, 2);
+			randNumTextDouble = to_string(randomDoubleNum);
+		}
+
+		if (randomDoubleNum > -1)
+		{
+			ImGui::Text("Your random number is:");
+			ImGui::SameLine();
+			ImGui::Text(randNumTextDouble.data());
+		}
+
+
+		ImGui::Text("Introduce min value:"); ImGui::SameLine();
+		isMinSelected = ImGui::InputInt("", &num1);
+
+		ImGui::Text("Introduce max value:"); ImGui::SameLine();
+		isMaxSelected = ImGui::InputInt(" ", &num2);
+
+		if (num1 > num2)
+		{
+			if (isMinSelected)
+				num2 = num1;
+			else if (isMaxSelected)
+				num1 = num2;
+		}
+
+		string buttonText = "Get a random number between " + to_string(num1) + " and " + to_string(num2);
+		if (ImGui::Button(buttonText.data(), ImVec2(400, 50)))
+		{
+			int range = num2 - num1 + 1;
+			randomIntNum = pcg32_boundedrand_r(&rng, range);
+			randomIntNum += num1;
+			randNumTextInt = to_string(randomIntNum);
+
+		}
+
+		ImGui::Text("Your random number is:");
+		ImGui::SameLine();
+		ImGui::Text(randNumTextInt.data());
+
+
+		ImGui::End();
+	}
+
+	if (ImGui::BeginMainMenuBar())
+	{
+		if (ImGui::BeginMenu("Menu"))
+		{		
+			if (ImGui::MenuItem("Example window"))
+				exampleWindow = !exampleWindow;
+
+			if (ImGui::MenuItem("Demo window"))
+				showdemowindow = !showdemowindow;
+
+			if (ImGui::MenuItem("Math window"))
+				mathGeoLibWindow = !mathGeoLibWindow;
+
+			if (ImGui::MenuItem("Random number window"))
+				randomNumberWindow = !randomNumberWindow;
+
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Exit"))
+		{
+			return update_status::UPDATE_STOP;
+			ImGui::EndMenu();
+		}
+		ImGui::EndMainMenuBar();
+	}
+
+	created = true;
+
 	
 
 	return UPDATE_CONTINUE;
@@ -61,40 +231,12 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 bool ModuleSceneIntro::CleanUp()
 {
 	LOGI("Unloading Intro scene");
-
 	return true;
 }
 
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
-	bool show_demo_window = true;
-	bool show_another_window = false;
-	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
-	static float f = 0.0f;
-	static int counter = 0;
-
-	if (show_demo_window)
-		ImGui::ShowDemoWindow(&show_demo_window);	
-
-	ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-
-	ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-	ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-	ImGui::Checkbox("Another Window", &show_another_window);
-
-	ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f    
-	ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-	if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-		counter++;
-	ImGui::SameLine();
-	ImGui::Text("counter = %d", counter);
-
-	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-	ImGui::End();
-	
 	return UPDATE_CONTINUE;
 }
 

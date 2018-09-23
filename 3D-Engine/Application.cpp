@@ -19,7 +19,7 @@ Application::Application()
 	AddModule(camera);
 	AddModule(input);
 	AddModule(audio);
-//	AddModule(physics);
+	//AddModule(physics);
 	
 	// Scenes
 	AddModule(scene_intro);
