@@ -1,5 +1,5 @@
 
-#include "Globals.h"
+/*#include "Globals.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
 #include "Primitive.h"
@@ -85,7 +85,7 @@ void Primitive::SetPos(float x, float y, float z)
 }
 
 // ------------------------------------------------------------
-void Primitive::SetRotation(float angle, const vec3 &u)
+void Primitive::SetRotation(float angle, const float3 &u)
 {
 	transform.rotate(angle, u);
 }
@@ -271,4 +271,4 @@ void Plane::InnerRender() const
 	}
 
 	glEnd();
-}
+}*/

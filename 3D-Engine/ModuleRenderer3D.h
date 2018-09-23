@@ -1,7 +1,9 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
-#include "glmath.h"
+//#include "glmath.h"
+#include "MathGeoLib/src/Math/float3x3.h"
+#include "MathGeoLib/src/Math/float4x4.h"
 #include "Light.h"
 
 
@@ -27,6 +29,6 @@ public:
 
 	Light lights[MAX_LIGHTS];
 	SDL_GLContext context;
-	mat3x3 NormalMatrix;
-	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
+	float3x3 NormalMatrix;
+	float4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
 };

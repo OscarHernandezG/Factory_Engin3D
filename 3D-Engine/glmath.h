@@ -3,7 +3,7 @@
 // Version 2.04
 //
 // ----------------------------------------------------------------------------------------------------------------------------
-#pragma once
+/*#pragma once
 #define _USE_MATH_DEFINES
 
 #include <math.h>
@@ -272,9 +272,9 @@ public:
 		return vec3(u.x / v.x, u.y / v.y, u.z / v.z);
 	}
 };
-
+*/
 // ----------------------------------------------------------------------------------------------------------------------------
-
+/*
 vec3 cross(const vec3 &u, const vec3 &v);
 float dot(const vec3 &u, const vec3 &v);
 float length(const vec3 &u);
@@ -515,4 +515,4 @@ mat4x4 perspective(float fovy, float aspect, float n, float f);
 mat4x4 rotate(float angle, const vec3 &u);
 mat4x4 scale(float x, float y, float z);
 mat4x4 translate(float x, float y, float z);
-mat4x4 transpose(const mat4x4 &Matrix);
+mat4x4 transpose(const mat4x4 &Matrix);*/

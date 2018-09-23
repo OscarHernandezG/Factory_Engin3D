@@ -23,11 +23,11 @@ ModuleSceneIntro::~ModuleSceneIntro()
 // Load assets
 bool ModuleSceneIntro::Start()
 {
-	LOG("Loading Intro assets");
+	LOGI("Loading Intro assets");
 	bool ret = true;
 
-	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
-	App->camera->LookAt(vec3(0, 0, 0));
+	App->camera->Move(float3(1.0f, 1.0f, 0.0f));
+	App->camera->LookAt(float3(0, 0, 0));
 
 	SDL_GLContext gl_context = SDL_GL_CreateContext(App->window->window);
 
@@ -60,7 +60,7 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 // Load assets
 bool ModuleSceneIntro::CleanUp()
 {
-	LOG("Unloading Intro scene");
+	LOGI("Unloading Intro scene");
 
 	return true;
 }
@@ -68,10 +68,6 @@ bool ModuleSceneIntro::CleanUp()
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
-	Plane p(0, 1, 0, 0);
-	p.axis = true;
-	p.Render();
-
 	bool show_demo_window = true;
 	bool show_another_window = false;
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);

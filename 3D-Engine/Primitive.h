@@ -1,6 +1,10 @@
-
+/*
 #pragma once
+#include "MathGeoLib/src/Math/float4x4.h"
+#include "MathGeoLib/src/Math/float3.h"
 #include "glmath.h"
+#include "MathGeoLib/src/Geometry/GeometryAll.h"
+
 #include "Color.h"
 
 enum PrimitiveTypes
@@ -13,6 +17,7 @@ enum PrimitiveTypes
 	Primitive_Cylinder
 };
 
+enum Geomtype;
 class Primitive
 {
 public:
@@ -22,14 +27,14 @@ public:
 	virtual void	Render() const;
 	virtual void	InnerRender() const;
 	void			SetPos(float x, float y, float z);
-	void			SetRotation(float angle, const vec3 &u);
+	void			SetRotation(float angle, const float3 &u);
 	void			Scale(float x, float y, float z);
 	PrimitiveTypes	GetType() const;
 
 public:
 	
 	Color color;
-	mat4x4 transform;
+	float4x4 transform;
 	bool axis,wire;
 
 protected:
@@ -44,15 +49,15 @@ public :
 	Cube(float sizeX, float sizeY, float sizeZ);
 	void InnerRender() const;
 public:
-	vec3 size;
+	float3 size;
 };
 
 // ============================================
-class Sphere : public Primitive
+class Spheree : public Primitive
 {
 public:
-	Sphere();
-	Sphere(float radius);
+	Spheree();
+	Spheree(float radius);
 	void InnerRender() const;
 public:
 	float radius;
@@ -71,15 +76,15 @@ public:
 };
 
 // ============================================
-class Line : public Primitive
+class Linee : public Primitive
 {
 public:
-	Line();
-	Line(float x, float y, float z);
+	Linee();
+	Linee(float x, float y, float z);
 	void InnerRender() const;
 public:
-	vec3 origin;
-	vec3 destination;
+	float3 origin;
+	float3 destination;
 };
 
 // ============================================
@@ -90,6 +95,6 @@ public:
 	Plane(float x, float y, float z, float d);
 	void InnerRender() const;
 public:
-	vec3 normal;
+	float3 normal;
 	float constant;
-};
+};*/

@@ -1,4 +1,4 @@
-#include "glmath.h"
+/*#include "glmath.h"
 
 // ----------------------------------------------------------------------------------------------------------------------------
 
@@ -834,4 +834,4 @@ mat4x4 transpose(const mat4x4 &Matrix)
 	Transpose.M[15] = Matrix.M[15];
 
 	return Transpose;
-}
+}*/

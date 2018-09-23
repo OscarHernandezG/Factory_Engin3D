@@ -1,7 +1,8 @@
-#pragma once
+/*#pragma once
 #include "Module.h"
 #include "Globals.h"
-#include "Primitive.h"
+//#include "Primitive.h"
+#include "MathGeoLib/src/Geometry/GeometryAll.h"
 #include <list>
 
 #include "Bullet/include/btBulletDynamicsCommon.h"
@@ -49,7 +50,7 @@ private:
 class DebugDrawer : public btIDebugDraw
 {
 public:
-	DebugDrawer() : line(0,0,0)
+	DebugDrawer() : line(float3(0, 0, 0), float3(1, 1, 1))
 	{}
 
 	void drawLine(const btVector3& from, const btVector3& to, const btVector3& color);
@@ -62,4 +63,4 @@ public:
 	DebugDrawModes mode;
 	Line line;
 	Primitive point;
-};
+};*/
