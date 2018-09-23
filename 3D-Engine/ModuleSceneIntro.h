@@ -1,7 +1,7 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
-#include "Primitive.h"
+//#include "Primitive.h"
 
 #include "pcg-c-0.94/include/pcg_variants.h"
 
@@ -30,5 +30,31 @@ public:
 public:
 
 	bool created = false;
+
+	bool showdemowindow = false;
+	bool exampleWindow = false;
+	bool mathGeoLibWindow = false;
+	bool randomNumberWindow = false;
+
+	bool spheresColliding = false;
+
+	float sphere1Pos = 0;
+	float sphere2Pos = 5;
+
+	bool isMinSelected = false;
+	bool isMaxSelected = false;
+
+	double randomDoubleNum = -1;
+
+	int num1 = 0;
+	int num2 = 0;
+	int randomIntNum = -1;
+
+	char* tempText = nullptr;
+
+	string randNumTextInt;
+	string randNumTextDouble;
+
+
 	pcg32_random_t rng;
 };
