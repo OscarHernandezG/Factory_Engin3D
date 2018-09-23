@@ -13,6 +13,15 @@
 
 #include <stdio.h>
 
+#include "pcg-c-0.94/extras/entropy.h"
+
+#include <iostream>
+#include <iomanip>
+#include <string>
+#include <map>
+#include <random>
+#include <cmath>
+
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 }
@@ -43,6 +52,13 @@ bool ModuleSceneIntro::Start()
 
 	ImGui::StyleColorsDark();
 
+
+	//uint64_t seeds[2];
+	//entropy_getbytes((void*)seeds, sizeof(seeds));
+	//pcg32_srandom_r(&rng, seeds[0], seeds[1]);
+
+	pcg32_srandom_r(&rng, 42u, 54u);
+
 	return ret;
 }
 
@@ -54,6 +70,11 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 	ImGui::NewFrame();
 	
 
+
+	if (!created)
+	{
+
+	}
 	return UPDATE_CONTINUE;
 }
 
@@ -80,11 +101,15 @@ update_status ModuleSceneIntro::Update(float dt)
 	static int counter = 0;
 
 	if (show_demo_window)
-		ImGui::ShowDemoWindow(&show_demo_window);	
+		ImGui::ShowDemoWindow(&show_demo_window);
 
-	ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
 
-	ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+	int randNum = pcg32_boundedrand_r(&rng, 50);
+	string text = to_string(randNum);
+
+	ImGui::Begin("hi");                          // Create a window called "Hello, world!" and append into it.
+
+	ImGui::Text(text.data());               // Display some text (you can use a format strings too)
 	ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
 	ImGui::Checkbox("Another Window", &show_another_window);
 
@@ -98,6 +123,8 @@ update_status ModuleSceneIntro::Update(float dt)
 
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::End();
+
+	created = true;
 	
 	return UPDATE_CONTINUE;
 }
