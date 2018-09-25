@@ -40,7 +40,6 @@ public:
 	bool mathGeoLibWindow = false;
 	bool randomNumberWindow = false;
 	bool aboutWindow = false;
-
 	bool configurationWindow = false;
 
 	bool spheresColliding = false;

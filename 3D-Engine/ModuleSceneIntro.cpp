@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleSceneIntro.h"
+#include "ModuleWindow.h"
 
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
@@ -186,8 +187,28 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 	if (aboutWindow)
 	{
 		ImGui::Begin("About", &aboutWindow);
-
-
+		ImGui::Text("Factory Engin3D");
+		ImGui::Separator();
+		ImGui::TextWrapped("This is an incredible description ^^");
+		if (ImGui::Button("Our repository", ImVec2(150, 25)))
+			ShellExecuteA(NULL, "Open", "https://github.com/OscarHernandezG/3D_Engine", NULL, NULL, SW_SHOWNORMAL);
+		ImGui::Text("Did it by:");
+		if (ImGui::Button("Oscar Gonzalez", ImVec2(150, 25)))
+			ShellExecuteA(NULL, "Open", "https://github.com/OscarHernandezG", NULL, NULL, SW_SHOWNORMAL);
+		ImGui::SameLine();
+		if (ImGui::Button("Aleix Gabarro", ImVec2(150, 25)))
+			ShellExecuteA(NULL, "Open", "https://github.com/aleixgab", NULL, NULL, SW_SHOWNORMAL);
+		ImGui::Separator();
+		ImGui::Text("Libraries that we used in this engine");
+		ImGui::Text("MathGeolib v1.5");
+		ImGui::Text("PCG-c-0.94");
+		ImGui::Text("ImGui 1.65");
+		ImGui::Text("SDL");
+		ImGui::Text("STL");
+		ImGui::Separator();
+		ImGui::TextWrapped("MIT License Copyright(c) 2018 Óscar Hernández and Aleix Gabarró	Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files(the Software), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:");
+		ImGui::TextWrapped("The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.");
+		ImGui::TextWrapped("THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.");
 
 		ImGui::End();
 	}
@@ -195,10 +216,10 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 	if (configurationWindow)
 	{
 		ImGui::Begin("Configuration", &configurationWindow);
-				
+
 		if (ImGui::CollapsingHeader("Application"))
 		{
-		//	ImGui::InputText(tempLabel, tempLabel2, 25);
+			//	ImGui::InputText(tempLabel, tempLabel2, 25);
 
 			char graphTitle[25];
 
@@ -270,32 +291,56 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 	if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("Menu"))
-		{		
-			if (ImGui::MenuItem("Example window","Ctrl+E",exampleWindow))
+		{
+			if (ImGui::MenuItem("Example window", "Ctrl + E", exampleWindow))
 				exampleWindow = !exampleWindow;
 
-			if (ImGui::MenuItem("Demo window","Ctrl+D", showDemoWindow))
+			else if (ImGui::MenuItem("Demo window", "Ctrl + D", showDemoWindow))
 				showDemoWindow = !showDemoWindow;
 
-			if (ImGui::MenuItem("Math window","Ctrl+M", mathGeoLibWindow))
+			else if (ImGui::MenuItem("Math window", "Ctrl + M", mathGeoLibWindow))
 				mathGeoLibWindow = !mathGeoLibWindow;
 
-			if (ImGui::MenuItem("Random number window","Ctrl+R", randomNumberWindow))
+			else if (ImGui::MenuItem("Random number window", "Ctrl + R", randomNumberWindow))
 				randomNumberWindow = !randomNumberWindow;
 
-			if (ImGui::MenuItem("About", "Ctrl+A", aboutWindow))
+			else if (ImGui::MenuItem("About", "Ctrl + A", aboutWindow))
 				aboutWindow = !aboutWindow;
 
-			if (ImGui::MenuItem("Configuration", "Ctrl+A", configurationWindow))
+			if (ImGui::MenuItem("Configuration", "Ctrl + C", configurationWindow))
 				configurationWindow = !configurationWindow;
 
 			if (ImGui::MenuItem("Open all windows"))
+
 			{
 				showDemoWindow = exampleWindow = mathGeoLibWindow = randomNumberWindow = true;
 			}
 
 			ImGui::EndMenu();
 		}
+
+		if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RCTRL) == KEY_REPEAT)
+		{
+			if (App->input->GetKey(SDL_SCANCODE_E) == KEY_DOWN)
+				exampleWindow = !exampleWindow;
+
+			else if (App->input->GetKey(SDL_SCANCODE_D) == KEY_DOWN)
+				showDemoWindow = !showDemoWindow;
+
+			else if (App->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN)
+				mathGeoLibWindow = !mathGeoLibWindow;
+
+			else if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
+				randomNumberWindow = !randomNumberWindow;
+
+			else if (App->input->GetKey(SDL_SCANCODE_A) == KEY_DOWN)
+				aboutWindow = !aboutWindow;
+
+			else if (App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN)
+				configurationWindow = !configurationWindow;
+
+		}
+
 		if (ImGui::BeginMenu("Exit"))
 		{
 			return update_status::UPDATE_STOP;
@@ -306,7 +351,7 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 
 	created = true;
 
-	
+
 	return UPDATE_CONTINUE;
 }
 
