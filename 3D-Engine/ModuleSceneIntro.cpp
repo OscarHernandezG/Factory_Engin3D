@@ -77,7 +77,7 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 	if (showDemoWindow)
 		ImGui::ShowDemoWindow(&showDemoWindow);
 
-	else if (exampleWindow)
+	if (exampleWindow)
 	{
 		ImGui::Begin("Hello World!", &exampleWindow);				// Create a window called "Hello, world!" and append into it.
 
@@ -97,7 +97,7 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 		ImGui::End();
 	}
 
-	else if (mathGeoLibWindow)
+	if (mathGeoLibWindow)
 	{
 		ImGui::Begin("MathGeoLib", &mathGeoLibWindow);
 		ImGui::Text("Move the sliders to move the sphere in the X axis.");
@@ -131,7 +131,7 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 		ImGui::End();
 	}
 
-	else if (randomNumberWindow)
+	if (randomNumberWindow)
 	{
 		ImGui::Begin("PCG", &randomNumberWindow);
 		ImGui::Text("Create random numbers.");
@@ -183,7 +183,7 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 		ImGui::End();
 	}
 
-	else if (aboutWindow)
+	if (aboutWindow)
 	{
 		ImGui::Begin("About", &aboutWindow);
 		ImGui::Text("Factory Engin3D");
@@ -205,14 +205,14 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 		ImGui::Text("SDL");
 		ImGui::Text("STL");
 		ImGui::Separator();
-		ImGui::TextWrapped("MIT License Copyright(c) 2018 Óscar Hernández and Aleix Gabarró	Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files(the Software), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:");
+		ImGui::TextWrapped("MIT License Copyright(c) 2018 Oscar Hernandez and Aleix Gabarro	Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files(the Software), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:");
 		ImGui::TextWrapped("The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.");
 		ImGui::TextWrapped("THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.");
 
 		ImGui::End();
 	}
 
-	else if (configurationWindow)
+	if (configurationWindow)
 	{
 		ImGui::Begin("Configuration", &configurationWindow);
 
