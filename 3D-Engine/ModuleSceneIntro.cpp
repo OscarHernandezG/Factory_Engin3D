@@ -217,6 +217,52 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 			}
 		}
 
+		if (ImGui::CollapsingHeader("Hardware"))
+		{			
+
+			ImVec4 color(255, 255, 0, 255);
+
+			ImGui::PushStyleColor(5, color);
+
+			ImGui::Text("CPUs: %i (Cache: %ikb)", SDL_GetCPUCount(), SDL_GetCPUCacheLineSize());
+
+			ImGui::PopStyleColor();
+
+			ImGui::Text("System RAM: %.2fGB", (float)SDL_GetSystemRAM() / 1024);
+
+			string caps("Caps: ");
+			CheckCaps(&caps);
+
+			ImGui::Text(caps.data());
+
+
+			ImGui::Separator();
+
+			
+			const GLubyte* gpuInfo = glGetString(GL_VENDOR);
+			const GLubyte* renderer = glGetString(GL_RENDERER);
+
+			ImGui::Text("GPU info:"); ImGui::SameLine();
+			ImGui::Text((char*)gpuInfo); ImGui::SameLine();
+			ImGui::Text((char*)renderer);
+
+			GLint nTotalMemoryInKB = 0;
+			glGetIntegerv(GL_GPU_MEM_INFO_TOTAL_AVAILABLE_MEM_NVX,
+				&nTotalMemoryInKB);
+
+			GLint nCurAvailMemoryInKB = 0;
+			glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX,
+				&nCurAvailMemoryInKB);
+
+
+			ImGui::Text("VRAM total: %.2f MB", (float)nTotalMemoryInKB / 1024);
+			ImGui::Text("VRAM available: %.2f MB", (float)nCurAvailMemoryInKB / 1024);
+			ImGui::Text("VRAM in use: %.2f MB", ((float)nTotalMemoryInKB / 1024) - (float)nCurAvailMemoryInKB / 1024);
+
+
+
+		}
+
 
 		ImGui::End();
 	}
@@ -299,3 +345,32 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 {
 }
 
+void ModuleSceneIntro::CheckCaps(string* caps)
+
+{
+	if (SDL_Has3DNow())
+		*caps += "3Dnow, ";
+	if (SDL_HasAVX())
+		*caps += "AVX, ";
+	if (SDL_HasAVX2())
+		*caps += "AVX2, ";
+	if (SDL_HasAltiVec())
+		*caps += "AltiVec, ";
+	if (SDL_HasMMX())
+		*caps += "MMX, ";
+	if (SDL_HasRDTSC())
+		*caps += "RDTSC , ";
+	if (SDL_HasSSE())
+		*caps += "SSE, ";
+	if (SDL_HasSSE2())
+		*caps += "SSE2, ";
+	if (SDL_HasSSE3())
+		*caps += "SSE3, ";
+	if (SDL_HasSSE41())
+		*caps += "SSE4.1, ";
+	if (SDL_HasSSE42())
+		*caps += "SSE4.2, ";
+
+
+	*caps = caps->substr(0, caps->size() - 2);
+}
