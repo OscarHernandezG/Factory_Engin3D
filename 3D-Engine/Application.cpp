@@ -8,7 +8,6 @@ Application::Application()
 	scene_intro = new ModuleSceneIntro(this);
 	renderer3D = new ModuleRenderer3D(this);
 	camera = new ModuleCamera3D(this);
-//	physics = new ModulePhysics3D(this);
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -19,7 +18,6 @@ Application::Application()
 	AddModule(camera);
 	AddModule(input);
 	AddModule(audio);
-	//AddModule(physics);
 	
 	// Scenes
 	AddModule(scene_intro);
@@ -91,6 +89,15 @@ void Application::PrepareUpdate()
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
+	if (!renderer3D->vsync && toCap) {
+		float toVsync = dt;
+
+		if (capFrames > 0)
+			toVsync = 1000 / capFrames;
+
+		if (dt < toVsync)
+			SDL_Delay(toVsync - dt);
+	}
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules
