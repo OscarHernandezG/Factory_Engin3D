@@ -26,6 +26,7 @@ public:
 	void SetTitle(const char* title);
 
 	void SetFullscreen();
+	void SetBorderless();
 
 	bool InitGl();
 
@@ -40,6 +41,7 @@ public:
 
 
 	bool fullscreen = false;
+	bool borderless = false;
 };
 
 #endif // __ModuleWindow_H__
