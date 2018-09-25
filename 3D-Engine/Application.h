@@ -45,4 +45,10 @@ private:
 	void AddModule(Module* mod);
 	void PrepareUpdate();
 	void FinishUpdate();
+
+public:
+
+	vector<float> fpsLog;
+	vector<float> msLog;
+
 };

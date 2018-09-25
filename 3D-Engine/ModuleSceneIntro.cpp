@@ -191,6 +191,33 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 
 		ImGui::End();
 	}
+
+	if (configurationWindow)
+	{
+		ImGui::Begin("Configuration", &configurationWindow);
+				
+		if (ImGui::CollapsingHeader("Application"))
+		{
+			ImGui::InputText(tempLabel, tempLabel2, 25);
+
+			char graphTitle[25];
+
+			sprintf_s(graphTitle, 25, "Framerate %.1f", App->fpsLog[App->fpsLog.size() - 1]);
+			ImGui::PlotHistogram("##Framerate", &App->fpsLog[0], App->fpsLog.size(), 0, graphTitle, 0.0f, 150.0f, ImVec2(310, 100));
+
+			sprintf_s(graphTitle, 25, "Milliseconds %.1f", App->msLog[App->msLog.size() - 1]);
+			ImGui::PlotHistogram("##Framerate", &App->msLog[0], App->msLog.size(), 0, graphTitle, 0.0f, 40.0f, ImVec2(310, 100));
+		}
+
+		if (ImGui::CollapsingHeader("Window"))
+		{
+
+		}
+
+
+		ImGui::End();
+	}
+
 	if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("Menu"))
@@ -209,6 +236,9 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 
 			if (ImGui::MenuItem("About", "Ctrl+A", aboutWindow))
 				aboutWindow = !aboutWindow;
+
+			if (ImGui::MenuItem("Configuration", "Ctrl+A", configurationWindow))
+				configurationWindow = !configurationWindow;
 
 			if (ImGui::MenuItem("Open all windows"))
 			{
