@@ -220,6 +220,16 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 		{
 			//	ImGui::InputText(tempLabel, tempLabel2, 25);
 
+
+
+
+
+
+			
+			ImGui::SliderInt("Max Fps", &App->capFrames, 30, 144);
+
+			ImGui::Checkbox("Cap Fps", &App->toCap);
+
 			char graphTitle[25];
 
 			sprintf_s(graphTitle, 25, "Framerate %.1f", App->fpsLog[App->fpsLog.size() - 1]);
