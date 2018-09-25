@@ -235,8 +235,12 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 			{
 				App->window->SetFullscreen();
 			}
-
-			else if (ImGui::SliderFloat("Brightness", &brightnessPos, 0.0f, 1.0f))
+			ImGui::SameLine();
+			if (ImGui::Checkbox("Borderless", &App->window->borderless))
+			{
+				App->window->SetBorderless();
+			}
+			if (ImGui::SliderFloat("Brightness", &brightnessPos, 0.0f, 1.0f))
 			{
 				SDL_SetWindowBrightness(App->window->window, brightnessPos);
 			}

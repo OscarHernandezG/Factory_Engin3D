@@ -142,6 +142,14 @@ void ModuleWindow::SetFullscreen()
 	}
 }
 
+void ModuleWindow::SetBorderless()
+{
+	if (!borderless)
+		SDL_SetWindowBordered(window, SDL_FALSE);
+
+	else
+		SDL_SetWindowBordered(window, SDL_TRUE);
+}
 bool ModuleWindow::InitGl()
 {
 	bool success = true;
