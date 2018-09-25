@@ -56,7 +56,9 @@ public:
 
 	string randNumTextInt;
 	string randNumTextDouble;
-
+	float brightnessPos = 1.0f;
+	int widthPos = SCREEN_WIDTH;
+	int heightPos = SCREEN_HEIGHT;
 
 	pcg32_random_t rng;
 };

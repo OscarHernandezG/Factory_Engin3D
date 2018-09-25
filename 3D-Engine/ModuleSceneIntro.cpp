@@ -62,7 +62,6 @@ bool ModuleSceneIntro::Start()
 
 update_status ModuleSceneIntro::PreUpdate(float dt)
 {
-
 	ImGui_ImplOpenGL2_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
@@ -78,7 +77,7 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 	if (showDemoWindow)
 		ImGui::ShowDemoWindow(&showDemoWindow);
 
-	if (exampleWindow)
+	else if (exampleWindow)
 	{
 		ImGui::Begin("Hello World!", &exampleWindow);				// Create a window called "Hello, world!" and append into it.
 
@@ -98,7 +97,7 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 		ImGui::End();
 	}
 
-	if (mathGeoLibWindow)
+	else if (mathGeoLibWindow)
 	{
 		ImGui::Begin("MathGeoLib", &mathGeoLibWindow);
 		ImGui::Text("Move the sliders to move the sphere in the X axis.");
@@ -132,7 +131,7 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 		ImGui::End();
 	}
 
-	if (randomNumberWindow)
+	else if (randomNumberWindow)
 	{
 		ImGui::Begin("PCG", &randomNumberWindow);
 		ImGui::Text("Create random numbers.");
@@ -184,7 +183,7 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 		ImGui::End();
 	}
 
-	if (aboutWindow)
+	else if (aboutWindow)
 	{
 		ImGui::Begin("About", &aboutWindow);
 		ImGui::Text("Factory Engin3D");
@@ -213,7 +212,7 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 		ImGui::End();
 	}
 
-	if (configurationWindow)
+	else if (configurationWindow)
 	{
 		ImGui::Begin("Configuration", &configurationWindow);
 
@@ -230,13 +229,28 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 			ImGui::PlotHistogram("##Framerate", &App->msLog[0], App->msLog.size(), 0, graphTitle, 0.0f, 40.0f, ImVec2(310, 100));
 		}
 
-		if (ImGui::CollapsingHeader("Window"))
+		else if (ImGui::CollapsingHeader("Window"))
 		{
 			if (ImGui::Checkbox("Fullscreen", &App->window->fullscreen))
 			{
 				App->window->SetFullscreen();
 			}
+
+			else if (ImGui::SliderFloat("Brightness", &brightnessPos, 0.0f, 1.0f))
+			{
+				SDL_SetWindowBrightness(App->window->window, brightnessPos);
+			}
+			if (ImGui::SliderInt("Width", &widthPos, 640, 1920))
+			{
+				SDL_SetWindowSize(App->window->window, widthPos, heightPos);
+			}
+			if (ImGui::SliderInt("Height", &heightPos, 480, 1080))
+			{
+				SDL_SetWindowSize(App->window->window, widthPos, heightPos);
+			}
+
 		}
+
 
 
 		ImGui::End();
