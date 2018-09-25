@@ -131,7 +131,7 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 		ImGui::End();
 	}
 
-	if (randomNumberWindow )
+	if (randomNumberWindow)
 	{
 		ImGui::Begin("PCG", &randomNumberWindow);
 		ImGui::Text("Create random numbers.");
@@ -189,7 +189,7 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 		ImGui::Text("Factory Engin3D");
 		ImGui::Separator();
 		ImGui::TextWrapped("This is an incredible description ^^");
-		if(ImGui::Button("Our repository", ImVec2(150, 25)))
+		if (ImGui::Button("Our repository", ImVec2(150, 25)))
 			ShellExecuteA(NULL, "Open", "https://github.com/OscarHernandezG/3D_Engine", NULL, NULL, SW_SHOWNORMAL);
 		ImGui::Text("Did it by:");
 		if (ImGui::Button("Oscar Gonzalez", ImVec2(150, 25)))
@@ -213,10 +213,10 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 	if (configurationWindow)
 	{
 		ImGui::Begin("Configuration", &configurationWindow);
-				
+
 		if (ImGui::CollapsingHeader("Application"))
 		{
-		//	ImGui::InputText(tempLabel, tempLabel2, 25);
+			//	ImGui::InputText(tempLabel, tempLabel2, 25);
 
 			char graphTitle[25];
 
@@ -242,17 +242,17 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 	if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("Menu"))
-		{		
-			if (ImGui::MenuItem("Example window","Ctrl + E",exampleWindow))
+		{
+			if (ImGui::MenuItem("Example window", "Ctrl + E", exampleWindow))
 				exampleWindow = !exampleWindow;
 
-			else if (ImGui::MenuItem("Demo window","Ctrl + D", showDemoWindow))
+			else if (ImGui::MenuItem("Demo window", "Ctrl + D", showDemoWindow))
 				showDemoWindow = !showDemoWindow;
 
-			else if (ImGui::MenuItem("Math window","Ctrl + M", mathGeoLibWindow))
+			else if (ImGui::MenuItem("Math window", "Ctrl + M", mathGeoLibWindow))
 				mathGeoLibWindow = !mathGeoLibWindow;
 
-			else if (ImGui::MenuItem("Random number window","Ctrl + R", randomNumberWindow))
+			else if (ImGui::MenuItem("Random number window", "Ctrl + R", randomNumberWindow))
 				randomNumberWindow = !randomNumberWindow;
 
 			else if (ImGui::MenuItem("About", "Ctrl + A", aboutWindow))
@@ -270,7 +270,7 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 			ImGui::EndMenu();
 		}
 
-		if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT|| App->input->GetKey(SDL_SCANCODE_RCTRL) == KEY_REPEAT)
+		if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RCTRL) == KEY_REPEAT)
 		{
 			if (App->input->GetKey(SDL_SCANCODE_E) == KEY_DOWN)
 				exampleWindow = !exampleWindow;
@@ -302,7 +302,7 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 
 	created = true;
 
-	
+
 	return UPDATE_CONTINUE;
 }
 
