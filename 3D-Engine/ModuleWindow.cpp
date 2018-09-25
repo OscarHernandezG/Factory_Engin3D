@@ -114,3 +114,23 @@ void ModuleWindow::SetTitle(const char* title)
 {
 	SDL_SetWindowTitle(window, title);
 }
+
+void ModuleWindow::SetFullscreen()
+{
+	if (!fullscreen)
+	{
+		//fullscreen = true;
+
+		SDL_SetWindowFullscreen(window, SDL_WINDOW_SHOWN);
+
+		SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+
+	}
+	else
+	{
+		//fullscreen = false;
+		SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+
+		SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+	}
+}
