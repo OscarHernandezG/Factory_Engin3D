@@ -11,6 +11,7 @@ struct PhysBody3D;
 struct ImVec2;
 struct ImVec3;
 struct ImVec4;
+struct ExampleAppConsole;
 
 class ModuleSceneIntro : public Module
 {
@@ -41,6 +42,7 @@ public:
 	bool randomNumberWindow = false;
 	bool aboutWindow = false;
 	bool configurationWindow = false;
+	bool consoleWindow = false;
 
 	bool spheresColliding = false;
 
