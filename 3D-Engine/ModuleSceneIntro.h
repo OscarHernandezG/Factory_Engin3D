@@ -31,10 +31,11 @@ public:
 
 	bool created = false;
 
-	bool showdemowindow = false;
+	bool showDemoWindow = false;
 	bool exampleWindow = false;
 	bool mathGeoLibWindow = false;
 	bool randomNumberWindow = false;
+	bool aboutWindow = false;
 
 	bool spheresColliding = false;
 

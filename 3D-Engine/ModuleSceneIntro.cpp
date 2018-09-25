@@ -54,11 +54,6 @@ bool ModuleSceneIntro::Start()
 
 	ImGui::StyleColorsDark();
 
-
-	//uint64_t seeds[2];
-	//entropy_getbytes((void*)seeds, sizeof(seeds));
-	//pcg32_srandom_r(&rng, seeds[0], seeds[1]);
-
 	pcg32_srandom_r(&rng, 42u, 54u);
 
 	return ret;
@@ -79,17 +74,14 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 	static float f = 0.0f;
 	static int counter = 0;
 
-	if (showdemowindow)
-		ImGui::ShowDemoWindow(&showdemowindow);
-
-
-
+	if (showDemoWindow)
+		ImGui::ShowDemoWindow(&showDemoWindow);
 
 	if (exampleWindow)
 	{
 		ImGui::Begin("Hello World!", &exampleWindow);				// Create a window called "Hello, world!" and append into it.
 
-		ImGui::Checkbox("Demo Window", &showdemowindow);			// Edit bools storing our window open/close state
+		ImGui::Checkbox("Demo Window", &showDemoWindow);			// Edit bools storing our window open/close state
 		ImGui::Checkbox("Another Window", &show_another_window);
 
 		ImGui::SliderFloat("float", &f, 0.0f, 1.0f);				// Edit 1 float using a slider from 0.0f to 1.0f    
@@ -104,7 +96,6 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		ImGui::End();
 	}
-
 
 	if (mathGeoLibWindow)
 	{
@@ -140,10 +131,9 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 		ImGui::End();
 	}
 
-
 	if (randomNumberWindow)
 	{
-		ImGui::Begin("PCG", &mathGeoLibWindow);
+		ImGui::Begin("PCG", &randomNumberWindow);
 		ImGui::Text("Create random numbers.");
 
 		if (ImGui::Button("Get a random number (0.0-1.0)", ImVec2(300, 50)))
@@ -193,25 +183,36 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 		ImGui::End();
 	}
 
+	if (aboutWindow)
+	{
+		ImGui::Begin("About", &aboutWindow);
+
+
+
+		ImGui::End();
+	}
 	if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("Menu"))
 		{		
-			if (ImGui::MenuItem("Example window"))
+			if (ImGui::MenuItem("Example window","Ctrl+E",exampleWindow))
 				exampleWindow = !exampleWindow;
 
-			if (ImGui::MenuItem("Demo window"))
-				showdemowindow = !showdemowindow;
+			if (ImGui::MenuItem("Demo window","Ctrl+D", showDemoWindow))
+				showDemoWindow = !showDemoWindow;
 
-			if (ImGui::MenuItem("Math window"))
+			if (ImGui::MenuItem("Math window","Ctrl+M", mathGeoLibWindow))
 				mathGeoLibWindow = !mathGeoLibWindow;
 
-			if (ImGui::MenuItem("Random number window"))
+			if (ImGui::MenuItem("Random number window","Ctrl+R", randomNumberWindow))
 				randomNumberWindow = !randomNumberWindow;
+
+			if (ImGui::MenuItem("About", "Ctrl+A", aboutWindow))
+				aboutWindow = !aboutWindow;
 
 			if (ImGui::MenuItem("Open all windows"))
 			{
-				showdemowindow = exampleWindow = mathGeoLibWindow = randomNumberWindow = true;
+				showDemoWindow = exampleWindow = mathGeoLibWindow = randomNumberWindow = true;
 			}
 
 			ImGui::EndMenu();
@@ -219,7 +220,7 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 		if (ImGui::BeginMenu("Exit"))
 		{
 			return update_status::UPDATE_STOP;
-			ImGui::EndMenu();
+			//ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();
 	}
@@ -227,7 +228,6 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 	created = true;
 
 	
-
 	return UPDATE_CONTINUE;
 }
 
