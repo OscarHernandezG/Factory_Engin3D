@@ -239,33 +239,32 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 		}
 
 		if (ImGui::CollapsingHeader("Hardware"))
-		{			
+		{	
+			//CPU--------------------------------------------------------
+			ImVec4 color(1.0f, 1.0f, 0.1f, 1.0f);
 
-			ImVec4 color(255, 255, 0, 255);
+			ImGui::Text("CPUs: "); ImGui::SameLine();
+			ImGui::TextColored(color, "%i (Cache: %ikb)", SDL_GetCPUCount(), SDL_GetCPUCacheLineSize());
 
-			ImGui::PushStyleColor(5, color);
+			ImGui::Text("System RAM: "); ImGui::SameLine();
+			ImGui::TextColored(color, "%.2fGB", (float)SDL_GetSystemRAM() / 1024);
 
-			ImGui::Text("CPUs: %i (Cache: %ikb)", SDL_GetCPUCount(), SDL_GetCPUCacheLineSize());
 
-			ImGui::PopStyleColor();
-
-			ImGui::Text("System RAM: %.2fGB", (float)SDL_GetSystemRAM() / 1024);
-
-			string caps("Caps: ");
+			ImGui::Text("Caps: "); ImGui::SameLine();
+			string caps("");
 			CheckCaps(&caps);
 
-			ImGui::Text(caps.data());
-
+			ImGui::TextColored(color, caps.data());
 
 			ImGui::Separator();
 
-			
+			//GPU--------------------------------------------------------
 			const GLubyte* gpuInfo = glGetString(GL_VENDOR);
 			const GLubyte* renderer = glGetString(GL_RENDERER);
 
 			ImGui::Text("GPU info:"); ImGui::SameLine();
-			ImGui::Text((char*)gpuInfo); ImGui::SameLine();
-			ImGui::Text((char*)renderer);
+			ImGui::TextColored(color,(char*)gpuInfo); ImGui::SameLine();
+			ImGui::TextColored(color,(char*)renderer);
 
 			GLint nTotalMemoryInKB = 0;
 			glGetIntegerv(GL_GPU_MEM_INFO_TOTAL_AVAILABLE_MEM_NVX,
@@ -276,12 +275,14 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 				&nCurAvailMemoryInKB);
 
 
-			ImGui::Text("VRAM total: %.2f MB", (float)nTotalMemoryInKB / 1024);
-			ImGui::Text("VRAM available: %.2f MB", (float)nCurAvailMemoryInKB / 1024);
-			ImGui::Text("VRAM in use: %.2f MB", ((float)nTotalMemoryInKB / 1024) - (float)nCurAvailMemoryInKB / 1024);
+			ImGui::Text("VRAM total: "); ImGui::SameLine();
+			ImGui::TextColored(color, "%.2f MB", (float)nTotalMemoryInKB / 1024);
 
+			ImGui::Text("VRAM available: "); ImGui::SameLine();
+			ImGui::TextColored(color, "%.2f MB", (float)nCurAvailMemoryInKB / 1024);
 
-
+			ImGui::Text("VRAM in use: "); ImGui::SameLine();
+			ImGui::TextColored(color, "%.2f MB", ((float)nTotalMemoryInKB / 1024) - (float)nCurAvailMemoryInKB / 1024);
 		}
 
 
