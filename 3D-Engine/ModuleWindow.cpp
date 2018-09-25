@@ -2,6 +2,9 @@
 #include "Application.h"
 #include "ModuleWindow.h"
 
+#include "SDL/include/SDL_opengl.h"
+#include <gl/GL.h>
+
 ModuleWindow::ModuleWindow(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 	window = NULL;
@@ -64,28 +67,32 @@ bool ModuleWindow::Init()
 		}
 		else
 		{
+			gContext = SDL_GL_CreateContext(window);
+			if (gContext == NULL)
+			{
+				printf("OpenGL context could not be created! SDL Error: %s\n", SDL_GetError());
+				ret = false;
+			}
+			else
+			{
+				//Use Vsync
+				if (SDL_GL_SetSwapInterval(1) < 0)
+				{
+					printf("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
+				}
+
+				//Initialize OpenGL
+				if (!InitGl())
+				{
+					printf("Unable to initialize OpenGL!\n");
+					ret = false;
+				}
+			}
+
 			//Get window surface
 			screen_surface = SDL_GetWindowSurface(window);
 		}
-	}
-
-
-	///***
-
-	/*SDL_GLContext gl_context = SDL_GL_CreateContext(window);
-
-
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-
-	ImGuiIO& io = ImGui::GetIO();
-	(void)io;
-
-	ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
-	ImGui_ImplOpenGL2_Init();
-
-	ImGui::StyleColorsDark();
-	*/
+	}	
 	return ret;
 }
 
@@ -133,4 +140,46 @@ void ModuleWindow::SetFullscreen()
 
 		SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 	}
+}
+
+bool ModuleWindow::InitGl()
+{
+	bool success = true;
+	GLenum error = GL_NO_ERROR;
+
+	//Initialize Projection Matrix
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	//Check for error
+	error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+	//	printf("Error initializing OpenGL! %s\n", gluErrorString(error));
+		success = false;
+	}
+
+	//Initialize Modelview Matrix
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	//Check for error
+	error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+	//	printf("Error initializing OpenGL! %s\n", gluErrorString(error));
+		success = false;
+	}
+	//Initialize clear color
+	glClearColor(0.f, 0.f, 0.f, 1.f);
+
+	//Check for error
+	error = glGetError();
+	if (error != GL_NO_ERROR)
+	{
+		//printf("Error initializing OpenGL! %s\n", gluErrorString(error));
+		success = false;
+	}
+
+	return success;
 }

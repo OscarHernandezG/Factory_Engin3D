@@ -27,6 +27,10 @@ public:
 
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
 
+	void CheckCaps(string * caps);
+
+	void CheckCaps(string & caps);
+
 public:
 
 	bool created = false;
