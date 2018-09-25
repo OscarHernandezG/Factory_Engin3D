@@ -51,4 +51,8 @@ public:
 	vector<float> fpsLog;
 	vector<float> msLog;
 
+	bool toCap = true;
+
+	int capFrames = 60;
+
 };
