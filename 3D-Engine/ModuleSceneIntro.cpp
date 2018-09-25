@@ -139,7 +139,6 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 		if (ImGui::Button("Get a random number (0.0-1.0)", ImVec2(300, 50)))
 		{
 			randomDoubleNum = ldexp(pcg32_random_r(&rng), -32);
-			//int randNum = pcg32_boundedrand_r(&rng, 2);
 			randNumTextDouble = to_string(randomDoubleNum);
 		}
 
@@ -192,7 +191,7 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 		if (ImGui::Button("Our repository", ImVec2(150, 25)))
 			ShellExecuteA(NULL, "Open", "https://github.com/OscarHernandezG/3D_Engine", NULL, NULL, SW_SHOWNORMAL);
 		ImGui::Text("Did it by:");
-		if (ImGui::Button("Oscar Gonzalez", ImVec2(150, 25)))
+		if (ImGui::Button("Oscar Hernandez", ImVec2(150, 25)))
 			ShellExecuteA(NULL, "Open", "https://github.com/OscarHernandezG", NULL, NULL, SW_SHOWNORMAL);
 		ImGui::SameLine();
 		if (ImGui::Button("Aleix Gabarro", ImVec2(150, 25)))
@@ -218,14 +217,6 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 
 		if (ImGui::CollapsingHeader("Application"))
 		{
-			//	ImGui::InputText(tempLabel, tempLabel2, 25);
-
-
-
-
-
-
-			
 			ImGui::SliderInt("Max Fps", &App->capFrames, 30, 144);
 
 			ImGui::Checkbox("Cap Fps", &App->toCap);
@@ -239,7 +230,7 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 			ImGui::PlotHistogram("##Framerate", &App->msLog[0], App->msLog.size(), 0, graphTitle, 0.0f, 40.0f, ImVec2(310, 100));
 		}
 
-		else if (ImGui::CollapsingHeader("Window"))
+		if (ImGui::CollapsingHeader("Window"))
 		{
 			if (ImGui::Checkbox("Fullscreen", &App->window->fullscreen))
 			{
@@ -293,6 +284,7 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 			ImGui::TextColored(color,(char*)gpuInfo); ImGui::SameLine();
 			ImGui::TextColored(color,(char*)renderer);
 
+
 			GLint nTotalMemoryInKB = 0;
 			glGetIntegerv(GL_GPU_MEM_INFO_TOTAL_AVAILABLE_MEM_NVX,
 				&nTotalMemoryInKB);
@@ -300,7 +292,6 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 			GLint nCurAvailMemoryInKB = 0;
 			glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX,
 				&nCurAvailMemoryInKB);
-
 
 			ImGui::Text("VRAM total: "); ImGui::SameLine();
 			ImGui::TextColored(color, "%.2f MB", (float)nTotalMemoryInKB / 1024);
@@ -311,9 +302,6 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 			ImGui::Text("VRAM in use: "); ImGui::SameLine();
 			ImGui::TextColored(color, "%.2f MB", ((float)nTotalMemoryInKB / 1024) - (float)nCurAvailMemoryInKB / 1024);
 		}
-
-
-
 		ImGui::End();
 	}
 
@@ -340,7 +328,6 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 				configurationWindow = !configurationWindow;
 
 			if (ImGui::MenuItem("Open all windows"))
-
 			{
 				showDemoWindow = exampleWindow = mathGeoLibWindow = randomNumberWindow = true;
 			}
@@ -367,7 +354,6 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 
 			else if (App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN)
 				configurationWindow = !configurationWindow;
-
 		}
 
 		if (ImGui::BeginMenu("Exit"))
@@ -406,8 +392,6 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 	ImGuiIO& io = ImGui::GetIO();
 	(void)io;
 	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
-	//SDL_GL_SwapWindow(App->window->window);
-
 
 	return UPDATE_CONTINUE;
 }
@@ -420,7 +404,6 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 }
 
 void ModuleSceneIntro::CheckCaps(string* caps)
-
 {
 	if (SDL_Has3DNow())
 		*caps += "3Dnow, ";
@@ -444,7 +427,6 @@ void ModuleSceneIntro::CheckCaps(string* caps)
 		*caps += "SSE4.1, ";
 	if (SDL_HasSSE42())
 		*caps += "SSE4.2, ";
-
 
 	*caps = caps->substr(0, caps->size() - 2);
 }
