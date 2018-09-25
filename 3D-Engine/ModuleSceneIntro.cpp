@@ -198,7 +198,7 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 				
 		if (ImGui::CollapsingHeader("Application"))
 		{
-			ImGui::InputText(tempLabel, tempLabel2, 25);
+		//	ImGui::InputText(tempLabel, tempLabel2, 25);
 
 			char graphTitle[25];
 
@@ -211,7 +211,10 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 
 		if (ImGui::CollapsingHeader("Window"))
 		{
-
+			if (ImGui::Checkbox("Fullscreen", &App->window->fullscreen))
+			{
+				App->window->SetFullscreen();
+			}
 		}
 
 
