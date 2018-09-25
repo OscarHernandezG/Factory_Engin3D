@@ -38,8 +38,6 @@ public:
 	bool aboutWindow = false;
 	bool configurationWindow = false;
 
-	bool configurationWindow = false;
-
 	bool spheresColliding = false;
 
 	float sphere1Pos = 0;
