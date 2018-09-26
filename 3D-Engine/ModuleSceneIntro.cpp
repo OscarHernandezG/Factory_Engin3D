@@ -198,11 +198,13 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 			ShellExecuteA(NULL, "Open", "https://github.com/aleixgab", NULL, NULL, SW_SHOWNORMAL);
 		ImGui::Separator();
 		ImGui::Text("Libraries that we used in this engine");
+		///	Todo: ask libraries their version
 		ImGui::Text("MathGeolib v1.5");
 		ImGui::Text("PCG-c-0.94");
 		ImGui::Text("ImGui 1.65");
 		ImGui::Text("SDL");
 		ImGui::Text("STL");
+		///---------------------------------
 		ImGui::Separator();
 		ImGui::TextWrapped("MIT License Copyright(c) 2018 Oscar Hernandez and Aleix Gabarro	Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files(the Software), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:");
 		ImGui::TextWrapped("The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.");

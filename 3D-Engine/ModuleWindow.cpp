@@ -145,10 +145,13 @@ void ModuleWindow::SetFullscreen()
 void ModuleWindow::SetBorderless()
 {
 	if (!borderless)
-		SDL_SetWindowBordered(window, SDL_FALSE);
+		SDL_SetWindowBordered(window, SDL_TRUE);
 
 	else
-		SDL_SetWindowBordered(window, SDL_TRUE);
+		SDL_SetWindowBordered(window, SDL_FALSE);
+
+	SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+
 }
 bool ModuleWindow::InitGl()
 {
