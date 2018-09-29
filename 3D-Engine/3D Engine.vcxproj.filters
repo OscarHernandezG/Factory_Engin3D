@@ -42,6 +42,8 @@
     </Filter>
     <Filter Include="Sources\Containers\Parson">
       <UniqueIdentifier>{0b5ba55d-5d2c-4e5b-8fe8-cf72e9651811}</UniqueIdentifier>
+    <Filter Include="Sources\Containers\Glew">
+      <UniqueIdentifier>{36103484-868c-403f-a169-be37a4e7c726}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -281,6 +283,17 @@
     </ClInclude>
     <ClInclude Include="parson\parson.h">
       <Filter>Sources\Containers\Parson</Filter>
+    <ClInclude Include="glew-2.1.0\include\GL\eglew.h">
+      <Filter>Sources\Containers\Glew</Filter>
+    </ClInclude>
+    <ClInclude Include="glew-2.1.0\include\GL\glew.h">
+      <Filter>Sources\Containers\Glew</Filter>
+    </ClInclude>
+    <ClInclude Include="glew-2.1.0\include\GL\glxew.h">
+      <Filter>Sources\Containers\Glew</Filter>
+    </ClInclude>
+    <ClInclude Include="glew-2.1.0\include\GL\wglew.h">
+      <Filter>Sources\Containers\Glew</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
