@@ -3,6 +3,8 @@
 #include "Globals.h"
 //#include "Primitive.h"
 
+#include "imgui.h"
+
 #include "pcg-c-0.94/include/pcg_variants.h"
 
 #define MAX_SNAKE 8
@@ -26,11 +28,26 @@ public:
 
 	bool CleanUp();
 
-	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
+	void CreateExampleWindow();
+	void CreateMGLWindow();
+	void CreateRandomNumberWindow();
+	void CreateAboutWindow();
+	void CreateConfigWindow();
 
-	void CheckCaps(string * caps);
+	bool CreateMainMenuBar();
 
-	void CheckCaps(string & caps);
+	void CreateMenu();
+	void CheckShortCuts();
+
+	void CreateAppHeader();
+	void CreateWindowHeader();
+	void CreateHardwareHeader();
+	void CreateRenderHeader();
+
+	void CreateCPUInfo(ImVec4 color);
+	void CreateGPUInfo(ImVec4 color);
+
+	void CheckCaps(string* caps);
 
 public:
 
@@ -67,4 +84,11 @@ public:
 	int heightPos = SCREEN_HEIGHT;
 
 	pcg32_random_t rng;
+
+	bool show_demo_window = true;
+	bool show_another_window = false;
+	ImVec4 clear_color;
+
+	float f = 0.0f;
+	int counter = 0;
 };
