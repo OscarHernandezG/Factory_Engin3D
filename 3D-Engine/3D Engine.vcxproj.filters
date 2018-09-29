@@ -43,6 +43,9 @@
     <Filter Include="Sources\Containers\Glew">
       <UniqueIdentifier>{36103484-868c-403f-a169-be37a4e7c726}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Containers\Parson">
+      <UniqueIdentifier>{7f66e4d7-bcbc-4355-b2f9-45cb998ec5bd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -291,6 +294,9 @@
     <ClInclude Include="glew-2.1.0\include\GL\wglew.h">
       <Filter>Sources\Containers\Glew</Filter>
     </ClInclude>
+    <ClInclude Include="parson\parson.h">
+      <Filter>Sources\Containers\Parson</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -436,6 +442,9 @@
     </ClCompile>
     <ClCompile Include="MathGeoLib\Time\Clock.cpp">
       <Filter>Sources\Containers\MathGeoLib\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="parson\parson.c">
+      <Filter>Sources\Containers\Parson</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
