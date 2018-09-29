@@ -131,9 +131,6 @@ bool ModuleSceneIntro::CleanUp()
 
 	LOGI("Unloading Intro scene");
 	return true;
-
-	LOGI("Unloading Intro scene");
-	return true;
 }
 
 // Update
