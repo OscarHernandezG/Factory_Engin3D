@@ -40,8 +40,6 @@
     <Filter Include="Sources\Containers\MathGeoLib\Algorithm\Random">
       <UniqueIdentifier>{11e09397-081c-450e-ab1d-19081e0179f2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Containers\Parson">
-      <UniqueIdentifier>{0b5ba55d-5d2c-4e5b-8fe8-cf72e9651811}</UniqueIdentifier>
     <Filter Include="Sources\Containers\Glew">
       <UniqueIdentifier>{36103484-868c-403f-a169-be37a4e7c726}</UniqueIdentifier>
     </Filter>
@@ -281,8 +279,6 @@
     <ClInclude Include="MathGeoLib\Time\Clock.h">
       <Filter>Sources\Containers\MathGeoLib\Time</Filter>
     </ClInclude>
-    <ClInclude Include="parson\parson.h">
-      <Filter>Sources\Containers\Parson</Filter>
     <ClInclude Include="glew-2.1.0\include\GL\eglew.h">
       <Filter>Sources\Containers\Glew</Filter>
     </ClInclude>
@@ -440,9 +436,6 @@
     </ClCompile>
     <ClCompile Include="MathGeoLib\Time\Clock.cpp">
       <Filter>Sources\Containers\MathGeoLib\Time</Filter>
-    </ClCompile>
-    <ClCompile Include="parson\parson.c">
-      <Filter>Sources\Containers\Parson</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
