@@ -284,7 +284,7 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 
 			ImGui::Text("GPU info:"); ImGui::SameLine();
 			ImGui::TextColored(color,(char*)gpuInfo); ImGui::SameLine();
-			ImGui::TextColored(color,(char*)renderer);
+			ImGui::TextColored(color,(char*)renderer); ImGui::SameLine();
 
 
 			GLint nTotalMemoryInKB = 0;
@@ -315,8 +315,8 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 		ImGui::End();
 		ImGui::ShowExampleAppConsole(&consoleWindow);
 		ImGui::*/
-		
 	}
+
 	if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("Menu"))

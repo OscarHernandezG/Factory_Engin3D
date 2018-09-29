@@ -40,6 +40,9 @@
     <Filter Include="Sources\Containers\MathGeoLib\Algorithm\Random">
       <UniqueIdentifier>{11e09397-081c-450e-ab1d-19081e0179f2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Containers\Glew">
+      <UniqueIdentifier>{36103484-868c-403f-a169-be37a4e7c726}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -275,6 +278,18 @@
     </ClInclude>
     <ClInclude Include="MathGeoLib\Time\Clock.h">
       <Filter>Sources\Containers\MathGeoLib\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="glew-2.1.0\include\GL\eglew.h">
+      <Filter>Sources\Containers\Glew</Filter>
+    </ClInclude>
+    <ClInclude Include="glew-2.1.0\include\GL\glew.h">
+      <Filter>Sources\Containers\Glew</Filter>
+    </ClInclude>
+    <ClInclude Include="glew-2.1.0\include\GL\glxew.h">
+      <Filter>Sources\Containers\Glew</Filter>
+    </ClInclude>
+    <ClInclude Include="glew-2.1.0\include\GL\wglew.h">
+      <Filter>Sources\Containers\Glew</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

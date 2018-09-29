@@ -1,9 +1,14 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
+
+#include "glew-2.1.0/include/GL/glew.h"
 #include "SDL\include\SDL_opengl.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
+
+#pragma comment (lib, "glew-2.1.0/lib/glew32.lib")
+#pragma comment (lib, "glew-2.1.0/lib/glew32s.lib")
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -30,6 +35,14 @@ bool ModuleRenderer3D::Init()
 		ret = false;
 	}
 	
+	GLenum error = glewInit();
+	if (error != GLEW_OK)
+	{
+		LOGE("Glew could not init %s\n", glewGetErrorString(error));
+	}
+	else
+		LOGE("Using Glew %s", glewGetString(GLEW_VERSION));
+
 	if(ret == true)
 	{
 		//Use Vsync
@@ -94,6 +107,11 @@ bool ModuleRenderer3D::Init()
 		lights[0].Active(true);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
+
+		glEnable(GL_TEXTURE_2D);
+		glShadeModel(GL_SMOOTH);
+
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 
 	// Projection matrix for
@@ -116,11 +134,6 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 
 	for(uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
-
-	///***
-	//ImGui_ImplOpenGL2_NewFrame();
-	//ImGui_ImplSDL2_NewFrame(App->window->window);
-	//ImGui::NewFrame();
 
 	return UPDATE_CONTINUE;
 }
@@ -164,3 +177,5 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
+
+
