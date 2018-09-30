@@ -103,37 +103,37 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 // Load assets
 bool ModuleSceneIntro::CleanUp()
 {
-	//JSON_Value *schema = json_parse_string("{\"name\":\"\"}");
+	JSON_Value *schema = json_parse_string("{\"name\":\"\"}");
 	JSON_Value *user_data = json_parse_file("user_data.json");
 	JSON_Object* dataObj = json_object(user_data);
 
-	JSON_Value *windowValue = json_parse_file("user_data.json");
-	
 
-	json_object_dotset_boolean(json_object(windowValue), "windowBools.DemoWindow", showDemoWindow);
-	json_object_dotset_boolean(json_object(windowValue), "windowBools.ExampeWindow", exampleWindow);
-	json_object_dotset_boolean(json_object(windowValue), "windowBools.MathGeoLibWindow", mathGeoLibWindow);
-	json_object_dotset_boolean(json_object(windowValue), "windowBools.randomNumberWindow", randomNumberWindow);
-	json_object_dotset_boolean(json_object(windowValue), "windowBools.aboutWindow", aboutWindow);
-	json_object_dotset_boolean(json_object(windowValue), "windowBools.configurationWindow", configurationWindow);
-	json_object_dotset_boolean(json_object(windowValue), "windowBools.consoleWindow", consoleWindow);
+	//JSON_Value *editablesValues = json_parse_file("user_data.json");
 
-	
+	json_object_dotset_boolean(dataObj, "editableValues.DemoWindowwwwwww", showDemoWindow);
+	json_object_dotset_boolean(dataObj, "editableValues.ExampeWindow", exampleWindow);
+	json_object_dotset_boolean(dataObj, "editableValues.MathGeoLibWindow", mathGeoLibWindow);
+	json_object_dotset_boolean(dataObj, "editableValues.randomNumberWindow", randomNumberWindow);
+	json_object_dotset_boolean(dataObj, "editableValues.aboutWindow", aboutWindow);
+	json_object_dotset_boolean(dataObj, "editableValues.configurationWindow", configurationWindow);
+	json_object_dotset_boolean(dataObj, "editableValues.consoleWindow", consoleWindow);
 
+	//JSON_Value *windowValues = json_parse_file("user_data.json");
+	json_object_dotset_boolean(dataObj, "window.fullscreen", App->window->fullscreen);
+	json_object_dotset_boolean(dataObj, "window.borderless", App->window->borderless);
+	json_object_dotset_number(dataObj, "window.height", heightPos);
+	json_object_dotset_number(dataObj, "window.width", widthPos);
 
+	//JSON_Value *aplicationValues = json_parse_file("user_data.json");
+	json_object_dotset_boolean(dataObj, "aplicationValues.IsCapped", App->toCap);
+	json_object_dotset_number(dataObj, "aplicationValues.capFrames", App->capFrames);
 
-	json_object_dotset_value(dataObj, "name.data", json_parse_string("[\"email@example.com\",\"email2@example.com\"]"));
 	json_serialize_to_file(user_data, "user_data.json");
-	json_serialize_to_file(windowValue, "user_data.json");
-
 	user_data = json_value_init_object();
-	windowValue = json_value_init_object();
 
-	//json_value_free(schema);
+	json_value_free(schema);
 	json_value_free(user_data);
-	json_value_free(windowValue);
-
-
+	   
 	LOGI("Unloading Intro scene");
 	return true;
 }
