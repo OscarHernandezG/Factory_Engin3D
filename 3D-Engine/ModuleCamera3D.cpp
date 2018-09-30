@@ -39,8 +39,6 @@ bool ModuleCamera3D::CleanUp()
 // -----------------------------------------------------------------
 update_status ModuleCamera3D::Update(float dt)
 {
-	///Dont want to move camera yet
-
 	float3 newPos(0,0,0);
 
 	float speed = 3.0f * dt;
@@ -151,22 +149,12 @@ void ModuleCamera3D::Move(const float3 &Movement)
 // -----------------------------------------------------------------
 float* ModuleCamera3D::GetViewMatrix()
 {
-	//float mat[15] = {ViewMatrix.D3DPerspProjRH}
 	return ViewMatrix.ptr();
 }
 
 // -----------------------------------------------------------------
 void ModuleCamera3D::CalculateViewMatrix()
 {
-	//float4 x(X.x, Y.x, Z.x, 0.0f);
-	//float4 y(X.y, Y.y, Z.y, 0.0f);
-	//float4 z(X.z, Y.z, Z.z, 0.0f);
-	//float4 w(1, 1, 1, 0.0f); //-dot(X, Position), -dot(Y, Position), -dot(Z, Position), 1.0f
-	//float4x4 mat4x4;
-	////ViewMatrix = mat4x4(x, y, z, w);
-	////ViewMatrixInverse = inverse(ViewMatrix);
-
-
 	ViewMatrix = float4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, -Dot(X, Position), -Dot(Y, Position), -Dot(Z, Position), 1.0f);
 	ViewMatrixInverse = ViewMatrix;
 	ViewMatrixInverse.Inverse();

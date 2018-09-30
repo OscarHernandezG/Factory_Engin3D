@@ -78,7 +78,9 @@ void Primitive::InnerRender() const
 // ------------------------------------------------------------
 void Primitive::SetPos(float x, float y, float z)
 {
-	transform = float4x4::Translate(x, y, z).ToFloat4x4() * transform;
+	transform[3][0] = x;
+	transform[3][1] = y;
+	transform[3][2] = z;
 }
 
 // ------------------------------------------------------------
