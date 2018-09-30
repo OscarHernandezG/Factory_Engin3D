@@ -191,24 +191,16 @@ math::float4x4 ModuleRenderer3D::Perspective(float fovy, float aspect, float n, 
 {
 	math::float4x4 Perspective;
 
-	float coty = 1.0f / tan(fovy * (float)3.14159265358979323846264338327950288 / 360.0f);
+	float coty = 1.0f / tan(fovy * (float)PI / 360.0f);
+	float cotA = coty / aspect;
+	float nfnf = (n + f) / (n - f);
+	float nf2 = 2.0f * n * f / (n - f);
 
-	Perspective[0][0] = coty / aspect;
-	Perspective[0][1] = 0.0f;
-	Perspective[0][2] = 0.0f;
-	Perspective[0][3] = 0.0f;
-	Perspective[1][0] = 0.0f;
-	Perspective[1][1] = coty;
-	Perspective[1][2] = 0.0f;
-	Perspective[1][3] = 0.0f;
-	Perspective[2][0] = 0.0f;
-	Perspective[2][1] = 0.0f;
-	Perspective[2][2] = (n + f) / (n - f);
-	Perspective[2][3] = -1.0f;
-	Perspective[3][0] = 0.0f;
-	Perspective[3][1] = 0.0f;
-	Perspective[3][2] = 2.0f * n * f / (n - f);
-	Perspective[3][3] = 0.0f;
+	Perspective[0][0] = cotA;	Perspective[1][0] = 0.0f;	Perspective[2][0] = 0.0f;	Perspective[3][0] = 0.0f;
+	Perspective[0][1] = 0.0f;	Perspective[1][1] = coty;	Perspective[2][1] = 0.0f;	Perspective[3][1] = 0.0f;
+	Perspective[0][2] = 0.0f;	Perspective[1][2] = 0.0f;	Perspective[2][2] = nfnf;	Perspective[3][2] = nf2;
+	Perspective[0][3] = 0.0f;	Perspective[1][3] = 0.0f;	Perspective[2][3] = -1.0f;	Perspective[3][3] = 0.0f;
+	
 
 	return Perspective;
 }
