@@ -141,7 +141,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 
-	if (false){
+	if (true){
 		glBegin(GL_QUADS);
 		// top
 		glColor3f(1.0f, 0.0f, 0.0f);

@@ -1,8 +1,9 @@
-
 #include "Globals.h"
-#include <gl/GL.h>
-#include <gl/GLU.h>
+#include "glew-2.1.0/include/GL/glew.h"
 #include "Primitive.h"
+
+#include "MathGeoLib/Math/TransformOps.h"
+#include "MathGeoLib/Math/MathConstants.h"
 
 
 // ------------------------------------------------------------
@@ -20,8 +21,8 @@ void Primitive::Render() const
 {
 	glPushMatrix();
 	glMultMatrixf((GLfloat*)transform.ptr());
-	
-	if(axis == true)
+
+	if (axis)
 	{
 		// Draw Axis Grid
 		glLineWidth(2.0f);
@@ -54,11 +55,6 @@ void Primitive::Render() const
 	}
 
 	glColor3f(color.r, color.g, color.b);
-
-	if(wire)
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	else
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	InnerRender();
 
@@ -245,7 +241,7 @@ void PrimitiveCube::InnerRender() const
 //}
 
 // PLANE ==================================================
-PrimitivePlane::PrimitivePlane() : Primitive(), normal(0, 1, 0), constant(1)
+PrimitivePlane::PrimitivePlane() : Primitive(), normal(0.0f, 1.0f, 0.0f), constant(1.0f)
 {
 	type = PrimitiveTypes::Primitive_Plane;
 }
@@ -259,29 +255,17 @@ void PrimitivePlane::InnerRender() const
 {
 	glLineWidth(1.0f);
 
-	glBegin(GL_QUADS);
+	glBegin(GL_LINES);
 
-	float d = 300.0f;
+	float d = 200.0f;
 
-	//for(float i = -d; i <= d; i += 1.0f)
-	//{
-	//	glVertex3f(i, 0.0f, -d);
-	//	glVertex3f(i, 0.0f, d);
-	//	glVertex3f(-d, 0.0f, i);
-	//	glVertex3f(d, 0.0f, i);
-	//}
-
-	float sx, sy, sz;
-	sx = sz = d;
-	sy = 0;
-
-	glNormal3f(0.0f, 1.0f, 0.0f);
-	glVertex3f(-sx, sy, sz);
-	glVertex3f(sx, sy, sz);
-	glVertex3f(sx, sy, -sz);
-	glVertex3f(-sx, sy, -sz);
-
-
+	for (float i = -d; i <= d; i += 1.0f)
+	{
+		glVertex3f(i, 0.0f, -d);
+		glVertex3f(i, 0.0f, d);
+		glVertex3f(-d, 0.0f, i);
+		glVertex3f(d, 0.0f, i);
+	}
 
 	glEnd();
 }
