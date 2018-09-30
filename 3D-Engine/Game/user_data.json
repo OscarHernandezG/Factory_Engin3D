@@ -1,1 +1,1 @@
-{"name":{"data":["email@example.com","email2@example.com"]},"windowBools":{"DemoWindow":false,"ExampeWindow":false,"MathGeoLibWindow":false,"randomNumberWindow":false,"aboutWindow":false,"configurationWindow":false,"consoleWindow":false}}
+{"name":{"data":["email@example.com","email2@example.com"]},"windowBools":{"DemoWindow":false,"ExampeWindow":false,"MathGeoLibWindow":false,"randomNumberWindow":false,"aboutWindow":false,"configurationWindow":true,"consoleWindow":true}}
