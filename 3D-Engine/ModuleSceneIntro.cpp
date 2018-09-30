@@ -281,11 +281,39 @@ void ModuleSceneIntro::CreateAboutWindow()
 	ImGui::Separator();
 	ImGui::Text("Libraries that we used in this engine");
 	///	Todo: ask libraries their version
-	ImGui::Text("MathGeolib v1.5");
-	ImGui::Text("PCG-c-0.94");
-	ImGui::Text("ImGui 1.65");
-	ImGui::Text("SDL");
-	ImGui::Text("STL");
+
+	//IMGUI BUTTON Link
+	string nameStr = "ImGui ";
+	nameStr += ImGui::GetVersion();
+	if (ImGui::Button(nameStr.data(),ImVec2(125, 20)))
+		ShellExecuteA(NULL, "Open", "https://github.com/ocornut/imgui/releases", NULL, NULL, SW_SHOWNORMAL);
+
+	//SDL BUTTON Link
+	SDL_version current;
+	SDL_VERSION(&current);
+	char nameChar[25];
+	sprintf_s(nameChar, 25, "SDL %d.%d.%d", current.major, current.minor, current.patch);
+	if (ImGui::Button(nameChar, ImVec2(125, 20)))
+		ShellExecuteA(NULL, "Open", "https://www.libsdl.org/download-2.0.php", NULL, NULL, SW_SHOWNORMAL);
+
+	//OPENGL BUTTON Link
+	int major = 3, minor = 1;
+	SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &major);
+	SDL_GL_GetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, &minor);
+	sprintf_s(nameChar, 25, "OPENGL %i.%i", major, minor);
+	if (ImGui::Button(nameChar, ImVec2(125, 20)))
+		ShellExecuteA(NULL, "Open", "https://www.opengl.org", NULL, NULL, SW_SHOWNORMAL);
+
+	//MathGeoLib BUTTON Link
+	sprintf_s(nameChar, 25, "MathGeoLib 1.5");
+	if (ImGui::Button(nameChar, ImVec2(125, 20)))
+		ShellExecuteA(NULL, "Open", "https://github.com/juj/MathGeoLib/releases/tag/v1.5", NULL, NULL, SW_SHOWNORMAL);
+
+	//PCG BUTTON Link
+	sprintf_s(nameChar, 25, "PCG 0.94");
+	if (ImGui::Button(nameChar, ImVec2(125, 20)))
+		ShellExecuteA(NULL, "Open", "http://www.pcg-random.org/download.html", NULL, NULL, SW_SHOWNORMAL);
+
 	///---------------------------------
 	ImGui::Separator();
 	ImGui::TextWrapped("MIT License Copyright(c) 2018 Oscar Hernandez and Aleix Gabarro	Permission is hereby granted, free of charge, to any person obtaining a copy of this software"
