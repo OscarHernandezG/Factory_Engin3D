@@ -297,6 +297,9 @@
     <ClInclude Include="parson\parson.h">
       <Filter>Sources\Containers\Parson</Filter>
     </ClInclude>
+    <ClInclude Include="Primitive.h">
+      <Filter>Sources\Helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleAudio.cpp">
@@ -445,6 +448,9 @@
     </ClCompile>
     <ClCompile Include="parson\parson.c">
       <Filter>Sources\Containers\Parson</Filter>
+    </ClCompile>
+    <ClCompile Include="Primitive.cpp">
+      <Filter>Sources\Helpers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

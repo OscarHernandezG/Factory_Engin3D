@@ -67,28 +67,6 @@ bool ModuleWindow::Init()
 		}
 		else
 		{
-			gContext = SDL_GL_CreateContext(window);
-			if (gContext == NULL)
-			{
-				printf("OpenGL context could not be created! SDL Error: %s\n", SDL_GetError());
-				ret = false;
-			}
-			else
-			{
-				//Use Vsync
-		//		if (SDL_GL_SetSwapInterval(-1) < 0)
-		//		{
-		//			printf("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
-		//		}
-
-				//Initialize OpenGL
-				if (!InitGl())
-				{
-					printf("Unable to initialize OpenGL!\n");
-					ret = false;
-				}
-			}
-
 			//Get window surface
 			screen_surface = SDL_GetWindowSurface(window);
 		}
@@ -152,45 +130,4 @@ void ModuleWindow::SetBorderless()
 
 	SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 
-}
-bool ModuleWindow::InitGl()
-{
-	bool success = true;
-	GLenum error = GL_NO_ERROR;
-
-	//Initialize Projection Matrix
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-
-	//Check for error
-	error = glGetError();
-	if (error != GL_NO_ERROR)
-	{
-	//	printf("Error initializing OpenGL! %s\n", gluErrorString(error));
-		success = false;
-	}
-
-	//Initialize Modelview Matrix
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	//Check for error
-	error = glGetError();
-	if (error != GL_NO_ERROR)
-	{
-	//	printf("Error initializing OpenGL! %s\n", gluErrorString(error));
-		success = false;
-	}
-	//Initialize clear color
-	glClearColor(0.f, 0.f, 0.f, 1.f);
-
-	//Check for error
-	error = glGetError();
-	if (error != GL_NO_ERROR)
-	{
-		//printf("Error initializing OpenGL! %s\n", gluErrorString(error));
-		success = false;
-	}
-
-	return success;
 }

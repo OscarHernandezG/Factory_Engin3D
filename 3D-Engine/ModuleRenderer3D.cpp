@@ -7,11 +7,10 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
-#pragma comment (lib, "glew-2.1.0/lib/glew32.lib")
-#pragma comment (lib, "glew-2.1.0/lib/glew32s.lib")
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
+#pragma comment (lib, "glew-2.1.0/lib/glew32.lib")
 
 ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -77,7 +76,7 @@ bool ModuleRenderer3D::Init()
 		glClearDepth(1.0f);
 		
 		//Initialize clear color
-		glClearColor(0.f, 0.f, 0.f, 1.f);
+		glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 
 		//Check for error
 		error = glGetError();
@@ -104,12 +103,12 @@ bool ModuleRenderer3D::Init()
 		
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
-		lights[0].Active(true);
+	//	lights[0].Active(true);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
 
-		glEnable(GL_TEXTURE_2D);
-		glShadeModel(GL_SMOOTH);
+//		glEnable(GL_TEXTURE_2D);
+//		glShadeModel(GL_SMOOTH);
 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
@@ -124,15 +123,15 @@ bool ModuleRenderer3D::Init()
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
+	//glLoadIdentity();
 
 	glMatrixMode(GL_MODELVIEW);
-//	glLoadMatrixf(App->camera->GetViewMatrix());
+	glLoadMatrixf(App->camera->GetViewMatrix());
 
-	// light 0 on cam pos
+	// Light 0 on cam pos
 	lights[0].SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
 
-	for(uint i = 0; i < MAX_LIGHTS; ++i)
+	for (uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
 
 	return UPDATE_CONTINUE;
@@ -141,16 +140,78 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
+
+	if (false){
+		glBegin(GL_QUADS);
+		// top
+		glColor3f(1.0f, 0.0f, 0.0f);
+		glNormal3f(0.0f, 1.0f, 0.0f);
+		glVertex3f(-0.5f, 0.5f, 0.5f);
+		glVertex3f(0.5f, 0.5f, 0.5f);
+		glVertex3f(0.5f, 0.5f, -0.5f);
+		glVertex3f(-0.5f, 0.5f, -0.5f);
+
+		glEnd();
+
+		glBegin(GL_QUADS);
+		// front
+		glColor3f(0.0f, 1.0f, 0.0f);
+		glNormal3f(0.0f, 0.0f, 1.0f);
+		glVertex3f(0.5f, -0.5f, 0.5f);
+		glVertex3f(0.5f, 0.5f, 0.5f);
+		glVertex3f(-0.5f, 0.5f, 0.5f);
+		glVertex3f(-0.5f, -0.5f, 0.5f);
+
+		glEnd();
+
+		glBegin(GL_QUADS);
+		// right
+		glColor3f(0.0f, 0.0f, 1.0f);
+		glNormal3f(1.0f, 0.0f, 0.0f);
+		glVertex3f(0.5f, 0.5f, -0.5f);
+		glVertex3f(0.5f, 0.5f, 0.5f);
+		glVertex3f(0.5f, -0.5f, 0.5f);
+		glVertex3f(0.5f, -0.5f, -0.5f);
+
+		glEnd();
+
+		glBegin(GL_QUADS);
+		// left
+		glColor3f(0.0f, 0.0f, 0.5f);
+		glNormal3f(-1.0f, 0.0f, 0.0f);
+		glVertex3f(-0.5f, -0.5f, 0.5f);
+		glVertex3f(-0.5f, 0.5f, 0.5f);
+		glVertex3f(-0.5f, 0.5f, -0.5f);
+		glVertex3f(-0.5f, -0.5f, -0.5f);
+
+		glEnd();
+
+		glBegin(GL_QUADS);
+		// bottom
+		glColor3f(0.5f, 0.0f, 0.0f);
+		glNormal3f(0.0f, -1.0f, 0.0f);
+		glVertex3f(0.5f, -0.5f, 0.5f);
+		glVertex3f(-0.5f, -0.5f, 0.5f);
+		glVertex3f(-0.5f, -0.5f, -0.5f);
+		glVertex3f(0.5f, -0.5f, -0.5f);
+
+		glEnd();
+
+		glBegin(GL_QUADS);
+		// back
+		glColor3f(0.0f, 0.5f, 0.0f);
+		glNormal3f(0.0f, 0.0f, -1.0f);
+		glVertex3f(0.5f, 0.5f, -0.5f);
+		glVertex3f(0.5f, -0.5f, -0.5f);
+		glVertex3f(-0.5f, -0.5f, -0.5f);
+		glVertex3f(-0.5f, 0.5f, -0.5f);
+
+		glEnd();
+	}
+
+
 	SDL_GL_SwapWindow(App->window->window);
 
-	/*ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
-	ImGui::Render();
-	ImGuiIO& io = ImGui::GetIO();
-	(void)io;
-	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
-	SDL_GL_SwapWindow(App->window->window);
-*/
 	return UPDATE_CONTINUE;
 }
 
@@ -171,11 +232,36 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	ProjectionMatrix = ProjectionMatrix.OpenGLPerspProjRH(60.0f, (float)width / (float)height, 0.125f, 512.0f);
-	//glLoadMatrixf(ProjectionMatrix);
+
+	ProjectionMatrix = Perspective(60.0f, (float)width / (float)height, 0.125f, 512.0f);
+	glLoadMatrixf((GLfloat*)ProjectionMatrix.ptr());
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
 
+math::float4x4 ModuleRenderer3D::Perspective(float fovy, float aspect, float n, float f) const
+{
+	math::float4x4 Perspective;
 
+	float coty = 1.0f / tan(fovy * (float)3.14159265358979323846264338327950288 / 360.0f);
+
+	Perspective[0][0] = coty / aspect;
+	Perspective[0][1] = 0.0f;
+	Perspective[0][2] = 0.0f;
+	Perspective[0][3] = 0.0f;
+	Perspective[1][0] = 0.0f;
+	Perspective[1][1] = coty;
+	Perspective[1][2] = 0.0f;
+	Perspective[1][3] = 0.0f;
+	Perspective[2][0] = 0.0f;
+	Perspective[2][1] = 0.0f;
+	Perspective[2][2] = (n + f) / (n - f);
+	Perspective[2][3] = -1.0f;
+	Perspective[3][0] = 0.0f;
+	Perspective[3][1] = 0.0f;
+	Perspective[3][2] = 2.0f * n * f / (n - f);
+	Perspective[3][3] = 0.0f;
+
+	return Perspective;
+}

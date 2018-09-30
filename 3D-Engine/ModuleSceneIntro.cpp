@@ -25,6 +25,8 @@
 
 #include "MathGeoLib/Geometry/GeometryAll.h"
 
+#include "Primitive.h"
+
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 }
@@ -141,6 +143,12 @@ bool ModuleSceneIntro::CleanUp()
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
+	//PrimitiveCube cube;
+	//cube.Render();
+
+	PrimitivePlane plane;
+	plane.Render();
+
 	return UPDATE_CONTINUE;
 }
 

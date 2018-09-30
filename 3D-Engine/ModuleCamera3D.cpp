@@ -2,16 +2,18 @@
 #include "Application.h"
 #include "ModuleCamera3D.h"
 
+#include "MathGeoLib/MathGeoLib.h"
+
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
+	X = math::float3(1.0f, 0.0f, 0.0f);
+	Y = math::float3(0.0f, 1.0f, 0.0f);
+	Z = math::float3(0.0f, 0.0f, 1.0f);
+
+	Position = math::float3(0.0f, 0.0f, 5.0f);
+	Reference = math::float3(0.0f, 0.0f, 0.0f);
+
 	CalculateViewMatrix();
-
-	X = float3(1.0f, 0.0f, 0.0f);
-	Y = float3(0.0f, 1.0f, 0.0f);
-	Z = float3(0.0f, 0.0f, 1.0f);
-
-	Position = float3(0.0f, 0.0f, 5.0f);
-	Reference = float3(0.0f, 0.0f, 0.0f);
 }
 
 ModuleCamera3D::~ModuleCamera3D()
@@ -38,8 +40,9 @@ bool ModuleCamera3D::CleanUp()
 update_status ModuleCamera3D::Update(float dt)
 {
 	///Dont want to move camera yet
-/*
-	vec3 newPos(0,0,0);
+
+	float3 newPos(0,0,0);
+
 	float speed = 3.0f * dt;
 	if(App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
 		speed = 8.0f * dt;
@@ -54,10 +57,12 @@ update_status ModuleCamera3D::Update(float dt)
 	if(App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= X * speed;
 	if(App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += X * speed;
 
+	if (App->input->GetKey(SDL_SCANCODE_P) == KEY_REPEAT) LookAt({ 0,0,0 });
+
 	Position += newPos;
 	Reference += newPos;
 
-	// Mouse motion ----------------
+	 //Mouse motion ----------------
 
 	if(App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 	{
@@ -72,28 +77,30 @@ update_status ModuleCamera3D::Update(float dt)
 		{
 			float DeltaX = (float)dx * Sensitivity;
 
-			X = rotate(X, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-			Y = rotate(Y, DeltaX, vec3(0.0f, 1.0f, 0.0f));
-			Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
+			float3x3 rotationMatrix = float3x3::RotateY(DeltaX);
+			X = rotationMatrix * X;
+			Y = rotationMatrix * Y;
+			Z = rotationMatrix * Z;
 		}
 
 		if(dy != 0)
 		{
 			float DeltaY = (float)dy * Sensitivity;
 
-			Y = rotate(Y, DeltaY, X);
-			Z = rotate(Z, DeltaY, X);
+			float3x3 rotationMatrix = float3x3::RotateAxisAngle(X, DeltaY);
+			Y = rotationMatrix * Y;
+			Z = rotationMatrix * Z;
 
-			if(Y.y < 0.0f)
+			if (Y.y < 0.0f)
 			{
-				Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
-				Y = cross(Z, X);
+				Z = float3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
+				Y = Cross(Z, X);
 			}
 		}
 
-		Position = Reference + Z * length(Position);
+		Position = Reference + Z * Position.Length();
 	}
-	*/
+	
 	// Recalculate matrix -------------
 	CalculateViewMatrix();
 
@@ -107,13 +114,10 @@ void ModuleCamera3D::Look(const float3 &Position, const float3 &Reference, bool 
 	this->Reference = Reference;
 
 	Z = (Position - Reference).Normalized();
+	X = Cross(math::float3(0.0f, 1.0f, 0.0f), Z).Normalized();
+	Y = Cross(Z, X);
 
-	float3 y(0.0f, 1.0f, 0.0f);
-	X = y.Cross(Z).Normalized();
-
-	Y = Z.Cross(X);
-
-	if(!RotateAroundReference)
+	if (!RotateAroundReference)
 	{
 		this->Reference = this->Position;
 		this->Position += Z * 0.05f;
@@ -128,11 +132,8 @@ void ModuleCamera3D::LookAt( const float3 &Spot)
 	Reference = Spot;
 
 	Z = (Position - Reference).Normalized();
-
-	float3 y(0.0f, 1.0f, 0.0f);
-	X = y.Cross(Z).Normalized();
-
-	Y = Z.Cross(X);
+	X = Cross(math::float3(0.0f, 1.0f, 0.0f), Z).Normalized();
+	Y = Cross(Z, X);
 
 	CalculateViewMatrix();
 }
@@ -148,20 +149,25 @@ void ModuleCamera3D::Move(const float3 &Movement)
 }
 
 // -----------------------------------------------------------------
-float4x4* ModuleCamera3D::GetViewMatrix()
+float* ModuleCamera3D::GetViewMatrix()
 {
 	//float mat[15] = {ViewMatrix.D3DPerspProjRH}
-	return &ViewMatrix;
+	return ViewMatrix.ptr();
 }
 
 // -----------------------------------------------------------------
 void ModuleCamera3D::CalculateViewMatrix()
 {
-	float4 x(X.x, Y.x, Z.x, 0.0f);
-	float4 y(X.y, Y.y, Z.y, 0.0f);
-	float4 z(X.z, Y.z, Z.z, 0.0f);
-	float4 w(1, 1, 1, 0.0f); //-dot(X, Position), -dot(Y, Position), -dot(Z, Position), 1.0f
-	float4x4 mat4x4;
-	//ViewMatrix = mat4x4(x, y, z, w);
-	//ViewMatrixInverse = inverse(ViewMatrix);
+	//float4 x(X.x, Y.x, Z.x, 0.0f);
+	//float4 y(X.y, Y.y, Z.y, 0.0f);
+	//float4 z(X.z, Y.z, Z.z, 0.0f);
+	//float4 w(1, 1, 1, 0.0f); //-dot(X, Position), -dot(Y, Position), -dot(Z, Position), 1.0f
+	//float4x4 mat4x4;
+	////ViewMatrix = mat4x4(x, y, z, w);
+	////ViewMatrixInverse = inverse(ViewMatrix);
+
+
+	ViewMatrix = float4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, -Dot(X, Position), -Dot(Y, Position), -Dot(Z, Position), 1.0f);
+	ViewMatrixInverse = ViewMatrix;
+	ViewMatrixInverse.Inverse();
 }
