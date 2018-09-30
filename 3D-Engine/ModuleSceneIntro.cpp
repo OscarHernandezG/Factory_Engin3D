@@ -143,12 +143,6 @@ bool ModuleSceneIntro::CleanUp()
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
-	//PrimitiveCube cube;
-	//cube.Render();
-
-	PrimitivePlane plane;
-	plane.Render();
-
 	return UPDATE_CONTINUE;
 }
 
@@ -164,6 +158,24 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 
 	return UPDATE_CONTINUE;
 }
+
+void ModuleSceneIntro::DrawUI()
+{
+ImGui::Render();
+ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
+
+
+}void ModuleSceneIntro::Draw3D()
+{
+	PrimitivePlane plane;
+	plane.Render();
+
+	PrimitiveCube cube;
+	cube.color = Color(0.5f, 0.5f, 0.5f, 1.0f);
+	cube.Render();
+}
+
+
 
 
 //Create Windows----------------------------------------------------------

@@ -7,7 +7,7 @@
 
 
 // ------------------------------------------------------------
-Primitive::Primitive() : transform(float4x4::identity), color(Blue), wire(false), axis(false), type(PrimitiveTypes::Primitive_Point)
+Primitive::Primitive() : transform(float4x4::identity), color(White), wire(false), axis(false), type(PrimitiveTypes::Primitive_Point)
 {}
 
 // ------------------------------------------------------------

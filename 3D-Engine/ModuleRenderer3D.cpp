@@ -113,11 +113,17 @@ bool ModuleRenderer3D::Init()
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 
+	return ret;
+}
+
+bool ModuleRenderer3D::Start()
+{
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	return ret;
+	return true;
 }
+
 
 // PreUpdate: clear buffer
 update_status ModuleRenderer3D::PreUpdate(float dt)
@@ -141,75 +147,16 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 
-	if (true){
-		glBegin(GL_QUADS);
-		// top
-		glColor3f(1.0f, 0.0f, 0.0f);
-		glNormal3f(0.0f, 1.0f, 0.0f);
-		glVertex3f(-0.5f, 0.5f, 0.5f);
-		glVertex3f(0.5f, 0.5f, 0.5f);
-		glVertex3f(0.5f, 0.5f, -0.5f);
-		glVertex3f(-0.5f, 0.5f, -0.5f);
+	// 1. Draw geometry
+	App->sceneIntro->Draw3D();
 
-		glEnd();
+	// 2. Debug geometry
+	//TODO
 
-		glBegin(GL_QUADS);
-		// front
-		glColor3f(0.0f, 1.0f, 0.0f);
-		glNormal3f(0.0f, 0.0f, 1.0f);
-		glVertex3f(0.5f, -0.5f, 0.5f);
-		glVertex3f(0.5f, 0.5f, 0.5f);
-		glVertex3f(-0.5f, 0.5f, 0.5f);
-		glVertex3f(-0.5f, -0.5f, 0.5f);
+	// 3. Draw UI
+	App->sceneIntro->DrawUI();
 
-		glEnd();
-
-		glBegin(GL_QUADS);
-		// right
-		glColor3f(0.0f, 0.0f, 1.0f);
-		glNormal3f(1.0f, 0.0f, 0.0f);
-		glVertex3f(0.5f, 0.5f, -0.5f);
-		glVertex3f(0.5f, 0.5f, 0.5f);
-		glVertex3f(0.5f, -0.5f, 0.5f);
-		glVertex3f(0.5f, -0.5f, -0.5f);
-
-		glEnd();
-
-		glBegin(GL_QUADS);
-		// left
-		glColor3f(0.0f, 0.0f, 0.5f);
-		glNormal3f(-1.0f, 0.0f, 0.0f);
-		glVertex3f(-0.5f, -0.5f, 0.5f);
-		glVertex3f(-0.5f, 0.5f, 0.5f);
-		glVertex3f(-0.5f, 0.5f, -0.5f);
-		glVertex3f(-0.5f, -0.5f, -0.5f);
-
-		glEnd();
-
-		glBegin(GL_QUADS);
-		// bottom
-		glColor3f(0.5f, 0.0f, 0.0f);
-		glNormal3f(0.0f, -1.0f, 0.0f);
-		glVertex3f(0.5f, -0.5f, 0.5f);
-		glVertex3f(-0.5f, -0.5f, 0.5f);
-		glVertex3f(-0.5f, -0.5f, -0.5f);
-		glVertex3f(0.5f, -0.5f, -0.5f);
-
-		glEnd();
-
-		glBegin(GL_QUADS);
-		// back
-		glColor3f(0.0f, 0.5f, 0.0f);
-		glNormal3f(0.0f, 0.0f, -1.0f);
-		glVertex3f(0.5f, 0.5f, -0.5f);
-		glVertex3f(0.5f, -0.5f, -0.5f);
-		glVertex3f(-0.5f, -0.5f, -0.5f);
-		glVertex3f(-0.5f, 0.5f, -0.5f);
-
-		glEnd();
-	}
-
-
+	// 4. Swap buffers
 	SDL_GL_SwapWindow(App->window->window);
 
 	return UPDATE_CONTINUE;

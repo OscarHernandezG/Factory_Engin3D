@@ -26,6 +26,10 @@ public:
 	update_status Update(float dt);
 	update_status PostUpdate(float dt);
 
+	void DrawUI();
+
+	void Draw3D();
+
 	bool CleanUp();
 
 	void CreateExampleWindow();
