@@ -69,7 +69,7 @@ update_status ModuleCamera3D::Update(float dt)
 		int dx = -App->input->GetMouseXMotion();
 		int dy = -App->input->GetMouseYMotion();
 
-		float Sensitivity = 0.25f;
+		float Sensitivity = 0.05f;
 
 		Position -= Reference;
 
@@ -85,7 +85,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 		if(dy != 0)
 		{
-			float DeltaY = (float)dy * Sensitivity;
+			float DeltaY = (float)dy * Sensitivity / 2;
 
 			float3x3 rotationMatrix = float3x3::RotateAxisAngle(X, DeltaY);
 			Y = rotationMatrix * Y;

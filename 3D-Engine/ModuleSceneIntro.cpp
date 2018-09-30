@@ -172,9 +172,9 @@ ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
 
 	PrimitiveCube cube;
 	cube.color = Color(0.5f, 0.5f, 0.5f, 1.0f);
+	cube.axis = true;
 	cube.Render();
 }
-
 
 
 
