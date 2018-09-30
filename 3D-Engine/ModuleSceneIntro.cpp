@@ -67,6 +67,8 @@ bool ModuleSceneIntro::Start()
 
 update_status ModuleSceneIntro::PreUpdate(float dt)
 {
+	update_status status = UPDATE_CONTINUE;
+
 	ImGui_ImplOpenGL2_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
@@ -94,12 +96,12 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 	{
 	}
 
-	CreateMainMenuBar();
+	status = CreateMainMenuBar();
 
 	created = true;
 
 
-	return UPDATE_CONTINUE;
+	return status;
 }
 
 // Load assets
@@ -110,7 +112,6 @@ bool ModuleSceneIntro::CleanUp()
 	JSON_Object* dataObj = json_object(user_data);
 
 	JSON_Value *windowValue = json_parse_file("user_data.json");
-	
 
 	json_object_dotset_boolean(json_object(windowValue), "windowBools.DemoWindow", showDemoWindow);
 	json_object_dotset_boolean(json_object(windowValue), "windowBools.ExampeWindow", exampleWindow);
@@ -119,10 +120,6 @@ bool ModuleSceneIntro::CleanUp()
 	json_object_dotset_boolean(json_object(windowValue), "windowBools.aboutWindow", aboutWindow);
 	json_object_dotset_boolean(json_object(windowValue), "windowBools.configurationWindow", configurationWindow);
 	json_object_dotset_boolean(json_object(windowValue), "windowBools.consoleWindow", consoleWindow);
-
-	
-
-
 
 	json_object_dotset_value(dataObj, "name.data", json_parse_string("[\"email@example.com\",\"email2@example.com\"]"));
 	json_serialize_to_file(user_data, "user_data.json");
@@ -149,23 +146,16 @@ update_status ModuleSceneIntro::Update(float dt)
 update_status ModuleSceneIntro::PostUpdate(float dt)
 {
 
-	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
-	ImGui::Render();
-	ImGuiIO& io = ImGui::GetIO();
-	(void)io;
-	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
-
 	return UPDATE_CONTINUE;
 }
 
 void ModuleSceneIntro::DrawUI()
 {
-ImGui::Render();
-ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
+	ImGui::Render();
+	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
+}
 
-
-}void ModuleSceneIntro::Draw3D()
+void ModuleSceneIntro::Draw3D()
 {
 	PrimitivePlane plane;
 	plane.Render();
@@ -346,8 +336,9 @@ void ModuleSceneIntro::CreateConfigWindow()
 	ImGui::End();
 }
 
-bool ModuleSceneIntro::CreateMainMenuBar()
+update_status ModuleSceneIntro::CreateMainMenuBar()
 {
+	update_status ret = UPDATE_CONTINUE;
 	if (ImGui::BeginMainMenuBar())
 	{
 		CreateMenu();
@@ -356,12 +347,13 @@ bool ModuleSceneIntro::CreateMainMenuBar()
 
 		if (ImGui::BeginMenu("Exit"))
 		{
-			return false;
+			ret = UPDATE_STOP;
+			ImGui::EndMenu();
 		}
 	}
 	ImGui::EndMainMenuBar();
 
-	return true;
+	return ret;
 }
 //Create Windows----------------------------------------------------------
 

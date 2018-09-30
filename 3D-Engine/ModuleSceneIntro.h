@@ -38,7 +38,7 @@ public:
 	void CreateAboutWindow();
 	void CreateConfigWindow();
 
-	bool CreateMainMenuBar();
+	update_status CreateMainMenuBar();
 
 	void CreateMenu();
 	void CheckShortCuts();
