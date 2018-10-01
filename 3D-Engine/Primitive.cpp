@@ -255,9 +255,99 @@ PrimitivePlane::PrimitivePlane(float x, float y, float z, float d) : Primitive()
 
 void PrimitivePlane::InnerRender() const
 {
+	glLineWidth(2.0f);
+	glRotatef(0.1f, 1.0f, 1.0f, 0.0f);
+
+	glBegin(GL_TRIANGLES);
+	glVertex3f(0.0f, 0.0f, 0.f);//a
+	glVertex3f(1.0f, 0.0f, 0.f);//b
+	glVertex3f(0.0f, 1.0f, 0.f);//c
+	glVertex3f(0.0f, 1.0f, 0.f);//c
+	glVertex3f(1.0f, 0.0f, 0.f);//b
+	glVertex3f(1.0f, 1.0f, 0.f);//d
+
+	glVertex3f(1.0f, 1.0f, 0.0f);//d
+	glVertex3f(1.0f, 0.0f, 0.0f);//b
+	glVertex3f(1.0f, 0.0f, 1.0f);//f
+	glVertex3f(1.0f, 0.0f, 1.0f);//f
+	glVertex3f(1.0f, 1.0f, 1.0f);//h
+	glVertex3f(1.0f, 1.0f, 0.0f);//d
+
+	glVertex3f(0.0f, 1.0f, 0.0f);//c
+	glVertex3f(1.0f, 1.0f, 0.0f);//d
+	glVertex3f(0.0f, 1.0f, 1.0f);//g
+	glVertex3f(0.0f, 1.0f, 1.0f);//g
+	glVertex3f(1.0f, 1.0f, 0.0f);//d
+	glVertex3f(1.0f, 1.0f, 1.0f);//h
+
+	glVertex3f(0.0f, 1.0f, 1.0f);//g
+	glVertex3f(0.0f, 0.0f, 1.0f);//e
+	glVertex3f(0.0f, 0.0f, 0.0f);//a
+	glVertex3f(0.0f, 0.0f, 0.0f);//a
+	glVertex3f(0.0f, 1.0f, 0.0f);//c
+	glVertex3f(0.0f, 1.0f, 1.0f);//g
+
+	glVertex3f(0.0f, 0.0f, 0.0f);//a
+	glVertex3f(0.0f, 0.0f, 1.0f);//e
+	glVertex3f(1.0f, 0.0f, 1.0f);//f
+	glVertex3f(1.0f, 0.0f, 1.0f);//f
+	glVertex3f(1.0f, 0.0f, 0.0f);//b
+	glVertex3f(0.0f, 0.0f, 0.0f);//a
+
+	glVertex3f(1.0f, 1.0f, 1.0f);//h
+	glVertex3f(1.0f, 0.0f, 1.0f);//f
+	glVertex3f(1.0f, 0.0f, 1.0f);//e
+	glVertex3f(1.0f, 0.0f, 1.0f);//e
+	glVertex3f(0.0f, 1.0f, 1.0f);//g
+	glVertex3f(1.0f, 1.0f, 1.0f);//h
+
+	glEnd();
+
 	glLineWidth(1.0f);
 
-	glBegin(GL_LINES);
+	///---------------------------
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, my_id);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+
+	glDrawArrays(GL_TRIANGLES, 0, 36); //36 = numVertices
+	glDisableClientState(GL_VERTEX_ARRAY);
+
+	///------------------------
+/*
+	uint my_indices = 0u;
+	glGenBuffers(1, (GLuint*)&(my_indices));
+	glBindBuffer(GL_ARRAY_BUFFER, my_indices);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(uint)*8,, GL_STATIC_DRAW);
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+
+	glDrawElements(GL_TRIANGLES, 8, GL_UNSIGNED_INT,NULL);
+	glDisableClientState(GL_VERTEX_ARRAY);
+	*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	/*glBegin(GL_LINES);
 
 	float d = 200.0f;
 
@@ -269,5 +359,5 @@ void PrimitivePlane::InnerRender() const
 		glVertex3f(d, 0.0f, i);
 	}
 
-	glEnd();
+	glEnd();*/
 }

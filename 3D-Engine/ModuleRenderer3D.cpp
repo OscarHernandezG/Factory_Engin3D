@@ -121,6 +121,12 @@ bool ModuleRenderer3D::Start()
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
+
+	//Create Quad
+	glGenBuffers(1, (GLuint*)&(my_id));
+	glBindBuffer(GL_ARRAY_BUFFER, my_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 36 * 3, vertex, GL_STATIC_DRAW);
+
 	return true;
 }
 

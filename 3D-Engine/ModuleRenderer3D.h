@@ -31,4 +31,7 @@ public:
 	float4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
 
 	bool vsync = false;
+	float vertex[36];
+	uint my_id = 0u;
+
 };

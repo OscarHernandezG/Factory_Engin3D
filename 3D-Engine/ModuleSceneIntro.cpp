@@ -171,7 +171,7 @@ void ModuleSceneIntro::Draw3D()
 	cube.color = Color(0.5f, 0.5f, 0.5f, 1.0f);
 	cube.SetPos(0, 0.5f, 0);
 	cube.axis = true;
-	cube.Render();
+	//cube.Render();
 }
 
 
