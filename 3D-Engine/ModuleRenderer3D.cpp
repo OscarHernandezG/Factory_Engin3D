@@ -188,7 +188,7 @@ bool ModuleRenderer3D::Start()
 
 	glGenBuffers(1, (GLuint*)&(my_indices));
 	glBindBuffer(GL_ARRAY_BUFFER, my_indices);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * 24, indicesQuad, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 24, indicesQuad, GL_STATIC_DRAW);
 	// 24 = All vertex positions (8 * 3) 8 = posibleVertex and 3 = pos x-y-z
 
 	uint vertices[]
@@ -248,7 +248,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
-
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	// 1. Draw geometry
 	App->sceneIntro->Draw3D();
 
@@ -306,10 +306,11 @@ void ModuleRenderer3D::DrawQuadVertex()
 void ModuleRenderer3D::DrawQuadIndices()
 {
 	glEnableClientState(GL_VERTEX_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, my_indices);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_vertices);
+
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 	
-	glBindBuffer(GL_ARRAY_BUFFER, my_indices);
 
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);
 	glDisableClientState(GL_VERTEX_ARRAY);
