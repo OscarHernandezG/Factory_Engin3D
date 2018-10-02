@@ -45,6 +45,8 @@ public :
 	void InnerRender() const;
 public:
 	float3 size;
+	uint my_indices = 0u;
+	uint my_vertices = 0u;
 };
 
 //// ============================================
