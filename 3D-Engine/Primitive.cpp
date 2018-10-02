@@ -155,7 +155,7 @@ void PrimitiveCube::InnerRender() const
 	glVertex3f(-0.5f, -0.5f, 0.5f);//e
 	glVertex3f(-0.5f, 0.5f, 0.5f);//g
 	glVertex3f(0.5f, 0.5f, 0.5f);//h
-
+	
 	glEnd();
 	
 	glLineWidth(1.0f);
@@ -308,43 +308,6 @@ PrimitivePlane::PrimitivePlane(float x, float y, float z, float d) : Primitive()
 
 void PrimitivePlane::InnerRender() const
 {
-
-
-
-
-	///------------------------
-/*
-	uint my_indices = 0u;
-	glGenBuffers(1, (GLuint*)&(my_indices));
-	glBindBuffer(GL_ARRAY_BUFFER, my_indices);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(uint)*8,, GL_STATIC_DRAW);
-
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_indices);
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-
-	glDrawElements(GL_TRIANGLES, 8, GL_UNSIGNED_INT,NULL);
-	glDisableClientState(GL_VERTEX_ARRAY);
-	*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	glBegin(GL_LINES);
 
 	float d = 200.0f;

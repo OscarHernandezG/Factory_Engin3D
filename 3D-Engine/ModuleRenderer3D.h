@@ -20,6 +20,8 @@ public:
 	bool CleanUp();
 
 	void DrawQuadVertex();
+	void DrawQuadIndices();
+
 	void OnResize(int width, int height);
 
 	math::float4x4 Perspective(float fovy, float aspect, float n, float f) const;
@@ -33,5 +35,6 @@ public:
 
 	bool vsync = false;
 	uint my_id = 0u;
-
+	uint my_indices = 0u;
+	uint my_vertices = 0u;
 };

@@ -154,6 +154,7 @@ void ModuleSceneIntro::DrawUI()
 void ModuleSceneIntro::Draw3D()
 {
 	PrimitivePlane plane;
+	plane.axis = true;
 	plane.Render();
 
 	PrimitiveCube cube;
