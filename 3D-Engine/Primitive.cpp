@@ -307,12 +307,12 @@ void PrimitivePlane::InnerRender() const
 
 	///---------------------------
 
-	glEnableClientState(GL_VERTEX_ARRAY);
+	/*glEnableClientState(GL_VERTEX_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, my_id);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 
 	glDrawArrays(GL_TRIANGLES, 0, 36); //36 = numVertices
-	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_VERTEX_ARRAY);*/
 
 	///------------------------
 /*
