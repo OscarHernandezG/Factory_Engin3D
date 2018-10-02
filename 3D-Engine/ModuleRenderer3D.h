@@ -19,6 +19,7 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
+	void DrawQuadVertex();
 	void OnResize(int width, int height);
 
 	math::float4x4 Perspective(float fovy, float aspect, float n, float f) const;
@@ -31,7 +32,6 @@ public:
 	float4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
 
 	bool vsync = false;
-	float vertex[36];
 	uint my_id = 0u;
 
 };

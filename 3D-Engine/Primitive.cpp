@@ -107,8 +107,61 @@ PrimitiveCube::PrimitiveCube(float sizeX, float sizeY, float sizeZ) : Primitive(
 }
 
 void PrimitiveCube::InnerRender() const
-{	
-	float sx = size.x * 0.5f;
+{
+
+	glLineWidth(2.0f);
+	glRotatef(0.1f, 1.0f, 1.0f, 0.0f);
+	glTranslatef(-2.0f, 0.0f, 0.0f);
+
+	glBegin(GL_TRIANGLES);
+	glVertex3f(-0.5f, -0.5f, -0.5f);//a
+	glVertex3f( 0.5f, -0.5f, -0.5f);//b
+	glVertex3f(-0.5f,  0.5f,  0.5f);//c
+	glVertex3f(-0.5f,  0.5f,  0.5f);//c
+	glVertex3f( 0.5f, -0.5f,  0.5f);//b
+	glVertex3f( 0.5f,  0.5f,  0.5f);//d
+
+	glVertex3f(0.5f, 0.5f, -0.5f);//d
+	glVertex3f(0.5f, -0.5f, -0.5f);//b
+	glVertex3f(0.5f, -0.5f, 0.5f);//f
+	glVertex3f(0.5f, -0.5f, 0.5f);//f
+	glVertex3f(0.5f, 0.5f, 0.5f);//h
+	glVertex3f(0.5f, 0.5f, -0.5f);//d
+
+	glVertex3f(-0.5f, 0.5f, -0.5f);//c
+	glVertex3f(0.5f, 0.5f, -0.5f);//d
+	glVertex3f(-0.5f, 0.5f, 0.5f);//g
+	glVertex3f(-0.5f, 0.5f, 0.5f);//g
+	glVertex3f(0.5f, 0.5f, -0.5f);//d
+	glVertex3f(0.5f, 0.5f, 0.5f);//h
+
+	glVertex3f(-0.5f, 0.5f, 0.5f);//g
+	glVertex3f(-0.5f, -0.5f, 0.5f);//e
+	glVertex3f(-0.5f, -0.5f, -0.5f);//a
+	glVertex3f(-0.5f, -0.5f, -0.5f);//a
+	glVertex3f(-0.5f, 0.5f, -0.5f);//c
+	glVertex3f(-0.5f, 0.5f, 0.5f);//g
+
+	glVertex3f(-0.5f, -0.5f, -0.5f);//a
+	glVertex3f(-0.5f, -0.5f, 0.5f);//e
+	glVertex3f(0.5f, -0.5f, 0.5f);//f
+	glVertex3f(0.5f, -0.5f, 0.5f);//f
+	glVertex3f(0.5f, -0.5f, -0.5f);//b
+	glVertex3f(-0.5f, -0.5f, -0.5f);//a
+
+	glVertex3f(0.5f, 0.5f, 0.5f);//h
+	glVertex3f(0.5f, -0.5f, 0.5f);//f
+	glVertex3f(-0.5f, -0.5f, 0.5f);//e
+	glVertex3f(-0.5f, -0.5f, 0.5f);//e
+	glVertex3f(-0.5f, 0.5f, 0.5f);//g
+	glVertex3f(0.5f, 0.5f, 0.5f);//h
+
+	glEnd();
+	
+	glLineWidth(1.0f);
+
+	//CANT DO IT WITH QUADS
+	/*float sx = size.x * 0.5f;
 	float sy = size.y * 0.5f;
 	float sz = size.z * 0.5f;
 
@@ -150,7 +203,7 @@ void PrimitiveCube::InnerRender() const
 	glVertex3f( sx, -sy,  sz);
 	glVertex3f(-sx, -sy,  sz);
 
-	glEnd();
+	glEnd();*/
 }
 
 // SPHERE ============================================
@@ -255,64 +308,9 @@ PrimitivePlane::PrimitivePlane(float x, float y, float z, float d) : Primitive()
 
 void PrimitivePlane::InnerRender() const
 {
-	glLineWidth(2.0f);
-	glRotatef(0.1f, 1.0f, 1.0f, 0.0f);
 
-	glBegin(GL_TRIANGLES);
-	glVertex3f(0.0f, 0.0f, 0.f);//a
-	glVertex3f(1.0f, 0.0f, 0.f);//b
-	glVertex3f(0.0f, 1.0f, 0.f);//c
-	glVertex3f(0.0f, 1.0f, 0.f);//c
-	glVertex3f(1.0f, 0.0f, 0.f);//b
-	glVertex3f(1.0f, 1.0f, 0.f);//d
 
-	glVertex3f(1.0f, 1.0f, 0.0f);//d
-	glVertex3f(1.0f, 0.0f, 0.0f);//b
-	glVertex3f(1.0f, 0.0f, 1.0f);//f
-	glVertex3f(1.0f, 0.0f, 1.0f);//f
-	glVertex3f(1.0f, 1.0f, 1.0f);//h
-	glVertex3f(1.0f, 1.0f, 0.0f);//d
 
-	glVertex3f(0.0f, 1.0f, 0.0f);//c
-	glVertex3f(1.0f, 1.0f, 0.0f);//d
-	glVertex3f(0.0f, 1.0f, 1.0f);//g
-	glVertex3f(0.0f, 1.0f, 1.0f);//g
-	glVertex3f(1.0f, 1.0f, 0.0f);//d
-	glVertex3f(1.0f, 1.0f, 1.0f);//h
-
-	glVertex3f(0.0f, 1.0f, 1.0f);//g
-	glVertex3f(0.0f, 0.0f, 1.0f);//e
-	glVertex3f(0.0f, 0.0f, 0.0f);//a
-	glVertex3f(0.0f, 0.0f, 0.0f);//a
-	glVertex3f(0.0f, 1.0f, 0.0f);//c
-	glVertex3f(0.0f, 1.0f, 1.0f);//g
-
-	glVertex3f(0.0f, 0.0f, 0.0f);//a
-	glVertex3f(0.0f, 0.0f, 1.0f);//e
-	glVertex3f(1.0f, 0.0f, 1.0f);//f
-	glVertex3f(1.0f, 0.0f, 1.0f);//f
-	glVertex3f(1.0f, 0.0f, 0.0f);//b
-	glVertex3f(0.0f, 0.0f, 0.0f);//a
-
-	glVertex3f(1.0f, 1.0f, 1.0f);//h
-	glVertex3f(1.0f, 0.0f, 1.0f);//f
-	glVertex3f(1.0f, 0.0f, 1.0f);//e
-	glVertex3f(1.0f, 0.0f, 1.0f);//e
-	glVertex3f(0.0f, 1.0f, 1.0f);//g
-	glVertex3f(1.0f, 1.0f, 1.0f);//h
-
-	glEnd();
-
-	glLineWidth(1.0f);
-
-	///---------------------------
-
-	/*glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, my_id);
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-
-	glDrawArrays(GL_TRIANGLES, 0, 36); //36 = numVertices
-	glDisableClientState(GL_VERTEX_ARRAY);*/
 
 	///------------------------
 /*
@@ -347,7 +345,7 @@ void PrimitivePlane::InnerRender() const
 
 
 
-	/*glBegin(GL_LINES);
+	glBegin(GL_LINES);
 
 	float d = 200.0f;
 
@@ -359,5 +357,5 @@ void PrimitivePlane::InnerRender() const
 		glVertex3f(d, 0.0f, i);
 	}
 
-	glEnd();*/
+	glEnd();
 }

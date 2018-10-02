@@ -15,14 +15,6 @@
 
 #include "parson/parson.h"
 
-#include <iostream>
-#include <iomanip>
-#include <string>
-#include <map>
-#include <random>
-#include <cmath>
-
-
 #include "MathGeoLib/Geometry/GeometryAll.h"
 
 #include "Primitive.h"
@@ -107,13 +99,10 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 // Load assets
 bool ModuleSceneIntro::CleanUp()
 {	
-	JSON_Value *schema = json_parse_string("{\"name\":\"\"}");
 	JSON_Value *user_data = json_parse_file("user_data.json");
 	user_data = json_value_init_object();
 
 	JSON_Object* dataObj = json_object(user_data);
-
-	JSON_Value *windowValue = json_parse_file("user_data.json");
 
 	//JSON_Value *editablesValues = json_parse_file("user_data.json");
 
@@ -138,7 +127,6 @@ bool ModuleSceneIntro::CleanUp()
 
 	json_serialize_to_file(user_data, "user_data.json");
 
-	json_value_free(schema);
 	json_value_free(user_data);
 	   
 	LOGI("Unloading Intro scene");
@@ -169,10 +157,7 @@ void ModuleSceneIntro::Draw3D()
 	plane.Render();
 
 	PrimitiveCube cube;
-	cube.color = Color(0.5f, 0.5f, 0.5f, 1.0f);
-	cube.SetPos(0, 0.5f, 0);
-	cube.axis = true;
-	//cube.Render();
+	cube.Render();
 }
 
 

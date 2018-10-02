@@ -121,11 +121,57 @@ bool ModuleRenderer3D::Start()
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
+	float vertexQuad[]
+	{
+	-0.5f,- 0.5f, -0.5f,//a
+	 0.5f, -0.5f, -0.5f,//b
+	-0.5f,  0.5f,  0.5f,//c
+	-0.5f,  0.5f,  0.5f,//c
+	 0.5f, -0.5f,  0.5f,//b
+	 0.5f,  0.5f,  0.5f,//d
+	  
+	 0.5f,  0.5f, -0.5f,//d
+	 0.5f, -0.5f, -0.5f,//b
+	 0.5f, -0.5f,  0.5f,//f
+	 0.5f, -0.5f,  0.5f,//f
+	 0.5f,  0.5f,  0.5f,//h
+	 0.5f,  0.5f, -0.5f,//d
+			  
+	-0.5f,  0.5f, -0.5f,//c
+	 0.5f,  0.5f, -0.5f,//d
+	-0.5f,  0.5f,  0.5f,//g
+	-0.5f,  0.5f,  0.5f,//g
+	 0.5f,  0.5f, -0.5f,//d
+	 0.5f,  0.5f,  0.5f,//h
+			  
+	-0.5f,  0.5f,  0.5f,//g
+	-0.5f, -0.5f,  0.5f,//e
+	-0.5f, -0.5f, -0.5f,//a
+	-0.5f, -0.5f, -0.5f,//a
+	-0.5f,  0.5f, -0.5f,//c
+	-0.5f,  0.5f,  0.5f,//g
+			  
+	-0.5f, -0.5f, -0.5f,//a
+	-0.5f, -0.5f,  0.5f,//e
+	 0.5f, -0.5f,  0.5f,//f
+	 0.5f, -0.5f,  0.5f,//f
+	 0.5f, -0.5f, -0.5f,//b
+	-0.5f, -0.5f, -0.5f,//a
+				  
+	 0.5f,  0.5f,  0.5f,//h
+	 0.5f, -0.5f,  0.5f,//f
+	-0.5f, -0.5f,  0.5f,//e
+	-0.5f, -0.5f,  0.5f,//e
+	-0.5f,  0.5f,  0.5f,//g
+	 0.5f,  0.5f,  0.5f,//h				  
+	};
 
 	//Create Quad
 	glGenBuffers(1, (GLuint*)&(my_id));
 	glBindBuffer(GL_ARRAY_BUFFER, my_id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 36 * 3, vertex, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 108, vertexQuad, GL_STATIC_DRAW); 
+	// 108 = All vertex positions (36 * 3) 36 = numsOfVertex and 3 = pos x-y-z
+
 
 	return true;
 }
@@ -155,6 +201,8 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	// 1. Draw geometry
 	App->sceneIntro->Draw3D();
+
+	DrawQuadVertex();
 
 	// 2. Debug geometry
 	//TODO
@@ -193,6 +241,16 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	glLoadIdentity();
 }
 
+void ModuleRenderer3D::DrawQuadVertex()
+{
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, my_id);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+
+	glDrawArrays(GL_TRIANGLES, 0, 36); //36 = numVertices
+	glDisableClientState(GL_VERTEX_ARRAY);
+}
+
 math::float4x4 ModuleRenderer3D::Perspective(float fovy, float aspect, float n, float f) const
 {
 	math::float4x4 Perspective;
@@ -210,3 +268,4 @@ math::float4x4 ModuleRenderer3D::Perspective(float fovy, float aspect, float n, 
 
 	return Perspective;
 }
+
