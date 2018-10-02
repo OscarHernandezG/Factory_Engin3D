@@ -104,7 +104,6 @@ bool ModuleSceneIntro::CleanUp()
 
 	JSON_Object* dataObj = json_object(user_data);
 
-	//JSON_Value *editablesValues = json_parse_file("user_data.json");
 
 	json_object_set_boolean(dataObj, "editableValues.DemoWindow", showDemoWindow);
 	json_object_set_boolean(dataObj, "editableValues.ExampeWindow", exampleWindow);
@@ -114,13 +113,11 @@ bool ModuleSceneIntro::CleanUp()
 	json_object_set_boolean(dataObj, "editableValues.configurationWindow", configurationWindow);
 	json_object_set_boolean(dataObj, "editableValues.consoleWindow", consoleWindow);
 
-	//JSON_Value *windowValues = json_parse_file("user_data.json");
 	json_object_set_boolean(dataObj, "window.fullscreen", App->window->fullscreen);
 	json_object_set_boolean(dataObj, "window.borderless", App->window->borderless);
 	json_object_set_number(dataObj, "window.height", heightPos);
 	json_object_set_number(dataObj, "window.width", widthPos);
 
-	//JSON_Value *aplicationValues = json_parse_file("user_data.json");
 	json_object_set_boolean(dataObj, "aplicationValues.IsCapped", App->toCap);
 	json_object_set_number(dataObj, "aplicationValues.capFrames", App->capFrames);
 
@@ -318,6 +315,11 @@ void ModuleSceneIntro::CreateAboutWindow()
 	sprintf_s(nameChar, 25, "PCG 0.94");
 	if (ImGui::Button(nameChar, ImVec2(125, 20)))
 		ShellExecuteA(NULL, "Open", "http://www.pcg-random.org/download.html", NULL, NULL, SW_SHOWNORMAL);
+
+	//PCG BUTTON Link
+	sprintf_s(nameChar, 25, "Parson");
+	if (ImGui::Button(nameChar, ImVec2(125, 20)))
+		ShellExecuteA(NULL, "Open", "https://github.com/kgabis/parson", NULL, NULL, SW_SHOWNORMAL);
 
 	///---------------------------------
 	ImGui::Separator();
