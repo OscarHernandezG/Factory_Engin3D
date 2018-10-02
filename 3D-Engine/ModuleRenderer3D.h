@@ -20,7 +20,10 @@ public:
 	bool CleanUp();
 
 	void DrawQuadVertex();
+	void DrawQuadVertexWireframe();
+
 	void DrawQuadIndices();
+	void DrawCubeWireframe();
 
 	void OnResize(int width, int height);
 
@@ -37,4 +40,7 @@ public:
 	uint my_id = 0u;
 	uint my_indices = 0u;
 	uint my_vertices = 0u;
+
+	bool isFill = true;
+	bool isWire = false;
 };
