@@ -141,7 +141,6 @@ update_status ModuleSceneIntro::Update(float dt)
 
 update_status ModuleSceneIntro::PostUpdate(float dt)
 {
-
 	return UPDATE_CONTINUE;
 }
 
@@ -503,6 +502,7 @@ void ModuleSceneIntro::CreateRenderHeader()
 	ImGui::Checkbox("LIGHTING", &test);  ImGui::SameLine(); ImGui::Text("\t\t"); ImGui::SameLine();
 	ImGui::Checkbox("COLORMATERIAL", &test);
 	ImGui::Checkbox("TEXTURE_2D", &test);
+
 }
 //Create Headers----------------------------------------------------------
 
