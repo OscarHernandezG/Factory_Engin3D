@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "parson/parson.h"
 
 Application::Application()
 {
@@ -107,10 +108,10 @@ update_status Application::Update()
 {
 	update_status ret = UPDATE_CONTINUE;
 	PrepareUpdate();
-	
+
 	list<Module*>::const_iterator item = list_modules.begin();
-	
-	while(item != list_modules.end() && ret == UPDATE_CONTINUE)
+
+	while (item != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
 		ret = (*item)->PreUpdate(dt);
 		item++;
@@ -118,7 +119,7 @@ update_status Application::Update()
 
 	item = list_modules.begin();
 
-	while(item != list_modules.end() && ret == UPDATE_CONTINUE)
+	while (item != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
 		ret = (*item)->Update(dt);
 		item++;
@@ -126,13 +127,46 @@ update_status Application::Update()
 
 	item = list_modules.begin();
 
-	while(item != list_modules.end() && ret == UPDATE_CONTINUE)
+	while (item != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
 		ret = (*item)->PostUpdate(dt);
 		item++;
 	}
 
 	FinishUpdate();
+
+	item = list_modules.begin();
+	//LOAD & SAVE
+	if (canLoad)
+	{
+		JSON_Value *user_data = json_parse_file("user_data.json");
+		if (user_data != NULL)
+		{
+			while (item != list_modules.end() && ret == UPDATE_CONTINUE)
+			{
+				JSON_Object* dataObj = json_object(user_data);
+				ret = (*item)->Load(dataObj);
+				item++;
+			}
+		}
+		canLoad = false;
+	}
+
+	item = list_modules.begin();
+	if (canSave)
+	{
+		JSON_Value *user_data = json_parse_file("user_data.json");
+		if (user_data == NULL)
+			user_data = json_value_init_object();
+		
+		while (item != list_modules.end() && ret == UPDATE_CONTINUE)
+		{
+			JSON_Object* dataObj = json_object(user_data);
+			ret = (*item)->Save(dataObj);
+			item++;
+		}
+		canSave = false;
+	}
 	return ret;
 }
 

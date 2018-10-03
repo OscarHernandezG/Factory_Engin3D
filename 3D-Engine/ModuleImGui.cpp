@@ -9,8 +9,6 @@
 
 #include "pcg-c-0.94/extras/entropy.h"
 
-#include "parson/parson.h"
-
 #include "MathGeoLib/Geometry/GeometryAll.h"
 
 #include "Primitive.h"
@@ -47,13 +45,6 @@ bool ModuleImGui::Start()
 
 	pcg32_srandom_r(&rng, 42u, 54u);
 
-	JSON_Value *user_data = json_parse_file("user_data.json");
-	if (user_data != NULL)
-	{
-		JSON_Object* dataObj = json_object(user_data);
-		showDemoWindow = json_object_dotget_boolean(dataObj, "editableValues.DemoWindow");
-	}
-	
 	return ret;
 }
 
@@ -145,6 +136,17 @@ void ModuleImGui::DrawUI()
 {
 	ImGui::Render();
 	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
+}
+
+update_status ModuleImGui::Save(JSON_Object* object)
+{
+
+	return UPDATE_CONTINUE;
+}
+
+update_status ModuleImGui::Load(JSON_Object * object)
+{
+	return update_status();
 }
 
 
@@ -359,11 +361,8 @@ update_status ModuleImGui::CreateMainMenuBar()
 
 		CheckShortCuts();
 
-		if (ImGui::BeginMenu("Exit"))
-		{
+		if (CreateOptions())
 			ret = UPDATE_STOP;
-			ImGui::EndMenu();
-		}
 	}
 	ImGui::EndMainMenuBar();
 
@@ -402,31 +401,55 @@ void ModuleImGui::CreateMenu()
 	}
 }
 
+bool ModuleImGui::CreateOptions()
+{
+	if (ImGui::BeginMenu("Options"))
+	{
+
+		if (ImGui::MenuItem("Save Game", "Ctrl+S"))
+			App->canSave = true;
+		
+		else if (ImGui::MenuItem("Load Game", "Ctrl+L"))
+			App->canLoad = true;
+
+		else if (ImGui::MenuItem("Exit", "ESC"))
+			exitOption = true;
+
+		ImGui::EndMenu();
+	}
+	return exitOption;
+}
+
 void ModuleImGui::CheckShortCuts()
 {
 	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RCTRL) == KEY_REPEAT)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_E) == KEY_DOWN)
-			exampleWindow = !exampleWindow;
-
-		else if (App->input->GetKey(SDL_SCANCODE_D) == KEY_DOWN)
-			showDemoWindow = !showDemoWindow;
-
-		else if (App->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN)
-			mathGeoLibWindow = !mathGeoLibWindow;
-
-		else if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
-			randomNumberWindow = !randomNumberWindow;
-
-		else if (App->input->GetKey(SDL_SCANCODE_A) == KEY_DOWN)
+		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_DOWN)
 			aboutWindow = !aboutWindow;
 
 		else if (App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN)
 			configurationWindow = !configurationWindow;
 
+		else if (App->input->GetKey(SDL_SCANCODE_D) == KEY_DOWN)
+			showDemoWindow = !showDemoWindow;
+
+		else if (App->input->GetKey(SDL_SCANCODE_E) == KEY_DOWN)
+			exampleWindow = !exampleWindow;
+		
+		else if (App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
+			App->canLoad = true;
+
+		else if (App->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN)
+			mathGeoLibWindow = !mathGeoLibWindow;
+
+		else if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
+			App->canSave = true;
+
+		else if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
+			randomNumberWindow = !randomNumberWindow;
+
 		else if (App->input->GetKey(SDL_SCANCODE_GRAVE) == KEY_DOWN)
 			consoleWindow = !consoleWindow;
-
 	}
 }
 //Create Menu-------------------------------------------------------------

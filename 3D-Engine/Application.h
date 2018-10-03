@@ -11,7 +11,6 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "ModuleImGui.h"
-//#include "ModulePhysics3D.h"
 
 using namespace std;
 
@@ -53,6 +52,8 @@ public:
 	vector<float> msLog;
 
 	bool toCap = true;
+	bool canSave = false;
+	bool canLoad = false;
 
 	int capFrames = 60;
 

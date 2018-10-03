@@ -1,4 +1,5 @@
 #pragma once
+#include "parson/parson.h"
 
 class Application;
 struct PhysBody3D;
@@ -42,12 +43,12 @@ public:
 		return UPDATE_CONTINUE;
 	}
 
-	virtual update_status Save()
+	virtual update_status Save(JSON_Object* object)
 	{
 		return UPDATE_CONTINUE;
 	}
 
-	virtual update_status Load()
+	virtual update_status Load(JSON_Object* object)
 	{
 		return UPDATE_CONTINUE;
 	}

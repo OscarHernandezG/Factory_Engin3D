@@ -4,6 +4,7 @@
 
 #include "imgui.h"
 
+#include "parson/parson.h"
 #include "pcg-c-0.94/include/pcg_variants.h"
 
 #define MAX_SNAKE 8
@@ -24,8 +25,11 @@ public:
 	update_status PreUpdate(float dt);
 	update_status Update(float dt);
 	update_status PostUpdate(float dt);
+	update_status Save(JSON_Object* object);
+	update_status Load(JSON_Object* object);
 
 	void DrawUI();
+
 
 	bool CleanUp();
 
@@ -38,6 +42,7 @@ public:
 	update_status CreateMainMenuBar();
 
 	void CreateMenu();
+	bool CreateOptions();
 	void CheckShortCuts();
 
 	void CreateAppHeader();
@@ -61,6 +66,7 @@ public:
 	bool aboutWindow = false;
 	bool configurationWindow = false;
 	bool consoleWindow = false;
+	bool exitOption = false;
 
 	bool spheresColliding = false;
 
