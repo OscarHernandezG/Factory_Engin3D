@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleSceneIntro.h"
+#include "ModuleImGui.h"
 
 #include "Primitive.h"
 
@@ -49,12 +50,14 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
-void ModuleSceneIntro::Draw3D()
+void ModuleSceneIntro::Draw3D(bool fill, bool wire)
 {
 	PrimitivePlane plane;
 	plane.axis = true;
 	plane.Render();
 
 	PrimitiveCube cube;
+	cube.fill = fill;
+	cube.wire = wire;
 	cube.Render();
 }
