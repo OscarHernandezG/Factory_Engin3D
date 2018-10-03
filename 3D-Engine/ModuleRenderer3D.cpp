@@ -171,57 +171,6 @@ bool ModuleRenderer3D::Start()
 	glBindBuffer(GL_ARRAY_BUFFER, my_id);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 108, vertexQuad, GL_STATIC_DRAW); 
 	// 108 = All vertex positions (36 * 3) 36 = numsOfVertex and 3 = pos x-y-z
-	
-
-
-	float indicesQuad[]
-	{
-	-0.5f, -0.5f, -0.5f,//a
-	 0.5f, -0.5f, -0.5f,//b
-	-0.5f,  0.5f, -0.5f,//c
-	 0.5f,  0.5f, -0.5f,//d
-	-0.5f, -0.5f,  0.5f,//e
-	 0.5f, -0.5f,  0.5f,//f
-	-0.5f,  0.5f,  0.5f,//g
-	 0.5f,  0.5f,  0.5f,//h
-	};
-
-	glGenBuffers(1, (GLuint*)&(my_indices));
-	glBindBuffer(GL_ARRAY_BUFFER, my_indices);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 24, indicesQuad, GL_STATIC_DRAW);
-	// 24 = All vertex positions (8 * 3) 8 = posibleVertex and 3 = pos x-y-z
-
-	uint vertices[]
-	{
-		// Front
-		0, 1, 2, // ABC
-		1, 3, 2, // BDC
-
-		// Right
-		1, 5, 3, // BFD
-		5, 7, 3, // FHD
-
-		// Back
-		5, 4, 7, // FEH
-		4, 6, 7, // EGH
-
-		// Left
-		4, 0, 6, // EAG
-		0, 2, 6, // ACG
-
-		// Top
-		2, 3, 6, // CDG
-		3, 7, 6, // DHG
-
-		// Bottom
-		0, 4, 1, // AEB
-		1, 4, 5  // BEF
-	};
-
-	glGenBuffers(1, (GLuint*)&(my_vertices));
-	glBindBuffer(GL_ARRAY_BUFFER, my_vertices);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * 36, vertices, GL_STATIC_DRAW);
-	// 36 = All vertex positions (12 * 3) 12 = vertices and 3 = pos x-y-z
 
 	return true;
 }
@@ -248,21 +197,24 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
+
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
 	// 1. Draw geometry
 	App->sceneIntro->Draw3D();
 
 
-	if (isFill)
+
+	/*if (isFill)
 	{
-		DrawQuadIndices();
+		DrawQuadTriangles();
 		DrawQuadVertex();
 	}
 	if (isWire)
 	{
-
 		DrawCubeWireframe();
 		DrawQuadVertexWireframe();
-	}
+	}*/
 	// 2. Debug geometry
 	//TODO
 
@@ -298,6 +250,61 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+}
+/*
+void ModuleRenderer3D::DrawQuadTriangles()
+{
+		glLineWidth(2.0f);
+	glRotatef(0.1f, 1.0f, 1.0f, 0.0f);
+	glTranslatef(-4.0f, 0.0f, 0.0f);
+
+	glBegin(GL_TRIANGLES);
+	glVertex3f(-0.5f, -0.5f, -0.5f);//a
+	glVertex3f(0.5f, -0.5f, -0.5f);//b
+	glVertex3f(-0.5f,  0.5f,  0.5f);//c
+	glVertex3f(-0.5f,  0.5f,  0.5f);//c
+	glVertex3f(0.5f, -0.5f,  0.5f);//b
+	glVertex3f(0.5f,  0.5f,  0.5f);//d
+
+	glVertex3f(0.5f, 0.5f, -0.5f);//d
+	glVertex3f(0.5f, -0.5f, -0.5f);//b
+	glVertex3f(0.5f, -0.5f, 0.5f);//f
+	glVertex3f(0.5f, -0.5f, 0.5f);//f
+	glVertex3f(0.5f, 0.5f, 0.5f);//h
+	glVertex3f(0.5f, 0.5f, -0.5f);//d
+
+	glVertex3f(-0.5f, 0.5f, -0.5f);//c
+	glVertex3f(0.5f, 0.5f, -0.5f);//d
+	glVertex3f(-0.5f, 0.5f, 0.5f);//g
+	glVertex3f(-0.5f, 0.5f, 0.5f);//g
+	glVertex3f(0.5f, 0.5f, -0.5f);//d
+	glVertex3f(0.5f, 0.5f, 0.5f);//h
+
+	glVertex3f(-0.5f, 0.5f, 0.5f);//g
+	glVertex3f(-0.5f, -0.5f, 0.5f);//e
+	glVertex3f(-0.5f, -0.5f, -0.5f);//a
+	glVertex3f(-0.5f, -0.5f, -0.5f);//a
+	glVertex3f(-0.5f, 0.5f, -0.5f);//c
+	glVertex3f(-0.5f, 0.5f, 0.5f);//g
+
+	glVertex3f(-0.5f, -0.5f, -0.5f);//a
+	glVertex3f(-0.5f, -0.5f, 0.5f);//e
+	glVertex3f(0.5f, -0.5f, 0.5f);//f
+	glVertex3f(0.5f, -0.5f, 0.5f);//f
+	glVertex3f(0.5f, -0.5f, -0.5f);//b
+	glVertex3f(-0.5f, -0.5f, -0.5f);//a
+
+	glVertex3f(0.5f, 0.5f, 0.5f);//h
+	glVertex3f(0.5f, -0.5f, 0.5f);//f
+	glVertex3f(-0.5f, -0.5f, 0.5f);//e
+	glVertex3f(-0.5f, -0.5f, 0.5f);//e
+	glVertex3f(-0.5f, 0.5f, 0.5f);//g
+	glVertex3f(0.5f, 0.5f, 0.5f);//h
+
+	glEnd();
+
+	glLineWidth(1.0f);
+
 }
 
 void ModuleRenderer3D::DrawQuadVertex()
@@ -342,24 +349,6 @@ void ModuleRenderer3D::DrawQuadVertexWireframe()
 
 }
 
-
-
-void ModuleRenderer3D::DrawQuadIndices()
-{
-	glEnableClientState(GL_VERTEX_ARRAY);
-
-	glBindBuffer(GL_ARRAY_BUFFER, my_indices);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_vertices);
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-	glDisableClientState(GL_VERTEX_ARRAY);
-}
-
 void ModuleRenderer3D::DrawCubeWireframe()
 {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -383,7 +372,7 @@ void ModuleRenderer3D::DrawCubeWireframe()
 	glColor3f(1, 1, 1);
 
 
-}
+}*/
 
 math::float4x4 ModuleRenderer3D::Perspective(float fovy, float aspect, float n, float f) const
 {
