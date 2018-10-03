@@ -22,11 +22,15 @@ public:
 	bool Init();
 	bool Start();
 	bool CleanUp();
-
+	
+	update_status Save(JSON_Object * object);
+	update_status Load(JSON_Object * object);
+	
 	void SetTitle(const char* title);
 
 	void SetFullscreen();
 	void SetBorderless();
+
 
 	bool InitGl();
 

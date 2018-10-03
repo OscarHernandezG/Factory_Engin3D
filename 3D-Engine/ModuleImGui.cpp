@@ -90,32 +90,6 @@ update_status ModuleImGui::PreUpdate(float dt)
 // Load assets
 bool ModuleImGui::CleanUp()
 {
-	JSON_Value *user_data = json_parse_file("user_data.json");
-	user_data = json_value_init_object();
-
-	JSON_Object* dataObj = json_object(user_data);
-
-
-	json_object_dotset_boolean(dataObj, "editableValues.DemoWindow", showDemoWindow);
-	json_object_dotset_boolean(dataObj, "editableValues.ExampeWindow", exampleWindow);
-	json_object_dotset_boolean(dataObj, "editableValues.MathGeoLibWindow", mathGeoLibWindow);
-	json_object_dotset_boolean(dataObj, "editableValues.randomNumberWindow", randomNumberWindow);
-	json_object_dotset_boolean(dataObj, "editableValues.aboutWindow", aboutWindow);
-	json_object_dotset_boolean(dataObj, "editableValues.configurationWindow", configurationWindow);
-	json_object_dotset_boolean(dataObj, "editableValues.consoleWindow", consoleWindow);
-
-	json_object_dotset_boolean(dataObj, "window.fullscreen", App->window->fullscreen);
-	json_object_dotset_boolean(dataObj, "window.borderless", App->window->borderless);
-	json_object_dotset_number(dataObj, "window.height", heightPos);
-	json_object_dotset_number(dataObj, "window.width", widthPos);
-
-	json_object_dotset_boolean(dataObj, "aplicationValues.IsCapped", App->toCap);
-	json_object_dotset_number(dataObj, "aplicationValues.capFrames", App->capFrames);
-
-
-	json_serialize_to_file(user_data, "user_data.json");
-
-	json_value_free(user_data);
 
 	LOGI("Unloading Intro scene");
 	return true;
@@ -141,12 +115,33 @@ void ModuleImGui::DrawUI()
 update_status ModuleImGui::Save(JSON_Object* object)
 {
 
+	json_object_dotset_boolean(object, "editableValues.DemoWindow", showDemoWindow);
+	json_object_dotset_boolean(object, "editableValues.ExampeWindow", exampleWindow);
+	json_object_dotset_boolean(object, "editableValues.MathGeoLibWindow", mathGeoLibWindow);
+	json_object_dotset_boolean(object, "editableValues.randomNumberWindow", randomNumberWindow);
+	json_object_dotset_boolean(object, "editableValues.aboutWindow", aboutWindow);
+	json_object_dotset_boolean(object, "editableValues.configurationWindow", configurationWindow);
+	json_object_dotset_boolean(object, "editableValues.consoleWindow", consoleWindow);
+	json_object_dotset_number(object, "window.height", heightPos);
+	json_object_dotset_number(object, "window.width", widthPos);
+
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleImGui::Load(JSON_Object * object)
 {
-	return update_status();
+	showDemoWindow = json_object_dotget_boolean(object, "editableValues.DemoWindow");
+	exampleWindow = json_object_dotget_boolean(object, "editableValues.ExampeWindow");
+	mathGeoLibWindow = json_object_dotget_boolean(object, "editableValues.MathGeoLibWindow");
+	randomNumberWindow = json_object_dotget_boolean(object, "editableValues.randomNumberWindow");
+	aboutWindow = json_object_dotget_boolean(object, "editableValues.aboutWindow");
+	configurationWindow = json_object_dotget_boolean(object, "editableValues.configurationWindow");
+	consoleWindow = json_object_dotget_boolean(object, "editableValues.consoleWindow");
+				   
+	heightPos = json_object_dotget_number(object, "window.height");
+	widthPos = json_object_dotget_number(object, "window.width");
+				   
+	return UPDATE_CONTINUE;
 }
 
 
@@ -252,7 +247,6 @@ void ModuleImGui::CreateRandomNumberWindow()
 	ImGui::Text("Your random number is:");
 	ImGui::SameLine();
 	ImGui::Text(randNumTextInt.data());
-
 
 	ImGui::End();
 }

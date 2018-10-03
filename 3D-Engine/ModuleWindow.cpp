@@ -104,8 +104,6 @@ void ModuleWindow::SetFullscreen()
 {
 	if (!fullscreen)
 	{
-		//fullscreen = true;
-
 		SDL_SetWindowFullscreen(window, SDL_WINDOW_SHOWN);
 
 		SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
@@ -113,7 +111,6 @@ void ModuleWindow::SetFullscreen()
 	}
 	else
 	{
-		//fullscreen = false;
 		SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 
 		SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
@@ -130,4 +127,27 @@ void ModuleWindow::SetBorderless()
 
 	SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 
+}
+
+update_status ModuleWindow::Save(JSON_Object* object)
+{
+
+	json_object_dotset_boolean(object, "window.fullscreen", fullscreen);
+	json_object_dotset_boolean(object, "window.borderless", borderless);
+
+	return UPDATE_CONTINUE;
+}
+
+update_status ModuleWindow::Load(JSON_Object * object)
+{
+
+	fullscreen = json_object_dotget_boolean(object, "window.fullscreen");
+	borderless = json_object_dotget_boolean(object, "window.borderless");
+	
+	if (fullscreen)
+		SetFullscreen();
+	if (borderless)
+		SetBorderless();
+
+	return UPDATE_CONTINUE;
 }

@@ -40,6 +40,9 @@ public:
 	update_status Update();
 	bool CleanUp();
 
+	update_status Save(JSON_Object * object);
+	update_status Load(JSON_Object * object);
+
 private:
 
 	void AddModule(Module* mod);

@@ -142,13 +142,14 @@ update_status Application::Update()
 		JSON_Value *user_data = json_parse_file("user_data.json");
 		if (user_data != NULL)
 		{
+			JSON_Object* dataObj = json_object(user_data);
 			while (item != list_modules.end() && ret == UPDATE_CONTINUE)
 			{
-				JSON_Object* dataObj = json_object(user_data);
 				ret = (*item)->Load(dataObj);
 				item++;
 			}
 		}
+		json_value_free(user_data);
 		canLoad = false;
 	}
 
@@ -158,13 +159,15 @@ update_status Application::Update()
 		JSON_Value *user_data = json_parse_file("user_data.json");
 		if (user_data == NULL)
 			user_data = json_value_init_object();
+		JSON_Object* dataObj = json_object(user_data);
 		
 		while (item != list_modules.end() && ret == UPDATE_CONTINUE)
 		{
-			JSON_Object* dataObj = json_object(user_data);
 			ret = (*item)->Save(dataObj);
 			item++;
 		}
+		json_serialize_to_file(user_data, "user_data.json");
+		json_value_free(user_data);
 		canSave = false;
 	}
 	return ret;
@@ -181,6 +184,22 @@ bool Application::CleanUp()
 		item++;
 	}
 	return ret;
+}
+
+update_status Application::Save(JSON_Object * object)
+{
+	json_object_dotset_boolean(object, "aplicationValues.IsCapped", toCap);
+	json_object_dotset_number(object, "aplicationValues.capFrames", capFrames);
+
+	return UPDATE_CONTINUE;
+}
+
+update_status Application::Load(JSON_Object * object)
+{
+	toCap = json_object_dotget_boolean(object, "aplicationValues.IsCapped");
+	capFrames = json_object_dotget_number(object, "aplicationValues.capFrames");
+
+	return UPDATE_CONTINUE;
 }
 
 void Application::AddModule(Module* mod)
