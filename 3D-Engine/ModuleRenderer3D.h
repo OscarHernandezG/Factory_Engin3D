@@ -21,6 +21,10 @@ public:
 
 	void DrawQuadVertex();
 	void DrawQuadTriangles();
+	void DrawQuadVertexWireframe();
+
+	void DrawQuadIndices();
+	void DrawCubeWireframe();
 
 	void OnResize(int width, int height);
 
@@ -36,4 +40,7 @@ public:
 
 	bool vsync = false;
 	uint my_id = 0u;
+
+	bool isFill = true;
+	bool isWire = false;
 };
