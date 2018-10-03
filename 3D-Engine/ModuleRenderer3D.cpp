@@ -205,7 +205,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 
 
-	if (isFill)
+	/*if (isFill)
 	{
 		DrawQuadTriangles();
 		DrawQuadVertex();
@@ -214,7 +214,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	{
 		DrawCubeWireframe();
 		DrawQuadVertexWireframe();
-	}
+	}*/
 	// 2. Debug geometry
 	//TODO
 
@@ -251,7 +251,7 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
-
+/*
 void ModuleRenderer3D::DrawQuadTriangles()
 {
 		glLineWidth(2.0f);
@@ -349,22 +349,6 @@ void ModuleRenderer3D::DrawQuadVertexWireframe()
 
 }
 
-void ModuleRenderer3D::DrawQuadIndices()
-{
-	glEnableClientState(GL_VERTEX_ARRAY);
-
-	glBindBuffer(GL_ARRAY_BUFFER, my_indices);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_vertices);
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-	glDisableClientState(GL_VERTEX_ARRAY);
-}
-
 void ModuleRenderer3D::DrawCubeWireframe()
 {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -388,7 +372,7 @@ void ModuleRenderer3D::DrawCubeWireframe()
 	glColor3f(1, 1, 1);
 
 
-}
+}*/
 
 math::float4x4 ModuleRenderer3D::Perspective(float fovy, float aspect, float n, float f) const
 {

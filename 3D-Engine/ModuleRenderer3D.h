@@ -19,12 +19,11 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
-	void DrawQuadVertex();
+	/*void DrawQuadVertex();
 	void DrawQuadTriangles();
-	void DrawQuadVertexWireframe();
+	void DrawQuadVertexWireframe();*/
 
-	void DrawQuadIndices();
-	void DrawCubeWireframe();
+	//void DrawCubeWireframe();
 
 	void OnResize(int width, int height);
 
