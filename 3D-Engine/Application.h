@@ -10,6 +10,7 @@
 #include "ModuleSceneIntro.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
+#include "ModuleImGui.h"
 //#include "ModulePhysics3D.h"
 
 using namespace std;
@@ -23,7 +24,7 @@ public:
 	ModuleSceneIntro* sceneIntro;
 	ModuleRenderer3D* renderer3D;
 	ModuleCamera3D* camera;
-//	ModulePhysics3D* physics;
+	ModuleImGui* gui;
 
 private:
 

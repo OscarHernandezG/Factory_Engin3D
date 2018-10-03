@@ -267,7 +267,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	//TODO
 
 	// 3. Draw UI
-	App->sceneIntro->DrawUI();
+	App->gui->DrawUI();
 
 	// 4. Swap buffers
 	SDL_GL_SwapWindow(App->window->window);
