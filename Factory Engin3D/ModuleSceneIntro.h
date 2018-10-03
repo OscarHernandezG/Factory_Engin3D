@@ -2,8 +2,6 @@
 #include "Module.h"
 #include "Globals.h"
 
-#define MAX_SNAKE 8
-
 class ModuleSceneIntro : public Module
 {
 public:

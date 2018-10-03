@@ -43,8 +43,9 @@ class PrimitiveCube : public Primitive
 public :
 	PrimitiveCube();
 	PrimitiveCube(float sizeX, float sizeY, float sizeZ);
+
 	void InnerRender() const;
-	void WireframeRender() const;
+
 public:
 	float3 size;
 	uint my_indices = 0u;

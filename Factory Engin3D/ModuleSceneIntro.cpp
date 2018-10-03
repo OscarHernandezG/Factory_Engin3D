@@ -35,7 +35,6 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 // Load assets
 bool ModuleSceneIntro::CleanUp()
 {	
-
 	return true;
 }
 
