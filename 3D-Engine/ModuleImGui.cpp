@@ -23,7 +23,7 @@ ModuleImGui::~ModuleImGui()
 // Load assets
 bool ModuleImGui::Start()
 {
-	LOGI("Loading Intro assets");
+	LOG("Loading Intro assets");
 
 	bool ret = true;
 
@@ -52,6 +52,9 @@ update_status ModuleImGui::PreUpdate(float dt)
 {
 	update_status status = UPDATE_CONTINUE;
 
+	if (App->input->GetKey(SDL_SCANCODE_0) == KEY_DOWN)//Debug Console
+		LOG("**");
+
 	ImGui_ImplOpenGL2_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
@@ -74,10 +77,8 @@ update_status ModuleImGui::PreUpdate(float dt)
 	if (configurationWindow)
 		CreateConfigWindow();
 
-
 	if (consoleWindow)
-	{
-	}
+		CreateConsole();
 
 	status = CreateMainMenuBar();
 
@@ -90,8 +91,8 @@ update_status ModuleImGui::PreUpdate(float dt)
 // Load assets
 bool ModuleImGui::CleanUp()
 {
-
-	LOGI("Unloading Intro scene");
+	textBuff.clear();
+	LOG("Unloading Intro scene");
 	return true;
 }
 
@@ -348,6 +349,22 @@ void ModuleImGui::CreateConfigWindow()
 	ImGui::End();
 }
 
+void ModuleImGui::CreateConsole()
+{
+	ImGui::SetWindowSize({ 400,200 }, ImGuiWindowFlags_NoResize);
+	ImGui::Begin("Console", &consoleWindow);
+	if (ImGui::Button("Clear", ImVec2(400, 20)))
+		textBuff.clear();
+	ImGui::Separator();
+
+	ImGui::TextWrapped(textBuff.begin());
+	if (canScroll)
+		ImGui::SetScrollY(1.0f);
+	canScroll = false;
+
+	ImGui::End();
+}
+
 update_status ModuleImGui::CreateMainMenuBar()
 {
 	update_status ret = UPDATE_CONTINUE;
@@ -595,4 +612,10 @@ void ModuleImGui::CheckCaps(string* caps)
 		*caps += "SSE4.2, ";
 
 	*caps = caps->substr(0, caps->size() - 2);
+}
+
+void ModuleImGui::LogConsole(const char * consoleText)
+{
+	textBuff.appendf(consoleText);
+	canScroll = true;
 }

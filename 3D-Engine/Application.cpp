@@ -55,7 +55,7 @@ bool Application::Init()
 	}
 
 	// After all Init calls we call Start() in all modules
-	LOGI("Application Start --------------");
+	LOG("Application Start --------------");
 	item = list_modules.begin();
 
 	while(item != list_modules.end() && ret == true)
@@ -147,6 +147,7 @@ update_status Application::Update()
 			{
 				ret = (*item)->Load(dataObj);
 				item++;
+
 			}
 		}
 		json_value_free(user_data);
@@ -184,6 +185,12 @@ bool Application::CleanUp()
 		item++;
 	}
 	return ret;
+}
+
+void Application::LogString(const char * texLog) const
+{
+	if(gui != nullptr)
+		gui->LogConsole(texLog);
 }
 
 update_status Application::Save(JSON_Object * object)

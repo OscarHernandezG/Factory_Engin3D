@@ -14,7 +14,7 @@ ModuleSceneIntro::~ModuleSceneIntro()
 // Load assets
 bool ModuleSceneIntro::Start()
 {
-	LOGI("Loading Intro assets");
+	LOG("Loading Intro assets");
 
 	bool ret = true;
 

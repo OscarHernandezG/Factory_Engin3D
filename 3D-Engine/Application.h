@@ -43,6 +43,8 @@ public:
 	update_status Save(JSON_Object * object);
 	update_status Load(JSON_Object * object);
 
+	void LogString(const char* texLog) const;
+
 private:
 
 	void AddModule(Module* mod);
@@ -61,3 +63,5 @@ public:
 	int capFrames = 60;
 
 };
+
+extern Application* App;

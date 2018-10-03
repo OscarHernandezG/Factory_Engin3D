@@ -38,6 +38,7 @@ public:
 	void CreateRandomNumberWindow();
 	void CreateAboutWindow();
 	void CreateConfigWindow();
+	void CreateConsole();
 
 	update_status CreateMainMenuBar();
 
@@ -55,6 +56,7 @@ public:
 
 	void CheckCaps(string* caps);
 
+	void LogConsole(const char* consoleText);
 public:
 
 	bool created = false;
@@ -98,4 +100,8 @@ public:
 
 	float f = 0.0f;
 	int counter = 0;
+
+	//console
+	ImGuiTextBuffer textBuff;
+	bool canScroll = false;
 };
