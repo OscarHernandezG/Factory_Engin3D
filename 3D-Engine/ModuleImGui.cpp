@@ -5,11 +5,7 @@
 
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl2.h"
-
 #include "SDL/include/SDL_opengl.h"
-#include "SDL/include/SDL.h"
-
-#include <stdio.h>
 
 #include "pcg-c-0.94/extras/entropy.h"
 
@@ -51,6 +47,13 @@ bool ModuleImGui::Start()
 
 	pcg32_srandom_r(&rng, 42u, 54u);
 
+	JSON_Value *user_data = json_parse_file("user_data.json");
+	if (user_data != NULL)
+	{
+		JSON_Object* dataObj = json_object(user_data);
+		showDemoWindow = json_object_dotget_boolean(dataObj, "editableValues.DemoWindow");
+	}
+	
 	return ret;
 }
 
@@ -102,21 +105,21 @@ bool ModuleImGui::CleanUp()
 	JSON_Object* dataObj = json_object(user_data);
 
 
-	json_object_set_boolean(dataObj, "editableValues.DemoWindow", showDemoWindow);
-	json_object_set_boolean(dataObj, "editableValues.ExampeWindow", exampleWindow);
-	json_object_set_boolean(dataObj, "editableValues.MathGeoLibWindow", mathGeoLibWindow);
-	json_object_set_boolean(dataObj, "editableValues.randomNumberWindow", randomNumberWindow);
-	json_object_set_boolean(dataObj, "editableValues.aboutWindow", aboutWindow);
-	json_object_set_boolean(dataObj, "editableValues.configurationWindow", configurationWindow);
-	json_object_set_boolean(dataObj, "editableValues.consoleWindow", consoleWindow);
+	json_object_dotset_boolean(dataObj, "editableValues.DemoWindow", showDemoWindow);
+	json_object_dotset_boolean(dataObj, "editableValues.ExampeWindow", exampleWindow);
+	json_object_dotset_boolean(dataObj, "editableValues.MathGeoLibWindow", mathGeoLibWindow);
+	json_object_dotset_boolean(dataObj, "editableValues.randomNumberWindow", randomNumberWindow);
+	json_object_dotset_boolean(dataObj, "editableValues.aboutWindow", aboutWindow);
+	json_object_dotset_boolean(dataObj, "editableValues.configurationWindow", configurationWindow);
+	json_object_dotset_boolean(dataObj, "editableValues.consoleWindow", consoleWindow);
 
-	json_object_set_boolean(dataObj, "window.fullscreen", App->window->fullscreen);
-	json_object_set_boolean(dataObj, "window.borderless", App->window->borderless);
-	json_object_set_number(dataObj, "window.height", heightPos);
-	json_object_set_number(dataObj, "window.width", widthPos);
+	json_object_dotset_boolean(dataObj, "window.fullscreen", App->window->fullscreen);
+	json_object_dotset_boolean(dataObj, "window.borderless", App->window->borderless);
+	json_object_dotset_number(dataObj, "window.height", heightPos);
+	json_object_dotset_number(dataObj, "window.width", widthPos);
 
-	json_object_set_boolean(dataObj, "aplicationValues.IsCapped", App->toCap);
-	json_object_set_number(dataObj, "aplicationValues.capFrames", App->capFrames);
+	json_object_dotset_boolean(dataObj, "aplicationValues.IsCapped", App->toCap);
+	json_object_dotset_number(dataObj, "aplicationValues.capFrames", App->capFrames);
 
 
 	json_serialize_to_file(user_data, "user_data.json");

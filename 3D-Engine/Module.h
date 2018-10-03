@@ -42,6 +42,16 @@ public:
 		return UPDATE_CONTINUE;
 	}
 
+	virtual update_status Save()
+	{
+		return UPDATE_CONTINUE;
+	}
+
+	virtual update_status Load()
+	{
+		return UPDATE_CONTINUE;
+	}
+
 	virtual bool CleanUp() 
 	{ 
 		return true; 

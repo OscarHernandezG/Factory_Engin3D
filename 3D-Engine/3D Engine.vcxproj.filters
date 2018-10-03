@@ -455,7 +455,7 @@
     <ClCompile Include="Primitive.cpp">
       <Filter>Sources\Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="MoculeImGui.cpp">
+    <ClCompile Include="ModuleImGui.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>
