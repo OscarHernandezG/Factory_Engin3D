@@ -24,13 +24,14 @@ public:
 	void			SetPos(float x, float y, float z);
 	void			SetRotation(float angle, const float3 &u);
 	void			Scale(float x, float y, float z);
+	void			WireframeRender() const;
 	PrimitiveTypes	GetType() const;
 
 public:
 	
 	Color color;
 	float4x4 transform;
-	bool axis,wire;
+	bool axis = false, wire = false, fill = true;
 
 protected:
 	PrimitiveTypes type;
@@ -43,6 +44,7 @@ public :
 	PrimitiveCube();
 	PrimitiveCube(float sizeX, float sizeY, float sizeZ);
 	void InnerRender() const;
+	void WireframeRender() const;
 public:
 	float3 size;
 	uint my_indices = 0u;

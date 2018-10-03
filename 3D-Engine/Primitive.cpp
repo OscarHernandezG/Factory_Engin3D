@@ -7,7 +7,7 @@
 
 
 // ------------------------------------------------------------
-Primitive::Primitive() : transform(float4x4::identity), color(White), wire(false), axis(false), type(PrimitiveTypes::Primitive_Point)
+Primitive::Primitive() : transform(float4x4::identity), color(White), wire(false), axis(false), fill(true), type(PrimitiveTypes::Primitive_Point)
 {}
 
 // ------------------------------------------------------------
@@ -56,7 +56,11 @@ void Primitive::Render() const
 
 	glColor3f(color.r, color.g, color.b);
 
-	InnerRender();
+	if (fill)
+		InnerRender();
+
+	if (wire)
+		WireframeRender();
 
 	glPopMatrix();
 }
@@ -73,6 +77,19 @@ void Primitive::InnerRender() const
 	glEnd();
 
 	glPointSize(1.0f);
+}
+
+// ------------------------------------------------------------
+void Primitive::WireframeRender() const
+{
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glColor3f(0, 1, 0);
+
+	InnerRender();
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+	glColor3f(1, 1, 1);
 }
 
 // ------------------------------------------------------------
@@ -209,7 +226,6 @@ PrimitiveCube::PrimitiveCube(float sizeX, float sizeY, float sizeZ) : Primitive(
 
 void PrimitiveCube::InnerRender() const
 {
-	glColor3f(0, 1, 0);
 	glEnableClientState(GL_VERTEX_ARRAY);
 
 	glBindBuffer(GL_ARRAY_BUFFER, my_indices);
