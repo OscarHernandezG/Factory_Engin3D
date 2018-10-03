@@ -140,6 +140,8 @@ update_status ModuleImGui::Load(JSON_Object * object)
 				   
 	heightPos = json_object_dotget_number(object, "window.height");
 	widthPos = json_object_dotget_number(object, "window.width");
+
+	SDL_SetWindowSize(App->window->window, widthPos, heightPos);
 				   
 	return UPDATE_CONTINUE;
 }
