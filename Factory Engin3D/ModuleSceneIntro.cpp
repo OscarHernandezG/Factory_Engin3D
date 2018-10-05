@@ -81,11 +81,11 @@ Mesh ModuleSceneIntro::LoadMesh()
 
 				glGenBuffers(1, (GLuint*)&(mesh.idIndex));
 				glBindBuffer(GL_ARRAY_BUFFER, mesh.idIndex);
-				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 24, mesh.index, GL_STATIC_DRAW);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * mesh.numIndex, mesh.index, GL_STATIC_DRAW);
 
 				glGenBuffers(1, (GLuint*)&(mesh.idVertex));
 				glBindBuffer(GL_ARRAY_BUFFER, mesh.idVertex);
-				glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * 36, mesh.vertex, GL_STATIC_DRAW);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh.numVertex, mesh.vertex, GL_STATIC_DRAW);
 			}
 
 			isSceneLoad = true;
