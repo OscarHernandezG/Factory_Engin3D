@@ -74,20 +74,21 @@ Mesh ModuleSceneIntro::LoadMesh()
 					for (uint index = 0; index < aiMesh->mNumFaces; ++index)
 					{
 						if (aiMesh->mFaces[index].mNumIndices != 3)
-							LOG("Achtung, geometry faces != 3 indices")
+							LOG("WARNING, geometry faces != 3 indices")
 						else
-							memcpy(&mesh.index[i * 3], aiMesh->mFaces[i].mIndices, sizeof(uint) * 3);
-						LOG("Index %i = %i", index, &mesh.index[i]);
+						{
+							memcpy(&mesh.index[index * 3], aiMesh->mFaces[index].mIndices, sizeof(uint) * 3);
+						}
 					}
 				}
 
 				glGenBuffers(1, (GLuint*)&(mesh.idIndex));
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.idIndex);
-				glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh.numIndex, &mesh.index[0], GL_STATIC_DRAW);
+				glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh.numIndex, mesh.index, GL_STATIC_DRAW);
 
 				glGenBuffers(1, (GLuint*)&(mesh.idVertex));
 				glBindBuffer(GL_ARRAY_BUFFER, mesh.idVertex);
-				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh.numVertex, &mesh.vertex[0], GL_STATIC_DRAW);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh.numVertex, &mesh.vertex, GL_STATIC_DRAW);
 			}
 
 			isSceneLoad = true;
