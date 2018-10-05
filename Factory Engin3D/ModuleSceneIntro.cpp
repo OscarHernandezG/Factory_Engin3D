@@ -88,7 +88,7 @@ Mesh ModuleSceneIntro::LoadMesh()
 
 				glGenBuffers(1, (GLuint*)&(mesh.idVertex));
 				glBindBuffer(GL_ARRAY_BUFFER, mesh.idVertex);
-				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh.numVertex, &mesh.vertex, GL_STATIC_DRAW);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh.numVertex, mesh.vertex, GL_STATIC_DRAW);
 			}
 
 			isSceneLoad = true;
