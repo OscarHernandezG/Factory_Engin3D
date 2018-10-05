@@ -57,37 +57,38 @@ Mesh ModuleSceneIntro::LoadMesh()
 	if (scene != nullptr) {
 		if (scene->HasMeshes())
 		{
-			aiMesh* aiMesh = (*scene->mMeshes);
+			aiMesh* currentMesh = (*scene->mMeshes);
 			for (int i = 0; i < scene->mNumMeshes; ++i)
 			{
-				mesh.numVertex = aiMesh->mNumVertices;
+				mesh.numVertex = currentMesh->mNumVertices;
 				mesh.vertex = new float[mesh.numVertex * 3];
 
-				memcpy(mesh.vertex, aiMesh->mVertices, sizeof(float) * mesh.numVertex);
+				memcpy(mesh.vertex, currentMesh->mVertices, sizeof(float) * mesh.numVertex);
 
 				LOG("New mesh loaded with %d vertices", mesh.numVertex);
 
-				if (aiMesh->HasFaces())
+				if (currentMesh->HasFaces())
 				{
-					mesh.numIndex = aiMesh->mNumFaces * 3;
+					mesh.numIndex = currentMesh->mNumFaces * 3;
 					mesh.index = new uint[mesh.numIndex];
-					for (uint index = 0; index < aiMesh->mNumFaces; ++index)
+					for (uint index = 0; index < currentMesh->mNumFaces; ++index)
 					{
-						if (aiMesh->mFaces[index].mNumIndices != 3)
-							LOG("Achtung, geometry faces != 3 indices")
+						if (currentMesh->mFaces[index].mNumIndices != 3)
+							LOG("WARNING, geometry faces != 3 indices")
 						else
-							memcpy(&mesh.index[i * 3], aiMesh->mFaces[i].mIndices, sizeof(uint) * 3);
-						LOG("Index %i = %i", index, &mesh.index[i]);
+						{
+							memcpy(&mesh.index[index * 3], currentMesh->mFaces[index].mIndices, sizeof(uint) * 3);
+						}
 					}
 				}
-
+			
 				glGenBuffers(1, (GLuint*)&(mesh.idIndex));
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.idIndex);
-				glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh.numIndex, &mesh.index[0], GL_STATIC_DRAW);
+				glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh.numIndex, mesh.index, GL_STATIC_DRAW);
 
 				glGenBuffers(1, (GLuint*)&(mesh.idVertex));
 				glBindBuffer(GL_ARRAY_BUFFER, mesh.idVertex);
-				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh.numVertex, &mesh.vertex[0], GL_STATIC_DRAW);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh.numVertex, mesh.vertex, GL_STATIC_DRAW);
 			}
 
 			isSceneLoad = true;
@@ -121,10 +122,10 @@ void ModuleSceneIntro::Draw3D(bool fill, bool wire)
 	plane.axis = true;
 	plane.Render();
 
-	PrimitiveCube cube;
-	cube.fill = fill;
-	cube.wire = wire;
-	cube.Render();
+	//PrimitiveCube cube;
+	//cube.fill = fill;
+	//cube.wire = wire;
+	//cube.Render();
 	warrior.wire = true;
 	warrior.Render();
 }
