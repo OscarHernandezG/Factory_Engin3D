@@ -7,10 +7,17 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
+#include "Assimp/include/cimport.h"
+#include "Assimp/include/scene.h"
+#include "Assimp/include/postprocess.h"
+#include "Assimp/include/cfileio.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
+
 #pragma comment (lib, "glew-2.1.0/lib/glew32.lib")
+
+#pragma comment (lib, "Assimp/libx86/assimp.lib")	
 
 ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
