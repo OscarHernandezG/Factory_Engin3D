@@ -1,5 +1,6 @@
-
 #pragma once
+#include "Globals.h"
+
 #include "MathGeoLib/MathGeoLib.h"
 #include "Color.h"
 
@@ -48,8 +49,8 @@ public :
 
 public:
 	float3 size;
-	uint my_indices = 0u;
-	uint my_vertices = 0u;
+	uint myIndices = 0u;
+	uint myVertices = 0u;
 };
 
 //// ============================================

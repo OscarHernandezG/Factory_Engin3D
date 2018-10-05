@@ -27,22 +27,6 @@ bool ModuleImGui::Start()
 
 	bool ret = true;
 
-	SDL_GLContext gl_context = SDL_GL_CreateContext(App->window->window);
-
-
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-
-	ImGuiIO& io = ImGui::GetIO();
-	(void)io;
-
-	ImGui_ImplSDL2_InitForOpenGL(App->window->window, gl_context);
-	ImGui_ImplOpenGL2_Init();
-
-	ImGui::StyleColorsDark();
-
-	clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
 	pcg32_srandom_r(&rng, 42u, 54u);
 
 	return ret;

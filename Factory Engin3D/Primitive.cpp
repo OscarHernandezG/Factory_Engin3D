@@ -129,8 +129,8 @@ PrimitiveCube::PrimitiveCube() : Primitive(), size(1.0f, 1.0f, 1.0f)
 	 0.5f,  0.5f,  0.5f,//h
 	};
 
-	glGenBuffers(1, (GLuint*)&(my_indices));
-	glBindBuffer(GL_ARRAY_BUFFER, my_indices);
+	glGenBuffers(1, (GLuint*)&(myIndices));
+	glBindBuffer(GL_ARRAY_BUFFER, myIndices);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 24, indicesQuad, GL_STATIC_DRAW);
 	// 24 = All vertex positions (8 * 3) 8 = posibleVertex and 3 = pos x-y-z
 
@@ -161,8 +161,8 @@ PrimitiveCube::PrimitiveCube() : Primitive(), size(1.0f, 1.0f, 1.0f)
 		1, 4, 5  // BEF
 	};
 
-	glGenBuffers(1, (GLuint*)&(my_vertices));
-	glBindBuffer(GL_ARRAY_BUFFER, my_vertices);
+	glGenBuffers(1, (GLuint*)&(myVertices));
+	glBindBuffer(GL_ARRAY_BUFFER, myVertices);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * 36, vertices, GL_STATIC_DRAW);
 	// 36 = All vertex positions (12 * 3) 12 = vertices and 3 = pos x-y-z
 
@@ -184,8 +184,8 @@ PrimitiveCube::PrimitiveCube(float sizeX, float sizeY, float sizeZ) : Primitive(
 	sizeX *  0.5f, sizeY *  0.5f, sizeZ *  0.5f,//h
 	};
 
-	glGenBuffers(1, (GLuint*)&(my_indices));
-	glBindBuffer(GL_ARRAY_BUFFER, my_indices);
+	glGenBuffers(1, (GLuint*)&(myIndices));
+	glBindBuffer(GL_ARRAY_BUFFER, myIndices);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 24, indicesQuad, GL_STATIC_DRAW);
 	// 24 = All vertex positions (8 * 3) 8 = posibleVertex and 3 = pos x-y-z
 
@@ -216,8 +216,8 @@ PrimitiveCube::PrimitiveCube(float sizeX, float sizeY, float sizeZ) : Primitive(
 		1, 4, 5  // BEF
 	};
 
-	glGenBuffers(1, (GLuint*)&(my_vertices));
-	glBindBuffer(GL_ARRAY_BUFFER, my_vertices);
+	glGenBuffers(1, (GLuint*)&(myVertices));
+	glBindBuffer(GL_ARRAY_BUFFER, myVertices);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * 36, vertices, GL_STATIC_DRAW);
 	// 36 = All vertex positions (12 * 3) 12 = vertices and 3 = pos x-y-z
 
@@ -228,8 +228,8 @@ void PrimitiveCube::InnerRender() const
 {
 	glEnableClientState(GL_VERTEX_ARRAY);
 
-	glBindBuffer(GL_ARRAY_BUFFER, my_indices);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, my_vertices);
+	glBindBuffer(GL_ARRAY_BUFFER, myIndices);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, myVertices);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);
