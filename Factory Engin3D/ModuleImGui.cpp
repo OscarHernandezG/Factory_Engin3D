@@ -36,9 +36,6 @@ update_status ModuleImGui::PreUpdate(float dt)
 {
 	update_status status = UPDATE_CONTINUE;
 
-	if (App->input->GetKey(SDL_SCANCODE_0) == KEY_DOWN)//Debug Console
-		LOG("**");
-
 	ImGui_ImplOpenGL2_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
@@ -288,10 +285,15 @@ void ModuleImGui::CreateAboutWindow()
 	if (ImGui::Button(nameChar, ImVec2(125, 20)))
 		ShellExecuteA(NULL, "Open", "http://www.pcg-random.org/download.html", NULL, NULL, SW_SHOWNORMAL);
 
-	//PCG BUTTON Link
+	//Parson Link
 	sprintf_s(nameChar, 25, "Parson");
 	if (ImGui::Button(nameChar, ImVec2(125, 20)))
 		ShellExecuteA(NULL, "Open", "https://github.com/kgabis/parson", NULL, NULL, SW_SHOWNORMAL);
+
+	//Assimp Link
+	sprintf_s(nameChar, 25, "Assimp");
+	if (ImGui::Button(nameChar, ImVec2(125, 20)))
+		ShellExecuteA(NULL, "Open", "http://www.assimp.org", NULL, NULL, SW_SHOWNORMAL);
 
 	///---------------------------------
 	ImGui::Separator();
