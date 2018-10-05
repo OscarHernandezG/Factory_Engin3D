@@ -1,5 +1,6 @@
-
 #pragma once
+#include "Globals.h"
+
 #include "MathGeoLib/MathGeoLib.h"
 #include "Color.h"
 

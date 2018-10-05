@@ -8,9 +8,10 @@
 class Mesh :public Primitive
 {
 public:
-	Mesh();
-	~Mesh();
+	Mesh() {};
+	~Mesh(){};
 
+	void InnerRender() const;
 
 public:
 

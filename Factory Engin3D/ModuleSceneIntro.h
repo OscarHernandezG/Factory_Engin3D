@@ -20,4 +20,5 @@ public:
 	Mesh LoadMesh();
 
 public:
+	Mesh warrior;
 };
