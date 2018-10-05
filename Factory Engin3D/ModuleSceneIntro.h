@@ -1,6 +1,7 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
+#include "Mesh.h"
 
 class ModuleSceneIntro : public Module
 {
@@ -15,6 +16,8 @@ public:
 
 	void Draw3D(bool fill = true, bool wire = false);
 	bool CleanUp();
+
+	Mesh LoadMesh();
 
 public:
 };
