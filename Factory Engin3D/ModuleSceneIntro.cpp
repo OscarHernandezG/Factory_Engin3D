@@ -50,7 +50,7 @@ bool ModuleSceneIntro::CleanUp()
 Mesh ModuleSceneIntro::LoadMesh()
 {
 	Mesh mesh;
-	char* filePath = "assets/warrior.FBX";
+	char* filePath = "assets/BakerHouse.fbx";
 	const aiScene* scene = aiImportFile(filePath, aiProcessPreset_TargetRealtime_MaxQuality);
 
 	bool isSceneLoad = false;
@@ -60,35 +60,41 @@ Mesh ModuleSceneIntro::LoadMesh()
 			aiMesh* currentMesh = (*scene->mMeshes);
 			for (int i = 0; i < scene->mNumMeshes; ++i)
 			{
-				mesh.numVertex = currentMesh->mNumVertices;
-				mesh.vertex = new float[mesh.numVertex * 3];
+				currentMesh = scene->mMeshes[i];
 
-				memcpy(mesh.vertex, currentMesh->mVertices, sizeof(float) * mesh.numVertex);
+				MeshBuffer currentBuffer;
+				currentBuffer.vertex.size = currentMesh->mNumVertices;
+				currentBuffer.vertex.buffer = new float[currentBuffer.vertex.size * 3];
 
-				LOG("New mesh loaded with %d vertices", mesh.numVertex);
+				memcpy(currentBuffer.vertex.buffer, currentMesh->mVertices, sizeof(float) * currentBuffer.vertex.size);
+
+				LOG("New mesh loaded with %d vertices", currentBuffer.vertex.size);
 
 				if (currentMesh->HasFaces())
 				{
-					mesh.numIndex = currentMesh->mNumFaces * 3;
-					mesh.index = new uint[mesh.numIndex];
+					currentBuffer.index.size = currentMesh->mNumFaces * 3;
+					currentBuffer.index.buffer = new uint[currentBuffer.index.size];
 					for (uint index = 0; index < currentMesh->mNumFaces; ++index)
 					{
 						if (currentMesh->mFaces[index].mNumIndices != 3)
 							LOG("WARNING, geometry faces != 3 indices")
 						else
 						{
-							memcpy(&mesh.index[index * 3], currentMesh->mFaces[index].mIndices, sizeof(uint) * 3);
+							memcpy(&currentBuffer.index.buffer[index * 3], currentMesh->mFaces[index].mIndices, sizeof(uint) * 3);
 						}
 					}
 				}
 			
-				glGenBuffers(1, (GLuint*)&(mesh.idIndex));
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.idIndex);
-				glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh.numIndex, mesh.index, GL_STATIC_DRAW);
+				glGenBuffers(1, (GLuint*)&(currentBuffer.index.id));
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, currentBuffer.index.id);
+				glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * currentBuffer.index.size, currentBuffer.index.buffer, GL_STATIC_DRAW);
 
-				glGenBuffers(1, (GLuint*)&(mesh.idVertex));
-				glBindBuffer(GL_ARRAY_BUFFER, mesh.idVertex);
-				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh.numVertex, mesh.vertex, GL_STATIC_DRAW);
+				glGenBuffers(1, (GLuint*)&(currentBuffer.vertex.id));
+				glBindBuffer(GL_ARRAY_BUFFER, currentBuffer.vertex.id);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * currentBuffer.vertex.size, currentBuffer.vertex.buffer, GL_STATIC_DRAW);
+
+				mesh.buffers.push_back(currentBuffer);
+				currentMesh;
 			}
 
 			isSceneLoad = true;
