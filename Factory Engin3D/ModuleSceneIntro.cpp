@@ -132,6 +132,6 @@ void ModuleSceneIntro::Draw3D(bool fill, bool wire)
 	//cube.fill = fill;
 	//cube.wire = wire;
 	//cube.Render();
-	warrior.wire = true;
+
 	warrior.Render();
 }
