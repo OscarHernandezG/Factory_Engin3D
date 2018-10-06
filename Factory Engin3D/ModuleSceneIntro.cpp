@@ -60,6 +60,6 @@ void ModuleSceneIntro::Draw3D(bool fill, bool wire)
 	cube.wire = wire;
 	cube.Render();*/
 
-	CylinderR cylinder;
-	cylinder.Render();
+	SpherePrim sphere;
+	sphere.Render();
 }

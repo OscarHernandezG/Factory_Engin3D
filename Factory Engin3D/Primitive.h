@@ -53,22 +53,24 @@ public:
 };
 
 //// ============================================
-//class Sphere : public Primitive
-//{
-//public:
-//	Sphere();
-//	Sphere(float radius);
-//	void InnerRender() const;
-//public:
-//	float radius;
-//};
-//
-//// ============================================
-class CylinderR : public Primitive
+class SpherePrim : public Primitive
 {
 public:
-	CylinderR();
-	CylinderR(float radius, float height, int faces);
+	SpherePrim();
+	SpherePrim(float radius,int hortzontalCuts, int verticalCuts);
+	void InnerRender() const;
+public:
+	float radius;
+	int horizontalCuts;
+	int verticalCuts;
+};
+
+//// ============================================
+class CylinderPrim : public Primitive
+{
+public:
+	CylinderPrim();
+	CylinderPrim(float radius, float height, int faces);
 	void InnerRender() const;
 public:
 	float radius;

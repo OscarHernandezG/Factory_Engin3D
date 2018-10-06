@@ -241,34 +241,83 @@ void PrimitiveCube::InnerRender() const
 }
 
 // SPHERE ============================================
-//Sphere::Sphere() : Primitive(), radius(1.0f)
-//{
-//	type = PrimitiveTypes::Primitive_Sphere;
-//}
-//
-//Sphere::Sphere(float radius) : Primitive(), radius(radius)
-//{
-//	type = PrimitiveTypes::Primitive_Sphere;
-//}
-//
-//void Sphere::InnerRender() const
-//{
-//	glutSolidSphere(radius, 25, 25);
-//}
-//
-//
+SpherePrim::SpherePrim() : Primitive(), radius(1.0f), horizontalCuts(11), verticalCuts(10)
+{
+	type = PrimitiveTypes::Primitive_Sphere;
+}
+
+SpherePrim::SpherePrim(float radius, int horizontalCuts, int verticalCuts) : Primitive(), radius(radius), horizontalCuts(horizontalCuts), verticalCuts(verticalCuts)
+{
+	type = PrimitiveTypes::Primitive_Sphere;
+}
+
+void SpherePrim::InnerRender() const
+{
+	glBegin(GL_TRIANGLES);
+
+	float currentRad = radius;
+	int verticalDeg = 360 / verticalCuts;
+	for (int horizontalCont = horizontalCuts / 2; horizontalCont >= 0; --horizontalCont)
+	{
+		float newRad = 0.0f;
+		if (horizontalCont != 0) {
+			float rad = ((float)horizontalCont / (float)(horizontalCont + 1));
+			newRad = rad *radius;
+		}
+		for (int i = 0; i < 360; i += verticalDeg)
+		{
+			float a = i * PI / 180; // degrees to radians
+			if (horizontalCont <= 0) {
+				glVertex3f(currentRad * cos(a), radius - currentRad, currentRad * sin(a));
+				glVertex3f(0, radius, 0);
+				a = (i + verticalDeg) * PI / 180; // degrees to radians
+				glVertex3f(currentRad * cos(a), radius - currentRad, currentRad * sin(a));
+			}
+			else
+			{
+				glVertex3f(currentRad * cos(a), radius - currentRad, currentRad * sin(a));
+				glVertex3f(newRad * cos(a), radius - newRad, newRad * sin(a));
+				a = (i + verticalDeg) * PI / 180; // degrees to radians
+				glVertex3f(currentRad * cos(a), radius - currentRad, currentRad * sin(a));
+
+				glVertex3f(newRad * cos(a), radius - newRad, newRad * sin(a));
+				glVertex3f(currentRad * cos(a), radius - currentRad, currentRad * sin(a));
+				a = i * PI / 180; // degrees to radians
+				glVertex3f(newRad * cos(a), radius - newRad, newRad * sin(a));
+
+			}
+
+		}
+		currentRad = newRad;
+}
+	glEnd();
+
+/*	glBegin(GL_TRIANGLES);
+	for (int i = 360; i > 0; i -= verticalDeg)
+	{
+		float a = i * PI / 180; // degrees to radians
+		glVertex3f(radius * cos(a), 0, radius * sin(a));
+		glVertex3f(0, -radius * 0.5f, 0);
+		a = (i - verticalDeg)* PI / 180; // degrees to radians
+		glVertex3f(radius * cos(a), 0, radius * sin(a));
+	}
+	glEnd();
+	*/
+}
+
+
 // CYLINDER ============================================
-CylinderR::CylinderR() : Primitive(), radius(1.0f), height(1.0f), faces(40)
+CylinderPrim::CylinderPrim() : Primitive(), radius(1.0f), height(1.0f), faces(40)
 {
 	type = PrimitiveTypes::Primitive_Cylinder;
 }
 
-CylinderR::CylinderR(float radius, float height, int faces) : Primitive(), radius(radius), height(height), faces(faces)
+CylinderPrim::CylinderPrim(float radius, float height, int faces) : Primitive(), radius(radius), height(height), faces(faces)
 {
 	type = PrimitiveTypes::Primitive_Cylinder;
 }
 
-void CylinderR::InnerRender() const
+void CylinderPrim::InnerRender() const
 {
 	// Cylinder Bottom
 	glBegin(GL_TRIANGLES);
