@@ -45,6 +45,8 @@ public:
 
 	void LogString(const char* texLog) const;
 
+	void ChangeAppName(char* newName);
+
 private:
 
 	void AddModule(Module* mod);
@@ -58,10 +60,10 @@ public:
 
 	bool toCap = true;
 	bool canSave = false;
-	bool canLoad = false;
+	bool canLoad = true;
 
 	int capFrames = 60;
-
+	std::string aplicationName;
 };
 
 extern Application* App;

@@ -28,7 +28,7 @@ public:
 	
 	void SetTitle(const char* title);
 
-	void SetFullscreen();
+	void SetFullscreen(bool desktop = false);
 	void SetBorderless();
 
 public:
@@ -42,6 +42,7 @@ public:
 
 
 	bool fullscreen = false;
+	bool fulldesktop = false;
 	bool borderless = false;
 };
 

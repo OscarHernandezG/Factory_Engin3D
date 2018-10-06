@@ -477,6 +477,12 @@ void ModuleImGui::CheckShortCuts()
 //Create Headers----------------------------------------------------------
 void ModuleImGui::CreateAppHeader()
 {
+
+	static char appName[64];
+	sprintf_s(appName,64,App->aplicationName.data());
+	if(ImGui::InputText("Aplication Name", appName, 64, ImGuiInputTextFlags_EnterReturnsTrue))
+		App->ChangeAppName(appName);
+
 	ImGui::SliderInt("Max Fps", &App->capFrames, 30, 144);
 
 	ImGui::Checkbox("Cap Fps", &App->toCap);
@@ -497,12 +503,18 @@ void ModuleImGui::CreateWindowHeader()
 {
 	if (ImGui::Checkbox("Fullscreen", &App->window->fullscreen))
 	{
+		App->window->fulldesktop = false;
 		App->window->SetFullscreen();
 	}
 	ImGui::SameLine();
 	if (ImGui::Checkbox("Borderless", &App->window->borderless))
 	{
 		App->window->SetBorderless();
+	}
+	if (ImGui::Checkbox("Full Desktop", &App->window->fulldesktop))
+	{
+		App->window->fullscreen = false;
+		App->window->SetFullscreen(true);
 	}
 	if (ImGui::SliderFloat("Brightness", &brightnessPos, 0.0f, 1.0f))
 	{
