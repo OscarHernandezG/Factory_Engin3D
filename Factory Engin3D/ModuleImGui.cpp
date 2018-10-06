@@ -13,6 +13,10 @@
 
 #include "Primitive.h"
 
+//RAM and CPU usage
+#include "windows.h"
+#include "psapi.h"
+
 ModuleImGui::ModuleImGui(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 }
@@ -85,6 +89,22 @@ update_status ModuleImGui::Update(float dt)
 
 update_status ModuleImGui::PostUpdate(float dt)
 {
+
+	PROCESS_MEMORY_COUNTERS counter;
+	GetProcessMemoryInfo(GetCurrentProcess(), &counter, sizeof(counter));
+
+	float ramInUse = counter.WorkingSetSize;
+	ramInUse /= 1024;
+	ramInUse /= 1024;
+
+	ramLog.push_back(ramInUse);
+	if (ramLog.size() > 75)
+	{
+		ramLog.erase(ramLog.begin());
+	}
+	test++;
+
+
 	return UPDATE_CONTINUE;
 }
 
@@ -467,7 +487,10 @@ void ModuleImGui::CreateAppHeader()
 	ImGui::PlotHistogram("##Framerate", &App->fpsLog[0], App->fpsLog.size(), 0, graphTitle, 0.0f, 150.0f, ImVec2(310, 100));
 
 	sprintf_s(graphTitle, 25, "Milliseconds %.1f", App->msLog[App->msLog.size() - 1]);
-	ImGui::PlotHistogram("##Framerate", &App->msLog[0], App->msLog.size(), 0, graphTitle, 0.0f, 40.0f, ImVec2(310, 100));
+	ImGui::PlotHistogram("##Milliseconds", &App->msLog[0], App->msLog.size(), 0, graphTitle, 0.0f, 40.0f, ImVec2(310, 100));
+
+	sprintf_s(graphTitle, 25, "RAM Usage %.1f", ramLog[ramLog.size() - 1]);
+	ImGui::PlotHistogram("##RAM", &ramLog[0], ramLog.size(), 0, graphTitle, 0.0f, 125.0f, ImVec2(310, 100));
 }
 
 void ModuleImGui::CreateWindowHeader()
@@ -535,6 +558,23 @@ void ModuleImGui::CreateCPUInfo(ImVec4 color)
 	ImGui::Text("System RAM: "); ImGui::SameLine();
 	ImGui::TextColored(color, "%.2fGB", (float)SDL_GetSystemRAM() / 1024);
 
+	MEMORYSTATUSEX memInfo;
+	memInfo.dwLength = sizeof(MEMORYSTATUSEX);
+	GlobalMemoryStatusEx(&memInfo);
+	DWORDLONG physMemUsed = memInfo.ullTotalPhys - memInfo.ullAvailPhys;
+	float totalRamInUse = physMemUsed / 1024;
+	totalRamInUse /= 1024;
+	totalRamInUse /= 1024;
+
+	ImGui::Text("Total RAM in use:"); ImGui::SameLine();
+	ImGui::TextColored(color, "%.2f GB", totalRamInUse);
+
+
+
+	ImGui::Text("RAM used by Factory Engin3D:"); ImGui::SameLine();
+	ImGui::TextColored(color, "%.2f MB", ramLog.end());
+
+
 	//CAP--------------------------------------------------------
 	ImGui::Text("Caps: "); ImGui::SameLine();
 	string caps("");
@@ -552,6 +592,7 @@ void ModuleImGui::CreateGPUInfo(ImVec4 color)
 	ImGui::Text("GPU info:"); ImGui::SameLine();
 	ImGui::TextColored(color, (char*)gpuInfo); ImGui::SameLine();
 	ImGui::TextColored(color, (char*)renderer);
+
 
 	//VRAM-------------------------------------------------------
 	GLint nTotalMemoryInKB = 0;

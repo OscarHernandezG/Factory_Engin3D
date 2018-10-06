@@ -31,9 +31,6 @@ public:
 	void SetFullscreen();
 	void SetBorderless();
 
-
-	bool InitGl();
-
 public:
 	//The window we'll be rendering to
 	SDL_Window* window;
