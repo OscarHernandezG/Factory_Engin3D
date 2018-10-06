@@ -30,7 +30,7 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(float3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(float3(0, 0, 0));
 
-	warrior = LoadMesh();
+	//warrior = LoadMesh();
 	return ret;
 }
 
@@ -47,65 +47,65 @@ bool ModuleSceneIntro::CleanUp()
 	return true;
 }
 
-Mesh ModuleSceneIntro::LoadMesh()
+Mesh ModuleSceneIntro::LoadMesh(char* path)
 {
 	Mesh mesh;
-	char* filePath = "assets/BakerHouse.fbx";
-	const aiScene* scene = aiImportFile(filePath, aiProcessPreset_TargetRealtime_MaxQuality);
+	if (path != nullptr)
+	{
+		char* filePath = path;
+		const aiScene* scene = aiImportFile(filePath, aiProcessPreset_TargetRealtime_MaxQuality);
 
-	bool isSceneLoad = false;
-	if (scene != nullptr) {
-		if (scene->HasMeshes())
-		{
-			aiMesh* currentMesh = (*scene->mMeshes);
-			for (int i = 0; i < scene->mNumMeshes; ++i)
+		bool isSceneLoad = false;
+		if (scene != nullptr) {
+			if (scene->HasMeshes())
 			{
-				currentMesh = scene->mMeshes[i];
-
-				MeshBuffer currentBuffer;
-				currentBuffer.vertex.size = currentMesh->mNumVertices;
-				currentBuffer.vertex.buffer = new float[currentBuffer.vertex.size * 3];
-
-				memcpy(currentBuffer.vertex.buffer, currentMesh->mVertices, sizeof(float) * currentBuffer.vertex.size);
-
-				LOG("New mesh loaded with %d vertices", currentBuffer.vertex.size);
-
-				if (currentMesh->HasFaces())
+				aiMesh* currentMesh = (*scene->mMeshes);
+				for (int i = 0; i < scene->mNumMeshes; ++i)
 				{
-					currentBuffer.index.size = currentMesh->mNumFaces * 3;
-					currentBuffer.index.buffer = new uint[currentBuffer.index.size];
-					for (uint index = 0; index < currentMesh->mNumFaces; ++index)
+					currentMesh = scene->mMeshes[i];
+
+					MeshBuffer currentBuffer;
+					currentBuffer.vertex.size = currentMesh->mNumVertices;
+					currentBuffer.vertex.buffer = new float[currentBuffer.vertex.size * 3];
+
+					memcpy(currentBuffer.vertex.buffer, currentMesh->mVertices, sizeof(float) * currentBuffer.vertex.size);
+
+					LOG("New mesh loaded with %d vertices", currentBuffer.vertex.size);
+
+					if (currentMesh->HasFaces())
 					{
-						if (currentMesh->mFaces[index].mNumIndices != 3)
-							LOG("WARNING, geometry faces != 3 indices")
-						else
+						currentBuffer.index.size = currentMesh->mNumFaces * 3;
+						currentBuffer.index.buffer = new uint[currentBuffer.index.size];
+						for (uint index = 0; index < currentMesh->mNumFaces; ++index)
 						{
-							memcpy(&currentBuffer.index.buffer[index * 3], currentMesh->mFaces[index].mIndices, sizeof(uint) * 3);
+							if (currentMesh->mFaces[index].mNumIndices != 3)
+								LOG("WARNING, geometry faces != 3 indices")
+							else
+							{
+								memcpy(&currentBuffer.index.buffer[index * 3], currentMesh->mFaces[index].mIndices, sizeof(uint) * 3);
+							}
 						}
 					}
+
+					glGenBuffers(1, (GLuint*)&(currentBuffer.index.id));
+					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, currentBuffer.index.id);
+					glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * currentBuffer.index.size, currentBuffer.index.buffer, GL_STATIC_DRAW);
+
+					glGenBuffers(1, (GLuint*)&(currentBuffer.vertex.id));
+					glBindBuffer(GL_ARRAY_BUFFER, currentBuffer.vertex.id);
+					glBufferData(GL_ARRAY_BUFFER, sizeof(float) * currentBuffer.vertex.size, currentBuffer.vertex.buffer, GL_STATIC_DRAW);
+
+					mesh.buffers.push_back(currentBuffer);
 				}
-			
-				glGenBuffers(1, (GLuint*)&(currentBuffer.index.id));
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, currentBuffer.index.id);
-				glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * currentBuffer.index.size, currentBuffer.index.buffer, GL_STATIC_DRAW);
-
-				glGenBuffers(1, (GLuint*)&(currentBuffer.vertex.id));
-				glBindBuffer(GL_ARRAY_BUFFER, currentBuffer.vertex.id);
-				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * currentBuffer.vertex.size, currentBuffer.vertex.buffer, GL_STATIC_DRAW);
-
-				mesh.buffers.push_back(currentBuffer);
-				currentMesh;
+				isSceneLoad = true;
 			}
+			aiReleaseImport(scene);
 
-			isSceneLoad = true;
 		}
-		aiReleaseImport(scene);
 
+		else
+			LOG("Error loading scene %s", filePath);
 	}
-
-	else
-		LOG("Error loading scene %s", filePath);
-
 	return mesh;
 }
 
@@ -133,5 +133,6 @@ void ModuleSceneIntro::Draw3D(bool fill, bool wire)
 	//cube.wire = wire;
 	//cube.Render();
 
+	warrior.wire = wire;
 	warrior.Render();
 }
