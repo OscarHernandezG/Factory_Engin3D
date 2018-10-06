@@ -143,6 +143,7 @@ update_status Application::Update()
 		if (user_data != NULL)
 		{
 			JSON_Object* dataObj = json_object(user_data);
+			Load(dataObj);
 			while (item != list_modules.end() && ret == UPDATE_CONTINUE)
 			{
 				ret = (*item)->Load(dataObj);
@@ -162,6 +163,7 @@ update_status Application::Update()
 			user_data = json_value_init_object();
 		JSON_Object* dataObj = json_object(user_data);
 		
+		Save(dataObj);
 		while (item != list_modules.end() && ret == UPDATE_CONTINUE)
 		{
 			ret = (*item)->Save(dataObj);
@@ -193,8 +195,15 @@ void Application::LogString(const char * texLog) const
 		gui->LogConsole(texLog);
 }
 
+void Application::ChangeAppName(char * newName)
+{
+	aplicationName = newName;
+	App->window->SetTitle(aplicationName.data());
+}
+
 update_status Application::Save(JSON_Object * object)
 {
+	json_object_dotset_string(object, "aplicationValues.Name", aplicationName.data());
 	json_object_dotset_boolean(object, "aplicationValues.IsCapped", toCap);
 	json_object_dotset_number(object, "aplicationValues.capFrames", capFrames);
 
@@ -203,6 +212,7 @@ update_status Application::Save(JSON_Object * object)
 
 update_status Application::Load(JSON_Object * object)
 {
+	aplicationName = json_object_dotget_string(object, "aplicationValues.Name");
 	toCap = json_object_dotget_boolean(object, "aplicationValues.IsCapped");
 	capFrames = json_object_dotget_number(object, "aplicationValues.capFrames");
 

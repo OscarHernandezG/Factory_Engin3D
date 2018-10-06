@@ -37,4 +37,4 @@ enum update_status
 #define WIN_BORDERLESS false
 #define WIN_FULLSCREEN_DESKTOP false
 #define VSYNC false
-#define TITLE "3D Engine"
+#define TITLE "Factory Engin3D"
