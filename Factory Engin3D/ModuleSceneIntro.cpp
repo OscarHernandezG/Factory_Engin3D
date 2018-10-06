@@ -55,8 +55,11 @@ void ModuleSceneIntro::Draw3D(bool fill, bool wire)
 	plane.axis = true;
 	plane.Render();
 
-	PrimitiveCube cube;
+	/*PrimitiveCube cube;
 	cube.fill = fill;
 	cube.wire = wire;
-	cube.Render();
+	cube.Render();*/
+
+	CylinderR cylinder;
+	cylinder.Render();
 }
