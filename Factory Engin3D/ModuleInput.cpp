@@ -2,8 +2,12 @@
 #include "Application.h"
 #include "ModuleInput.h"
 
+#include "ModuleSceneIntro.h"
+
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
+
+#include	"SDL/include/SDL_syswm.h"
 
 #define MAX_KEYS 300
 
@@ -87,6 +91,9 @@ update_status ModuleInput::PreUpdate(float dt)
 
 	mouse_x_motion = mouse_y_motion = 0;
 
+	SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
+
+
 	bool quit = false;
 	SDL_Event e;
 	while(SDL_PollEvent(&e))
@@ -116,6 +123,12 @@ update_status ModuleInput::PreUpdate(float dt)
 				if(e.window.event == SDL_WINDOWEVENT_RESIZED)
 					App->renderer3D->OnResize(e.window.data1, e.window.data2);
 			}
+			break;
+			case SDL_DROPFILE:
+
+				App->sceneIntro->warrior = App->sceneIntro->LoadMesh(e.drop.file);
+
+				break;
 		}
 	}
 
