@@ -65,7 +65,7 @@ Mesh ModuleSceneIntro::LoadMesh(char* path)
 					currentMesh = scene->mMeshes[i];
 
 					MeshBuffer currentBuffer;
-					currentBuffer.vertex.size = currentMesh->mNumVertices;
+					currentBuffer.vertex.size = currentMesh->mNumVertices * 3;
 					currentBuffer.vertex.buffer = new float[currentBuffer.vertex.size * 3];
 
 					memcpy(currentBuffer.vertex.buffer, currentMesh->mVertices, sizeof(float) * currentBuffer.vertex.size);
@@ -132,7 +132,7 @@ void ModuleSceneIntro::Draw3D(bool fill, bool wire)
 	//cube.fill = fill;
 	//cube.wire = wire;
 	//cube.Render();
-
+	warrior.fill = fill;
 	warrior.wire = wire;
 	warrior.Render();
 }

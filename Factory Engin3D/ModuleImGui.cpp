@@ -584,7 +584,7 @@ void ModuleImGui::CreateCPUInfo(ImVec4 color)
 
 
 	ImGui::Text("RAM used by Factory Engin3D:"); ImGui::SameLine();
-	ImGui::TextColored(color, "%.2f MB", ramLog.end());
+	ImGui::TextColored(color, "%.2f MB", ramLog.back());
 
 
 	//CAP--------------------------------------------------------
