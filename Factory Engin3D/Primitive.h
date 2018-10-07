@@ -46,6 +46,14 @@ public :
 	PrimitiveCube();
 	PrimitiveCube(float sizeX, float sizeY, float sizeZ);
 
+	void LoadCubeBuffers(float sizeX, float sizeY, float sizeZ);
+	void LoadCubeBuffers(float3 size)
+	{
+		LoadCubeBuffers(size.x, size.y, size.z);
+	}
+
+	~PrimitiveCube();
+
 	void InnerRender() const;
 
 public:

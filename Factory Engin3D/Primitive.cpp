@@ -116,62 +116,19 @@ void Primitive::Scale(float x, float y, float z)
 PrimitiveCube::PrimitiveCube() : Primitive(), size(1.0f, 1.0f, 1.0f)
 {
 	type = PrimitiveTypes::Primitive_Cube;
-
-	float indicesQuad[]
-	{
-	-0.5f, -0.5f, -0.5f,//a
-	 0.5f, -0.5f, -0.5f,//b
-	-0.5f,  0.5f, -0.5f,//c
-	 0.5f,  0.5f, -0.5f,//d
-	-0.5f, -0.5f,  0.5f,//e
-	 0.5f, -0.5f,  0.5f,//f
-	-0.5f,  0.5f,  0.5f,//g
-	 0.5f,  0.5f,  0.5f,//h
-	};
-
-	glGenBuffers(1, (GLuint*)&(myIndices));
-	glBindBuffer(GL_ARRAY_BUFFER, myIndices);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 24, indicesQuad, GL_STATIC_DRAW);
-	// 24 = All vertex positions (8 * 3) 8 = posibleVertex and 3 = pos x-y-z
-
-	uint vertices[]
-	{
-		// Front
-		0, 1, 2, // ABC
-		1, 3, 2, // BDC
-
-		// Right
-		1, 5, 3, // BFD
-		5, 7, 3, // FHD
-
-		// Back
-		5, 4, 7, // FEH
-		4, 6, 7, // EGH
-
-		// Left
-		4, 0, 6, // EAG
-		0, 2, 6, // ACG
-
-		// Top
-		2, 3, 6, // CDG
-		3, 7, 6, // DHG
-
-		// Bottom
-		0, 4, 1, // AEB
-		1, 4, 5  // BEF
-	};
-
-	glGenBuffers(1, (GLuint*)&(myVertices));
-	glBindBuffer(GL_ARRAY_BUFFER, myVertices);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * 36, vertices, GL_STATIC_DRAW);
-	// 36 = All vertex positions (12 * 3) 12 = vertices and 3 = pos x-y-z
-
+	LoadCubeBuffers(size);
 }
 
 PrimitiveCube::PrimitiveCube(float sizeX, float sizeY, float sizeZ) : Primitive(), size(sizeX, sizeY, sizeZ)
 {
 	type = PrimitiveTypes::Primitive_Cube;
 
+	LoadCubeBuffers(sizeX, sizeY, sizeZ);
+}
+
+
+void PrimitiveCube::LoadCubeBuffers(float sizeX, float sizeY, float sizeZ)
+{
 	float indicesQuad[]
 	{
 	sizeX * -0.5f, sizeY * -0.5f, sizeZ * -0.5f,//a
@@ -220,7 +177,13 @@ PrimitiveCube::PrimitiveCube(float sizeX, float sizeY, float sizeZ) : Primitive(
 	glBindBuffer(GL_ARRAY_BUFFER, myVertices);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * 36, vertices, GL_STATIC_DRAW);
 	// 36 = All vertex positions (12 * 3) 12 = vertices and 3 = pos x-y-z
+}
 
+
+PrimitiveCube::~PrimitiveCube()
+{
+	glDeleteBuffers(1, (GLuint*)&(myIndices));
+	glDeleteBuffers(1, (GLuint*)&(myVertices));
 }
 
 void PrimitiveCube::InnerRender() const
