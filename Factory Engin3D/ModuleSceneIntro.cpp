@@ -33,7 +33,7 @@ bool ModuleSceneIntro::Start()
 	//warrior = LoadMesh();
 	
 	frust = new PrimitiveFrustum(0.5f, 1.5f, { 2,0,0 });
-	cube = new PrimitiveCube(1, 1, 1);
+	cube = new PrimitiveCube({ 0,2,0 }, 1, 1, 1);
 
 	return ret;
 }

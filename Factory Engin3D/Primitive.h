@@ -44,12 +44,12 @@ class PrimitiveCube : public Primitive
 {
 public :
 	PrimitiveCube();
-	PrimitiveCube(float sizeX, float sizeY, float sizeZ);
+	PrimitiveCube(float3 position, float sizeX, float sizeY, float sizeZ);
 
-	void LoadCubeBuffers(float sizeX, float sizeY, float sizeZ);
-	void LoadCubeBuffers(float3 size)
+	void LoadCubeBuffers(float3 position, float sizeX, float sizeY, float sizeZ);
+	void LoadCubeBuffers(float3 position, float3 size)
 	{
-		LoadCubeBuffers(size.x, size.y, size.z);
+		LoadCubeBuffers(position, size.x, size.y, size.z);
 	}
 
 	~PrimitiveCube();

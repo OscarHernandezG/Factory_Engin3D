@@ -116,29 +116,29 @@ void Primitive::Scale(float x, float y, float z)
 PrimitiveCube::PrimitiveCube() : Primitive(), size(1.0f, 1.0f, 1.0f)
 {
 	type = PrimitiveTypes::Primitive_Cube;
-	LoadCubeBuffers(size);
+	LoadCubeBuffers({ 0,0,0 },size);
 }
 
-PrimitiveCube::PrimitiveCube(float sizeX, float sizeY, float sizeZ) : Primitive(), size(sizeX, sizeY, sizeZ)
+PrimitiveCube::PrimitiveCube(float3 position, float sizeX, float sizeY, float sizeZ) : Primitive(), size(sizeX, sizeY, sizeZ)
 {
 	type = PrimitiveTypes::Primitive_Cube;
 
-	LoadCubeBuffers(sizeX, sizeY, sizeZ);
+	LoadCubeBuffers(position, sizeX, sizeY, sizeZ);
 }
 
 
-void PrimitiveCube::LoadCubeBuffers(float sizeX, float sizeY, float sizeZ)
+void PrimitiveCube::LoadCubeBuffers(float3 position, float sizeX, float sizeY, float sizeZ)
 {
 	float indicesQuad[]
 	{
-	sizeX * -0.5f, sizeY * -0.5f, sizeZ * -0.5f,//a
-	sizeX *  0.5f, sizeY * -0.5f, sizeZ * -0.5f,//b
-	sizeX * -0.5f, sizeY *  0.5f, sizeZ * -0.5f,//c
-	sizeX *  0.5f, sizeY *  0.5f, sizeZ * -0.5f,//d
-	sizeX * -0.5f, sizeY * -0.5f, sizeZ *  0.5f,//e
-	sizeX *  0.5f, sizeY * -0.5f, sizeZ *  0.5f,//f
-	sizeX * -0.5f, sizeY *  0.5f, sizeZ *  0.5f,//g
-	sizeX *  0.5f, sizeY *  0.5f, sizeZ *  0.5f,//h
+	position.x + (sizeX * -0.5f), position.y + (sizeY * -0.5f), position.z + (sizeZ * -0.5f), //a
+	position.x + (sizeX *  0.5f), position.y + (sizeY * -0.5f), position.z + (sizeZ * -0.5f), //b
+	position.x + (sizeX * -0.5f), position.y + (sizeY *  0.5f), position.z + (sizeZ * -0.5f), //c
+	position.x + (sizeX *  0.5f), position.y + (sizeY *  0.5f), position.z + (sizeZ * -0.5f), //d
+	position.x + (sizeX * -0.5f), position.y + (sizeY * -0.5f), position.z + (sizeZ *  0.5f), //e
+	position.x + (sizeX *  0.5f), position.y + (sizeY * -0.5f), position.z + (sizeZ *  0.5f), //f
+	position.x + (sizeX * -0.5f), position.y + (sizeY *  0.5f), position.z + (sizeZ *  0.5f), //g
+	position.x + (sizeX *  0.5f), position.y + (sizeY *  0.5f), position.z + (sizeZ *  0.5f), //h
 	};
 
 	glGenBuffers(1, (GLuint*)&(myIndices));
