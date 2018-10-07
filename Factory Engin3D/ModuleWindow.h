@@ -28,11 +28,8 @@ public:
 	
 	void SetTitle(const char* title);
 
-	void SetFullscreen();
+	void SetFullscreen(bool desktop = false);
 	void SetBorderless();
-
-
-	bool InitGl();
 
 public:
 	//The window we'll be rendering to
@@ -45,6 +42,7 @@ public:
 
 
 	bool fullscreen = false;
+	bool fulldesktop = false;
 	bool borderless = false;
 };
 

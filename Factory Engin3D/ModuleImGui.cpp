@@ -13,6 +13,10 @@
 
 #include "Primitive.h"
 
+//RAM and CPU usage
+#include "windows.h"
+#include "psapi.h"
+
 ModuleImGui::ModuleImGui(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 }
@@ -27,22 +31,6 @@ bool ModuleImGui::Start()
 
 	bool ret = true;
 
-	SDL_GLContext gl_context = SDL_GL_CreateContext(App->window->window);
-
-
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-
-	ImGuiIO& io = ImGui::GetIO();
-	(void)io;
-
-	ImGui_ImplSDL2_InitForOpenGL(App->window->window, gl_context);
-	ImGui_ImplOpenGL2_Init();
-
-	ImGui::StyleColorsDark();
-
-	clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
 	pcg32_srandom_r(&rng, 42u, 54u);
 
 	return ret;
@@ -51,9 +39,6 @@ bool ModuleImGui::Start()
 update_status ModuleImGui::PreUpdate(float dt)
 {
 	update_status status = UPDATE_CONTINUE;
-
-	if (App->input->GetKey(SDL_SCANCODE_0) == KEY_DOWN)//Debug Console
-		LOG("**");
 
 	ImGui_ImplOpenGL2_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
@@ -104,6 +89,22 @@ update_status ModuleImGui::Update(float dt)
 
 update_status ModuleImGui::PostUpdate(float dt)
 {
+
+	PROCESS_MEMORY_COUNTERS counter;
+	GetProcessMemoryInfo(GetCurrentProcess(), &counter, sizeof(counter));
+
+	float ramInUse = counter.WorkingSetSize;
+	ramInUse /= 1024;
+	ramInUse /= 1024;
+
+	ramLog.push_back(ramInUse);
+	if (ramLog.size() > 75)
+	{
+		ramLog.erase(ramLog.begin());
+	}
+	test++;
+
+
 	return UPDATE_CONTINUE;
 }
 
@@ -304,10 +305,15 @@ void ModuleImGui::CreateAboutWindow()
 	if (ImGui::Button(nameChar, ImVec2(125, 20)))
 		ShellExecuteA(NULL, "Open", "http://www.pcg-random.org/download.html", NULL, NULL, SW_SHOWNORMAL);
 
-	//PCG BUTTON Link
+	//Parson Link
 	sprintf_s(nameChar, 25, "Parson");
 	if (ImGui::Button(nameChar, ImVec2(125, 20)))
 		ShellExecuteA(NULL, "Open", "https://github.com/kgabis/parson", NULL, NULL, SW_SHOWNORMAL);
+
+	//Assimp Link
+	sprintf_s(nameChar, 25, "Assimp");
+	if (ImGui::Button(nameChar, ImVec2(125, 20)))
+		ShellExecuteA(NULL, "Open", "http://www.assimp.org", NULL, NULL, SW_SHOWNORMAL);
 
 	///---------------------------------
 	ImGui::Separator();
@@ -471,6 +477,12 @@ void ModuleImGui::CheckShortCuts()
 //Create Headers----------------------------------------------------------
 void ModuleImGui::CreateAppHeader()
 {
+
+	static char appName[64];
+	sprintf_s(appName,64,App->aplicationName.data());
+	if(ImGui::InputText("Aplication Name", appName, 64, ImGuiInputTextFlags_EnterReturnsTrue))
+		App->ChangeAppName(appName);
+
 	ImGui::SliderInt("Max Fps", &App->capFrames, 30, 144);
 
 	ImGui::Checkbox("Cap Fps", &App->toCap);
@@ -481,19 +493,28 @@ void ModuleImGui::CreateAppHeader()
 	ImGui::PlotHistogram("##Framerate", &App->fpsLog[0], App->fpsLog.size(), 0, graphTitle, 0.0f, 150.0f, ImVec2(310, 100));
 
 	sprintf_s(graphTitle, 25, "Milliseconds %.1f", App->msLog[App->msLog.size() - 1]);
-	ImGui::PlotHistogram("##Framerate", &App->msLog[0], App->msLog.size(), 0, graphTitle, 0.0f, 40.0f, ImVec2(310, 100));
+	ImGui::PlotHistogram("##Milliseconds", &App->msLog[0], App->msLog.size(), 0, graphTitle, 0.0f, 40.0f, ImVec2(310, 100));
+
+	sprintf_s(graphTitle, 25, "RAM Usage %.1f", ramLog[ramLog.size() - 1]);
+	ImGui::PlotHistogram("##RAM", &ramLog[0], ramLog.size(), 0, graphTitle, 0.0f, 125.0f, ImVec2(310, 100));
 }
 
 void ModuleImGui::CreateWindowHeader()
 {
 	if (ImGui::Checkbox("Fullscreen", &App->window->fullscreen))
 	{
+		App->window->fulldesktop = false;
 		App->window->SetFullscreen();
 	}
 	ImGui::SameLine();
 	if (ImGui::Checkbox("Borderless", &App->window->borderless))
 	{
 		App->window->SetBorderless();
+	}
+	if (ImGui::Checkbox("Full Desktop", &App->window->fulldesktop))
+	{
+		App->window->fullscreen = false;
+		App->window->SetFullscreen(true);
 	}
 	if (ImGui::SliderFloat("Brightness", &brightnessPos, 0.0f, 1.0f))
 	{
@@ -549,6 +570,23 @@ void ModuleImGui::CreateCPUInfo(ImVec4 color)
 	ImGui::Text("System RAM: "); ImGui::SameLine();
 	ImGui::TextColored(color, "%.2fGB", (float)SDL_GetSystemRAM() / 1024);
 
+	MEMORYSTATUSEX memInfo;
+	memInfo.dwLength = sizeof(MEMORYSTATUSEX);
+	GlobalMemoryStatusEx(&memInfo);
+	DWORDLONG physMemUsed = memInfo.ullTotalPhys - memInfo.ullAvailPhys;
+	float totalRamInUse = physMemUsed / 1024;
+	totalRamInUse /= 1024;
+	totalRamInUse /= 1024;
+
+	ImGui::Text("Total RAM in use:"); ImGui::SameLine();
+	ImGui::TextColored(color, "%.2f GB", totalRamInUse);
+
+
+
+	ImGui::Text("RAM used by Factory Engin3D:"); ImGui::SameLine();
+	ImGui::TextColored(color, "%.2f MB", ramLog.back());
+
+
 	//CAP--------------------------------------------------------
 	ImGui::Text("Caps: "); ImGui::SameLine();
 	string caps("");
@@ -566,6 +604,7 @@ void ModuleImGui::CreateGPUInfo(ImVec4 color)
 	ImGui::Text("GPU info:"); ImGui::SameLine();
 	ImGui::TextColored(color, (char*)gpuInfo); ImGui::SameLine();
 	ImGui::TextColored(color, (char*)renderer);
+
 
 	//VRAM-------------------------------------------------------
 	GLint nTotalMemoryInKB = 0;

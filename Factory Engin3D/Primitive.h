@@ -1,12 +1,13 @@
-
 #pragma once
+#include "Globals.h"
+
 #include "MathGeoLib/MathGeoLib.h"
 #include "Color.h"
 
 enum PrimitiveTypes
 {
 	Primitive_Point,
-	Primitive_Line,
+	Primitive_Ray,
 	Primitive_Plane,
 	Primitive_Cube,
 	Primitive_Sphere,
@@ -48,8 +49,8 @@ public :
 
 public:
 	float3 size;
-	uint my_indices = 0u;
-	uint my_vertices = 0u;
+	uint myIndices = 0u;
+	uint myVertices = 0u;
 };
 
 //// ============================================
@@ -78,24 +79,23 @@ public:
 	int faces;
 };
 
-//// ============================================
-//class Line : public Primitive
-//{
-//public:
-//	Line();
-//	Line(float x, float y, float z);
-//	void InnerRender() const;
-//public:
-//	float3 origin;
-//	float3 destination;
-//};
+class RayLine : public Primitive
+{
+public:
+	RayLine();
+	RayLine(float3 origin, float3 destination);
+	void InnerRender() const;
+public:
+	float3 origin;
+	float3 destination;
+};
 
 // ============================================
 class PrimitivePlane : public Primitive
 {
 public:
 	PrimitivePlane();
-	PrimitivePlane(float x, float y, float z, float d);
+	PrimitivePlane(float3 normal, float d);
 	void InnerRender() const;
 public:
 	float3 normal;

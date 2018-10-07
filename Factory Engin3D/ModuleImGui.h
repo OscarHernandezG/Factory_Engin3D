@@ -57,8 +57,8 @@ public:
 	void CheckCaps(string* caps);
 
 	void LogConsole(const char* consoleText);
-public:
 
+public:
 	bool created = false;
 
 	bool showDemoWindow = false;
@@ -104,4 +104,9 @@ public:
 	//console
 	ImGuiTextBuffer textBuff;
 	bool canScroll = false;
+
+	vector<float> ramLog;
+
+	int test = 0;
+
 };

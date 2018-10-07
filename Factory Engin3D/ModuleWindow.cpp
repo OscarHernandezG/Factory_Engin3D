@@ -100,9 +100,9 @@ void ModuleWindow::SetTitle(const char* title)
 	SDL_SetWindowTitle(window, title);
 }
 
-void ModuleWindow::SetFullscreen()
+void ModuleWindow::SetFullscreen(bool desktop)
 {
-	if (!fullscreen)
+	if (!fullscreen && !fulldesktop)
 	{
 		SDL_SetWindowFullscreen(window, SDL_WINDOW_SHOWN);
 
@@ -111,7 +111,11 @@ void ModuleWindow::SetFullscreen()
 	}
 	else
 	{
-		SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+		if(desktop)
+			SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+
+		else
+			SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
 
 		SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 	}
@@ -134,6 +138,7 @@ update_status ModuleWindow::Save(JSON_Object* object)
 
 	json_object_dotset_boolean(object, "window.fullscreen", fullscreen);
 	json_object_dotset_boolean(object, "window.borderless", borderless);
+	json_object_dotset_boolean(object, "window.fulldesktop", fulldesktop);
 
 	return UPDATE_CONTINUE;
 }
@@ -143,8 +148,9 @@ update_status ModuleWindow::Load(JSON_Object * object)
 
 	fullscreen = json_object_dotget_boolean(object, "window.fullscreen");
 	borderless = json_object_dotget_boolean(object, "window.borderless");
-	
-	if (fullscreen)
+	fulldesktop = json_object_dotget_boolean(object, "window.fulldesktop");
+
+	if (fullscreen || fulldesktop)
 		SetFullscreen();
 	if (borderless)
 		SetBorderless();

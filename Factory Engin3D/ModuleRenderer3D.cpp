@@ -7,10 +7,20 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
+#include "imgui_impl_sdl.h"
+#include "imgui_impl_opengl2.h"
+
+#include "Assimp/include/cimport.h"
+#include "Assimp/include/scene.h"
+#include "Assimp/include/postprocess.h"
+#include "Assimp/include/cfileio.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
+
 #pragma comment (lib, "glew-2.1.0/libx86/glew32.lib")
+
+#pragma comment (lib, "Assimp/libx86/assimp.lib")	
 
 ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -76,7 +86,7 @@ bool ModuleRenderer3D::Init()
 		glClearDepth(1.0f);
 		
 		//Initialize clear color
-		glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 		//Check for error
 		error = glGetError();
@@ -86,7 +96,7 @@ bool ModuleRenderer3D::Init()
 			ret = false;
 		}
 		
-		GLfloat LightModelAmbient[] = {0.0f, 0.0f, 0.0f, 1.0f};
+		GLfloat LightModelAmbient[] = {1.0f, 1.0f, 1.0f, 1.0f};
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
 		
 		lights[0].ref = GL_LIGHT0;
@@ -113,6 +123,17 @@ bool ModuleRenderer3D::Init()
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+
+	ImGuiIO& io = ImGui::GetIO();
+	(void)io;
+
+	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
+	ImGui_ImplOpenGL2_Init();
+
+	ImGui::StyleColorsDark();
+
 	return ret;
 }
 
@@ -121,56 +142,13 @@ bool ModuleRenderer3D::Start()
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	float vertexQuad[]
-	{
-	-0.5f,- 0.5f, -0.5f,//a
-	 0.5f, -0.5f, -0.5f,//b
-	-0.5f,  0.5f,  0.5f,//c
-	-0.5f,  0.5f,  0.5f,//c
-	 0.5f, -0.5f,  0.5f,//b
-	 0.5f,  0.5f,  0.5f,//d
-	  
-	 0.5f,  0.5f, -0.5f,//d
-	 0.5f, -0.5f, -0.5f,//b
-	 0.5f, -0.5f,  0.5f,//f
-	 0.5f, -0.5f,  0.5f,//f
-	 0.5f,  0.5f,  0.5f,//h
-	 0.5f,  0.5f, -0.5f,//d
-			  
-	-0.5f,  0.5f, -0.5f,//c
-	 0.5f,  0.5f, -0.5f,//d
-	-0.5f,  0.5f,  0.5f,//g
-	-0.5f,  0.5f,  0.5f,//g
-	 0.5f,  0.5f, -0.5f,//d
-	 0.5f,  0.5f,  0.5f,//h
-			  
-	-0.5f,  0.5f,  0.5f,//g
-	-0.5f, -0.5f,  0.5f,//e
-	-0.5f, -0.5f, -0.5f,//a
-	-0.5f, -0.5f, -0.5f,//a
-	-0.5f,  0.5f, -0.5f,//c
-	-0.5f,  0.5f,  0.5f,//g
-			  
-	-0.5f, -0.5f, -0.5f,//a
-	-0.5f, -0.5f,  0.5f,//e
-	 0.5f, -0.5f,  0.5f,//f
-	 0.5f, -0.5f,  0.5f,//f
-	 0.5f, -0.5f, -0.5f,//b
-	-0.5f, -0.5f, -0.5f,//a
-				  
-	 0.5f,  0.5f,  0.5f,//h
-	 0.5f, -0.5f,  0.5f,//f
-	-0.5f, -0.5f,  0.5f,//e
-	-0.5f, -0.5f,  0.5f,//e
-	-0.5f,  0.5f,  0.5f,//g
-	 0.5f,  0.5f,  0.5f,//h				  
-	};
+	//future Assimp Logs in console
+	struct aiLogStream stream;
+	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
+	aiAttachLogStream(&stream);
 
-	//Create Quad
-	glGenBuffers(1, (GLuint*)&(my_id));
-	glBindBuffer(GL_ARRAY_BUFFER, my_id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 108, vertexQuad, GL_STATIC_DRAW); 
-	// 108 = All vertex positions (36 * 3) 36 = numsOfVertex and 3 = pos x-y-z
+	// Projection matrix for
+	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	return true;
 }
@@ -179,6 +157,7 @@ bool ModuleRenderer3D::Start()
 // PreUpdate: clear buffer
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	//glLoadIdentity();
 
@@ -197,8 +176,6 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
-
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	// 1. Draw geometry
 	App->sceneIntro->Draw3D(isFill, isWire);
@@ -219,7 +196,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 bool ModuleRenderer3D::CleanUp()
 {
 	LOG("Destroying 3D Renderer");
-
+	aiDetachAllLogStreams();
 	SDL_GL_DeleteContext(context);
 
 	return true;
@@ -239,104 +216,6 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
-/*
-void ModuleRenderer3D::DrawQuadTriangles()
-{
-		glLineWidth(2.0f);
-	glRotatef(0.1f, 1.0f, 1.0f, 0.0f);
-	glTranslatef(-4.0f, 0.0f, 0.0f);
-
-	glBegin(GL_TRIANGLES);
-	glVertex3f(-0.5f, -0.5f, -0.5f);//a
-	glVertex3f(0.5f, -0.5f, -0.5f);//b
-	glVertex3f(-0.5f,  0.5f,  0.5f);//c
-	glVertex3f(-0.5f,  0.5f,  0.5f);//c
-	glVertex3f(0.5f, -0.5f,  0.5f);//b
-	glVertex3f(0.5f,  0.5f,  0.5f);//d
-
-	glVertex3f(0.5f, 0.5f, -0.5f);//d
-	glVertex3f(0.5f, -0.5f, -0.5f);//b
-	glVertex3f(0.5f, -0.5f, 0.5f);//f
-	glVertex3f(0.5f, -0.5f, 0.5f);//f
-	glVertex3f(0.5f, 0.5f, 0.5f);//h
-	glVertex3f(0.5f, 0.5f, -0.5f);//d
-
-	glVertex3f(-0.5f, 0.5f, -0.5f);//c
-	glVertex3f(0.5f, 0.5f, -0.5f);//d
-	glVertex3f(-0.5f, 0.5f, 0.5f);//g
-	glVertex3f(-0.5f, 0.5f, 0.5f);//g
-	glVertex3f(0.5f, 0.5f, -0.5f);//d
-	glVertex3f(0.5f, 0.5f, 0.5f);//h
-
-	glVertex3f(-0.5f, 0.5f, 0.5f);//g
-	glVertex3f(-0.5f, -0.5f, 0.5f);//e
-	glVertex3f(-0.5f, -0.5f, -0.5f);//a
-	glVertex3f(-0.5f, -0.5f, -0.5f);//a
-	glVertex3f(-0.5f, 0.5f, -0.5f);//c
-	glVertex3f(-0.5f, 0.5f, 0.5f);//g
-
-	glVertex3f(-0.5f, -0.5f, -0.5f);//a
-	glVertex3f(-0.5f, -0.5f, 0.5f);//e
-	glVertex3f(0.5f, -0.5f, 0.5f);//f
-	glVertex3f(0.5f, -0.5f, 0.5f);//f
-	glVertex3f(0.5f, -0.5f, -0.5f);//b
-	glVertex3f(-0.5f, -0.5f, -0.5f);//a
-
-	glVertex3f(0.5f, 0.5f, 0.5f);//h
-	glVertex3f(0.5f, -0.5f, 0.5f);//f
-	glVertex3f(-0.5f, -0.5f, 0.5f);//e
-	glVertex3f(-0.5f, -0.5f, 0.5f);//e
-	glVertex3f(-0.5f, 0.5f, 0.5f);//g
-	glVertex3f(0.5f, 0.5f, 0.5f);//h
-
-	glEnd();
-
-	glLineWidth(1.0f);
-
-}
-
-void ModuleRenderer3D::DrawQuadVertex()
-{
-	glTranslatef(2.0f, 0.0f, 0.0f);
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, my_id);
-
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	glDrawArrays(GL_TRIANGLES, 0, 36); //36 = numVertices
-
-	
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glTranslatef(-2.0f, 0.0f, 0.0f);
-
-}
-
-void ModuleRenderer3D::DrawQuadVertexWireframe()
-{
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glColor3f(0, 1, 0);
-
-
-	glTranslatef(2.0f, 0.0f, 0.0f);
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, my_id);
-
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	glDrawArrays(GL_TRIANGLES, 0, 36); //36 = numVertices
-
-
-	glDisableClientState(GL_VERTEX_ARRAY);
-
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-	glColor3f(1, 1, 1);
-	glTranslatef(-2.0f, 0.0f, 0.0f);
-
-}
-*/
 
 math::float4x4 ModuleRenderer3D::Perspective(float fovy, float aspect, float n, float f) const
 {
