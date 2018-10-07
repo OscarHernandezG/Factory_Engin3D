@@ -125,7 +125,8 @@ update_status ModuleInput::PreUpdate(float dt)
 			}
 			break;
 			case SDL_DROPFILE:
-
+				//Todo clean
+				App->sceneIntro->warrior.ClearMesh();
 				App->sceneIntro->warrior = App->sceneIntro->LoadMesh(e.drop.file);
 
 				break;

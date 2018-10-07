@@ -23,21 +23,14 @@ class Mesh :public Primitive
 {
 public:
 	Mesh() {};
-	~Mesh(){};
+	~Mesh() { ClearMesh(); };
 
 	void InnerRender() const;
 
+	void ClearMesh();
+
 public:
 
-//	uint idIndex = 0u;
-//	uint  numIndex = 0u;
-//	uint* index = nullptr;
-
 	std::vector<MeshBuffer> buffers;
-
-//	uint idVertex = 0u;
-//	uint numVertex = 0u;
-//	float* vertex = nullptr;
-
 
 };

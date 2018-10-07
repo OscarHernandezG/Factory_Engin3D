@@ -59,6 +59,7 @@ Mesh ModuleSceneIntro::LoadMesh(char* path)
 	Mesh mesh;
 	if (path != nullptr)
 	{
+		int faces = 0;
 		char* filePath = path;
 		const aiScene* scene = aiImportFile(filePath, aiProcessPreset_TargetRealtime_MaxQuality);
 
@@ -81,6 +82,7 @@ Mesh ModuleSceneIntro::LoadMesh(char* path)
 
 					if (currentMesh->HasFaces())
 					{
+						faces += currentMesh->mNumFaces;
 						currentBuffer.index.size = currentMesh->mNumFaces * 3;
 						currentBuffer.index.buffer = new uint[currentBuffer.index.size];
 						for (uint index = 0; index < currentMesh->mNumFaces; ++index)
@@ -112,6 +114,8 @@ Mesh ModuleSceneIntro::LoadMesh(char* path)
 
 		else
 			LOG("Error loading scene %s", filePath);
+
+		LOG("Loaded geometry with %i faces", faces);
 	}
 	return mesh;
 }
@@ -142,8 +146,8 @@ void ModuleSceneIntro::Draw3D(bool fill, bool wire)
 		cube->Render();
 	}
 
-	/*warrior.fill = fill;
-	warrior.wire = wire;*/
+	warrior.fill = fill;
+	warrior.wire = wire;
 
 	//SpherePrim sphere;
 	//sphere.fill = fill;
