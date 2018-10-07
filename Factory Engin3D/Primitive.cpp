@@ -304,30 +304,31 @@ void PrimitiveCube::InnerRender() const
 //	glEnd();
 //}
 //
-//// LINE ==================================================
-//Line::Line() : Primitive(), origin(0, 0, 0), destination(1, 1, 1)
-//{
-//	type = PrimitiveTypes::Primitive_Line;
-//}
-//
-//Line::Line(float x, float y, float z) : Primitive(), origin(0, 0, 0), destination(x, y, z)
-//{
-//	type = PrimitiveTypes::Primitive_Line;
-//}
-//
-//void Line::InnerRender() const
-//{
-//	glLineWidth(2.0f);
-//
-//	glBegin(GL_LINES);
-//
-//	glVertex3f(origin.x, origin.y, origin.z);
-//	glVertex3f(destination.x, destination.y, destination.z);
-//
-//	glEnd();
-//
-//	glLineWidth(1.0f);
-//}
+// LINE ==================================================
+RayLine::RayLine() : Primitive(), origin(0, 0, 0), destination(1, 1, 1)
+{
+	
+	type = PrimitiveTypes::Primitive_Ray;
+}
+
+RayLine::RayLine(float3 origin, float3 destination) : Primitive(), origin(origin), destination(destination)
+{
+	type = PrimitiveTypes::Primitive_Ray;
+}
+
+void RayLine::InnerRender() const
+{
+	glLineWidth(2.0f);
+
+	glBegin(GL_LINES);
+
+	glVertex3f(origin.x, origin.y, origin.z);
+	glVertex3f(destination.x, destination.y, destination.z);
+
+	glEnd();
+
+	glLineWidth(1.0f);
+}
 
 // PLANE ==================================================
 PrimitivePlane::PrimitivePlane() : Primitive(), normal(0.0f, 1.0f, 0.0f), constant(1.0f)
@@ -335,7 +336,7 @@ PrimitivePlane::PrimitivePlane() : Primitive(), normal(0.0f, 1.0f, 0.0f), consta
 	type = PrimitiveTypes::Primitive_Plane;
 }
 
-PrimitivePlane::PrimitivePlane(float x, float y, float z, float d) : Primitive(), normal(x, y, z), constant(d)
+PrimitivePlane::PrimitivePlane(float3 normal, float d) : Primitive(), normal(normal), constant(d)
 {
 	type = PrimitiveTypes::Primitive_Plane;
 }

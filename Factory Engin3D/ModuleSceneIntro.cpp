@@ -132,6 +132,10 @@ void ModuleSceneIntro::Draw3D(bool fill, bool wire)
 	//cube.fill = fill;
 	//cube.wire = wire;
 	//cube.Render();
+
+	//RayLine ray({ 2,2,2 }, { 8,8,8 });
+	//ray.Render();
+
 	warrior.fill = fill;
 	warrior.wire = wire;
 	warrior.Render();
