@@ -408,7 +408,11 @@ PrimitiveFrustum::PrimitiveFrustum(float highSizes, float lowSize, float sizeX, 
 	LoadFrustumBuffers(highSizes, lowSize, sizeX, sizeY, sizeZ);
 
 }
-
+PrimitiveFrustum::~PrimitiveFrustum()
+{
+	glDeleteBuffers(1, (GLuint*)&(myIndices));
+	glDeleteBuffers(1, (GLuint*)&(myVertices));
+}
 void PrimitiveFrustum::LoadFrustumBuffers(float highSizes, float lowSize, float sizeX, float sizeY, float sizeZ)
 {
 	float indicesQuad[]
