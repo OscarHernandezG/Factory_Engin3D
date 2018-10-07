@@ -221,7 +221,6 @@ PrimitiveCube::PrimitiveCube(float sizeX, float sizeY, float sizeZ) : Primitive(
 	glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * 36, vertices, GL_STATIC_DRAW);
 	// 36 = All vertex positions (12 * 3) 12 = vertices and 3 = pos x-y-z
 
-
 }
 
 void PrimitiveCube::InnerRender() const
@@ -237,7 +236,6 @@ void PrimitiveCube::InnerRender() const
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glDisableClientState(GL_VERTEX_ARRAY);
-
 }
 
 // SPHERE ============================================
@@ -394,4 +392,86 @@ void PrimitivePlane::InnerRender() const
 	}
 
 	glEnd();
+}
+
+
+// Frustum ================================================
+PrimitiveFrustum::PrimitiveFrustum() : Primitive()
+{
+	type = PrimitiveTypes::Primitive_Plane;
+	LoadFrustumBuffers();
+}
+
+PrimitiveFrustum::PrimitiveFrustum(float highSizes, float lowSize, float sizeX, float sizeY, float sizeZ)
+{
+	type = PrimitiveTypes::Primitive_Frustum;
+	LoadFrustumBuffers(highSizes, lowSize, sizeX, sizeY, sizeZ);
+
+}
+
+void PrimitiveFrustum::LoadFrustumBuffers(float highSizes, float lowSize, float sizeX, float sizeY, float sizeZ)
+{
+	float indicesQuad[]
+	{
+	sizeX * -0.5f * lowSize,	sizeY * -0.5f, sizeZ * -0.5f * lowSize,//a
+	sizeX *  0.5f * lowSize,	sizeY * -0.5f, sizeZ * -0.5f * lowSize,//b
+	sizeX * -0.5f * highSizes,	sizeY *  0.5f, sizeZ * -0.5f * highSizes,//c
+	sizeX *  0.5f * highSizes,	sizeY *  0.5f, sizeZ * -0.5f * highSizes,//d
+	sizeX * -0.5f * lowSize,	sizeY * -0.5f, sizeZ *  0.5f * lowSize,//e
+	sizeX *  0.5f * lowSize,	sizeY * -0.5f, sizeZ *  0.5f * lowSize,//f
+	sizeX * -0.5f * highSizes,	sizeY *  0.5f, sizeZ *  0.5f * highSizes,//g
+	sizeX *  0.5f * highSizes,	sizeY *  0.5f, sizeZ *  0.5f * highSizes,//h
+	};
+
+	glGenBuffers(1, (GLuint*)&(myIndices));
+	glBindBuffer(GL_ARRAY_BUFFER, myIndices);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 24, indicesQuad, GL_STATIC_DRAW);
+	// 24 = All vertex positions (8 * 3) 8 = posibleVertex and 3 = pos x-y-z
+
+	uint vertices[]
+	{
+		// Front
+		0, 1, 2, // ABC
+		1, 3, 2, // BDC
+
+		// Right
+		1, 5, 3, // BFD
+		5, 7, 3, // FHD
+
+		// Back
+		5, 4, 7, // FEH
+		4, 6, 7, // EGH
+
+		// Left
+		4, 0, 6, // EAG
+		0, 2, 6, // ACG
+
+		// Top
+		2, 3, 6, // CDG
+		3, 7, 6, // DHG
+
+		// Bottom
+		0, 4, 1, // AEB
+		1, 4, 5  // BEF
+	};
+
+	glGenBuffers(1, (GLuint*)&(myVertices));
+	glBindBuffer(GL_ARRAY_BUFFER, myVertices);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * 36, vertices, GL_STATIC_DRAW);
+	// 36 = All vertex positions (12 * 3) 12 = vertices and 3 = pos x-y-z
+}
+
+void PrimitiveFrustum::InnerRender() const
+{
+	glEnableClientState(GL_VERTEX_ARRAY);
+
+	glBindBuffer(GL_ARRAY_BUFFER, myIndices);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, myVertices);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glDisableClientState(GL_VERTEX_ARRAY);
 }

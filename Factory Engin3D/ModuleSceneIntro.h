@@ -21,6 +21,6 @@ public:
 
 public:
 	Mesh warrior;
-
+	PrimitiveFrustum* frust;
 	char* droppedFileDir = nullptr;
 };

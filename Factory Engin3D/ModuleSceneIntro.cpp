@@ -31,6 +31,9 @@ bool ModuleSceneIntro::Start()
 	App->camera->LookAt(float3(0, 0, 0));
 
 	//warrior = LoadMesh();
+	
+	frust = new PrimitiveFrustum(0.5f,1.5f);
+
 	return ret;
 }
 
@@ -44,6 +47,7 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 // Load assets
 bool ModuleSceneIntro::CleanUp()
 {	
+	delete frust;
 	return true;
 }
 
@@ -136,9 +140,15 @@ void ModuleSceneIntro::Draw3D(bool fill, bool wire)
 	/*warrior.fill = fill;
 	warrior.wire = wire;*/
 
-	SpherePrim sphere;
-	sphere.fill = fill;
-	sphere.wire = wire;
-	sphere.Render();
+	//SpherePrim sphere;
+	//sphere.fill = fill;
+	//sphere.wire = wire;
+	//sphere.Render();
 
+	if (frust != nullptr)
+	{
+		frust->fill = fill;
+		frust->wire = wire;
+		frust->Render();
+	}
 }

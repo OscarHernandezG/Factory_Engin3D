@@ -11,7 +11,8 @@ enum PrimitiveTypes
 	Primitive_Plane,
 	Primitive_Cube,
 	Primitive_Sphere,
-	Primitive_Cylinder
+	Primitive_Cylinder,
+	Primitive_Frustum
 };
 
 class Primitive
@@ -101,3 +102,21 @@ public:
 	float3 normal;
 	float constant;
 };
+
+// ============================================
+class PrimitiveFrustum : public Primitive
+{
+public:
+	PrimitiveFrustum();
+	PrimitiveFrustum(float highSizes, float lowSize, float sizeX = 1, float sizeY = 1, float sizeZ = 1);
+
+	void LoadFrustumBuffers(float highSizes = 1, float lowSize = 1, float sizeX = 1, float sizeY = 1, float sizeZ = 1);
+
+	void InnerRender() const;
+
+public:
+	float3 size;
+	uint myIndices = 0u;
+	uint myVertices = 0u;
+};
+
