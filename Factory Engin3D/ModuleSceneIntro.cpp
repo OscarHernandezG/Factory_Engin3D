@@ -32,7 +32,8 @@ bool ModuleSceneIntro::Start()
 
 	//warrior = LoadMesh();
 	
-	frust = new PrimitiveFrustum(0.5f,1.5f);
+	frust = new PrimitiveFrustum(0.5f, 1.5f, { 2,0,0 });
+	cube = new PrimitiveCube(1, 1, 1);
 
 	return ret;
 }
@@ -48,6 +49,8 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 bool ModuleSceneIntro::CleanUp()
 {	
 	delete frust;
+	delete cube;
+
 	return true;
 }
 
@@ -132,10 +135,12 @@ void ModuleSceneIntro::Draw3D(bool fill, bool wire)
 	plane.axis = true;
 	plane.Render();
 
-	/*PrimitiveCube cube;
-	cube.fill = fill;
-	cube.wire = wire;
-	cube.Render();*/
+	if (cube != nullptr)
+	{
+		cube->fill = fill;
+		cube->wire = wire;
+		cube->Render();
+	}
 
 	/*warrior.fill = fill;
 	warrior.wire = wire;*/

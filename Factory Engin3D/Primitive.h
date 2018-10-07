@@ -116,10 +116,10 @@ class PrimitiveFrustum : public Primitive
 {
 public:
 	PrimitiveFrustum();
-	PrimitiveFrustum(float highSizes, float lowSize, float sizeX = 1, float sizeY = 1, float sizeZ = 1);
+	PrimitiveFrustum(float highSizes, float lowSize, float3 position = { 0,0,0 }, float sizeX = 1, float sizeY = 1, float sizeZ = 1);
 	~PrimitiveFrustum();
 
-	void LoadFrustumBuffers(float highSizes = 1, float lowSize = 1, float sizeX = 1, float sizeY = 1, float sizeZ = 1);
+	void LoadFrustumBuffers(float highSizes = 1, float lowSize = 1, float3 position = { 0,0,0 }, float sizeX = 1, float sizeY = 1, float sizeZ = 1);
 
 	void InnerRender() const;
 

@@ -365,10 +365,10 @@ PrimitiveFrustum::PrimitiveFrustum() : Primitive()
 	LoadFrustumBuffers();
 }
 
-PrimitiveFrustum::PrimitiveFrustum(float highSizes, float lowSize, float sizeX, float sizeY, float sizeZ)
+PrimitiveFrustum::PrimitiveFrustum(float highSizes, float lowSize, float3 position, float sizeX, float sizeY, float sizeZ)
 {
 	type = PrimitiveTypes::Primitive_Frustum;
-	LoadFrustumBuffers(highSizes, lowSize, sizeX, sizeY, sizeZ);
+	LoadFrustumBuffers(highSizes, lowSize, position, sizeX, sizeY, sizeZ);
 
 }
 PrimitiveFrustum::~PrimitiveFrustum()
@@ -376,18 +376,18 @@ PrimitiveFrustum::~PrimitiveFrustum()
 	glDeleteBuffers(1, (GLuint*)&(myIndices));
 	glDeleteBuffers(1, (GLuint*)&(myVertices));
 }
-void PrimitiveFrustum::LoadFrustumBuffers(float highSizes, float lowSize, float sizeX, float sizeY, float sizeZ)
+void PrimitiveFrustum::LoadFrustumBuffers(float hSize, float lSize, float3 position, float sizeX, float sizeY, float sizeZ)
 {
 	float indicesQuad[]
 	{
-	sizeX * -0.5f * lowSize,	sizeY * -0.5f, sizeZ * -0.5f * lowSize,//a
-	sizeX *  0.5f * lowSize,	sizeY * -0.5f, sizeZ * -0.5f * lowSize,//b
-	sizeX * -0.5f * highSizes,	sizeY *  0.5f, sizeZ * -0.5f * highSizes,//c
-	sizeX *  0.5f * highSizes,	sizeY *  0.5f, sizeZ * -0.5f * highSizes,//d
-	sizeX * -0.5f * lowSize,	sizeY * -0.5f, sizeZ *  0.5f * lowSize,//e
-	sizeX *  0.5f * lowSize,	sizeY * -0.5f, sizeZ *  0.5f * lowSize,//f
-	sizeX * -0.5f * highSizes,	sizeY *  0.5f, sizeZ *  0.5f * highSizes,//g
-	sizeX *  0.5f * highSizes,	sizeY *  0.5f, sizeZ *  0.5f * highSizes,//h
+	position.x + (sizeX * -0.5f * lSize),	position.y + (sizeY * -0.5f), position.z + (sizeZ * -0.5f * lSize),//a
+	position.x + (sizeX *  0.5f * lSize),	position.y + (sizeY * -0.5f), position.z + (sizeZ * -0.5f * lSize),//b
+	position.x + (sizeX * -0.5f * hSize),	position.y + (sizeY *  0.5f), position.z + (sizeZ * -0.5f * hSize),//c
+	position.x + (sizeX *  0.5f * hSize),	position.y + (sizeY *  0.5f), position.z + (sizeZ * -0.5f * hSize),//d
+	position.x + (sizeX * -0.5f * lSize),	position.y + (sizeY * -0.5f), position.z + (sizeZ *  0.5f * lSize),//e
+	position.x + (sizeX *  0.5f * lSize),	position.y + (sizeY * -0.5f), position.z + (sizeZ *  0.5f * lSize),//f
+	position.x + (sizeX * -0.5f * hSize),	position.y + (sizeY *  0.5f), position.z + (sizeZ *  0.5f * hSize),//g
+	position.x + (sizeX *  0.5f * hSize),	position.y + (sizeY *  0.5f), position.z + (sizeZ *  0.5f * hSize),//h
 	};
 
 	glGenBuffers(1, (GLuint*)&(myIndices));
