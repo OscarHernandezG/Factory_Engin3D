@@ -244,17 +244,17 @@ void SpherePrim::InnerRender() const
 
 
 // CYLINDER ============================================
-CylinderPrim::CylinderPrim() : Primitive(), radius(1.0f), height(1.0f), faces(40)
+PrimitiveCylinder::PrimitiveCylinder() : Primitive(), radius(1.0f), height(1.0f), faces(40)
 {
 	type = PrimitiveTypes::Primitive_Cylinder;
 }
 
-CylinderPrim::CylinderPrim(float radius, float height, int faces) : Primitive(), radius(radius), height(height), faces(faces)
+PrimitiveCylinder::PrimitiveCylinder(float radius, float height, int faces) : Primitive(), radius(radius), height(height), faces(faces)
 {
 	type = PrimitiveTypes::Primitive_Cylinder;
 }
 
-void CylinderPrim::InnerRender() const
+void PrimitiveCylinder::InnerRender() const
 {
 	// Cylinder Bottom
 	glBegin(GL_TRIANGLES);
@@ -298,8 +298,6 @@ void CylinderPrim::InnerRender() const
 		glVertex3f(radius * cos(a), height * 0.5f, radius * sin(a));
 		a = (i)* PI / 180; // degrees to radians
 		glVertex3f(radius * cos(a), -height * 0.5f, radius * sin(a));
-
-		
 	}
 	glEnd();
 }
