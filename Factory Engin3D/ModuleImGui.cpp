@@ -614,7 +614,7 @@ void ModuleImGui::CreateGPUInfo(ImVec4 color)
 	GLint nCurAvailMemoryInKB = 0;
 	glGetIntegerv(GL_GPU_MEM_INFO_CURRENT_AVAILABLE_MEM_NVX,
 		&nCurAvailMemoryInKB);
-
+ 
 	ImGui::Text("VRAM total: "); ImGui::SameLine();
 	ImGui::TextColored(color, "%.2f MB", (float)nTotalMemoryInKB / 1024);
 
