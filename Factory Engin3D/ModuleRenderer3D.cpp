@@ -117,7 +117,7 @@ bool ModuleRenderer3D::Init()
 		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
 
-//		glEnable(GL_TEXTURE_2D);
+		glEnable(GL_TEXTURE_2D);
 //		glShadeModel(GL_SMOOTH);
 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -169,6 +169,65 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 
 	for (uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
+
+	const int eight = 8;
+	GLubyte checkImage[eight][eight][4];
+	for (int i = 0; i < eight; i++) {
+		for (int j = 0; j < eight; j++) {
+			int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
+			checkImage[i][j][0] = (GLubyte)c;
+			checkImage[i][j][1] = (GLubyte)c;
+			checkImage[i][j][2] = (GLubyte)c;
+			checkImage[i][j][3] = (GLubyte)255;
+		}
+	}
+
+	glLineWidth(2.0f);
+
+	glBegin(GL_TRIANGLES);
+	glVertex3f(-0.5f, -0.5f, -0.5f);//a
+	glVertex3f(0.5f, -0.5f, -0.5f);//b
+	glVertex3f(-0.5f, 0.5f, -0.5f);//c
+	glVertex3f(-0.5f, 0.5f, -0.5f);//c
+	glVertex3f(0.5f, -0.5f, -0.5f);//b
+	glVertex3f(0.5f, 0.5f, -0.5f);//d
+
+	glVertex3f(0.5f, 0.5f, -0.5f);//d
+	glVertex3f(0.5f, -0.5f, -0.5f);//b
+	glVertex3f(0.5f, -0.5f, 0.5f);//f
+	glVertex3f(0.5f, -0.5f, 0.5f);//f
+	glVertex3f(0.5f, 0.5f, 0.5f);//h
+	glVertex3f(0.5f, 0.5f, -0.5f);//d
+
+	glVertex3f(-0.5f, 0.5f, -0.5f);//c
+	glVertex3f(0.5f, 0.5f, -0.5f);//d
+	glVertex3f(-0.5f, 0.5f, 0.5f);//g
+	glVertex3f(-0.5f, 0.5f, 0.5f);//g
+	glVertex3f(0.5f, 0.5f, -0.5f);//d
+	glVertex3f(0.5f, 0.5f, 0.5f);//h
+
+	glVertex3f(-0.5f, 0.5f, 0.5f);//g
+	glVertex3f(-0.5f, -0.5f, 0.5f);//e
+	glVertex3f(-0.5f, -0.5f, -0.5f);//a
+	glVertex3f(-0.5f, -0.5f, -0.5f);//a
+	glVertex3f(-0.5f, 0.5f, -0.5f);//c
+	glVertex3f(-0.5f, 0.5f, 0.5f);//g
+
+	glVertex3f(-0.5f, -0.5f, -0.5f);//a
+	glVertex3f(-0.5f, -0.5f, 0.5f);//e
+	glVertex3f(0.5f, -0.5f, 0.5f);//f
+	glVertex3f(0.5f, -0.5f, 0.5f);//f
+	glVertex3f(0.5f, -0.5f, -0.5f);//b
+	glVertex3f(-0.5f, -0.5f, -0.5f);//a
+
+	glVertex3f(0.5f, 0.5f, 0.5f);//h
+	glVertex3f(0.5f, -0.5f, 0.5f);//f
+	glVertex3f(-0.5f, -0.5f, 0.5f);//e
+	glVertex3f(-0.5f, -0.5f, 0.5f);//e
+	glVertex3f(-0.5f, 0.5f, 0.5f);//g
+	glVertex3f(0.5f, 0.5f, 0.5f);//h
+	glEnd();
+	glLineWidth(1.0f);
 
 	return UPDATE_CONTINUE;
 }
