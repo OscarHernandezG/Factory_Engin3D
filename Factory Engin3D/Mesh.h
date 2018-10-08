@@ -30,7 +30,6 @@ public:
 	void ClearMesh();
 
 public:
-
 	std::vector<MeshBuffer> buffers;
 
 };

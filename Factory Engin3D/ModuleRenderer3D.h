@@ -41,5 +41,5 @@ public:
 	uint my_id = 0u;
 
 	bool isFill = true;
-	bool isWire = false;
+	bool isWire = true;
 };

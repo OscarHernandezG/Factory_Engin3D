@@ -139,12 +139,12 @@ void ModuleSceneIntro::Draw3D(bool fill, bool wire)
 	plane.axis = true;
 	plane.Render();
 
-	if (cube != nullptr)
-	{
-		cube->fill = fill;
-		cube->wire = wire;
-		cube->Render();
-	}
+	//if (cube != nullptr)
+	//{
+	//	cube->fill = fill;
+	//	cube->wire = wire;
+	//	cube->Render();
+	//}
 
 	warrior.fill = fill;
 	warrior.wire = wire;
@@ -154,10 +154,10 @@ void ModuleSceneIntro::Draw3D(bool fill, bool wire)
 	//sphere.wire = wire;
 	//sphere.Render();
 
-	if (frust != nullptr)
-	{
-		frust->fill = fill;
-		frust->wire = wire;
-		frust->Render();
-	}
+	//if (frust != nullptr)
+	//{
+	//	frust->fill = fill;
+	//	frust->wire = wire;
+	//	frust->Render();
+	//}
 }

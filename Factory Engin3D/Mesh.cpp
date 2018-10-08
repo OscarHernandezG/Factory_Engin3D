@@ -22,12 +22,12 @@ void Mesh::InnerRender() const
 
 void Mesh::ClearMesh()
 {
-	for (std::vector<MeshBuffer>::iterator iterator = buffers.begin(); iterator != buffers.end(); ++iterator)
-	{
-		glDeleteBuffers(1, (GLuint*)&((*iterator).index.id));
-		glDeleteBuffers(1, (GLuint*)&((*iterator).vertex.id));
+	//for (std::vector<MeshBuffer>::iterator iterator = buffers.begin(); iterator != buffers.end(); ++iterator)
+	//{
+	//	glDeleteBuffers(1, (GLuint*)&((*iterator).index.id));
+	//	glDeleteBuffers(1, (GLuint*)&((*iterator).vertex.id));
 
-		delete (*iterator).index.buffer;
-		delete (*iterator).vertex.buffer;
-	}
+	//	delete (*iterator).index.buffer;
+	//	delete (*iterator).vertex.buffer;
+	//}
 }
