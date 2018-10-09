@@ -29,7 +29,7 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(float3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(float3(0, 0, 0));
 
-	//warrior = LoadMesh();
+	//currentMesh = LoadMesh();
 	
 	frust = new PrimitiveFrustum(0.5f, 1.5f, { 2,0,0 });
 	cube = new PrimitiveCube({ 0,2,0 }, 1, 1, 1);
@@ -56,7 +56,7 @@ bool ModuleSceneIntro::CleanUp()
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
-	warrior.Render();
+	currentMesh.Render();
 	return UPDATE_CONTINUE;
 }
 

@@ -9,7 +9,8 @@
 #include "Assimp/include/cfileio.h"
 
 #include "DevIL/includex86/IL/il.h"
-//#include "DevIL/includex86/IL/ilu.h"
+#include "DevIL/includex86/IL/ilu.h"
+#include "DevIL/includex86/IL/ilut.h"
 
 
 #pragma comment( lib, "DevIL/libx86/DevIL.lib" )
@@ -31,12 +32,12 @@ bool ModuleGeometry::Start()
 	LOG("Loading Geometry manager");
 
 
-	//ilutRenderer(ILUT_OPENGL);
-	//ilInit();
-	//iluInit();
-	//ilutInit();
-	//ilutRenderer(ILUT_OPENGL);
-
+	ilutRenderer(ILUT_OPENGL);
+	ilInit();
+	iluInit();
+	ilutInit();
+	ilutRenderer(ILUT_OPENGL);
+	imageID = LoadTexture("assets/Lenna.png");
 	bool ret = true;
 
 	return ret;
@@ -137,14 +138,14 @@ uint ModuleGeometry::LoadTexture(char* path)
 	ilGenImages(1, &imageID);
 	ilBindImage(imageID);
 
-	if (ilLoadImage(path))
+	if ((bool)ilLoadImage(path))
 	{
-		//ILinfo info;
-		//iluGetImageInfo(&info);
-		//if (info.Origin == IL_ORIGIN_UPPER_LEFT)
-		//{
-		//	iluFlipImage();
-		//}
+		ILinfo info;
+		iluGetImageInfo(&info);
+		if (info.Origin == IL_ORIGIN_UPPER_LEFT)
+		{
+			iluFlipImage();
+		}
 
 		if (ilConvertImage(IL_RGB, IL_UNSIGNED_BYTE))
 		{
@@ -164,12 +165,12 @@ uint ModuleGeometry::LoadTexture(char* path)
 		}
 		else
 		{
-		//	LOG("Image conversion error %s", iluErrorString(ilGetError()));
+			LOG("Image conversion error %s", iluErrorString(ilGetError()));
 		}
 	}
 	else
 	{
-	//	LOG("Error loading texture %s", iluErrorString(ilGetError()));
+		LOG("Error loading texture %s", iluErrorString(ilGetError()));
 	}
 
 	ilDeleteImages(1, &imageID);
@@ -202,9 +203,9 @@ void ModuleGeometry::Draw3D(bool fill, bool wire)
 	plane.axis = true;
 	plane.Render();
 
-	warrior.fill = fill;
-	warrior.wire = wire;
-	warrior.Render();
+	currentMesh.fill = fill;
+	currentMesh.wire = wire;
+	currentMesh.Render();
 
 	//SpherePrim sphere;
 	//sphere.fill = fill;
@@ -217,4 +218,100 @@ void ModuleGeometry::Draw3D(bool fill, bool wire)
 	//	frust->wire = wire;
 	//	frust->Render();
 	//}
+
+
+	glLineWidth(2.0f);
+	glBindTexture(GL_TEXTURE_2D, imageID);
+
+	glBegin(GL_TRIANGLES);
+
+	glTexCoord2f(0.0f, 0.0f);
+	glVertex3f(-0.5f, -0.5f, -0.5f);//a
+	glTexCoord2f(1.0f, 0.0f);
+	glVertex3f(0.5f, -0.5f, -0.5f);//b
+	glTexCoord2f(0.0f, 1.0f);
+	glVertex3f(-0.5f, 0.5f, -0.5f);//c
+	glTexCoord2f(1.0f, 0.0f);
+	glVertex3f(-0.5f, 0.5f, -0.5f);//c
+	glTexCoord2f(0.0f, 1.0f);
+	glVertex3f(0.5f, -0.5f, -0.5f);//b
+	glTexCoord2f(1.0f, 1.0f);
+	glVertex3f(0.5f, 0.5f, -0.5f);//d
+
+	glTexCoord2f(1.0f, 0.0f);
+	glVertex3f(0.5f, 0.5f, -0.5f);//d
+	glTexCoord2f(0.0f, 0.0f);
+	glVertex3f(0.5f, -0.5f, -0.5f);//b
+	glTexCoord2f(0.0f, 1.0f);
+	glVertex3f(0.5f, -0.5f, 0.5f);//f
+	glTexCoord2f(0.0f, 1.0f);
+	glVertex3f(0.5f, -0.5f, 0.5f);//f
+	glTexCoord2f(1.0f, 1.0f);
+	glVertex3f(0.5f, 0.5f, 0.5f);//h
+	glTexCoord2f(1.0f, 0.0f);
+	glVertex3f(0.5f, 0.5f, -0.5f);//d
+
+	glTexCoord2f(0.0f, 0.0f);
+	glVertex3f(-0.5f, 0.5f, -0.5f);//c
+	glTexCoord2f(0.0f, 1.0f);
+	glVertex3f(0.5f, 0.5f, -0.5f);//d
+	glTexCoord2f(1.0f, 0.0f);
+	glVertex3f(-0.5f, 0.5f, 0.5f);//g
+	glTexCoord2f(1.0f, 0.0f);
+	glVertex3f(-0.5f, 0.5f, 0.5f);//g
+	glTexCoord2f(0.0f, 1.0f);
+	glVertex3f(0.5f, 0.5f, -0.5f);//d
+	glTexCoord2f(1.0f, 1.0f);
+	glVertex3f(0.5f, 0.5f, 0.5f);//h
+
+	glTexCoord2f(1.0f, 0.0f);
+	glVertex3f(-0.5f, 0.5f, 0.5f);//g
+	glTexCoord2f(0.0f, 0.0f);
+	glVertex3f(-0.5f, -0.5f, 0.5f);//e
+	glTexCoord2f(0.0f, 1.0f);
+	glVertex3f(-0.5f, -0.5f, -0.5f);//a
+	glTexCoord2f(0.0f, 1.0f);
+	glVertex3f(-0.5f, -0.5f, -0.5f);//a
+	glTexCoord2f(1.0f, 1.0f);
+	glVertex3f(-0.5f, 0.5f, -0.5f);//c
+	glTexCoord2f(1.0f, 0.0f);
+	glVertex3f(-0.5f, 0.5f, 0.5f);//g
+
+	glTexCoord2f(1.0f, 0.0f);
+	glVertex3f(-0.5f, -0.5f, -0.5f);//a
+	glTexCoord2f(0.0f, 0.0f);
+	glVertex3f(-0.5f, -0.5f, 0.5f);//e
+	glTexCoord2f(0.0f, 1.0f);
+	glVertex3f(0.5f, -0.5f, 0.5f);//f
+	glTexCoord2f(0.0f, 1.0f);
+	glVertex3f(0.5f, -0.5f, 0.5f);//f
+	glTexCoord2f(1.0f, 1.0f);
+	glVertex3f(0.5f, -0.5f, -0.5f);//b
+	glTexCoord2f(1.0f, 0.0f);
+	glVertex3f(-0.5f, -0.5f, -0.5f);//a
+
+	glTexCoord2f(1.0f, 0.0f);
+	glVertex3f(0.5f, 0.5f, 0.5f);//h
+	glTexCoord2f(0.0f, 0.0f);
+	glVertex3f(0.5f, -0.5f, 0.5f);//f
+	glTexCoord2f(0.0f, 1.0f);
+	glVertex3f(-0.5f, -0.5f, 0.5f);//e
+	glTexCoord2f(0.0f, 1.0f);
+	glVertex3f(-0.5f, -0.5f, 0.5f);//e
+	glTexCoord2f(1.0f, 1.0f);
+	glVertex3f(-0.5f, 0.5f, 0.5f);//g
+	glTexCoord2f(1.0f, 0.0f);
+	glVertex3f(0.5f, 0.5f, 0.5f);//h
+
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+
+	glMatrixMode(GL_MODELVIEW);
+
+
+	glEnd();
+	glLineWidth(1.0f);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
 }

@@ -24,7 +24,7 @@ public:
 	uint LoadTexture(char* path);
 
 public:
-	Mesh warrior;
-
+	Mesh currentMesh;
+	uint imageID;
 	char* droppedFileDir = nullptr;
 };
