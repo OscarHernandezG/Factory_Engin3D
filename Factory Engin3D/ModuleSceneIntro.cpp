@@ -78,7 +78,7 @@ Mesh ModuleSceneIntro::LoadMesh(char* path)
 
 					memcpy(currentBuffer.vertex.buffer, currentMesh->mVertices, sizeof(float) * currentBuffer.vertex.size);
 
-					LOG("New mesh loaded with %d vertices", currentBuffer.vertex.size);
+					//LOG("New mesh loaded with %d vertices", currentBuffer.vertex.size);
 
 					if (currentMesh->HasFaces())
 					{
@@ -87,9 +87,9 @@ Mesh ModuleSceneIntro::LoadMesh(char* path)
 						currentBuffer.index.buffer = new uint[currentBuffer.index.size];
 						for (uint index = 0; index < currentMesh->mNumFaces; ++index)
 						{
-							if (currentMesh->mFaces[index].mNumIndices != 3)
-								LOG("WARNING, geometry faces != 3 indices")
-							else
+							//if (currentMesh->mFaces[index].mNumIndices != 3)
+								//LOG("WARNING, geometry faces != 3 indices")
+							//else
 							{
 								memcpy(&currentBuffer.index.buffer[index * 3], currentMesh->mFaces[index].mIndices, sizeof(uint) * 3);
 							}
@@ -112,10 +112,10 @@ Mesh ModuleSceneIntro::LoadMesh(char* path)
 
 		}
 
-		else
-			LOG("Error loading scene %s", filePath);
+		//else
+			//LOG("Error loading scene %s", filePath);
 
-		LOG("Loaded geometry with %i faces", faces);
+		//LOG("Loaded geometry with %i faces", faces);
 	}
 	return mesh;
 }

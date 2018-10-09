@@ -22,6 +22,8 @@
 
 #pragma comment (lib, "Assimp/libx86/assimp.lib")	
 
+void myCallback(const char *msg, char *userData) { LOG("%s",msg); }
+
 ModuleRenderer3D::ModuleRenderer3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 }
@@ -144,11 +146,11 @@ bool ModuleRenderer3D::Start()
 
 	//future Assimp Logs in console
 	struct aiLogStream stream;
-	stream = aiGetPredefinedLogStream(aiDefaultLogStream_DEBUGGER, nullptr);
+	stream.callback = myCallback;
 	aiAttachLogStream(&stream);
-
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
+
 
 	return true;
 }
