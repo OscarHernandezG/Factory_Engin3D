@@ -15,6 +15,10 @@
 #include "Assimp/include/postprocess.h"
 #include "Assimp/include/cfileio.h"
 
+#include "DeviL/include/il.h"
+#include "DevIL/include/ilu.h"
+
+
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 
@@ -186,46 +190,83 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 
 	glBegin(GL_TRIANGLES);
 	glVertex3f(-0.5f, -0.5f, -0.5f);//a
+	glTexCoord2f(0.0f, 0.0f);
 	glVertex3f(0.5f, -0.5f, -0.5f);//b
+	glTexCoord2f(1.0f, 0.0f);
 	glVertex3f(-0.5f, 0.5f, -0.5f);//c
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(-0.5f, 0.5f, -0.5f);//c
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(0.5f, -0.5f, -0.5f);//b
+	glTexCoord2f(0.0f, 0.0f);
 	glVertex3f(0.5f, 0.5f, -0.5f);//d
+	glTexCoord2f(1.0f, 1.0f);
 
 	glVertex3f(0.5f, 0.5f, -0.5f);//d
+	glTexCoord2f(1.0f, 0.0f);
 	glVertex3f(0.5f, -0.5f, -0.5f);//b
+	glTexCoord2f(0.0f, 0.0f);
 	glVertex3f(0.5f, -0.5f, 0.5f);//f
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(0.5f, -0.5f, 0.5f);//f
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(0.5f, 0.5f, 0.5f);//h
+	glTexCoord2f(1.0f, 1.0f);
 	glVertex3f(0.5f, 0.5f, -0.5f);//d
+	glTexCoord2f(1.0f, 0.0f);
 
 	glVertex3f(-0.5f, 0.5f, -0.5f);//c
+	glTexCoord2f(0.0f, 0.0f);
 	glVertex3f(0.5f, 0.5f, -0.5f);//d
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(-0.5f, 0.5f, 0.5f);//g
+	glTexCoord2f(1.0f, 0.0f);
 	glVertex3f(-0.5f, 0.5f, 0.5f);//g
+	glTexCoord2f(1.0f, 0.0f);
 	glVertex3f(0.5f, 0.5f, -0.5f);//d
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(0.5f, 0.5f, 0.5f);//h
+	glTexCoord2f(1.0f, 1.0f);
 
 	glVertex3f(-0.5f, 0.5f, 0.5f);//g
+	glTexCoord2f(1.0f, 0.0f);
 	glVertex3f(-0.5f, -0.5f, 0.5f);//e
+	glTexCoord2f(0.0f, 0.0f);
 	glVertex3f(-0.5f, -0.5f, -0.5f);//a
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(-0.5f, -0.5f, -0.5f);//a
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(-0.5f, 0.5f, -0.5f);//c
+	glTexCoord2f(1.0f, 1.0f);
 	glVertex3f(-0.5f, 0.5f, 0.5f);//g
+	glTexCoord2f(1.0f, 0.0f);
 
 	glVertex3f(-0.5f, -0.5f, -0.5f);//a
+	glTexCoord2f(1.0f, 0.0f);
 	glVertex3f(-0.5f, -0.5f, 0.5f);//e
+	glTexCoord2f(0.0f, 0.0f);
 	glVertex3f(0.5f, -0.5f, 0.5f);//f
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(0.5f, -0.5f, 0.5f);//f
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(0.5f, -0.5f, -0.5f);//b
+	glTexCoord2f(1.0f, 1.0f);
 	glVertex3f(-0.5f, -0.5f, -0.5f);//a
+	glTexCoord2f(1.0f, 0.0f);
 
 	glVertex3f(0.5f, 0.5f, 0.5f);//h
+	glTexCoord2f(1.0f, 0.0f);
 	glVertex3f(0.5f, -0.5f, 0.5f);//f
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(-0.5f, -0.5f, 0.5f);//e
+	glTexCoord2f(1.0f, 1.0f);
 	glVertex3f(-0.5f, -0.5f, 0.5f);//e
+	glTexCoord2f(1.0f, 1.0f);
 	glVertex3f(-0.5f, 0.5f, 0.5f);//g
+	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(0.5f, 0.5f, 0.5f);//h
+	glTexCoord2f(1.0f, 0.0f);
+	
 	glEnd();
 	glLineWidth(1.0f);
 
