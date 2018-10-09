@@ -1,6 +1,6 @@
 #include "Module.h"
 
-#include "Primitive.h"
+#include "Geometries.h"
 
 class ModuleGeometry : public Module
 {
@@ -17,6 +17,8 @@ public:
 	bool CleanUp();
 
 	Mesh LoadMesh(char* path);
+
+	Primitive LoadPrimitive(PrimitiveTypes type);
 
 public:
 	Mesh warrior;
