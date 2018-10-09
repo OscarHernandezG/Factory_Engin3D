@@ -19,7 +19,7 @@ public:
 
 	Mesh LoadMesh(char* path);
 
-	Primitive LoadPrimitive(PrimitiveTypes type);
+	Primitive* LoadPrimitive(PrimitiveTypes type);
 
 public:
 	Mesh warrior;

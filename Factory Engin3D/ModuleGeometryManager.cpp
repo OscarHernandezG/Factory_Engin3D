@@ -105,9 +105,12 @@ Mesh ModuleGeometry::LoadMesh(char* path)
 	return mesh;
 }
 
-Primitive ModuleGeometry::LoadPrimitive(PrimitiveTypes type)
+Primitive* ModuleGeometry::LoadPrimitive(PrimitiveTypes type)
 {
 	//TODO
+
+
+	return nullptr;
 }
 
 // Update

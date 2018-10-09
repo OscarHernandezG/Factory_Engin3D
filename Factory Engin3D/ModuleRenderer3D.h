@@ -19,12 +19,6 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
-	/*void DrawQuadVertex();
-	void DrawQuadTriangles();
-	void DrawQuadVertexWireframe();*/
-
-	//void DrawCubeWireframe();
-
 	void OnResize(int width, int height);
 
 
@@ -44,3 +38,4 @@ public:
 	bool isWire = true;
 	uint buffer_id = 0u;
 };
+
