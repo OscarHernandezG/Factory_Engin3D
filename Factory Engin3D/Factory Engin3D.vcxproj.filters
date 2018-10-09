@@ -46,6 +46,9 @@
     <Filter Include="Sources\Containers\Parson">
       <UniqueIdentifier>{7f66e4d7-bcbc-4355-b2f9-45cb998ec5bd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Containers\DeviL">
+      <UniqueIdentifier>{66a45395-75af-4048-a266-586981742c18}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -305,6 +308,12 @@
     </ClInclude>
     <ClInclude Include="Mesh.h">
       <Filter>Sources\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="DevIL\include\IL\il.h">
+      <Filter>Sources\Containers\DeviL</Filter>
+    </ClInclude>
+    <ClInclude Include="DevIL\include\IL\ilu.h">
+      <Filter>Sources\Containers\DeviL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

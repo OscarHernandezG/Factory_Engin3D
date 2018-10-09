@@ -15,8 +15,8 @@
 #include "Assimp/include/postprocess.h"
 #include "Assimp/include/cfileio.h"
 
-#include "DeviL/include/il.h"
-#include "DevIL/include/ilu.h"
+#include "DeviL/include/IL/il.h"
+//#include "DevIL/include/IL/ilu.h"
 
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
@@ -154,6 +154,28 @@ bool ModuleRenderer3D::Start()
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
+	const int eight = 8;
+	GLubyte checkImage[eight][eight][4];
+	for (int i = 0; i < eight; i++) {
+		for (int j = 0; j < eight; j++) {
+			int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
+			checkImage[i][j][0] = (GLubyte)c;
+			checkImage[i][j][1] = (GLubyte)c;
+			checkImage[i][j][2] = (GLubyte)c;
+			checkImage[i][j][3] = (GLubyte)255;
+		}
+	}
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glGenTextures(1, &buffer_id);
+	glBindTexture(GL_TEXTURE_2D, buffer_id);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, eight, eight,
+		0, GL_RGBA, GL_UNSIGNED_BYTE, checkImage);
+
 	return true;
 }
 
@@ -174,46 +196,37 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	for (uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
 
-	const int eight = 8;
-	GLubyte checkImage[eight][eight][4];
-	for (int i = 0; i < eight; i++) {
-		for (int j = 0; j < eight; j++) {
-			int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
-			checkImage[i][j][0] = (GLubyte)c;
-			checkImage[i][j][1] = (GLubyte)c;
-			checkImage[i][j][2] = (GLubyte)c;
-			checkImage[i][j][3] = (GLubyte)255;
-		}
-	}
 
+	glBindTexture(GL_TEXTURE_2D, buffer_id);
+	
 	glLineWidth(2.0f);
 
 	glBegin(GL_TRIANGLES);
+	glTexCoord2f(0.0f, 0.0f);
 	glVertex3f(-0.5f, -0.5f, -0.5f);//a
-	glTexCoord2f(0.0f, 0.0f);
-	glVertex3f(0.5f, -0.5f, -0.5f);//b
 	glTexCoord2f(1.0f, 0.0f);
-	glVertex3f(-0.5f, 0.5f, -0.5f);//c
-	glTexCoord2f(0.0f, 1.0f);
-	glVertex3f(-0.5f, 0.5f, -0.5f);//c
-	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(0.5f, -0.5f, -0.5f);//b
+	glTexCoord2f(0.0f, 1.0f);
+	glVertex3f(-0.5f, 0.5f, -0.5f);//c
+	glTexCoord2f(0.0f, 1.0f);
+	glVertex3f(-0.5f, 0.5f, -0.5f);//c
 	glTexCoord2f(0.0f, 0.0f);
-	glVertex3f(0.5f, 0.5f, -0.5f);//d
+	glVertex3f(0.5f, -0.5f, -0.5f);//b
 	glTexCoord2f(1.0f, 1.0f);
+	glVertex3f(0.5f, 0.5f, -0.5f);//d
 
-	glVertex3f(0.5f, 0.5f, -0.5f);//d
 	glTexCoord2f(1.0f, 0.0f);
-	glVertex3f(0.5f, -0.5f, -0.5f);//b
+	glVertex3f(0.5f, 0.5f, -0.5f);//d
 	glTexCoord2f(0.0f, 0.0f);
-	glVertex3f(0.5f, -0.5f, 0.5f);//f
+	glVertex3f(0.5f, -0.5f, -0.5f);//b
 	glTexCoord2f(0.0f, 1.0f);
 	glVertex3f(0.5f, -0.5f, 0.5f);//f
 	glTexCoord2f(0.0f, 1.0f);
-	glVertex3f(0.5f, 0.5f, 0.5f);//h
+	glVertex3f(0.5f, -0.5f, 0.5f);//f
 	glTexCoord2f(1.0f, 1.0f);
-	glVertex3f(0.5f, 0.5f, -0.5f);//d
+	glVertex3f(0.5f, 0.5f, 0.5f);//h
 	glTexCoord2f(1.0f, 0.0f);
+	glVertex3f(0.5f, 0.5f, -0.5f);//d
 
 	glVertex3f(-0.5f, 0.5f, -0.5f);//c
 	glTexCoord2f(0.0f, 0.0f);
@@ -269,6 +282,8 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	
 	glEnd();
 	glLineWidth(1.0f);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
 
 	return UPDATE_CONTINUE;
 }

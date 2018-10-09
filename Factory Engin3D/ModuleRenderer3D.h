@@ -42,4 +42,5 @@ public:
 
 	bool isFill = true;
 	bool isWire = true;
+	uint buffer_id = 0u;
 };
