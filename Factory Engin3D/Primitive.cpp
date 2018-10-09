@@ -145,6 +145,7 @@ void PrimitiveCube::LoadCubeBuffers(float3 position, float sizeX, float sizeY, f
 	glBindBuffer(GL_ARRAY_BUFFER, myIndices);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 24, indicesQuad, GL_STATIC_DRAW);
 	// 24 = All vertex positions (8 * 3) 8 = posibleVertex and 3 = pos x-y-z
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	uint vertices[]
 	{
@@ -177,6 +178,7 @@ void PrimitiveCube::LoadCubeBuffers(float3 position, float sizeX, float sizeY, f
 	glBindBuffer(GL_ARRAY_BUFFER, myVertices);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * 36, vertices, GL_STATIC_DRAW);
 	// 36 = All vertex positions (12 * 3) 12 = vertices and 3 = pos x-y-z
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 
@@ -424,6 +426,8 @@ void PrimitiveFrustum::LoadFrustumBuffers(float hSize, float lSize, float3 posit
 	glBindBuffer(GL_ARRAY_BUFFER, myVertices);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * 36, vertices, GL_STATIC_DRAW);
 	// 36 = All vertex positions (12 * 3) 12 = vertices and 3 = pos x-y-z
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void PrimitiveFrustum::InnerRender() const
