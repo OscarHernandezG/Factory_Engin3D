@@ -21,6 +21,8 @@ public:
 
 	Primitive* LoadPrimitive(PrimitiveTypes type);
 
+	uint LoadTexture(char* path);
+
 public:
 	Mesh warrior;
 

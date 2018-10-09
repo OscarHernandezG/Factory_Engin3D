@@ -309,17 +309,35 @@
     <ClInclude Include="Mesh.h">
       <Filter>Sources\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="DevIL\include\IL\il.h">
-      <Filter>Sources\Containers\DeviL</Filter>
-    </ClInclude>
-    <ClInclude Include="DevIL\include\IL\ilu.h">
-      <Filter>Sources\Containers\DeviL</Filter>
-    </ClInclude>
     <ClInclude Include="ModuleGeometryManager.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Geometries.h">
       <Filter>Sources\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="DevIL\includex86\IL\devil_cpp_wrapper.hpp">
+      <Filter>Sources\Containers\DeviL</Filter>
+    </ClInclude>
+    <ClInclude Include="DevIL\includex86\IL\devil_internal_exports.h">
+      <Filter>Sources\Containers\DeviL</Filter>
+    </ClInclude>
+    <ClInclude Include="DevIL\includex86\IL\il.h">
+      <Filter>Sources\Containers\DeviL</Filter>
+    </ClInclude>
+    <ClInclude Include="DevIL\includex86\IL\il_wrap.h">
+      <Filter>Sources\Containers\DeviL</Filter>
+    </ClInclude>
+    <ClInclude Include="DevIL\includex86\IL\ilu_region.h">
+      <Filter>Sources\Containers\DeviL</Filter>
+    </ClInclude>
+    <ClInclude Include="DevIL\includex86\IL\ilut.h">
+      <Filter>Sources\Containers\DeviL</Filter>
+    </ClInclude>
+    <ClInclude Include="DevIL\includex86\IL\ilut_config.h">
+      <Filter>Sources\Containers\DeviL</Filter>
+    </ClInclude>
+    <ClInclude Include="DevIL\includex86\IL\ilu.h">
+      <Filter>Sources\Containers\DeviL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

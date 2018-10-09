@@ -76,8 +76,14 @@
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="Color.h" />
-    <ClInclude Include="DevIL\include\IL\il.h" />
-    <ClInclude Include="DevIL\include\IL\ilu.h" />
+    <ClInclude Include="DevIL\includex86\IL\devil_cpp_wrapper.hpp" />
+    <ClInclude Include="DevIL\includex86\IL\devil_internal_exports.h" />
+    <ClInclude Include="DevIL\includex86\IL\il.h" />
+    <ClInclude Include="DevIL\includex86\IL\ilu.h" />
+    <ClInclude Include="DevIL\includex86\IL\ilut.h" />
+    <ClInclude Include="DevIL\includex86\IL\ilut_config.h" />
+    <ClInclude Include="DevIL\includex86\IL\ilu_region.h" />
+    <ClInclude Include="DevIL\includex86\IL\il_wrap.h" />
     <ClInclude Include="Geometries.h" />
     <ClInclude Include="glew-2.1.0\include\GL\eglew.h" />
     <ClInclude Include="glew-2.1.0\include\GL\glew.h" />

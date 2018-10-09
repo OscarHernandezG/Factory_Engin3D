@@ -8,6 +8,15 @@
 #include "Assimp/include/postprocess.h"
 #include "Assimp/include/cfileio.h"
 
+#include "DevIL/includex86/IL/il.h"
+//#include "DevIL/includex86/IL/ilu.h"
+
+
+#pragma comment( lib, "DevIL/libx86/DevIL.lib" )
+#pragma comment( lib, "DevIL/libx86/ILU.lib" )
+#pragma comment( lib, "DevIL/libx86/ILUT.lib" )
+
+
 
 ModuleGeometry::ModuleGeometry(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -20,6 +29,13 @@ ModuleGeometry::~ModuleGeometry()
 bool ModuleGeometry::Start()
 {
 	LOG("Loading Geometry manager");
+
+
+	//ilutRenderer(ILUT_OPENGL);
+	//ilInit();
+	//iluInit();
+	//ilutInit();
+	//ilutRenderer(ILUT_OPENGL);
 
 	bool ret = true;
 
@@ -111,6 +127,54 @@ Primitive* ModuleGeometry::LoadPrimitive(PrimitiveTypes type)
 
 
 	return nullptr;
+}
+
+uint ModuleGeometry::LoadTexture(char* path)
+{
+	uint textureID = 0;
+	uint imageID = 0;
+
+	ilGenImages(1, &imageID);
+	ilBindImage(imageID);
+
+	if (ilLoadImage(path))
+	{
+		//ILinfo info;
+		//iluGetImageInfo(&info);
+		//if (info.Origin == IL_ORIGIN_UPPER_LEFT)
+		//{
+		//	iluFlipImage();
+		//}
+
+		if (ilConvertImage(IL_RGB, IL_UNSIGNED_BYTE))
+		{
+			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+			glGenTextures(1, &textureID);
+			glBindTexture(GL_TEXTURE_2D, textureID);
+
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+			glTexImage2D(GL_TEXTURE_2D, 0, ilGetInteger(IL_IMAGE_FORMAT), ilGetInteger(IL_IMAGE_WIDTH), ilGetInteger(IL_IMAGE_HEIGHT),
+				0, ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE, ilGetData());
+		}
+		else
+		{
+		//	LOG("Image conversion error %s", iluErrorString(ilGetError()));
+		}
+	}
+	else
+	{
+	//	LOG("Error loading texture %s", iluErrorString(ilGetError()));
+	}
+
+	ilDeleteImages(1, &imageID);
+
+	return textureID;
 }
 
 // Update
