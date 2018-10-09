@@ -2,7 +2,7 @@
 #include "Application.h"
 #include "ModuleInput.h"
 
-#include "ModuleSceneIntro.h"
+#include "ModuleGeometryManager.h"
 
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
@@ -126,8 +126,8 @@ update_status ModuleInput::PreUpdate(float dt)
 			break;
 			case SDL_DROPFILE:
 				//Todo clean
-				App->sceneIntro->warrior.ClearMesh();
-				App->sceneIntro->warrior = App->sceneIntro->LoadMesh(e.drop.file);
+				App->geometry->warrior.ClearMesh();
+				App->geometry->warrior = App->geometry->LoadMesh(e.drop.file);
 
 				break;
 		}

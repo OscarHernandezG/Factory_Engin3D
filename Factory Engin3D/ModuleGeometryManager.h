@@ -1,3 +1,4 @@
+#pragma once
 #include "Module.h"
 
 #include "Geometries.h"
@@ -22,8 +23,6 @@ public:
 
 public:
 	Mesh warrior;
-	PrimitiveFrustum* frust = nullptr;
-	PrimitiveCube* cube = nullptr;
 
 	char* droppedFileDir = nullptr;
 };

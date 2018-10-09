@@ -300,7 +300,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 
 	// 1. Draw geometry
-	App->sceneIntro->Draw3D(isFill, isWire);
+	App->geometry->Draw3D(isFill, isWire);
 
 	// 2. Debug geometry
 	//TODO

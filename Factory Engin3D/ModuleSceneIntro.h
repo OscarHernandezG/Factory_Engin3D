@@ -14,10 +14,7 @@ public:
 	update_status Update(float dt);
 	update_status PostUpdate(float dt);
 
-	void Draw3D(bool fill = true, bool wire = false);
 	bool CleanUp();
-
-	Mesh LoadMesh(char* path);
 
 public:
 	Mesh warrior;

@@ -1,8 +1,5 @@
 #include "Application.h"
 #include "ModuleGeometryManager.h"
-#include "ModuleImGui.h"
-
-#include "Primitive.h"
 
 #include "glew-2.1.0/include/GL/glew.h"
 
@@ -26,11 +23,6 @@ bool ModuleGeometry::Start()
 
 	bool ret = true;
 
-	//warrior = LoadMesh();
-
-	frust = new PrimitiveFrustum(0.5f, 1.5f, { 2,0,0 });
-	cube = new PrimitiveCube({ 0,2,0 }, 1, 1, 1);
-
 	return ret;
 }
 
@@ -44,9 +36,6 @@ update_status ModuleGeometry::PreUpdate(float dt)
 // Load assets
 bool ModuleGeometry::CleanUp()
 {
-	delete frust;
-	delete cube;
-
 	return true;
 }
 
@@ -134,17 +123,17 @@ update_status ModuleGeometry::PostUpdate(float dt)
 
 void ModuleGeometry::Draw3D(bool fill, bool wire)
 {
-	PrimitivePlane plane;
-	plane.color = { 1, 1, 1, 1 };
-	plane.axis = true;
-	plane.Render();
-
 	//if (cube != nullptr)
 	//{
 	//	cube->fill = fill;
 	//	cube->wire = wire;
 	//	cube->Render();
 	//}
+
+	PrimitivePlane plane;
+	plane.color = { 1, 1, 1, 1 };
+	plane.axis = true;
+	plane.Render();
 
 	warrior.fill = fill;
 	warrior.wire = wire;
