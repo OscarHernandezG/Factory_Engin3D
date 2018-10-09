@@ -17,6 +17,7 @@ struct MeshBuffer
 {
 	Buffer<uint> index;
 	Buffer<float> vertex;
+	Buffer<float> texture;
 };
 
 class Mesh :public Primitive

@@ -37,9 +37,11 @@ bool ModuleGeometry::Start()
 	iluInit();
 	ilutInit();
 	ilutRenderer(ILUT_OPENGL);
-	imageID = LoadTexture("assets/Lenna.png");
 	bool ret = true;
 
+
+	currentMesh = LoadMesh("assets/BakerHouse.fbx");
+	
 	return ret;
 }
 
@@ -98,6 +100,27 @@ Mesh ModuleGeometry::LoadMesh(char* path)
 						}
 					}
 
+					if (currentMesh->HasTextureCoords(0))
+					{
+						float* textCoords = new float[currentMesh->mNumVertices * 2];
+						for (int currVertices = 0; currVertices < currentMesh->mNumVertices; ++currVertices)
+						{
+							textCoords[currVertices * 2] = currentMesh->mTextureCoords[0][currVertices].x;
+							textCoords[currVertices * 2 + 1] = currentMesh->mTextureCoords[0][currVertices].y;
+						}
+					
+						glGenBuffers(1,&currentBuffer.texture.id);
+						glBindBuffer(GL_ARRAY_BUFFER, currentBuffer.texture.id);
+						glBufferData(GL_ARRAY_BUFFER, 2 * currentMesh->mNumVertices * sizeof(GLfloat), textCoords, GL_STATIC_DRAW);
+
+						glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+						glEnableVertexAttribArray(1);
+
+						delete[] textCoords;
+					
+					}
+
+
 					glGenBuffers(1, (GLuint*)&(currentBuffer.index.id));
 					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, currentBuffer.index.id);
 					glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * currentBuffer.index.size, currentBuffer.index.buffer, GL_STATIC_DRAW);
@@ -112,12 +135,12 @@ Mesh ModuleGeometry::LoadMesh(char* path)
 			}
 			aiReleaseImport(scene);
 
+		LOG("Loaded geometry with %i faces", faces);
 		}
 
 		else
-			LOG("Error loading scene %s", filePath);
+			LOG("Error loading geometry %s", filePath);
 
-		LOG("Loaded geometry with %i faces", faces);
 	}
 	return mesh;
 }
@@ -220,98 +243,98 @@ void ModuleGeometry::Draw3D(bool fill, bool wire)
 	//}
 
 
-	glLineWidth(2.0f);
-	glBindTexture(GL_TEXTURE_2D, imageID);
+	//glLineWidth(2.0f);
+	//glBindTexture(GL_TEXTURE_2D, imageID);
 
-	glBegin(GL_TRIANGLES);
+	//glBegin(GL_TRIANGLES);
+	//
+	//glTexCoord2f(0.0f, 0.0f);
+	//glVertex3f(-0.5f, -0.5f, -0.5f);//a
+	//glTexCoord2f(1.0f, 0.0f);
+	//glVertex3f(0.5f, -0.5f, -0.5f);//b
+	//glTexCoord2f(0.0f, 1.0f);
+	//glVertex3f(-0.5f, 0.5f, -0.5f);//c
+	//glTexCoord2f(0.0f, 1.0f);
+	//glVertex3f(-0.5f, 0.5f, -0.5f);//c
+	//glTexCoord2f(1.0f, 0.0f);
+	//glVertex3f(0.5f, -0.5f, -0.5f);//b
+	//glTexCoord2f(1.0f, 1.0f);
+	//glVertex3f(0.5f, 0.5f, -0.5f);//d
 
-	glTexCoord2f(0.0f, 0.0f);
-	glVertex3f(-0.5f, -0.5f, -0.5f);//a
-	glTexCoord2f(1.0f, 0.0f);
-	glVertex3f(0.5f, -0.5f, -0.5f);//b
-	glTexCoord2f(0.0f, 1.0f);
-	glVertex3f(-0.5f, 0.5f, -0.5f);//c
-	glTexCoord2f(1.0f, 0.0f);
-	glVertex3f(-0.5f, 0.5f, -0.5f);//c
-	glTexCoord2f(0.0f, 1.0f);
-	glVertex3f(0.5f, -0.5f, -0.5f);//b
-	glTexCoord2f(1.0f, 1.0f);
-	glVertex3f(0.5f, 0.5f, -0.5f);//d
+	//glTexCoord2f(1.0f, 0.0f);
+	//glVertex3f(0.5f, 0.5f, -0.5f);//d
+	//glTexCoord2f(0.0f, 0.0f);
+	//glVertex3f(0.5f, -0.5f, -0.5f);//b
+	//glTexCoord2f(0.0f, 1.0f);
+	//glVertex3f(0.5f, -0.5f, 0.5f);//f
+	//glTexCoord2f(0.0f, 1.0f);
+	//glVertex3f(0.5f, -0.5f, 0.5f);//f
+	//glTexCoord2f(1.0f, 1.0f);
+	//glVertex3f(0.5f, 0.5f, 0.5f);//h
+	//glTexCoord2f(1.0f, 0.0f);
+	//glVertex3f(0.5f, 0.5f, -0.5f);//d
 
-	glTexCoord2f(1.0f, 0.0f);
-	glVertex3f(0.5f, 0.5f, -0.5f);//d
-	glTexCoord2f(0.0f, 0.0f);
-	glVertex3f(0.5f, -0.5f, -0.5f);//b
-	glTexCoord2f(0.0f, 1.0f);
-	glVertex3f(0.5f, -0.5f, 0.5f);//f
-	glTexCoord2f(0.0f, 1.0f);
-	glVertex3f(0.5f, -0.5f, 0.5f);//f
-	glTexCoord2f(1.0f, 1.0f);
-	glVertex3f(0.5f, 0.5f, 0.5f);//h
-	glTexCoord2f(1.0f, 0.0f);
-	glVertex3f(0.5f, 0.5f, -0.5f);//d
+	//glTexCoord2f(0.0f, 0.0f);
+	//glVertex3f(-0.5f, 0.5f, -0.5f);//c
+	//glTexCoord2f(0.0f, 1.0f);
+	//glVertex3f(0.5f, 0.5f, -0.5f);//d
+	//glTexCoord2f(1.0f, 0.0f);
+	//glVertex3f(-0.5f, 0.5f, 0.5f);//g
+	//glTexCoord2f(1.0f, 0.0f);
+	//glVertex3f(-0.5f, 0.5f, 0.5f);//g
+	//glTexCoord2f(0.0f, 1.0f);
+	//glVertex3f(0.5f, 0.5f, -0.5f);//d
+	//glTexCoord2f(1.0f, 1.0f);
+	//glVertex3f(0.5f, 0.5f, 0.5f);//h
 
-	glTexCoord2f(0.0f, 0.0f);
-	glVertex3f(-0.5f, 0.5f, -0.5f);//c
-	glTexCoord2f(0.0f, 1.0f);
-	glVertex3f(0.5f, 0.5f, -0.5f);//d
-	glTexCoord2f(1.0f, 0.0f);
-	glVertex3f(-0.5f, 0.5f, 0.5f);//g
-	glTexCoord2f(1.0f, 0.0f);
-	glVertex3f(-0.5f, 0.5f, 0.5f);//g
-	glTexCoord2f(0.0f, 1.0f);
-	glVertex3f(0.5f, 0.5f, -0.5f);//d
-	glTexCoord2f(1.0f, 1.0f);
-	glVertex3f(0.5f, 0.5f, 0.5f);//h
+	//glTexCoord2f(1.0f, 0.0f);
+	//glVertex3f(-0.5f, 0.5f, 0.5f);//g
+	//glTexCoord2f(0.0f, 0.0f);
+	//glVertex3f(-0.5f, -0.5f, 0.5f);//e
+	//glTexCoord2f(0.0f, 1.0f);
+	//glVertex3f(-0.5f, -0.5f, -0.5f);//a
+	//glTexCoord2f(0.0f, 1.0f);
+	//glVertex3f(-0.5f, -0.5f, -0.5f);//a
+	//glTexCoord2f(1.0f, 1.0f);
+	//glVertex3f(-0.5f, 0.5f, -0.5f);//c
+	//glTexCoord2f(1.0f, 0.0f);
+	//glVertex3f(-0.5f, 0.5f, 0.5f);//g
 
-	glTexCoord2f(1.0f, 0.0f);
-	glVertex3f(-0.5f, 0.5f, 0.5f);//g
-	glTexCoord2f(0.0f, 0.0f);
-	glVertex3f(-0.5f, -0.5f, 0.5f);//e
-	glTexCoord2f(0.0f, 1.0f);
-	glVertex3f(-0.5f, -0.5f, -0.5f);//a
-	glTexCoord2f(0.0f, 1.0f);
-	glVertex3f(-0.5f, -0.5f, -0.5f);//a
-	glTexCoord2f(1.0f, 1.0f);
-	glVertex3f(-0.5f, 0.5f, -0.5f);//c
-	glTexCoord2f(1.0f, 0.0f);
-	glVertex3f(-0.5f, 0.5f, 0.5f);//g
+	//glTexCoord2f(1.0f, 0.0f);
+	//glVertex3f(-0.5f, -0.5f, -0.5f);//a
+	//glTexCoord2f(0.0f, 0.0f);
+	//glVertex3f(-0.5f, -0.5f, 0.5f);//e
+	//glTexCoord2f(0.0f, 1.0f);
+	//glVertex3f(0.5f, -0.5f, 0.5f);//f
+	//glTexCoord2f(0.0f, 1.0f);
+	//glVertex3f(0.5f, -0.5f, 0.5f);//f
+	//glTexCoord2f(1.0f, 1.0f);
+	//glVertex3f(0.5f, -0.5f, -0.5f);//b
+	//glTexCoord2f(1.0f, 0.0f);
+	//glVertex3f(-0.5f, -0.5f, -0.5f);//a
 
-	glTexCoord2f(1.0f, 0.0f);
-	glVertex3f(-0.5f, -0.5f, -0.5f);//a
-	glTexCoord2f(0.0f, 0.0f);
-	glVertex3f(-0.5f, -0.5f, 0.5f);//e
-	glTexCoord2f(0.0f, 1.0f);
-	glVertex3f(0.5f, -0.5f, 0.5f);//f
-	glTexCoord2f(0.0f, 1.0f);
-	glVertex3f(0.5f, -0.5f, 0.5f);//f
-	glTexCoord2f(1.0f, 1.0f);
-	glVertex3f(0.5f, -0.5f, -0.5f);//b
-	glTexCoord2f(1.0f, 0.0f);
-	glVertex3f(-0.5f, -0.5f, -0.5f);//a
+	//glTexCoord2f(1.0f, 0.0f);
+	//glVertex3f(0.5f, 0.5f, 0.5f);//h
+	//glTexCoord2f(0.0f, 0.0f);
+	//glVertex3f(0.5f, -0.5f, 0.5f);//f
+	//glTexCoord2f(0.0f, 1.0f);
+	//glVertex3f(-0.5f, -0.5f, 0.5f);//e
+	//glTexCoord2f(0.0f, 1.0f);
+	//glVertex3f(-0.5f, -0.5f, 0.5f);//e
+	//glTexCoord2f(1.0f, 1.0f);
+	//glVertex3f(-0.5f, 0.5f, 0.5f);//g
+	//glTexCoord2f(1.0f, 0.0f);
+	//glVertex3f(0.5f, 0.5f, 0.5f);//h
 
-	glTexCoord2f(1.0f, 0.0f);
-	glVertex3f(0.5f, 0.5f, 0.5f);//h
-	glTexCoord2f(0.0f, 0.0f);
-	glVertex3f(0.5f, -0.5f, 0.5f);//f
-	glTexCoord2f(0.0f, 1.0f);
-	glVertex3f(-0.5f, -0.5f, 0.5f);//e
-	glTexCoord2f(0.0f, 1.0f);
-	glVertex3f(-0.5f, -0.5f, 0.5f);//e
-	glTexCoord2f(1.0f, 1.0f);
-	glVertex3f(-0.5f, 0.5f, 0.5f);//g
-	glTexCoord2f(1.0f, 0.0f);
-	glVertex3f(0.5f, 0.5f, 0.5f);//h
+	//glMatrixMode(GL_PROJECTION);
+	//glPopMatrix();
 
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-
-	glMatrixMode(GL_MODELVIEW);
+	//glMatrixMode(GL_MODELVIEW);
 
 
-	glEnd();
-	glLineWidth(1.0f);
+	//glEnd();
+	//glLineWidth(1.0f);
 
-	glBindTexture(GL_TEXTURE_2D, 0);
+	//glBindTexture(GL_TEXTURE_2D, 0);
 
 }
