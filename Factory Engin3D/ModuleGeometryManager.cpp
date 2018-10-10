@@ -107,14 +107,14 @@ Mesh ModuleGeometry::LoadMesh(char* path)
 						{
 							textCoords[currVertices * 2] = currentMesh->mTextureCoords[0][currVertices].x;
 							textCoords[currVertices * 2 + 1] = currentMesh->mTextureCoords[0][currVertices].y;
+							LOG("x = %.2f, y = %.2f", textCoords[currVertices * 2], textCoords[currVertices * 2 + 1]);
 						}
 					
 						glGenBuffers(1,&currentBuffer.texture.id);
 						glBindBuffer(GL_ARRAY_BUFFER, currentBuffer.texture.id);
-						glBufferData(GL_ARRAY_BUFFER, 2 * currentMesh->mNumVertices * sizeof(GLfloat), textCoords, GL_STATIC_DRAW);
+						glBufferData(GL_ARRAY_BUFFER, currentMesh->mNumVertices * sizeof(float) * 2, textCoords, GL_STATIC_DRAW);
+						glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-						glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-						glEnableVertexAttribArray(1);
 
 						delete[] textCoords;
 					

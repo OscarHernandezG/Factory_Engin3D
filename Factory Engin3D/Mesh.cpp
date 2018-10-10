@@ -7,26 +7,31 @@ void Mesh::InnerRender() const
 {
 	for (std::vector<MeshBuffer>::const_iterator iterator = buffers.begin(); iterator != buffers.end(); ++iterator)
 	{
+		//Load vertex and index
 		glEnableClientState(GL_VERTEX_ARRAY);
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
 		glBindBuffer(GL_ARRAY_BUFFER, (*iterator).vertex.id);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*iterator).index.id);
-		glBindBuffer(GL_COLOR_ARRAY_BUFFER_BINDING, (*iterator).texture.id);
+		glVertexPointer(3, GL_FLOAT, 0, NULL);
+		
+		//Load Texture UV
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		glBindBuffer(GL_ARRAY_BUFFER, (*iterator).texture.id);
+		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+		
+		//Load texture
 		glBindTexture(GL_TEXTURE_2D, App->geometry->imageID);
 
-		glVertexPointer(3, GL_FLOAT, 0, NULL);
-		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
-
+		//Draw mesh
 		glDrawElements(GL_TRIANGLES, (*iterator).index.size, GL_UNSIGNED_INT, NULL);
 
+		//Free buffers
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_COLOR_ARRAY_BUFFER_BINDING, 0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		glDisableClientState(GL_VERTEX_ARRAY);
+		
 	}
 }
 
