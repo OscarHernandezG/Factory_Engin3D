@@ -32,6 +32,7 @@ bool ModuleWindow::Init()
 		//Create window
 		int width = SCREEN_WIDTH * SCREEN_SIZE;
 		int height = SCREEN_HEIGHT * SCREEN_SIZE;
+
 		Uint32 flags = SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN;
 
 		//Use OpenGL 2.1
@@ -71,6 +72,8 @@ bool ModuleWindow::Init()
 			screen_surface = SDL_GetWindowSurface(window);
 		}
 	}	
+
+
 	return ret;
 }
 
@@ -121,16 +124,25 @@ void ModuleWindow::SetFullscreen(bool desktop)
 	}
 }
 
-void ModuleWindow::SetBorderless()
+void ModuleWindow::SetMaximize()
 {
-	if (!borderless)
-		SDL_SetWindowBordered(window, SDL_TRUE);
-
-	else
-		SDL_SetWindowBordered(window, SDL_FALSE);
+	SDL_MaximizeWindow(window);
 
 	SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+}
 
+void ModuleWindow::SetBorderless()
+{
+	//if (!borderless)
+	//	SDL_SetWindowBordered(window, SDL_TRUE);
+	//
+	//else
+	//	SDL_SetWindowBordered(window, SDL_FALSE);
+
+	//SDL_MaximizeWindow(window);
+
+	//SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+	SetMaximize();
 }
 
 update_status ModuleWindow::Save(JSON_Object* object)

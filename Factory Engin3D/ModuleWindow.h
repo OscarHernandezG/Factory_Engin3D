@@ -29,6 +29,7 @@ public:
 	void SetTitle(const char* title);
 
 	void SetFullscreen(bool desktop = false);
+	void SetMaximize();
 	void SetBorderless();
 
 public:

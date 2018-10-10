@@ -63,7 +63,7 @@ public:
 	bool toCap = true;
 	bool canSave = false;
 	bool canLoad = true;
-
+	bool isMaximized = false;
 	int capFrames = 60;
 	std::string aplicationName;
 };

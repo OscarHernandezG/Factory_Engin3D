@@ -94,6 +94,11 @@ void Application::PrepareUpdate()
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
+	if (!isMaximized)
+	{
+		App->window->SetMaximize();
+		isMaximized = true;
+	}
 	if (!renderer3D->vsync && toCap) {
 		float toVsync = dt;
 	
@@ -135,7 +140,6 @@ update_status Application::Update()
 		item++;
 	}
 
-	FinishUpdate();
 
 	item = list_modules.begin();
 	//LOAD & SAVE
@@ -175,6 +179,9 @@ update_status Application::Update()
 		json_value_free(user_data);
 		canSave = false;
 	}
+	
+	FinishUpdate();
+	
 	return ret;
 }
 
