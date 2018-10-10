@@ -126,9 +126,8 @@ update_status ModuleInput::PreUpdate(float dt)
 			break;
 			case SDL_DROPFILE:
 				//Todo clean
-				//App->geometry->currentMesh.ClearMesh();
-				//App->geometry->currentMesh = App->geometry->LoadMesh(e.drop.file);
-				App->geometry->imageID = App->geometry->LoadTexture(e.drop.file);
+				App->geometry->UpdateMesh(e.drop.file);
+				App->geometry->UpdateTexture(e.drop.file);
 
 				break;
 		}

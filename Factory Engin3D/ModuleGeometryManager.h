@@ -17,14 +17,18 @@ public:
 	void Draw3D(bool fill = true, bool wire = false);
 	bool CleanUp();
 
-	Mesh LoadMesh(char* path);
+	Mesh* LoadMesh(char* path);
+
+	void UpdateMesh(char * path);
 
 	Primitive* LoadPrimitive(PrimitiveTypes type);
 
 	uint LoadTexture(char* path);
 
+	void UpdateTexture(char* path);
+
 public:
-	Mesh currentMesh;
-	uint imageID;
+	Mesh* currentMesh;
+	uint textureID;
 	char* droppedFileDir = nullptr;
 };

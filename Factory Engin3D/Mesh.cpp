@@ -19,7 +19,7 @@ void Mesh::InnerRender() const
 		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 		
 		//Load texture
-		glBindTexture(GL_TEXTURE_2D, App->geometry->imageID);
+		glBindTexture(GL_TEXTURE_2D, App->geometry->textureID);
 
 		//Draw mesh
 		glDrawElements(GL_TRIANGLES, (*iterator).index.size, GL_UNSIGNED_INT, NULL);
