@@ -58,9 +58,9 @@ bool ModuleGeometry::CleanUp()
 	return true;
 }
 
-Mesh ModuleGeometry::LoadMesh(char* path)
+Mesh* ModuleGeometry::LoadMesh(char* path)
 {
-	Mesh mesh;
+	Mesh* mesh = nullptr;
 	if (path != nullptr)
 	{
 		int faces = 0;
@@ -71,10 +71,11 @@ Mesh ModuleGeometry::LoadMesh(char* path)
 		if (scene != nullptr) {
 			if (scene->HasMeshes())
 			{
-				aiMesh* currentMesh = (*scene->mMeshes);
+				mesh = new Mesh();
+
 				for (int i = 0; i < scene->mNumMeshes; ++i)
 				{
-					currentMesh = scene->mMeshes[i];
+					aiMesh* currentMesh = scene->mMeshes[i];
 
 					MeshBuffer currentBuffer;
 					currentBuffer.vertex.size = currentMesh->mNumVertices * 3;
@@ -83,6 +84,10 @@ Mesh ModuleGeometry::LoadMesh(char* path)
 					memcpy(currentBuffer.vertex.buffer, currentMesh->mVertices, sizeof(float) * currentBuffer.vertex.size);
 
 					LOG("New mesh loaded with %d vertices", currentBuffer.vertex.size);
+
+					glGenBuffers(1, (GLuint*)&(currentBuffer.vertex.id));
+					glBindBuffer(GL_ARRAY_BUFFER, currentBuffer.vertex.id);
+					glBufferData(GL_ARRAY_BUFFER, sizeof(float) * currentBuffer.vertex.size, currentBuffer.vertex.buffer, GL_STATIC_DRAW);
 
 					if (currentMesh->HasFaces())
 					{
@@ -98,6 +103,9 @@ Mesh ModuleGeometry::LoadMesh(char* path)
 								memcpy(&currentBuffer.index.buffer[index * 3], currentMesh->mFaces[index].mIndices, sizeof(uint) * 3);
 							}
 						}
+						glGenBuffers(1, (GLuint*)&(currentBuffer.index.id));
+						glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, currentBuffer.index.id);
+						glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * currentBuffer.index.size, currentBuffer.index.buffer, GL_STATIC_DRAW);
 					}
 
 					if (currentMesh->HasTextureCoords(0))
@@ -120,16 +128,7 @@ Mesh ModuleGeometry::LoadMesh(char* path)
 					
 					}
 
-
-					glGenBuffers(1, (GLuint*)&(currentBuffer.index.id));
-					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, currentBuffer.index.id);
-					glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * currentBuffer.index.size, currentBuffer.index.buffer, GL_STATIC_DRAW);
-
-					glGenBuffers(1, (GLuint*)&(currentBuffer.vertex.id));
-					glBindBuffer(GL_ARRAY_BUFFER, currentBuffer.vertex.id);
-					glBufferData(GL_ARRAY_BUFFER, sizeof(float) * currentBuffer.vertex.size, currentBuffer.vertex.buffer, GL_STATIC_DRAW);
-
-					mesh.buffers.push_back(currentBuffer);
+					mesh->buffers.push_back(currentBuffer);
 				}
 				isSceneLoad = true;
 			}
@@ -145,6 +144,17 @@ Mesh ModuleGeometry::LoadMesh(char* path)
 	return mesh;
 }
 
+void ModuleGeometry::UpdateMesh(char* path)
+{
+	Mesh* tempMesh = LoadMesh(path);
+	if (tempMesh != nullptr)
+		if (!tempMesh->buffers.empty())
+		{
+			currentMesh->ClearMesh();
+			currentMesh = tempMesh;
+		}
+}
+
 Primitive* ModuleGeometry::LoadPrimitive(PrimitiveTypes type)
 {
 	//TODO
@@ -156,10 +166,9 @@ Primitive* ModuleGeometry::LoadPrimitive(PrimitiveTypes type)
 uint ModuleGeometry::LoadTexture(char* path)
 {
 	uint textureID = 0;
-	uint imageID = 0;
 
-	ilGenImages(1, &imageID);
-	ilBindImage(imageID);
+	ilGenImages(1, &textureID);
+	ilBindImage(textureID);
 
 	if ((bool)ilLoadImage(path))
 	{
@@ -196,10 +205,18 @@ uint ModuleGeometry::LoadTexture(char* path)
 		LOG("Error loading texture %s", iluErrorString(ilGetError()));
 	}
 
-	ilDeleteImages(1, &imageID);
+	ilDeleteImages(1, &textureID);
 
 	return textureID;
 }
+
+void ModuleGeometry::UpdateTexture(char* path)
+{
+	uint tempTexture = LoadTexture(path);
+	if (tempTexture != 0)
+		textureID = tempTexture;
+}
+
 
 // Update
 update_status ModuleGeometry::Update(float dt)
@@ -226,9 +243,9 @@ void ModuleGeometry::Draw3D(bool fill, bool wire)
 	plane.axis = true;
 	plane.Render();
 
-	currentMesh.fill = fill;
-	currentMesh.wire = wire;
-	currentMesh.Render();
+	currentMesh->fill = fill;
+	currentMesh->wire = wire;
+	currentMesh->Render();
 
 	//SpherePrim sphere;
 	//sphere.fill = fill;
@@ -244,7 +261,7 @@ void ModuleGeometry::Draw3D(bool fill, bool wire)
 
 
 	//glLineWidth(2.0f);
-	//glBindTexture(GL_TEXTURE_2D, imageID);
+	//glBindTexture(GL_TEXTURE_2D, textureID);
 
 	//glBegin(GL_TRIANGLES);
 	//
