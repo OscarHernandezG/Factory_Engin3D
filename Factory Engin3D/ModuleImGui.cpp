@@ -69,7 +69,6 @@ update_status ModuleImGui::PreUpdate(float dt)
 
 	created = true;
 
-
 	return status;
 }
 
@@ -148,7 +147,10 @@ update_status ModuleImGui::Load(JSON_Object * object)
 	return UPDATE_CONTINUE;
 }
 
-
+bool ModuleImGui::IsAnyWindowHovered()
+{
+	return ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow);
+}
 
 //Create Windows----------------------------------------------------------
 void ModuleImGui::CreateExampleWindow()

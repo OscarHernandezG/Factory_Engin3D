@@ -39,10 +39,10 @@ bool ModuleCamera3D::CleanUp()
 // -----------------------------------------------------------------
 update_status ModuleCamera3D::Update(float dt)
 {
-	float3 newPos(0,0,0);
+	float3 newPos(0, 0, 0);
 
 	float speed = 3.0f * dt;
-	if(App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
+	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
 		speed = 80.0f * dt;
 
 	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT)) {
@@ -55,10 +55,14 @@ update_status ModuleCamera3D::Update(float dt)
 	}
 
 	//Zoom with wheel
-	float wheel = (float)App->input->GetMouseZ();
-	if (wheel != 0)
+	if (!App->gui->IsAnyWindowHovered())
 	{
-		newPos += (Reference - Position) * wheel;
+
+		float wheel = (float)App->input->GetMouseZ();
+		if (wheel != 0)
+		{
+			newPos += (Reference - Position) * wheel;
+		}
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_P) == KEY_REPEAT) LookAt({ 0,0,0 });
@@ -66,10 +70,10 @@ update_status ModuleCamera3D::Update(float dt)
 	Position += newPos;
 	Reference += newPos;
 
-	 //Mouse motion ----------------
+	//Mouse motion ----------------
 
-	//if(App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RALT) == KEY_REPEAT)
-	if(App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
+   //if(App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RALT) == KEY_REPEAT)
+	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 	{
 		int dx = -App->input->GetMouseXMotion();
 		int dy = -App->input->GetMouseYMotion();
@@ -78,7 +82,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 		Position -= Reference;
 
-		if(dx != 0)
+		if (dx != 0)
 		{
 			float DeltaX = (float)dx * Sensitivity;
 
@@ -88,7 +92,7 @@ update_status ModuleCamera3D::Update(float dt)
 			Z = rotationMatrix * Z;
 		}
 
-		if(dy != 0)
+		if (dy != 0)
 		{
 			float DeltaY = (float)dy * Sensitivity / 2;
 
@@ -105,7 +109,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 		Position = Reference + Z * Position.Length();
 	}
-	
+
 	// Recalculate matrix -------------
 	CalculateViewMatrix();
 

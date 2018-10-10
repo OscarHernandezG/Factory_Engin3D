@@ -28,6 +28,8 @@ public:
 	update_status Save(JSON_Object* object);
 	update_status Load(JSON_Object* object);
 
+	bool IsAnyWindowHovered();
+
 	void DrawUI();
 
 
