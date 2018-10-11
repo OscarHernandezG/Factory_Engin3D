@@ -21,6 +21,8 @@ public:
 
 	void OnResize(int width, int height);
 
+	void SetLightAmbient(float3 rgb);
+
 
 	math::float4x4 Perspective(float fovy, float aspect, float n, float f) const;
 

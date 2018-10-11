@@ -99,8 +99,7 @@ bool ModuleRenderer3D::Init()
 			ret = false;
 		}
 		
-		GLfloat LightModelAmbient[] = {1.0f, 1.0f, 1.0f, 1.0f};
-		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
+		SetLightAmbient({ 1.0f, 1.0f, 1.0f });
 		
 		lights[0].ref = GL_LIGHT0;
 		lights[0].ambient.Set(0.25f, 0.25f, 0.25f, 1.0f);
@@ -242,6 +241,12 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	glLoadIdentity();
 }
 
+void ModuleRenderer3D::SetLightAmbient(float3 rgb)
+{
+	GLfloat LightModelAmbient[] = { rgb.x, rgb.y, rgb.z, 1.0f };
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
+}
+
 math::float4x4 ModuleRenderer3D::Perspective(float fovy, float aspect, float n, float f) const
 {
 	math::float4x4 Perspective;
@@ -259,4 +264,3 @@ math::float4x4 ModuleRenderer3D::Perspective(float fovy, float aspect, float n, 
 
 	return Perspective;
 }
-

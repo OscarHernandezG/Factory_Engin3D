@@ -565,6 +565,10 @@ void ModuleImGui::CreateRenderHeader()
 		else
 			App->renderer3D->isFill = true;
 	}
+
+	if (ImGui::ColorPicker3("Light Model Ambient", (float*)&ambient_lihgt))
+		App->renderer3D->SetLightAmbient(ambient_lihgt);
+	
 }
 //Create Headers----------------------------------------------------------
 
