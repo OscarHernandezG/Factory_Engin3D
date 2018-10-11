@@ -127,10 +127,6 @@ update_status ModuleImGui::Save(JSON_Object* object)
 	json_object_dotset_number(object, "window.height", heightPos);
 	json_object_dotset_number(object, "window.width", widthPos);
 
-	json_object_dotset_number(object, "window.ambientLight.red", ambient_lihgt.x);
-	json_object_dotset_number(object, "window.ambientLight.green", ambient_lihgt.y);
-	json_object_dotset_number(object, "window.ambientLight.blue", ambient_lihgt.z);
-
 	return UPDATE_CONTINUE;
 }
 
@@ -147,12 +143,7 @@ update_status ModuleImGui::Load(JSON_Object * object)
 	heightPos = json_object_dotget_number(object, "window.height");
 	widthPos = json_object_dotget_number(object, "window.width");
 
-	ambient_lihgt.x = json_object_dotget_number(object, "window.ambientLight.red");
-	ambient_lihgt.y = json_object_dotget_number(object, "window.ambientLight.green");
-	ambient_lihgt.z = json_object_dotget_number(object, "window.ambientLight.blue");
-	
 	SDL_SetWindowSize(App->window->window, widthPos, heightPos);
-	App->renderer3D->SetLightAmbient(ambient_lihgt);
 
 	return UPDATE_CONTINUE;
 }
@@ -585,8 +576,8 @@ void ModuleImGui::CreateRenderHeader()
 			App->renderer3D->isFill = true;
 	}
 
-	if (ImGui::ColorPicker3("Light Model Ambient", (float*)&ambient_lihgt))
-		App->renderer3D->SetLightAmbient(ambient_lihgt);
+	if (ImGui::ColorPicker3("Light Model Ambient", (float*)&App->renderer3D->ambient_lihgt))
+		App->renderer3D->SetLightAmbient();
 	
 }
 //Create Headers----------------------------------------------------------

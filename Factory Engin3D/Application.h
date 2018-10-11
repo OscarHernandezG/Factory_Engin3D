@@ -44,6 +44,7 @@ public:
 
 	update_status Save(JSON_Object * object);
 	update_status Load(JSON_Object * object);
+	void InitialLoad();
 
 	void LogString(const char* texLog) const;
 
@@ -62,7 +63,7 @@ public:
 
 	bool toCap = true;
 	bool canSave = false;
-	bool canLoad = true;
+	bool canLoad = false;
 	bool isMaximized = false;
 	int capFrames = 60;
 	std::string aplicationName;

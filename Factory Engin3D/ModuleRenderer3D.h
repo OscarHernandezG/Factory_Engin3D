@@ -21,10 +21,13 @@ public:
 
 	void OnResize(int width, int height);
 
-	void SetLightAmbient(float3 rgb);
+	void SetLightAmbient();
 
 
 	math::float4x4 Perspective(float fovy, float aspect, float n, float f) const;
+
+	update_status Save(JSON_Object * object);
+	update_status Load(JSON_Object * object);
 
 public:
 
@@ -39,5 +42,7 @@ public:
 	bool isFill = true;
 	bool isWire = true;
 	uint buffer_id = 0u;
+
+	float3 ambient_lihgt = { 1.0f,1.0f,1.0f };
 };
 

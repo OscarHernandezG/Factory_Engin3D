@@ -101,8 +101,6 @@ public:
 	bool show_another_window = false;
 	ImVec4 clear_color;
 
-	float3 ambient_lihgt = { 1.0f,1.0f,1.0f };
-
 	float f = 0.0f;
 	int counter = 0;
 
