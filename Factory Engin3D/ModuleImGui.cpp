@@ -397,11 +397,18 @@ void ModuleImGui::CreateMenu()
 {
 	if (ImGui::BeginMenu("Menu"))
 	{
-		if (ImGui::MenuItem("Example window", "Ctrl+E", exampleWindow))
-			exampleWindow = !exampleWindow;
 
+		if (ImGui::MenuItem("About", "Ctrl+A", aboutWindow))
+			aboutWindow = !aboutWindow;
+
+		else if (ImGui::MenuItem("Configuration", "Ctrl+C", configurationWindow))
+			configurationWindow = !configurationWindow;
+		
 		else if (ImGui::MenuItem("Demo window", "Ctrl+D", showDemoWindow))
 			showDemoWindow = !showDemoWindow;
+
+		else if (ImGui::MenuItem("Example window", "Ctrl+E", exampleWindow))
+			exampleWindow = !exampleWindow;
 
 		else if (ImGui::MenuItem("Math window", "Ctrl+M", mathGeoLibWindow))
 			mathGeoLibWindow = !mathGeoLibWindow;
@@ -409,14 +416,11 @@ void ModuleImGui::CreateMenu()
 		else if (ImGui::MenuItem("Random number window", "Ctrl+R", randomNumberWindow))
 			randomNumberWindow = !randomNumberWindow;
 
-		else if (ImGui::MenuItem("About", "Ctrl+A", aboutWindow))
-			aboutWindow = !aboutWindow;
-
-		if (ImGui::MenuItem("Configuration", "Ctrl+C", configurationWindow))
-			configurationWindow = !configurationWindow;
-
-		if (ImGui::MenuItem("Console", "Ctrl+GRAVE"))
+		else if (ImGui::MenuItem("Console", "Ctrl+GRAVE"))
 			consoleWindow = !consoleWindow;
+
+		else if (ImGui::MenuItem("Clear All", "Ctrl+X"))
+			showDemoWindow = exampleWindow = mathGeoLibWindow = randomNumberWindow = aboutWindow = configurationWindow = consoleWindow = false;
 
 		ImGui::EndMenu();
 	}
@@ -471,6 +475,9 @@ void ModuleImGui::CheckShortCuts()
 
 		else if (App->input->GetKey(SDL_SCANCODE_GRAVE) == KEY_DOWN)
 			consoleWindow = !consoleWindow;
+
+		else if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN)
+			clearAll = !clearAll;
 	}
 }
 //Create Menu-------------------------------------------------------------

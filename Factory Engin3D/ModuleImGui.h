@@ -72,6 +72,7 @@ public:
 	bool consoleWindow = false;
 	bool exitOption = false;
 
+
 	bool spheresColliding = false;
 
 	float sphere1Pos = 0;
