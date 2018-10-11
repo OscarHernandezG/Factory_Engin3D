@@ -60,6 +60,8 @@ public:
 
 	void LogConsole(const char* consoleText);
 
+	void ResizeImGui(float2 scale);
+
 public:
 	bool created = false;
 
@@ -110,6 +112,6 @@ public:
 
 	vector<float> ramLog;
 
-	int test = 0;
+	int resize = 0;
 
 };

@@ -99,6 +99,7 @@ void Application::FinishUpdate()
 		App->window->SetMaximize();
 		isMaximized = true;
 	}
+
 	if (!renderer3D->vsync && toCap) {
 		float toVsync = dt;
 	

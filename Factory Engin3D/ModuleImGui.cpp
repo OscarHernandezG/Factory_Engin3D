@@ -5,6 +5,7 @@
 
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl2.h"
+#include "imgui_internal.h"
 #include "SDL/include/SDL_opengl.h"
 
 #include "pcg-c-0.94/extras/entropy.h"
@@ -32,7 +33,6 @@ bool ModuleImGui::Start()
 	bool ret = true;
 
 	pcg32_srandom_r(&rng, 42u, 54u);
-
 	return ret;
 }
 
@@ -83,6 +83,14 @@ bool ModuleImGui::CleanUp()
 // Update
 update_status ModuleImGui::Update(float dt)
 {
+	if (resize == 1) 
+	{
+		ResizeImGui({ 0,0 });
+		resize++;
+	}
+	else
+	resize++;
+
 	return UPDATE_CONTINUE;
 }
 
@@ -101,8 +109,6 @@ update_status ModuleImGui::PostUpdate(float dt)
 	{
 		ramLog.erase(ramLog.begin());
 	}
-	test++;
-
 
 	return UPDATE_CONTINUE;
 }
@@ -162,6 +168,7 @@ void ModuleImGui::CreateExampleWindow()
 
 	ImGui::SliderFloat("float", &f, 0.0f, 1.0f);				// Edit 1 float using a slider from 0.0f to 1.0f    
 	ImGui::ColorEdit3("clear color", (float*)&clear_color);		// Edit 3 floats representing a color
+	ImGui::ColorPicker4("test", (float*)&clear_color);
 
 	if (ImGui::Button("Button"))								// Buttons return true when clicked (most widgets return true when edited/activated)
 		counter++;
@@ -343,7 +350,7 @@ void ModuleImGui::CreateConfigWindow()
 	if (ImGui::CollapsingHeader("Window"))
 	{
 		CreateWindowHeader();
-	}
+	}	
 
 	if (ImGui::CollapsingHeader("Hardware"))
 	{
@@ -416,7 +423,7 @@ void ModuleImGui::CreateMenu()
 		else if (ImGui::MenuItem("Random number window", "Ctrl+R", randomNumberWindow))
 			randomNumberWindow = !randomNumberWindow;
 
-		else if (ImGui::MenuItem("Console", "Ctrl+GRAVE"), consoleWindow)
+		else if (ImGui::MenuItem("Console", "Ctrl+GRAVE", consoleWindow))
 			consoleWindow = !consoleWindow;
 
 		else if (ImGui::MenuItem("Clear All", "Ctrl+X"))
@@ -460,7 +467,7 @@ void ModuleImGui::CheckShortCuts()
 
 		else if (App->input->GetKey(SDL_SCANCODE_E) == KEY_DOWN)
 			exampleWindow = !exampleWindow;
-		
+
 		else if (App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
 			App->canLoad = true;
 
@@ -667,3 +674,21 @@ void ModuleImGui::LogConsole(const char * consoleText)
 	textBuff.appendf(consoleText);
 	canScroll = true;
 }
+
+
+void ModuleImGui::ResizeImGui(float2 scale)
+{
+	scale.x = 2560.0f / 1920;
+	scale.y = 1440.0f / 1080;
+	ImGuiContext* context = ImGui::GetCurrentContext();
+
+	for (ImVector<ImGuiWindow*>::iterator currentWindow = context->Windows.begin(); currentWindow != context->Windows.end(); ++currentWindow)
+	{
+		(*currentWindow)->Pos.x *= scale.x;
+		(*currentWindow)->Pos.y *= scale.y;
+
+		(*currentWindow)->SizeFull.x *= scale.x;
+		(*currentWindow)->SizeFull.y *= scale.y;
+	}
+}
+

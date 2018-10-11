@@ -65,7 +65,10 @@ update_status ModuleCamera3D::Update(float dt)
 		}
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_P) == KEY_REPEAT) LookAt({ 0,0,0 });
+	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT) LookAt({ 0,0,0 });
+	if (App->input->GetKey(SDL_SCANCODE_I) == KEY_DOWN) LookAt(this->Position);
+
+
 
 	Position += newPos;
 	Reference += newPos;
