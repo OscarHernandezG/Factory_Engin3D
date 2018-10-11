@@ -416,7 +416,7 @@ void ModuleImGui::CreateMenu()
 		else if (ImGui::MenuItem("Random number window", "Ctrl+R", randomNumberWindow))
 			randomNumberWindow = !randomNumberWindow;
 
-		else if (ImGui::MenuItem("Console", "Ctrl+GRAVE"))
+		else if (ImGui::MenuItem("Console", "Ctrl+GRAVE"), consoleWindow)
 			consoleWindow = !consoleWindow;
 
 		else if (ImGui::MenuItem("Clear All", "Ctrl+X"))
@@ -477,7 +477,7 @@ void ModuleImGui::CheckShortCuts()
 			consoleWindow = !consoleWindow;
 
 		else if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN)
-			clearAll = !clearAll;
+			showDemoWindow = exampleWindow = mathGeoLibWindow = randomNumberWindow = aboutWindow = configurationWindow = consoleWindow = false;
 	}
 }
 //Create Menu-------------------------------------------------------------
