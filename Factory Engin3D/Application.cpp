@@ -94,11 +94,11 @@ void Application::PrepareUpdate()
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
-	if (!isMaximized)
-	{
-		App->window->SetMaximize();
-		isMaximized = true;
-	}
+	//if (!isMaximized)
+	//{
+	//	App->window->SetMaximize();
+	//	isMaximized = true;
+	//}
 
 	if (!renderer3D->vsync && toCap) {
 		float toVsync = dt;

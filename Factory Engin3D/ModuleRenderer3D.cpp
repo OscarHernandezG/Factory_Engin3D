@@ -245,6 +245,18 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+	int w, h;
+	SDL_GetWindowSize(App->window->window, &w, &h);
+	currSize.x = w;
+	currSize.y = h;
+
+	float2 size;
+	size.x = currSize.x / prevSize.x;
+	size.y = currSize.y / prevSize.y;
+
+	App->gui->ResizeImGui(size);
+
+	prevSize = currSize;
 }
 
 math::float4x4 ModuleRenderer3D::Perspective(float fovy, float aspect, float n, float f) const

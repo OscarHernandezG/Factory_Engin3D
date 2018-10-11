@@ -83,13 +83,13 @@ bool ModuleImGui::CleanUp()
 // Update
 update_status ModuleImGui::Update(float dt)
 {
-	if (resize == 1) 
-	{
-		ResizeImGui({ 0,0 });
-		resize++;
-	}
-	else
-	resize++;
+	//if (resize == 1) 
+	//{
+	//	ResizeImGui({ 0,0 });
+	//	resize++;
+	//}
+	//else
+	//resize++;
 
 	return UPDATE_CONTINUE;
 }
@@ -678,8 +678,6 @@ void ModuleImGui::LogConsole(const char * consoleText)
 
 void ModuleImGui::ResizeImGui(float2 scale)
 {
-	scale.x = 2560.0f / 1920;
-	scale.y = 1440.0f / 1080;
 	ImGuiContext* context = ImGui::GetCurrentContext();
 
 	for (ImVector<ImGuiWindow*>::iterator currentWindow = context->Windows.begin(); currentWindow != context->Windows.end(); ++currentWindow)

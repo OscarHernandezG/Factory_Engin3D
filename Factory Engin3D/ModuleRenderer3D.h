@@ -37,5 +37,9 @@ public:
 	bool isFill = true;
 	bool isWire = true;
 	uint buffer_id = 0u;
+
+	float2 prevSize{ SCREEN_WIDTH,SCREEN_HEIGHT };
+	float2 currSize{ SCREEN_WIDTH,SCREEN_HEIGHT };
+
 };
 
