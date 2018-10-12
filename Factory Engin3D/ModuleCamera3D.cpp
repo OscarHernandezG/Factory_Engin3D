@@ -65,8 +65,22 @@ update_status ModuleCamera3D::Update(float dt)
 		}
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT) LookAt({ 0,0,0 });
-	if (App->input->GetKey(SDL_SCANCODE_I) == KEY_DOWN) LookAt(this->Position);
+	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_DOWN)
+	{
+		isCameraFocused = true;
+	}
+
+
+	if (isCameraFocused)
+	{
+		LookAt({ 0,0,0 });
+
+		if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_UP)
+		{
+			Look(Position, Reference, false);
+			isCameraFocused = false;
+		}
+	}
 
 	Position += newPos;
 	Reference += newPos;

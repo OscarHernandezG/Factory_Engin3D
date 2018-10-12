@@ -30,5 +30,6 @@ public:
 
 private:
 
+	bool isCameraFocused = true;
 	float4x4 ViewMatrix, ViewMatrixInverse;
 };
