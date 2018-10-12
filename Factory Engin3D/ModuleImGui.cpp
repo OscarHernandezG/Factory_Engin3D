@@ -129,6 +129,7 @@ update_status ModuleImGui::Save(JSON_Object* object)
 	json_object_dotset_boolean(object, "editableValues.aboutWindow", aboutWindow);
 	json_object_dotset_boolean(object, "editableValues.configurationWindow", configurationWindow);
 	json_object_dotset_boolean(object, "editableValues.consoleWindow", consoleWindow);
+
 	json_object_dotset_number(object, "window.height", heightPos);
 	json_object_dotset_number(object, "window.width", widthPos);
 
@@ -149,7 +150,7 @@ update_status ModuleImGui::Load(JSON_Object * object)
 	widthPos = json_object_dotget_number(object, "window.width");
 
 	SDL_SetWindowSize(App->window->window, widthPos, heightPos);
-				   
+
 	return UPDATE_CONTINUE;
 }
 
@@ -269,7 +270,11 @@ void ModuleImGui::CreateAboutWindow()
 	ImGui::Begin("About", &aboutWindow);
 	ImGui::Text("Factory Engin3D");
 	ImGui::Separator();
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	ImGui::TextWrapped("This is an incredible description ^^");
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	if (ImGui::Button("Our repository", ImVec2(150, 25)))
 		ShellExecuteA(NULL, "Open", "https://github.com/OscarHernandezG/3D_Engine", NULL, NULL, SW_SHOWNORMAL);
 	ImGui::Text("Did it by:");
@@ -320,9 +325,14 @@ void ModuleImGui::CreateAboutWindow()
 		ShellExecuteA(NULL, "Open", "https://github.com/kgabis/parson", NULL, NULL, SW_SHOWNORMAL);
 
 	//Assimp Link
-	sprintf_s(nameChar, 25, "Assimp");
+	sprintf_s(nameChar, 25, "Assimp 3.3");
 	if (ImGui::Button(nameChar, ImVec2(125, 20)))
 		ShellExecuteA(NULL, "Open", "http://www.assimp.org", NULL, NULL, SW_SHOWNORMAL);
+
+	//DevIL Link
+	sprintf_s(nameChar, 25, "DevIL 1.8");
+	if (ImGui::Button(nameChar, ImVec2(125, 20)))
+		ShellExecuteA(NULL, "Open", "http://openil.sourceforge.net", NULL, NULL, SW_SHOWNORMAL);
 
 	///---------------------------------
 	ImGui::Separator();
@@ -572,6 +582,10 @@ void ModuleImGui::CreateRenderHeader()
 		else
 			App->renderer3D->isFill = true;
 	}
+
+	if (ImGui::ColorPicker3("Light Model Ambient", (float*)&App->renderer3D->ambient_lihgt))
+		App->renderer3D->SetLightAmbient();
+	
 }
 //Create Headers----------------------------------------------------------
 

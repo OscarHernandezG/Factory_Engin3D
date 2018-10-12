@@ -48,7 +48,11 @@ bool Application::Init()
 	bool ret = true;
 
 	// Call Init() in all modules
+
+	InitialLoad();
+
 	list<Module*>::const_iterator item = list_modules.begin();
+	item = list_modules.begin();
 
 	while(item != list_modules.end() && ret == true)
 	{
@@ -227,6 +231,25 @@ update_status Application::Load(JSON_Object * object)
 	capFrames = json_object_dotget_number(object, "aplicationValues.capFrames");
 
 	return UPDATE_CONTINUE;
+}
+
+void Application::InitialLoad()
+{
+	list<Module*>::const_iterator item = list_modules.begin();
+	JSON_Value *user_data = json_parse_file("user_data.json");
+	if (user_data != NULL)
+	{
+		JSON_Object* dataObj = json_object(user_data);
+		Load(dataObj);
+		while (item != list_modules.end())
+		{
+			(*item)->Load(dataObj);
+			item++;
+		}
+	}
+	json_value_free(user_data);
+
+
 }
 
 void Application::AddModule(Module* mod)

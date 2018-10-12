@@ -21,8 +21,13 @@ public:
 
 	void OnResize(int width, int height);
 
+	void SetLightAmbient();
+
 
 	math::float4x4 Perspective(float fovy, float aspect, float n, float f) const;
+
+	update_status Save(JSON_Object * object);
+	update_status Load(JSON_Object * object);
 
 public:
 
@@ -40,6 +45,8 @@ public:
 
 	float2 prevSize{ SCREEN_WIDTH,SCREEN_HEIGHT };
 	float2 currSize{ SCREEN_WIDTH,SCREEN_HEIGHT };
+
+	float3 ambient_lihgt = { 1.0f,1.0f,1.0f };
 
 };
 

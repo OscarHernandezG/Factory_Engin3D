@@ -99,8 +99,7 @@ bool ModuleRenderer3D::Init()
 			ret = false;
 		}
 		
-		GLfloat LightModelAmbient[] = {1.0f, 1.0f, 1.0f, 1.0f};
-		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
+		SetLightAmbient();
 		
 		lights[0].ref = GL_LIGHT0;
 		lights[0].ambient.Set(0.25f, 0.25f, 0.25f, 1.0f);
@@ -259,6 +258,12 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	prevSize = currSize;
 }
 
+void ModuleRenderer3D::SetLightAmbient()
+{
+	GLfloat LightModelAmbient[] = { ambient_lihgt.x, ambient_lihgt.y, ambient_lihgt.z, 1.0f };
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
+}
+
 math::float4x4 ModuleRenderer3D::Perspective(float fovy, float aspect, float n, float f) const
 {
 	math::float4x4 Perspective;
@@ -275,5 +280,24 @@ math::float4x4 ModuleRenderer3D::Perspective(float fovy, float aspect, float n, 
 	
 
 	return Perspective;
+}
+
+update_status ModuleRenderer3D::Save(JSON_Object* object)
+{
+	json_object_dotset_number(object, "render.ambientLight.red", ambient_lihgt.x);
+	json_object_dotset_number(object, "render.ambientLight.green", ambient_lihgt.y);
+	json_object_dotset_number(object, "render.ambientLight.blue", ambient_lihgt.z);
+
+	return UPDATE_CONTINUE;
+}
+
+update_status ModuleRenderer3D::Load(JSON_Object * object)
+{
+
+	ambient_lihgt.x = json_object_dotget_number(object, "render.ambientLight.red");
+	ambient_lihgt.y = json_object_dotget_number(object, "render.ambientLight.green");
+	ambient_lihgt.z = json_object_dotget_number(object, "render.ambientLight.blue");
+
+	return UPDATE_CONTINUE;
 }
 
