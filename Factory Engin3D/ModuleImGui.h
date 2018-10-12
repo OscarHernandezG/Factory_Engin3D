@@ -41,6 +41,8 @@ public:
 	void CreateAboutWindow();
 	void CreateConfigWindow();
 	void CreateConsole();
+	void CreateTransform();
+
 
 	update_status CreateMainMenuBar();
 
@@ -72,6 +74,7 @@ public:
 	bool aboutWindow = false;
 	bool configurationWindow = false;
 	bool consoleWindow = false;
+	bool transformWindow = false;
 	bool exitOption = false;
 
 

@@ -107,9 +107,37 @@ void Primitive::SetRotation(float angle, const float3 &u)
 }
 
 // ------------------------------------------------------------
-void Primitive::Scale(float x, float y, float z)
+void Primitive::SetScale(float x, float y, float z)
 {
-	transform = float4x4::Scale(x, y, z).ToFloat4x4() * transform;
+	float4x4 initialScale = float4x4::identity;
+	//SetPos
+	initialScale[3][0] = transform[3][0];
+	initialScale[3][1] = transform[3][1];
+	initialScale[3][2] = transform[3][2];
+	transform = float4x4::Scale(x, y, z).ToFloat4x4() * initialScale;
+}
+
+float3 Primitive::GetPos() const
+{
+	return { transform[3][0], transform[3][1], transform[3][2] };
+}
+
+float3 Primitive::GetScale() const
+{
+	return { transform[0][0], transform[1][1], transform[2][2] };
+}
+
+float3 Primitive::GetRotation() const
+{
+	/*float3x3 rot;
+	for (int i = 0; i < 3; ++i)
+	{
+		for (int j = 0; j < 3; ++j)
+		{
+			rot[i][j] = transform[i][j];
+		}
+	}*/
+	return { transform[0][3], transform[1][3], transform[2][3] };
 }
 
 // CUBE ============================================
