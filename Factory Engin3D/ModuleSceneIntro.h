@@ -17,7 +17,6 @@ public:
 	bool CleanUp();
 
 public:
-	Mesh currentMesh;
 	PrimitiveFrustum* frust = nullptr;
 	PrimitiveCube* cube = nullptr;
 

@@ -65,6 +65,9 @@ update_status ModuleImGui::PreUpdate(float dt)
 	if (consoleWindow)
 		CreateConsole();
 
+	if (transformWindow)
+		CreateTransform();
+
 	status = CreateMainMenuBar();
 
 	created = true;
@@ -129,6 +132,7 @@ update_status ModuleImGui::Save(JSON_Object* object)
 	json_object_dotset_boolean(object, "editableValues.aboutWindow", aboutWindow);
 	json_object_dotset_boolean(object, "editableValues.configurationWindow", configurationWindow);
 	json_object_dotset_boolean(object, "editableValues.consoleWindow", consoleWindow);
+	json_object_dotset_boolean(object, "editableValues.transformWindow", transformWindow);
 
 	json_object_dotset_number(object, "window.height", heightPos);
 	json_object_dotset_number(object, "window.width", widthPos);
@@ -145,7 +149,9 @@ update_status ModuleImGui::Load(JSON_Object * object)
 	aboutWindow = json_object_dotget_boolean(object, "editableValues.aboutWindow");
 	configurationWindow = json_object_dotget_boolean(object, "editableValues.configurationWindow");
 	consoleWindow = json_object_dotget_boolean(object, "editableValues.consoleWindow");
-				   
+	transformWindow = json_object_dotget_boolean(object, "editableValues.transformWindow");
+
+
 	heightPos = json_object_dotget_number(object, "window.height");
 	widthPos = json_object_dotget_number(object, "window.width");
 
@@ -390,6 +396,38 @@ void ModuleImGui::CreateConsole()
 	ImGui::End();
 }
 
+void ModuleImGui::CreateTransform()
+{
+	ImGui::SetWindowSize({ 400,200 }, ImGuiWindowFlags_NoResize);
+	ImGui::Begin("Transform", &transformWindow);
+	
+	float3 position, scale, angles;
+	Quat rotate;
+	App->geometry->currentMesh->transform.Decompose(position,rotate,scale);
+	
+	float* vector3 = &App->geometry->currentMesh->GetPos()[0];
+	if(ImGui::InputFloat3("Position", vector3)) {
+		App->geometry->currentMesh->SetPos(vector3[0], vector3[1], vector3[2]);
+	}
+
+	vector3 = &scale[0];
+	if (ImGui::InputFloat3("Scale", vector3))
+		App->geometry->currentMesh->SetScale(vector3[0], vector3[1], vector3[2]);
+
+	angles = rotate.ToEulerXYZ();
+
+	vector3[0] = math::RadToDeg(angles.x);
+	vector3[1] = math::RadToDeg(angles.y);
+	vector3[2] = math::RadToDeg(angles.z);
+	
+	ImGui::DragFloat3("Rotation", vector3);
+
+	if (ImGui::Button("Reset", ImVec2(100, 20)))
+		App->geometry->currentMesh->SetIdentity();
+
+	ImGui::End();
+}
+
 update_status ModuleImGui::CreateMainMenuBar()
 {
 	update_status ret = UPDATE_CONTINUE;
@@ -433,11 +471,14 @@ void ModuleImGui::CreateMenu()
 		else if (ImGui::MenuItem("Random number window", "Ctrl+R", randomNumberWindow))
 			randomNumberWindow = !randomNumberWindow;
 
+		else if (ImGui::MenuItem("Transform window", "Ctrl+T", transformWindow))
+			transformWindow = !transformWindow;
+
 		else if (ImGui::MenuItem("Console", "Ctrl+GRAVE", consoleWindow))
 			consoleWindow = !consoleWindow;
 
 		else if (ImGui::MenuItem("Clear All", "Ctrl+X"))
-			showDemoWindow = exampleWindow = mathGeoLibWindow = randomNumberWindow = aboutWindow = configurationWindow = consoleWindow = false;
+			showDemoWindow = exampleWindow = mathGeoLibWindow = randomNumberWindow = aboutWindow = configurationWindow = consoleWindow = transformWindow = false;
 
 		ImGui::EndMenu();
 	}
@@ -490,11 +531,14 @@ void ModuleImGui::CheckShortCuts()
 		else if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
 			randomNumberWindow = !randomNumberWindow;
 
+		else if (App->input->GetKey(SDL_SCANCODE_T) == KEY_DOWN)
+			transformWindow = !transformWindow;
+
 		else if (App->input->GetKey(SDL_SCANCODE_GRAVE) == KEY_DOWN)
 			consoleWindow = !consoleWindow;
 
 		else if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN)
-			showDemoWindow = exampleWindow = mathGeoLibWindow = randomNumberWindow = aboutWindow = configurationWindow = consoleWindow = false;
+			showDemoWindow = exampleWindow = mathGeoLibWindow = randomNumberWindow = aboutWindow = configurationWindow = consoleWindow = transformWindow = false;
 	}
 }
 //Create Menu-------------------------------------------------------------

@@ -107,10 +107,43 @@ void Geometry::SetRotation(float angle, const float3 &u)
 }
 
 // ------------------------------------------------------------
-void Geometry::Scale(float x, float y, float z)
+
+void Geometry::SetScale(float x, float y, float z)
 {
-	transform = float4x4::Scale(x, y, z).ToFloat4x4() * transform;
+	float4x4 initialScale = float4x4::identity;
+	//SetPos
+	initialScale[3][0] = transform[3][0];
+	initialScale[3][1] = transform[3][1];
+	initialScale[3][2] = transform[3][2];
+	transform = float4x4::Scale(x, y, z).ToFloat4x4() * initialScale;
 }
+
+void Geometry::SetIdentity()
+{
+	transform = float4x4::identity;
+}
+
+float3 Geometry::GetPos() const
+{
+	return { transform[3][0], transform[3][1], transform[3][2] };
+}
+
+/*float3 Primitive::GetScale() const
+{ 
+	return { transform[0][0], transform[1][1], transform[2][2] };
+}*/
+
+/*float3 Primitive::GetRotation() const
+{
+	float3x3 rot = transform.RotatePart();
+
+	float3 angles = rot.ToEulerXYX();
+	math::RadToDeg(angles.x);
+	math::RadToDeg(angles.y);
+	math::RadToDeg(angles.z);
+
+	return angles;
+}*/
 
 // CUBE ============================================
 PrimitiveCube::PrimitiveCube() : Geometry(), size(1.0f, 1.0f, 1.0f)
