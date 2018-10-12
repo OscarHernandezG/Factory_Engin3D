@@ -42,7 +42,9 @@ void Mesh::ClearMesh()
 		glDeleteBuffers(1, (GLuint*)&((*iterator).vertex.id));
 		glDeleteBuffers(1, (GLuint*)&((*iterator).texture.id));
 
+
 		delete (*iterator).index.buffer;
 		delete (*iterator).vertex.buffer;
+		delete (*iterator).texture.buffer;
 	}
 }
