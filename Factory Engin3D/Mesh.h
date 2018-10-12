@@ -1,7 +1,7 @@
 #pragma once
 
 #include "MathGeoLib/MathGeoLib.h"
-#include "Primitive.h"
+#include "Geometries.h"
 
 #include "Globals.h"
 
@@ -20,7 +20,7 @@ struct MeshBuffer
 	Buffer<float> texture;
 };
 
-class Mesh :public Primitive
+class Mesh :public Geometry
 {
 public:
 	Mesh() {};

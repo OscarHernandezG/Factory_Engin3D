@@ -154,7 +154,7 @@ void ModuleGeometry::UpdateMesh(char* path)
 		}
 }
 
-Primitive* ModuleGeometry::LoadPrimitive(PrimitiveTypes type)
+Geometry* ModuleGeometry::LoadPrimitive(PrimitiveTypes type)
 {
 	//TODO
 

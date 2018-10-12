@@ -1,23 +1,23 @@
 #include "Globals.h"
 #include "glew-2.1.0/include/GL/glew.h"
-#include "Primitive.h"
+#include "Geometry.h"
 
 #include "MathGeoLib/Math/TransformOps.h"
 #include "MathGeoLib/Math/MathConstants.h"
 
 
 // ------------------------------------------------------------
-Primitive::Primitive() : transform(float4x4::identity), color(White), wire(false), axis(false), fill(true), type(PrimitiveTypes::Primitive_Point)
+Geometry::Geometry() : transform(float4x4::identity), color(White), wire(false), axis(false), fill(true), type(PrimitiveTypes::Primitive_Point)
 {}
 
 // ------------------------------------------------------------
-PrimitiveTypes Primitive::GetType() const
+PrimitiveTypes Geometry::GetType() const
 {
 	return type;
 }
 
 // ------------------------------------------------------------
-void Primitive::Render() const
+void Geometry::Render() const
 {
 	glPushMatrix();
 	glMultMatrixf((GLfloat*)transform.ptr());
@@ -66,7 +66,7 @@ void Primitive::Render() const
 }
 
 // ------------------------------------------------------------
-void Primitive::InnerRender() const
+void Geometry::InnerRender() const
 {
 	glPointSize(5.0f);
 
@@ -80,7 +80,7 @@ void Primitive::InnerRender() const
 }
 
 // ------------------------------------------------------------
-void Primitive::WireframeRender() const
+void Geometry::WireframeRender() const
 {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glColor3f(0, 1, 0);
@@ -93,7 +93,7 @@ void Primitive::WireframeRender() const
 }
 
 // ------------------------------------------------------------
-void Primitive::SetPos(float x, float y, float z)
+void Geometry::SetPos(float x, float y, float z)
 {
 	transform[3][0] = x;
 	transform[3][1] = y;
@@ -101,25 +101,25 @@ void Primitive::SetPos(float x, float y, float z)
 }
 
 // ------------------------------------------------------------
-void Primitive::SetRotation(float angle, const float3 &u)
+void Geometry::SetRotation(float angle, const float3 &u)
 {
 	transform = float4x4::RotateAxisAngle(u, angle) * transform;
 }
 
 // ------------------------------------------------------------
-void Primitive::Scale(float x, float y, float z)
+void Geometry::Scale(float x, float y, float z)
 {
 	transform = float4x4::Scale(x, y, z).ToFloat4x4() * transform;
 }
 
 // CUBE ============================================
-PrimitiveCube::PrimitiveCube() : Primitive(), size(1.0f, 1.0f, 1.0f)
+PrimitiveCube::PrimitiveCube() : Geometry(), size(1.0f, 1.0f, 1.0f)
 {
 	type = PrimitiveTypes::Primitive_Cube;
 	LoadCubeBuffers({ 0,0,0 },size);
 }
 
-PrimitiveCube::PrimitiveCube(float3 position, float sizeX, float sizeY, float sizeZ) : Primitive(), size(sizeX, sizeY, sizeZ)
+PrimitiveCube::PrimitiveCube(float3 position, float sizeX, float sizeY, float sizeZ) : Geometry(), size(sizeX, sizeY, sizeZ)
 {
 	type = PrimitiveTypes::Primitive_Cube;
 
@@ -204,12 +204,12 @@ void PrimitiveCube::InnerRender() const
 }
 
 // SPHERE ============================================
-SpherePrim::SpherePrim() : Primitive(), radius(1.0f), horizontalCuts(21), verticalCuts(10)
+SpherePrim::SpherePrim() : Geometry(), radius(1.0f), horizontalCuts(21), verticalCuts(10)
 {
 	type = PrimitiveTypes::Primitive_Sphere;
 }
 
-SpherePrim::SpherePrim(float radius, int horizontalCuts, int verticalCuts) : Primitive(), radius(radius), horizontalCuts(horizontalCuts), verticalCuts(verticalCuts)
+SpherePrim::SpherePrim(float radius, int horizontalCuts, int verticalCuts) : Geometry(), radius(radius), horizontalCuts(horizontalCuts), verticalCuts(verticalCuts)
 {
 	type = PrimitiveTypes::Primitive_Sphere;
 }
@@ -246,12 +246,12 @@ void SpherePrim::InnerRender() const
 
 
 // CYLINDER ============================================
-PrimitiveCylinder::PrimitiveCylinder() : Primitive(), radius(1.0f), height(1.0f), faces(40)
+PrimitiveCylinder::PrimitiveCylinder() : Geometry(), radius(1.0f), height(1.0f), faces(40)
 {
 	type = PrimitiveTypes::Primitive_Cylinder;
 }
 
-PrimitiveCylinder::PrimitiveCylinder(float radius, float height, int faces) : Primitive(), radius(radius), height(height), faces(faces)
+PrimitiveCylinder::PrimitiveCylinder(float radius, float height, int faces) : Geometry(), radius(radius), height(height), faces(faces)
 {
 	type = PrimitiveTypes::Primitive_Cylinder;
 }
@@ -304,13 +304,13 @@ void PrimitiveCylinder::InnerRender() const
 	glEnd();
 }
 
-RayLine::RayLine() : Primitive(), origin(0, 0, 0), destination(1, 1, 1)
+RayLine::RayLine() : Geometry(), origin(0, 0, 0), destination(1, 1, 1)
 {
 	
 	type = PrimitiveTypes::Primitive_Ray;
 }
 
-RayLine::RayLine(float3 origin, float3 destination) : Primitive(), origin(origin), destination(destination)
+RayLine::RayLine(float3 origin, float3 destination) : Geometry(), origin(origin), destination(destination)
 {
 	type = PrimitiveTypes::Primitive_Ray;
 }
@@ -330,12 +330,12 @@ void RayLine::InnerRender() const
 }
 
 // PLANE ==================================================
-PrimitivePlane::PrimitivePlane() : Primitive(), normal(0.0f, 1.0f, 0.0f), constant(1.0f)
+PrimitivePlane::PrimitivePlane() : Geometry(), normal(0.0f, 1.0f, 0.0f), constant(1.0f)
 {
 	type = PrimitiveTypes::Primitive_Plane;
 }
 
-PrimitivePlane::PrimitivePlane(float3 normal, float d) : Primitive(), normal(normal), constant(d)
+PrimitivePlane::PrimitivePlane(float3 normal, float d) : Geometry(), normal(normal), constant(d)
 {
 	type = PrimitiveTypes::Primitive_Plane;
 }
@@ -359,7 +359,7 @@ void PrimitivePlane::InnerRender() const
 
 
 // Frustum ================================================
-PrimitiveFrustum::PrimitiveFrustum() : Primitive()
+PrimitiveFrustum::PrimitiveFrustum() : Geometry()
 {
 	type = PrimitiveTypes::Primitive_Plane;
 	LoadFrustumBuffers();

@@ -21,7 +21,7 @@ public:
 
 	void UpdateMesh(char * path);
 
-	Primitive* LoadPrimitive(PrimitiveTypes type);
+	Geometry* LoadPrimitive(PrimitiveTypes type);
 
 	uint LoadTexture(char* path);
 

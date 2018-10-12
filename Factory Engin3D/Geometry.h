@@ -15,11 +15,11 @@ enum PrimitiveTypes
 	Primitive_Frustum
 };
 
-class Primitive
+class Geometry
 {
 public:
 
-	Primitive();
+	Geometry();
 
 	virtual void	Render() const;
 	virtual void	InnerRender() const;
@@ -40,7 +40,7 @@ protected:
 };
 
 // ============================================
-class PrimitiveCube : public Primitive
+class PrimitiveCube : public Geometry
 {
 public :
 	PrimitiveCube();
@@ -63,7 +63,7 @@ public:
 };
 
 //// ============================================
-class SpherePrim : public Primitive
+class SpherePrim : public Geometry
 {
 public:
 	SpherePrim();
@@ -76,7 +76,7 @@ public:
 };
 
 //// ============================================
-class PrimitiveCylinder : public Primitive
+class PrimitiveCylinder : public Geometry
 {
 public:
 	PrimitiveCylinder();
@@ -88,7 +88,7 @@ public:
 	int faces;
 };
 
-class RayLine : public Primitive
+class RayLine : public Geometry
 {
 public:
 	RayLine();
@@ -100,7 +100,7 @@ public:
 };
 
 // ============================================
-class PrimitivePlane : public Primitive
+class PrimitivePlane : public Geometry
 {
 public:
 	PrimitivePlane();
@@ -112,7 +112,7 @@ public:
 };
 
 // ============================================
-class PrimitiveFrustum : public Primitive
+class PrimitiveFrustum : public Geometry
 {
 public:
 	PrimitiveFrustum();

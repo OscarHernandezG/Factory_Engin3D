@@ -12,7 +12,7 @@
 
 #include "MathGeoLib/Geometry/GeometryAll.h"
 
-#include "Primitive.h"
+#include "Geometries.h"
 
 //RAM and CPU usage
 #include "windows.h"

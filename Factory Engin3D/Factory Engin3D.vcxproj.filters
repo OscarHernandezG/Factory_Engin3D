@@ -49,6 +49,12 @@
     <Filter Include="Sources\Containers\DeviL">
       <UniqueIdentifier>{66a45395-75af-4048-a266-586981742c18}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\GameObject">
+      <UniqueIdentifier>{9a0cc268-b143-4c8a-b269-1a18e17d68c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\GameObject\Geometries">
+      <UniqueIdentifier>{ea7f7de3-117a-461b-bccf-b4df756ef03d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -74,9 +80,6 @@
     </ClInclude>
     <ClInclude Include="Color.h">
       <Filter>Sources\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="Light.h">
-      <Filter>Sources\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="ModuleSceneIntro.h">
       <Filter>Sources\Modules\Engine</Filter>
@@ -297,20 +300,11 @@
     <ClInclude Include="parson\parson.h">
       <Filter>Sources\Containers\Parson</Filter>
     </ClInclude>
-    <ClInclude Include="Primitive.h">
-      <Filter>Sources\Helpers</Filter>
-    </ClInclude>
     <ClInclude Include="ModuleImGui.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Sources\Helpers</Filter>
-    </ClInclude>
     <ClInclude Include="ModuleGeometryManager.h">
       <Filter>Sources\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Geometries.h">
-      <Filter>Sources\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="DevIL\includex86\IL\devil_cpp_wrapper.hpp">
       <Filter>Sources\Containers\DeviL</Filter>
@@ -335,6 +329,18 @@
     </ClInclude>
     <ClInclude Include="DevIL\includex86\IL\ilu.h">
       <Filter>Sources\Containers\DeviL</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Sources\GameObject\Geometries</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Sources\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometries.h">
+      <Filter>Sources\GameObject\Geometries</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry.h">
+      <Filter>Sources\GameObject\Geometries</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -364,9 +370,6 @@
     </ClCompile>
     <ClCompile Include="Color.cpp">
       <Filter>Sources\Containers</Filter>
-    </ClCompile>
-    <ClCompile Include="Light.cpp">
-      <Filter>Sources\Helpers</Filter>
     </ClCompile>
     <ClCompile Include="ModuleSceneIntro.cpp">
       <Filter>Sources\Modules\Engine</Filter>
@@ -482,17 +485,20 @@
     <ClCompile Include="parson\parson.c">
       <Filter>Sources\Containers\Parson</Filter>
     </ClCompile>
-    <ClCompile Include="Primitive.cpp">
-      <Filter>Sources\Helpers</Filter>
-    </ClCompile>
     <ClCompile Include="ModuleImGui.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>Sources\Helpers</Filter>
-    </ClCompile>
     <ClCompile Include="ModuleGeometryManager.cpp">
       <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Sources\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Geometry.cpp">
+      <Filter>Sources\GameObject\Geometries</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Sources\GameObject\Geometries</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
