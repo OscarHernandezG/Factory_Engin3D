@@ -400,32 +400,38 @@ void ModuleImGui::CreateTransform()
 {
 	ImGui::SetWindowSize({ 400,200 }, ImGuiWindowFlags_NoResize);
 	ImGui::Begin("Transform", &transformWindow);
-	
-	float3 position, scale, angles;
-	Quat rotate;
-	App->geometry->currentMesh->transform.Decompose(position,rotate,scale);
-	
-	float* vector3 = &App->geometry->currentMesh->GetPos()[0];
-	if(ImGui::InputFloat3("Position", vector3)) {
-		App->geometry->currentMesh->SetPos(vector3[0], vector3[1], vector3[2]);
+
+	if (App->geometry->currentMesh != nullptr)
+	{
+		float3 position, scale, angles;
+		Quat rotate;
+		App->geometry->currentMesh->transform.Decompose(position, rotate, scale);
+
+		float* vector3 = &App->geometry->currentMesh->GetPos()[0];
+		if (ImGui::InputFloat3("Position", vector3)) {
+			App->geometry->currentMesh->SetPos(vector3[0], vector3[1], vector3[2]);
+		}
+
+		vector3 = &scale[0];
+		if (ImGui::InputFloat3("Scale", vector3))
+			App->geometry->currentMesh->SetScale(vector3[0], vector3[1], vector3[2]);
+
+		angles = rotate.ToEulerXYZ();
+
+		vector3[0] = math::RadToDeg(angles.x);
+		vector3[1] = math::RadToDeg(angles.y);
+		vector3[2] = math::RadToDeg(angles.z);
+
+		ImGui::DragFloat3("Rotation", vector3);
+
+		if (ImGui::Button("Reset", ImVec2(100, 20)))
+			App->geometry->currentMesh->SetIdentity();
+
 	}
-
-	vector3 = &scale[0];
-	if (ImGui::InputFloat3("Scale", vector3))
-		App->geometry->currentMesh->SetScale(vector3[0], vector3[1], vector3[2]);
-
-	angles = rotate.ToEulerXYZ();
-
-	vector3[0] = math::RadToDeg(angles.x);
-	vector3[1] = math::RadToDeg(angles.y);
-	vector3[2] = math::RadToDeg(angles.z);
-	
-	ImGui::DragFloat3("Rotation", vector3);
-
-	if (ImGui::Button("Reset", ImVec2(100, 20)))
-		App->geometry->currentMesh->SetIdentity();
-
-	ImGui::End();
+	else {
+		ImGui::TextWrapped("There aren't any mesh");
+	}
+		ImGui::End();
 }
 
 update_status ModuleImGui::CreateMainMenuBar()
@@ -477,7 +483,7 @@ void ModuleImGui::CreateMenu()
 		else if (ImGui::MenuItem("Console", "Ctrl+GRAVE", consoleWindow))
 			consoleWindow = !consoleWindow;
 
-		else if (ImGui::MenuItem("Clear All", "Ctrl+X"))
+		else if (ImGui::MenuItem("Close All", "Ctrl+X"))
 			showDemoWindow = exampleWindow = mathGeoLibWindow = randomNumberWindow = aboutWindow = configurationWindow = consoleWindow = transformWindow = false;
 
 		ImGui::EndMenu();
