@@ -22,8 +22,12 @@ ModuleCamera3D::~ModuleCamera3D()
 // -----------------------------------------------------------------
 bool ModuleCamera3D::Start()
 {
-	LOG("Setting up the camera");
 	bool ret = true;
+
+	LOG("Setting up the camera");
+
+	LookAt(float3(0, 0, 0));
+	Look(false);
 
 	return ret;
 }
@@ -40,12 +44,11 @@ bool ModuleCamera3D::CleanUp()
 update_status ModuleCamera3D::Update(float dt)
 {
 	float3 newPos(0, 0, 0);
+	float speed = cameraSpeed * dt;
+	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)	speed *= 2.0f;
 
-	float speed = 3.0f * dt;
-	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
-		speed = 80.0f * dt;
-
-	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT)) {
+	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT)) 
+	{
 		if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT) newPos.y += speed;
 		if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT) newPos.y -= speed;
 		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos -= Z * speed;
@@ -61,13 +64,16 @@ update_status ModuleCamera3D::Update(float dt)
 		float wheel = (float)App->input->GetMouseZ();
 		if (wheel != 0)
 		{
-			newPos += (Reference - Position) * wheel;
+			// We do not use dt to zoom with the mouse wheel, the speed at which the mouse wheel rotates is independent of the fps
+			// The movement of the mouse wheel is not a "KEY_REPEAT" every frame but a "KEY_DOWN" occasionally
+			newPos += (Reference - Position).Normalized() * wheel * cameraSpeed;
 		}
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_DOWN)
 	{
 		isCameraFocused = true;
+		cameraMovementButton = MouseButton_Left;
 	}
 
 
@@ -77,9 +83,20 @@ update_status ModuleCamera3D::Update(float dt)
 
 		if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_UP)
 		{
-			Look(Position, Reference, false);
+			Look(false);
 			isCameraFocused = false;
+			cameraMovementButton = MouseButton_Right;
 		}
+
+		else if (App->input->GetMouseButton(MouseButton_Right) == KEY_REPEAT)
+		{
+			float motion = App->input->GetMouseXMotion() + App->input->GetMouseYMotion();
+			if (motion != 0)
+			{
+				newPos += (Reference - Position).Normalized() * motion * dt;
+			}
+		}
+
 	}
 
 	Position += newPos;
@@ -88,7 +105,7 @@ update_status ModuleCamera3D::Update(float dt)
 	//Mouse motion ----------------
 
    //if(App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RALT) == KEY_REPEAT)
-	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
+	if (App->input->GetMouseButton(cameraMovementButton) == KEY_REPEAT)
 	{
 		int dx = -App->input->GetMouseXMotion();
 		int dy = -App->input->GetMouseYMotion();
@@ -148,6 +165,11 @@ void ModuleCamera3D::Look(const float3 &Position, const float3 &Reference, bool 
 	}
 
 	CalculateViewMatrix();
+}
+
+void ModuleCamera3D::Look(bool RotateAroundReference)
+{
+	Look(Position, Reference, RotateAroundReference);
 }
 
 // -----------------------------------------------------------------
