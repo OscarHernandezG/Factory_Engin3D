@@ -679,7 +679,6 @@ void ModuleImGui::LogConsole(const char * consoleText)
 void ModuleImGui::ResizeImGui(float2 scale)
 {
 	ImGuiContext* context = ImGui::GetCurrentContext();
-
 	for (ImVector<ImGuiWindow*>::iterator currentWindow = context->Windows.begin(); currentWindow != context->Windows.end(); ++currentWindow)
 	{
 		(*currentWindow)->Pos.x *= scale.x;
@@ -687,6 +686,10 @@ void ModuleImGui::ResizeImGui(float2 scale)
 
 		(*currentWindow)->SizeFull.x *= scale.x;
 		(*currentWindow)->SizeFull.y *= scale.y;
+
+		(*currentWindow)->Size.x *= scale.x;
+		(*currentWindow)->Size.y *= scale.y;
+		
 	}
 }
 

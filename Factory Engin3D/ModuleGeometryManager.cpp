@@ -115,7 +115,6 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 						{
 							textCoords[currVertices * 2] = currentMesh->mTextureCoords[0][currVertices].x;
 							textCoords[currVertices * 2 + 1] = currentMesh->mTextureCoords[0][currVertices].y;
-							LOG("x = %.2f, y = %.2f", textCoords[currVertices * 2], textCoords[currVertices * 2 + 1]);
 						}
 					
 						glGenBuffers(1,&currentBuffer.texture.id);
