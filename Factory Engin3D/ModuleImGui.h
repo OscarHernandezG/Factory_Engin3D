@@ -7,7 +7,7 @@
 #include "parson/parson.h"
 #include "pcg-c-0.94/include/pcg_variants.h"
 
-#define MAX_SNAKE 8
+using namespace std;
 
 struct PhysBody3D;
 struct ImVec2;
