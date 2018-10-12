@@ -117,28 +117,32 @@ void Primitive::SetScale(float x, float y, float z)
 	transform = float4x4::Scale(x, y, z).ToFloat4x4() * initialScale;
 }
 
+void Primitive::SetIdentity()
+{
+	transform = float4x4::identity;
+}
+
 float3 Primitive::GetPos() const
 {
 	return { transform[3][0], transform[3][1], transform[3][2] };
 }
 
-float3 Primitive::GetScale() const
-{
+/*float3 Primitive::GetScale() const
+{ 
 	return { transform[0][0], transform[1][1], transform[2][2] };
-}
+}*/
 
-float3 Primitive::GetRotation() const
+/*float3 Primitive::GetRotation() const
 {
-	/*float3x3 rot;
-	for (int i = 0; i < 3; ++i)
-	{
-		for (int j = 0; j < 3; ++j)
-		{
-			rot[i][j] = transform[i][j];
-		}
-	}*/
-	return { transform[0][3], transform[1][3], transform[2][3] };
-}
+	float3x3 rot = transform.RotatePart();
+
+	float3 angles = rot.ToEulerXYX();
+	math::RadToDeg(angles.x);
+	math::RadToDeg(angles.y);
+	math::RadToDeg(angles.z);
+
+	return angles;
+}*/
 
 // CUBE ============================================
 PrimitiveCube::PrimitiveCube() : Primitive(), size(1.0f, 1.0f, 1.0f)

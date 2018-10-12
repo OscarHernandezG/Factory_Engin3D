@@ -400,18 +400,30 @@ void ModuleImGui::CreateTransform()
 {
 	ImGui::SetWindowSize({ 400,200 }, ImGuiWindowFlags_NoResize);
 	ImGui::Begin("Transform", &transformWindow);
-
+	
+	float3 position, scale, angles;
+	Quat rotate;
+	App->geometry->currentMesh->transform.Decompose(position,rotate,scale);
+	
 	float* vector3 = &App->geometry->currentMesh->GetPos()[0];
 	if(ImGui::InputFloat3("Position", vector3)) {
 		App->geometry->currentMesh->SetPos(vector3[0], vector3[1], vector3[2]);
 	}
 
-	vector3 = &App->geometry->currentMesh->GetScale()[0];
-
+	vector3 = &scale[0];
 	if (ImGui::InputFloat3("Scale", vector3))
 		App->geometry->currentMesh->SetScale(vector3[0], vector3[1], vector3[2]);
+
+	angles = rotate.ToEulerXYZ();
+
+	vector3[0] = math::RadToDeg(angles.x);
+	vector3[1] = math::RadToDeg(angles.y);
+	vector3[2] = math::RadToDeg(angles.z);
 	
-	vector3 = &App->geometry->currentMesh->GetRotation()[0];
+	ImGui::DragFloat3("Rotation", vector3);
+
+	if (ImGui::Button("Reset", ImVec2(100, 20)))
+		App->geometry->currentMesh->SetIdentity();
 
 	ImGui::End();
 }
