@@ -28,8 +28,6 @@ bool ModuleSceneIntro::Start()
 
 	App->camera->Move(float3(1.0f, 1.0f, 0.0f));
 
-	//frust = new PrimitiveFrustum(0.5f, 1.5f, { 2,0,0 });
-	//cube = new Primit
 	return ret;
 }
 

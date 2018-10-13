@@ -40,11 +40,11 @@ bool ModuleGeometry::Start()
 	bool ret = true;
 
 
-	currentMesh = LoadMesh("assets/BakerHouse.fbx");
-	textureID = LoadTexture("assets/Baker_house.png");
+	LoadDefaultScene();
 	
 	return ret;
 }
+
 
 update_status ModuleGeometry::PreUpdate(float dt)
 {
@@ -335,4 +335,10 @@ void ModuleGeometry::Draw3D(bool fill, bool wire)
 	currentMesh->fill = fill;
 	currentMesh->wire = wire;
 	currentMesh->Render();
+}
+
+void ModuleGeometry::LoadDefaultScene()
+{
+	currentMesh = LoadMesh("assets/BakerHouse.fbx");
+	textureID = LoadTexture("assets/Baker_house.png");
 }
