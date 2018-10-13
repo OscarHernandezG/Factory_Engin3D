@@ -31,7 +31,7 @@ bool ModuleSceneIntro::Start()
 	//currentMesh = LoadMesh();
 	
 	//frust = new PrimitiveFrustum(0.5f, 1.5f, { 2,0,0 });
-	cube = new PrimitiveCube({ 0,0,0 }, 1, 1, 1);
+	//cube = new PrimitiveCube({ 0,0,0 }, 1, 1, 1);
 
 	return ret;
 }
@@ -46,8 +46,8 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 // Load assets
 bool ModuleSceneIntro::CleanUp()
 {	
-	delete frust;
-	delete cube;
+	//delete frust;
+	//delete cube;
 
 	return true;
 }
@@ -55,10 +55,6 @@ bool ModuleSceneIntro::CleanUp()
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
-	cube->fill = true;
-	cube->wire = true;
-	cube->Render();
-
 	return UPDATE_CONTINUE;
 }
 
