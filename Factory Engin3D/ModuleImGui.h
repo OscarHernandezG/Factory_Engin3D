@@ -120,4 +120,5 @@ public:
 
 	int resize = 0;
 
+	bool warningDialoge = false;
 };

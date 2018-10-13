@@ -355,7 +355,7 @@ void ModuleImGui::CreateConfigWindow()
 	if (ImGui::CollapsingHeader("Window"))
 	{
 		CreateWindowHeader();
-	}	
+	}
 
 	if (ImGui::CollapsingHeader("Input"))
 	{
@@ -382,6 +382,19 @@ void ModuleImGui::CreateConfigWindow()
 		CreateHardwareHeader();
 	}
 	ImGui::End();
+
+	if (warningDialoge)
+	{
+		ImGui::SetNextWindowSize({ 270,110 });
+		ImGui::OpenPopup(" Functionality temporarily disabled");
+		if (ImGui::BeginPopupModal(" Functionality temporarily disabled", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize))
+		{
+			ImGui::Text("Coming soon...");
+			if (ImGui::Button("Close", { 250,50 }))
+				warningDialoge = false;
+			ImGui::EndPopup();
+		}
+	}
 }
 
 void ModuleImGui::CreateConsole()
@@ -595,6 +608,8 @@ void ModuleImGui::CreateWindowHeader()
 	{
 		//App->window->fullscreen = false;
 		//App->window->SetFullscreen(true);
+		App->window->fulldesktop = false;
+		warningDialoge = true;
 	}
 	if (ImGui::SliderFloat("Brightness", &brightnessPos, 0.0f, 1.0f))
 	{
@@ -602,11 +617,14 @@ void ModuleImGui::CreateWindowHeader()
 	}
 	if (ImGui::SliderInt("Width", &widthPos, 640, 1920))
 	{
-		SDL_SetWindowSize(App->window->window, widthPos, heightPos);
+		//SDL_SetWindowSize(App->window->window, widthPos, heightPos);
+		warningDialoge = true;
 	}
 	if (ImGui::SliderInt("Height", &heightPos, 480, 1080))
 	{
-		SDL_SetWindowSize(App->window->window, widthPos, heightPos);
+		//SDL_SetWindowSize(App->window->window, widthPos, heightPos);
+		warningDialoge = true;
+
 	}
 }
 
