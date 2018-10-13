@@ -267,7 +267,6 @@ void ModuleRenderer3D::SetLightAmbient()
 math::float4x4 ModuleRenderer3D::Perspective(float fovy, float aspect, float n, float f) const
 {
 	math::float4x4 Perspective;
-
 	float coty = 1.0f / tan(fovy * (float)PI / 360.0f);
 	float cotA = coty / aspect;
 	float nfnf = (n + f) / (n - f);

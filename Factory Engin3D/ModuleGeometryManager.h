@@ -36,7 +36,7 @@ public:
 
 public:
 	Mesh* currentMesh;
-	uint textureID;
+	uint textureID = 0;
 	char* droppedFileDir = nullptr;
 
 	float3 max{ 0,0,0 }, min{ 0,0,0 };

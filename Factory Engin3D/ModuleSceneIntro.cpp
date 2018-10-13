@@ -30,8 +30,8 @@ bool ModuleSceneIntro::Start()
 
 	//currentMesh = LoadMesh();
 	
-	frust = new PrimitiveFrustum(0.5f, 1.5f, { 2,0,0 });
-	cube = new PrimitiveCube({ 0,2,0 }, 1, 1, 1);
+	//frust = new PrimitiveFrustum(0.5f, 1.5f, { 2,0,0 });
+	//cube = new PrimitiveCube({ 0,2,0 }, 1, 1, 1);
 
 	return ret;
 }

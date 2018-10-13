@@ -111,21 +111,18 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 
 					if (currentMesh->HasTextureCoords(0))
 					{
-						float* textCoords = new float[currentMesh->mNumVertices * 2];
+						currentBuffer.texture.buffer = new float[currentMesh->mNumVertices * 2];
 						for (int currVertices = 0; currVertices < currentMesh->mNumVertices; ++currVertices)
 						{
-							textCoords[currVertices * 2] = currentMesh->mTextureCoords[0][currVertices].x;
-							textCoords[currVertices * 2 + 1] = currentMesh->mTextureCoords[0][currVertices].y;
+							currentBuffer.texture.buffer[currVertices * 2] = currentMesh->mTextureCoords[0][currVertices].x;
+							currentBuffer.texture.buffer[currVertices * 2 + 1] = currentMesh->mTextureCoords[0][currVertices].y;
 						}
-					
-						glGenBuffers(1,&currentBuffer.texture.id);
+
+						glGenBuffers(1, &currentBuffer.texture.id);
 						glBindBuffer(GL_ARRAY_BUFFER, currentBuffer.texture.id);
-						glBufferData(GL_ARRAY_BUFFER, currentMesh->mNumVertices * sizeof(float) * 2, textCoords, GL_STATIC_DRAW);
+						glBufferData(GL_ARRAY_BUFFER, currentMesh->mNumVertices * sizeof(float) * 2, currentBuffer.texture.buffer, GL_STATIC_DRAW);
 						glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-
-						delete[] textCoords;
-					
 					}
 
 					mesh->buffers.push_back(currentBuffer);
@@ -151,7 +148,10 @@ void ModuleGeometry::UpdateMesh(char* path)
 	if (tempMesh != nullptr)
 		if (!tempMesh->buffers.empty())
 		{
-			currentMesh->ClearMesh();
+			if (currentMesh != nullptr)
+			{
+				delete currentMesh;
+			}
 			currentMesh = tempMesh;
 		}
 }
@@ -191,9 +191,17 @@ AABB* ModuleGeometry::LoadBoundingBox(Mesh* mesh)
 
 	//poly.num
 
+
+	float3 distance{ 0,0,0 };
 	float3 size = boundingBox.Size();
-	float length = size.Length();
-	LOG("Length %f", length);
+
+	float reScale = 1.25;
+	distance.x = (size.x / 2) / math::Tan(0.33333333333 * reScale);
+	distance.y = (size.y / 2) / math::Tan(0.33333333333 * reScale);
+	distance.z = (size.z / 2) / math::Tan(0.33333333333 * reScale);
+
+	App->camera->Position = distance;
+	App->camera->LookAt({ 0,0,0 });
 	return nullptr;
 }
 
