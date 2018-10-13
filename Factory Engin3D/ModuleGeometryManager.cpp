@@ -267,7 +267,10 @@ void ModuleGeometry::UpdateTexture(char* path)
 {
 	uint tempTexture = LoadTexture(path);
 	if (tempTexture != 0)
+	{
+		glDeleteBuffers(1, &textureID);
 		textureID = tempTexture;
+	}
 }
 
 
