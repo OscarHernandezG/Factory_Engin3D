@@ -17,6 +17,7 @@ Factory engin3D is a 3D game engine createt by Òscar Hernàndez and Aleix Gabar
   - Right click: Zoom
 - F: Focus to the object
 - Wheel: Zoom
+- Shift: Duplicate movement speed
 
 #### Save and load
 - Ctrl+S: Save
@@ -42,5 +43,3 @@ Factory engin3D is a 3D game engine createt by Òscar Hernàndez and Aleix Gabar
 - Parson
 - Assimp
 - DevIL
-
-
