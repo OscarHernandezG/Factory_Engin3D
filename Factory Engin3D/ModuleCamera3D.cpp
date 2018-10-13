@@ -45,27 +45,26 @@ update_status ModuleCamera3D::Update(float dt)
 {
 	float3 newPos(0, 0, 0);
 	float speed = cameraSpeed * dt;
-	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)	speed *= 2.0f;
-
-	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT)) 
-	{
-		if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT) newPos.y += speed;
-		if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT) newPos.y -= speed;
-		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos -= Z * speed;
-		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos += Z * speed;
-		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= X * speed;
-		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += X * speed;
-	}
-
-
-	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
-		Look(App->geometry->GetBBPos(), App->geometry->GetCurrentMeshPivot(), false);
-
-
-	//Zoom with wheel
 	if (!App->gui->IsAnyWindowHovered())
 	{
+		if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)	speed *= 2.0f;
 
+		if (App->input->GetMouseButton(SDL_BUTTON_RIGHT))
+		{
+			if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT) newPos.y += speed;
+			if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT) newPos.y -= speed;
+			if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos -= Z * speed;
+			if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos += Z * speed;
+			if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= X * speed;
+			if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += X * speed;
+		}
+
+
+		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
+			Look(App->geometry->GetBBPos(), App->geometry->GetCurrentMeshPivot(), false);
+
+
+		//Zoom with wheel
 		float wheel = (float)App->input->GetMouseZ();
 		if (wheel != 0)
 		{
@@ -73,80 +72,80 @@ update_status ModuleCamera3D::Update(float dt)
 			// The movement of the mouse wheel is not a "KEY_REPEAT" every frame but a "KEY_DOWN" occasionally
 			newPos += (Reference - Position).Normalized() * wheel * cameraSpeed;
 		}
-	}
 
-	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_DOWN)
-	{
-		isCameraFocused = true;
-		cameraMovementButton = MouseButton_Left;
-	}
-
-
-	if (isCameraFocused)
-	{
-		LookAt({ 0,0,0 });
-
-		if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_UP)
+		if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_DOWN)
 		{
-			Look(false);
-			isCameraFocused = false;
-			cameraMovementButton = MouseButton_Right;
+			isCameraFocused = true;
+			cameraMovementButton = MouseButton_Left;
 		}
 
-		else if (App->input->GetMouseButton(MouseButton_Right) == KEY_REPEAT)
+
+		if (isCameraFocused)
 		{
-			float motion = App->input->GetMouseXMotion() + App->input->GetMouseYMotion();
-			if (motion != 0)
+			LookAt({ 0,0,0 });
+
+			if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_UP)
 			{
-				newPos += (Reference - Position).Normalized() * motion * dt;
+				Look(false);
+				isCameraFocused = false;
+				cameraMovementButton = MouseButton_Right;
 			}
-		}
 
-	}
-
-	Position += newPos;
-	Reference += newPos;
-
-	//Mouse motion ----------------
-
-   //if(App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RALT) == KEY_REPEAT)
-	if (App->input->GetMouseButton(cameraMovementButton) == KEY_REPEAT)
-	{
-		int dx = -App->input->GetMouseXMotion();
-		int dy = -App->input->GetMouseYMotion();
-
-		float Sensitivity = 0.01f;
-
-		Position -= Reference;
-
-		if (dx != 0)
-		{
-			float DeltaX = (float)dx * Sensitivity;
-
-			float3x3 rotationMatrix = float3x3::RotateY(DeltaX);
-			X = rotationMatrix * X;
-			Y = rotationMatrix * Y;
-			Z = rotationMatrix * Z;
-		}
-
-		if (dy != 0)
-		{
-			float DeltaY = (float)dy * Sensitivity / 2;
-
-			float3x3 rotationMatrix = float3x3::RotateAxisAngle(X, DeltaY);
-			Y = rotationMatrix * Y;
-			Z = rotationMatrix * Z;
-
-			if (Y.y < 0.0f)
+			else if (App->input->GetMouseButton(MouseButton_Right) == KEY_REPEAT)
 			{
-				Z = float3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
-				Y = Cross(Z, X);
+				float motion = App->input->GetMouseXMotion() + App->input->GetMouseYMotion();
+				if (motion != 0)
+				{
+					newPos += (Reference - Position).Normalized() * motion * dt;
+				}
 			}
+
 		}
 
-		Position = Reference + Z * Position.Length();
-	}
+		Position += newPos;
+		Reference += newPos;
 
+		//Mouse motion ----------------
+
+	   //if(App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RALT) == KEY_REPEAT)
+		if (App->input->GetMouseButton(cameraMovementButton) == KEY_REPEAT)
+		{
+			int dx = -App->input->GetMouseXMotion();
+			int dy = -App->input->GetMouseYMotion();
+
+			float Sensitivity = 0.01f;
+
+			Position -= Reference;
+
+			if (dx != 0)
+			{
+				float DeltaX = (float)dx * Sensitivity;
+
+				float3x3 rotationMatrix = float3x3::RotateY(DeltaX);
+				X = rotationMatrix * X;
+				Y = rotationMatrix * Y;
+				Z = rotationMatrix * Z;
+			}
+
+			if (dy != 0)
+			{
+				float DeltaY = (float)dy * Sensitivity / 2;
+
+				float3x3 rotationMatrix = float3x3::RotateAxisAngle(X, DeltaY);
+				Y = rotationMatrix * Y;
+				Z = rotationMatrix * Z;
+
+				if (Y.y < 0.0f)
+				{
+					Z = float3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
+					Y = Cross(Z, X);
+				}
+			}
+
+			Position = Reference + Z * Position.Length();
+		}
+
+	}
 	// Recalculate matrix -------------
 	CalculateViewMatrix();
 
