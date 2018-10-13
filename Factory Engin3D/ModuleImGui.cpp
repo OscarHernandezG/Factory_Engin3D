@@ -265,7 +265,7 @@ void ModuleImGui::CreateRandomNumberWindow()
 
 void ModuleImGui::CreateAboutWindow()
 {
-	ImGui::Begin("About", &aboutWindow);
+	ImGui::Begin("About", &aboutWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 	ImGui::Text("Factory Engin3D");
 	ImGui::Separator();
 	ImGui::TextWrapped("Factory engin3D is a 3D game engine createt by Oscar Hernandez and Aleix Gabarro. Two students of CITM, UPC in Terrassa.");
@@ -344,7 +344,7 @@ void ModuleImGui::CreateAboutWindow()
 
 void ModuleImGui::CreateConfigWindow()
 {
-	ImGui::Begin("Configuration", &configurationWindow);
+	ImGui::Begin("Configuration", &configurationWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 
 
 	if (ImGui::CollapsingHeader("Application"))
@@ -387,7 +387,7 @@ void ModuleImGui::CreateConfigWindow()
 void ModuleImGui::CreateConsole()
 {
 	ImGui::SetWindowSize({ 400,200 }, ImGuiWindowFlags_NoResize);
-	ImGui::Begin("Console", &consoleWindow);
+	ImGui::Begin("Console", &consoleWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 	if (ImGui::Button("Clear", ImVec2(400, 20)))
 		textBuff.clear();
 	ImGui::Separator();
@@ -403,7 +403,7 @@ void ModuleImGui::CreateConsole()
 void ModuleImGui::CreateTransform()
 {
 	ImGui::SetWindowSize({ 400,200 }, ImGuiWindowFlags_NoResize);
-	ImGui::Begin("Transform", &transformWindow, ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::Begin("Transform", &transformWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 
 	if (App->geometry->currentMesh != nullptr)
 	{
@@ -435,7 +435,7 @@ void ModuleImGui::CreateTransform()
 	else {
 		ImGui::TextWrapped("There aren't any meshes");
 	}
-		ImGui::End();
+	ImGui::End();
 }
 
 update_status ModuleImGui::CreateMainMenuBar()
@@ -499,10 +499,10 @@ bool ModuleImGui::CreateOptions()
 	if (ImGui::BeginMenu("Options"))
 	{
 
-		if (ImGui::MenuItem("Save Game", "Ctrl+S"))
+		if (ImGui::MenuItem("Save", "Ctrl+S"))
 			App->canSave = true;
 		
-		else if (ImGui::MenuItem("Load Game", "Ctrl+L"))
+		else if (ImGui::MenuItem("Load", "Ctrl+L"))
 			App->canLoad = true;
 
 		else if (ImGui::MenuItem("Exit", "ESC"))
@@ -645,16 +645,10 @@ void ModuleImGui::CreateTextureHeader()
 	if (App->geometry->textureID != 0)
 	{
 		ImGui::Text("Texture id: %i", App->geometry->textureID);
-		ImGui::Text("Texture used by %i meshes", App->geometry->currentMesh->buffers.size());
+		ImGui::Text("Texture used by %i meshes",App->geometry->currentMesh->buffers.size());
 		ImGui::Text("UV Preview");
 		ImGui::Separator();
 		ImGui::Image((void*)App->geometry->textureID, { 200,200 });
-		ImGui::SameLine();
-		if (ImGui::Button("Remove Texture", ImVec2(125, 25)))
-		{
-			glDeleteTextures(1, &App->geometry->textureID);
-			App->geometry->textureID = 0;
-		}
 	}
 	else
 	{

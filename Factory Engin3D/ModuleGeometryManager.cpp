@@ -41,6 +41,7 @@ bool ModuleGeometry::Start()
 
 
 	currentMesh = LoadMesh("assets/BakerHouse.fbx");
+	textureID = LoadTexture("assets/Baker_house.png");
 	
 	return ret;
 }

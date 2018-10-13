@@ -82,7 +82,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 		if (isCameraFocused)
 		{
-			LookAt({ 0,0,0 });
+			LookAt(App->geometry->GetCurrentMeshPivot());
 
 			if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_UP)
 			{
