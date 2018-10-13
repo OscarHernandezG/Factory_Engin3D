@@ -52,6 +52,8 @@ public:
 
 	void CreateAppHeader();
 	void CreateWindowHeader();
+	void CreateInputHeader();
+	void CreateTextureHeader();
 	void CreateHardwareHeader();
 	void CreateRenderHeader();
 

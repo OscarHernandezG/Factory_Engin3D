@@ -360,14 +360,24 @@ void ModuleImGui::CreateConfigWindow()
 		CreateWindowHeader();
 	}	
 
-	if (ImGui::CollapsingHeader("Hardware"))
+	if (ImGui::CollapsingHeader("Input"))
 	{
-		CreateHardwareHeader();
+		CreateInputHeader();
+	}
+
+	if (ImGui::CollapsingHeader("Texture"))
+	{
+		CreateTextureHeader();
 	}
 
 	if (ImGui::CollapsingHeader("Render"))
 	{
 		CreateRenderHeader();
+	}
+
+	if (ImGui::CollapsingHeader("Hardware"))
+	{
+		CreateHardwareHeader();
 	}
 	ImGui::End();
 }
@@ -598,17 +608,29 @@ void ModuleImGui::CreateWindowHeader()
 	}
 }
 
-void ModuleImGui::CreateHardwareHeader()
+void ModuleImGui::CreateInputHeader()
 {
-	ImVec4 color(1.0f, 1.0f, 0.1f, 1.0f);
+	ImGui::Text("Mouse position: (%i,%i)", App->input->GetMouseX(), App->input->GetMouseY());
+	ImGui::Text("Mouse motion: (%i,%i)", App->input->GetMouseXMotion(), App->input->GetMouseYMotion());
+	
+	ImGui::Text("Is mouse pressed: %s", App->input->GetIsMousePressed() == true ? "Yes" : "No");
+	ImGui::Text("Is any key pressed: %s", App->input->GetIsKeyPressed() == true ? "Yes" : "No");
+}
 
-	//CPU--------------------------------------------------------
-	CreateCPUInfo(color);
-
-	ImGui::Separator();
-
-	//GPU--------------------------------------------------------
-	CreateGPUInfo(color);
+void ModuleImGui::CreateTextureHeader()
+{
+	if (App->geometry->textureID != 0)
+	{
+		ImGui::Text("Texture id: %i", App->geometry->textureID);
+		ImGui::Text("Texture used by %i meshes",App->geometry->currentMesh->buffers.size());
+		ImGui::Text("UV Preview");
+		ImGui::Separator();
+		ImGui::Image((void*)App->geometry->textureID, { 200,200 });
+	}
+	else
+	{
+		ImGui::TextWrapped("There isn't any texture");
+	}
 }
 
 void ModuleImGui::CreateRenderHeader()
@@ -629,6 +651,20 @@ void ModuleImGui::CreateRenderHeader()
 		App->renderer3D->SetLightAmbient();
 	
 }
+
+void ModuleImGui::CreateHardwareHeader()
+{
+	ImVec4 color(1.0f, 1.0f, 0.1f, 1.0f);
+
+	//CPU--------------------------------------------------------
+	CreateCPUInfo(color);
+
+	ImGui::Separator();
+
+	//GPU--------------------------------------------------------
+	CreateGPUInfo(color);
+}
+
 //Create Headers----------------------------------------------------------
 
 
