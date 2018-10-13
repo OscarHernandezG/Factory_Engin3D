@@ -248,6 +248,7 @@ Geometry* ModuleGeometry::LoadPrimitive(PrimitiveTypes type)
 
 uint ModuleGeometry::LoadTexture(char* path)
 {
+	bool isSuccess = true;
 	uint newTextureID = 0;
 
 	ilGenImages(1, &newTextureID);
@@ -280,15 +281,20 @@ uint ModuleGeometry::LoadTexture(char* path)
 		}
 		else
 		{
+			isSuccess = false;
 			LOG("Image conversion error %s", iluErrorString(ilGetError()));
 		}
 	}
 	else
 	{
+		isSuccess = false;
 		LOG("Error loading texture %s", iluErrorString(ilGetError()));
 	}
 
 	ilDeleteImages(1, &newTextureID);
+
+	if (!isSuccess)
+		newTextureID = 0;
 
 	return newTextureID;
 }
@@ -297,7 +303,13 @@ void ModuleGeometry::UpdateTexture(char* path)
 {
 	uint tempTexture = LoadTexture(path);
 	if (tempTexture != 0)
+	{
+		if (textureID != 0)
+		{
+			glDeleteTextures(1, &textureID);
+		}
 		textureID = tempTexture;
+	}
 }
 
 
