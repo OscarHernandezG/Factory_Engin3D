@@ -30,5 +30,6 @@ public:
 public:
 	Mesh* currentMesh;
 	uint textureID = 0;
+	uint numFaces = 0;
 	char* droppedFileDir = nullptr;
 };

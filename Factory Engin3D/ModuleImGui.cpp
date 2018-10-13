@@ -233,25 +233,25 @@ void ModuleImGui::CreateRandomNumberWindow()
 
 
 	ImGui::Text("Introduce min value:"); ImGui::SameLine();
-	isMinSelected = ImGui::InputInt("", &num1);
+	isMinSelected = ImGui::InputInt("", &randNum1);
 
 	ImGui::Text("Introduce max value:"); ImGui::SameLine();
-	isMaxSelected = ImGui::InputInt(" ", &num2);
+	isMaxSelected = ImGui::InputInt(" ", &randNum2);
 
-	if (num1 > num2)
+	if (randNum1 > randNum2)
 	{
 		if (isMinSelected)
-			num2 = num1;
+			randNum2 = randNum1;
 		else if (isMaxSelected)
-			num1 = num2;
+			randNum1 = randNum2;
 	}
 
-	string buttonText = "Get a random number between " + to_string(num1) + " and " + to_string(num2);
+	string buttonText = "Get a random number between " + to_string(randNum1) + " and " + to_string(randNum2);
 	if (ImGui::Button(buttonText.data(), ImVec2(400, 50)))
 	{
-		int range = num2 - num1 + 1;
+		int range = randNum2 - randNum1 + 1;
 		randomIntNum = pcg32_boundedrand_r(&rng, range);
-		randomIntNum += num1;
+		randomIntNum += randNum1;
 		randNumTextInt = to_string(randomIntNum);
 
 	}
@@ -268,11 +268,8 @@ void ModuleImGui::CreateAboutWindow()
 	ImGui::Begin("About", &aboutWindow);
 	ImGui::Text("Factory Engin3D");
 	ImGui::Separator();
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	ImGui::TextWrapped("This is an incredible description ^^");
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	ImGui::TextWrapped("Factory engin3D is a 3D game engine createt by Oscar Hernandez and Aleix Gabarro. Two students of CITM, UPC in Terrassa.");
+	ImGui::Text("This code is written in C++");
 	if (ImGui::Button("Our repository", ImVec2(150, 25)))
 		ShellExecuteA(NULL, "Open", "https://github.com/OscarHernandezG/3D_Engine", NULL, NULL, SW_SHOWNORMAL);
 	ImGui::Text("Did it by:");
@@ -282,7 +279,7 @@ void ModuleImGui::CreateAboutWindow()
 	if (ImGui::Button("Aleix Gabarro", ImVec2(150, 25)))
 		ShellExecuteA(NULL, "Open", "https://github.com/aleixgab", NULL, NULL, SW_SHOWNORMAL);
 	ImGui::Separator();
-	ImGui::Text("Libraries that we used in this engine");
+	ImGui::Text("External libraries that we used in this engine");
 	///	Todo: ask libraries their version
 
 	//IMGUI BUTTON Link
@@ -365,6 +362,11 @@ void ModuleImGui::CreateConfigWindow()
 		CreateInputHeader();
 	}
 
+	if (ImGui::CollapsingHeader("Meshes"))
+	{
+		CreateMeshesHeader();
+	}
+
 	if (ImGui::CollapsingHeader("Texture"))
 	{
 		CreateTextureHeader();
@@ -431,7 +433,7 @@ void ModuleImGui::CreateTransform()
 
 	}
 	else {
-		ImGui::TextWrapped("There aren't any mesh");
+		ImGui::TextWrapped("There aren't any meshes");
 	}
 		ImGui::End();
 }
@@ -615,6 +617,27 @@ void ModuleImGui::CreateInputHeader()
 	
 	ImGui::Text("Is mouse pressed: %s", App->input->GetIsMousePressed() == true ? "Yes" : "No");
 	ImGui::Text("Is any key pressed: %s", App->input->GetIsKeyPressed() == true ? "Yes" : "No");
+}
+
+void ModuleImGui::CreateMeshesHeader()
+{
+	if (App->geometry->currentMesh != nullptr)
+	{
+		uint numVertex = 0u;
+		std::vector<MeshBuffer>::iterator iterator = App->geometry->currentMesh->buffers.begin();
+		while (iterator != App->geometry->currentMesh->buffers.end())
+		{
+			numVertex += (*iterator).vertex.size;
+			++iterator;
+		}
+
+		ImGui::Text("Total vertex: %i", numVertex);
+		ImGui::Text("Total faces: %i", App->geometry->numFaces);
+	}
+	else
+	{
+		ImGui::TextWrapped("There aren't any meshes");
+	}
 }
 
 void ModuleImGui::CreateTextureHeader()

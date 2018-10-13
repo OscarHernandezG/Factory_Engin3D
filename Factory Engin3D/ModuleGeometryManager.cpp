@@ -63,7 +63,6 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 	Mesh* mesh = nullptr;
 	if (path != nullptr)
 	{
-		int faces = 0;
 		char* filePath = path;
 		const aiScene* scene = aiImportFile(filePath, aiProcessPreset_TargetRealtime_MaxQuality);
 
@@ -71,6 +70,7 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 			if (scene->HasMeshes())
 			{
 				mesh = new Mesh();
+				numFaces = 0u;
 
 				for (int i = 0; i < scene->mNumMeshes; ++i)
 				{
@@ -90,7 +90,7 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 
 					if (currentMesh->HasFaces())
 					{
-						faces += currentMesh->mNumFaces;
+						numFaces += currentMesh->mNumFaces;
 						currentBuffer.index.size = currentMesh->mNumFaces * 3;
 						currentBuffer.index.buffer = new uint[currentBuffer.index.size];
 						for (uint index = 0; index < currentMesh->mNumFaces; ++index)
@@ -121,7 +121,7 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 						glBufferData(GL_ARRAY_BUFFER, currentMesh->mNumVertices * sizeof(float) * 2, textCoords, GL_STATIC_DRAW);
 						glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-
+						
 						delete[] textCoords;
 					
 					}
@@ -131,7 +131,7 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 			}
 			aiReleaseImport(scene);
 
-		LOG("Loaded geometry with %i faces", faces);
+		LOG("Loaded geometry with %i faces", numFaces);
 		}
 
 		else
