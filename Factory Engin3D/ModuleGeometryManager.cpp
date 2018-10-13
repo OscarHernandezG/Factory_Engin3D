@@ -68,7 +68,8 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 		const aiScene* scene = aiImportFile(filePath, aiProcessPreset_TargetRealtime_MaxQuality);
 
 		bool isSceneLoad = false;
-		if (scene != nullptr) {
+		if (scene != nullptr) 
+		{
 			if (scene->HasMeshes())
 			{
 				mesh = new Mesh();
@@ -130,6 +131,7 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 					mesh->buffers.push_back(currentBuffer);
 				}
 				isSceneLoad = true;
+				LoadBoundingBox(mesh);
 			}
 			aiReleaseImport(scene);
 
@@ -153,6 +155,58 @@ void ModuleGeometry::UpdateMesh(char* path)
 			currentMesh = tempMesh;
 		}
 }
+
+AABB* ModuleGeometry::LoadBoundingBox(Mesh* mesh)
+{
+	std::vector<MeshBuffer>::iterator iterator = mesh->buffers.begin();
+	max.x = (*iterator).vertex.buffer[0];
+	max.y = (*iterator).vertex.buffer[1];
+	max.z = (*iterator).vertex.buffer[2];
+
+	min = max;
+
+
+	for (iterator; iterator != mesh->buffers.end(); ++iterator)
+	{
+		int vertexSize = (*iterator).vertex.size / 3;
+		float* buffer = (*iterator).vertex.buffer;
+		for (int i = 0; i < vertexSize; ++i)
+		{
+			Higher(max.x, buffer[i * 3]);
+			Higher(max.y, buffer[i * 3 + 1]);
+			Higher(max.z, buffer[i * 3 + 2]);
+
+			Lower(min.x, buffer[i * 3]);
+			Lower(min.y, buffer[i * 3 + 1]);
+			Lower(min.z, buffer[i * 3 + 2]);
+		}
+	}
+
+	AABB boundingBox(min, max);
+
+	//Polyhedron poly = boundingBox.ToPolyhedron();
+
+	//poly.VertexArrayPtr;
+	//poly.NumVertices;
+
+	//poly.num
+
+	float3 size = boundingBox.Size();
+	float length = size.Length();
+	LOG("Length %f", length);
+	return nullptr;
+}
+
+void ModuleGeometry::Higher(float& val1, float val2)
+{
+	val1 = val1 > val2 ? val1 : val2;
+}
+
+void ModuleGeometry::Lower(float& val1, float val2)
+{
+	val1 = val1 < val2 ? val1 : val2;
+}
+
 
 Geometry* ModuleGeometry::LoadPrimitive(PrimitiveTypes type)
 {
@@ -230,12 +284,17 @@ update_status ModuleGeometry::PostUpdate(float dt)
 
 void ModuleGeometry::Draw3D(bool fill, bool wire)
 {
-	//if (cube != nullptr)
-	//{
-	//	cube->fill = fill;
-	//	cube->wire = wire;
-	//	cube->Render();
-	//}
+	// Debug cubes
+	//PrimitiveCube cube(min, 1, 1, 1);
+	//cube.fill = fill;
+	//cube.wire = wire;
+	//cube.Render();
+
+	//PrimitiveCube cubi(max, 1, 1, 1);
+	//cubi.fill = fill;
+	//cubi.wire = wire;
+	//cubi.Render();
+
 
 	PrimitivePlane plane;
 	plane.color = { 1, 1, 1, 1 };
