@@ -130,7 +130,7 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 				}
 			}
 			aiReleaseImport(scene);
-			LoadBoundingBox(mesh);
+			currentMeshBB = LoadBoundingBox(mesh);
 		LOG("Loaded geometry with %i faces", faces);
 		}
 
@@ -154,45 +154,77 @@ void ModuleGeometry::UpdateMesh(char* path)
 
 AABB* ModuleGeometry::LoadBoundingBox(Mesh* mesh)
 {
-	float3 max, min;
-	std::vector<MeshBuffer>::iterator iterator = mesh->buffers.begin();
-	max.x = (*iterator).vertex.buffer[0];
-	max.y = (*iterator).vertex.buffer[1];
-	max.z = (*iterator).vertex.buffer[2];
-
-	min = max;
-
-
-	for (iterator; iterator != mesh->buffers.end(); ++iterator)
+	AABB* boundingBox = nullptr;
+	if (mesh != nullptr)
 	{
-		int vertexSize = (*iterator).vertex.size / 3;
-		float* buffer = (*iterator).vertex.buffer;
-		for (int i = 0; i < vertexSize; ++i)
+		float3 max, min;
+		std::vector<MeshBuffer>::iterator iterator = mesh->buffers.begin();
+		max.x = (*iterator).vertex.buffer[0];
+		max.y = (*iterator).vertex.buffer[1];
+		max.z = (*iterator).vertex.buffer[2];
+
+		min = max;
+
+
+		for (iterator; iterator != mesh->buffers.end(); ++iterator)
 		{
-			Higher(max.x, buffer[i * 3]);
-			Higher(max.y, buffer[i * 3 + 1]);
-			Higher(max.z, buffer[i * 3 + 2]);
+			int vertexSize = (*iterator).vertex.size / 3;
+			float* buffer = (*iterator).vertex.buffer;
+			for (int i = 0; i < vertexSize; ++i)
+			{
+				Higher(max.x, buffer[i * 3]);
+				Higher(max.y, buffer[i * 3 + 1]);
+				Higher(max.z, buffer[i * 3 + 2]);
 
-			Lower(min.x, buffer[i * 3]);
-			Lower(min.y, buffer[i * 3 + 1]);
-			Lower(min.z, buffer[i * 3 + 2]);
+				Lower(min.x, buffer[i * 3]);
+				Lower(min.y, buffer[i * 3 + 1]);
+				Lower(min.z, buffer[i * 3 + 2]);
+			}
 		}
+
+		boundingBox = new AABB(min, max);
+
+		App->camera->Position = CalcBBPos(boundingBox);
+		App->camera->Look(CalcBBPos(boundingBox), mesh->GetPos(), false);
 	}
-
-	AABB boundingBox(min, max);
-
-	float3 distance{ 0,0,0 };
-	float3 size = boundingBox.Size();
-
-	float reScale = 1.25;
-	distance.x = (size.x / 2) / math::Tan(0.33333333333 * reScale);
-	distance.y = (size.y / 2) / math::Tan(0.33333333333 * reScale);
-	distance.z = (size.z / 2) / math::Tan(0.33333333333 * reScale);
-
-	App->camera->Position = distance;
-	App->camera->LookAt({ 0,0,0 });
-	return nullptr;
+	return boundingBox;
 }
+
+float3 ModuleGeometry::CalcBBPos(math::AABB* boundingBox)
+{
+	float3 distance{ 0,0,0 };
+	if (boundingBox != nullptr)
+	{
+		float3 size = boundingBox->Size();
+
+		float reScale = 1.25;
+		distance.x = (size.x / 2) / math::Tan(0.33333333333 * reScale);
+		distance.y = (size.y / 2) / math::Tan(0.33333333333 * reScale);
+		distance.z = (size.z / 2) / math::Tan(0.33333333333 * reScale);
+	}
+	return distance;
+}
+
+float3 ModuleGeometry::GetBBPos()
+{
+	float3 distance{ 0,0,0 };
+	if (currentMeshBB != nullptr)
+	{
+		float3 size = currentMeshBB->Size();
+
+		float reScale = 1.25;
+		distance.x = (size.x / 2) / math::Tan(0.33333333333 * reScale);
+		distance.y = (size.y / 2) / math::Tan(0.33333333333 * reScale);
+		distance.z = (size.z / 2) / math::Tan(0.33333333333 * reScale);
+	}
+	return distance;
+}
+
+float3 ModuleGeometry::GetCurrentMeshPivot()
+{
+	return currentMesh->GetPos();
+}
+
 
 void ModuleGeometry::Higher(float& val1, float val2)
 {

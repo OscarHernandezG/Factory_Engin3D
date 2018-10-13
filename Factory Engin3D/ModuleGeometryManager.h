@@ -23,6 +23,12 @@ public:
 
 	AABB * LoadBoundingBox(Mesh * mesh);
 
+	float3 CalcBBPos(math::AABB* boundingBox);
+
+	float3 GetBBPos();
+
+	float3 GetCurrentMeshPivot();
+
 	void Higher(float & val1, float val2);
 
 	void Lower(float & val1, float val2);
