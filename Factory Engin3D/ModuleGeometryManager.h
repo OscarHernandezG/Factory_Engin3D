@@ -21,13 +21,12 @@ public:
 
 	void UpdateMesh(char * path);
 
-	AABB* LoadBoundingBox(Mesh * mesh);
+	AABB * LoadBoundingBox(Mesh * mesh);
 
-	void Higher(float& val1, float val2);
+	void Higher(float & val1, float val2);
 
-	void Lower(float& val1, float val2);
+	void Lower(float & val1, float val2);
 
-	
 	Geometry* LoadPrimitive(PrimitiveTypes type);
 
 	uint LoadTexture(char* path);
@@ -35,9 +34,8 @@ public:
 	void UpdateTexture(char* path);
 
 public:
-	Mesh* currentMesh;
+	Mesh* currentMesh = nullptr;
 	uint textureID = 0;
 	char* droppedFileDir = nullptr;
-
-	float3 max{ 0,0,0 }, min{ 0,0,0 };
+	AABB* currentMeshBB = nullptr;
 };
