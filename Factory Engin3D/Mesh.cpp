@@ -45,6 +45,6 @@ void Mesh::ClearMesh()
 
 		delete (*iterator).index.buffer;
 		delete (*iterator).vertex.buffer;
-//		delete (*iterator).texture.buffer;
+		delete (*iterator).texture.buffer;
 	}
 }
