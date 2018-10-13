@@ -41,7 +41,11 @@ public:
 
 public:
 	Mesh* currentMesh = nullptr;
+
 	uint textureID = 0;
+	uint numFaces = 0;
+
 	char* droppedFileDir = nullptr;
+
 	AABB* currentMeshBB = nullptr;
 };

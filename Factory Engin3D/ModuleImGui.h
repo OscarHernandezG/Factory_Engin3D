@@ -52,6 +52,9 @@ public:
 
 	void CreateAppHeader();
 	void CreateWindowHeader();
+	void CreateInputHeader();
+	void CreateMeshesHeader();
+	void CreateTextureHeader();
 	void CreateHardwareHeader();
 	void CreateRenderHeader();
 
@@ -88,8 +91,8 @@ public:
 
 	double randomDoubleNum = -1;
 
-	int num1 = 0;
-	int num2 = 0;
+	int randNum1 = 0;
+	int randNum2 = 0;
 	int randomIntNum = -1;
 
 	char* tempText = nullptr;

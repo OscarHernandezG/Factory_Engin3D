@@ -28,11 +28,8 @@ bool ModuleSceneIntro::Start()
 
 	App->camera->Move(float3(1.0f, 1.0f, 0.0f));
 
-	//currentMesh = LoadMesh();
-	
 	//frust = new PrimitiveFrustum(0.5f, 1.5f, { 2,0,0 });
-	//cube = new PrimitiveCube({ 0,0,0 }, 1, 1, 1);
-
+	//cube = new Primit
 	return ret;
 }
 

@@ -63,7 +63,6 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 	Mesh* mesh = nullptr;
 	if (path != nullptr)
 	{
-		int faces = 0;
 		char* filePath = path;
 		const aiScene* scene = aiImportFile(filePath, aiProcessPreset_TargetRealtime_MaxQuality);
 
@@ -71,6 +70,7 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 			if (scene->HasMeshes())
 			{
 				mesh = new Mesh();
+				numFaces = 0u;
 
 				for (int i = 0; i < scene->mNumMeshes; ++i)
 				{
@@ -90,9 +90,11 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 
 					if (currentMesh->HasFaces())
 					{
-						faces += currentMesh->mNumFaces;
+
+						numFaces += currentMesh->mNumFaces;
 						newCurrentBuffer.index.size = currentMesh->mNumFaces * 3;
 						newCurrentBuffer.index.buffer = new uint[newCurrentBuffer.index.size];
+
 						for (uint index = 0; index < currentMesh->mNumFaces; ++index)
 						{
 							if (currentMesh->mFaces[index].mNumIndices != 3)
@@ -115,23 +117,25 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 							textCoords[currVertices * 2] = currentMesh->mTextureCoords[0][currVertices].x;
 							textCoords[currVertices * 2 + 1] = currentMesh->mTextureCoords[0][currVertices].y;
 						}
-					
-						glGenBuffers(1,&newCurrentBuffer.texture.id);
+
+						glGenBuffers(1, &newCurrentBuffer.texture.id);
 						glBindBuffer(GL_ARRAY_BUFFER, newCurrentBuffer.texture.id);
 						glBufferData(GL_ARRAY_BUFFER, currentMesh->mNumVertices * sizeof(float) * 2, textCoords, GL_STATIC_DRAW);
 						glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 
 						delete[] textCoords;
-					
+
 					}
 
 					mesh->buffers.push_back(newCurrentBuffer);
 				}
-			}
-			aiReleaseImport(scene);
+
 			currentMeshBB = LoadBoundingBox(mesh);
-		LOG("Loaded geometry with %i faces", faces);
+			LOG("Loaded geometry with %i faces", numFaces);
+			}
+
+			aiReleaseImport(scene);
 		}
 
 		else

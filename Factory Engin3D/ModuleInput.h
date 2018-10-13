@@ -58,6 +58,15 @@ public:
 		return mouse_y_motion;
 	}
 
+	bool GetIsKeyPressed() const
+	{
+		return keyPressed;
+	}
+	
+	bool GetIsMousePressed() const
+	{
+		return mousePressed;
+	}
 private:
 	KEY_STATE* keyboard;
 	KEY_STATE mouse_buttons[MAX_MOUSE_BUTTONS];
@@ -66,5 +75,7 @@ private:
 	int mouse_z;
 	int mouse_x_motion;
 	int mouse_y_motion;
+	bool keyPressed = false;
+	bool mousePressed = false;
 	//int mouse_z_motion;
 };

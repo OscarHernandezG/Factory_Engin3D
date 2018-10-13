@@ -133,16 +133,15 @@ void ModuleWindow::SetMaximize()
 
 void ModuleWindow::SetBorderless()
 {
-	//if (!borderless)
-	//	SDL_SetWindowBordered(window, SDL_TRUE);
-	//
-	//else
-	//	SDL_SetWindowBordered(window, SDL_FALSE);
+	if (!borderless)
+		SDL_SetWindowBordered(window, SDL_TRUE);
+	
+	else
+		SDL_SetWindowBordered(window, SDL_FALSE);
 
-	//SDL_MaximizeWindow(window);
+	SDL_MaximizeWindow(window);
 
-	//SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
-	SetMaximize();
+	SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 }
 
 update_status ModuleWindow::Save(JSON_Object* object)

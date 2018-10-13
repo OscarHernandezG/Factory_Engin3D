@@ -15,8 +15,8 @@
 #include "Geometries.h"
 
 //RAM and CPU usage
-#include "windows.h"
-#include "psapi.h"
+#include "Windows.h"
+#include "Psapi.h"
 
 ModuleImGui::ModuleImGui(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -86,24 +86,16 @@ bool ModuleImGui::CleanUp()
 // Update
 update_status ModuleImGui::Update(float dt)
 {
-	//if (resize == 1) 
-	//{
-	//	ResizeImGui({ 0,0 });
-	//	resize++;
-	//}
-	//else
-	//resize++;
-
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleImGui::PostUpdate(float dt)
 {
 
-	PROCESS_MEMORY_COUNTERS counter;
-	GetProcessMemoryInfo(GetCurrentProcess(), &counter, sizeof(counter));
+	PROCESS_MEMORY_COUNTERS counters;
+	GetProcessMemoryInfo(GetCurrentProcess(), &counters, sizeof(counters));
 
-	float ramInUse = counter.WorkingSetSize;
+	float ramInUse = counters.WorkingSetSize;
 	ramInUse /= 1024;
 	ramInUse /= 1024;
 
@@ -241,25 +233,25 @@ void ModuleImGui::CreateRandomNumberWindow()
 
 
 	ImGui::Text("Introduce min value:"); ImGui::SameLine();
-	isMinSelected = ImGui::InputInt("", &num1);
+	isMinSelected = ImGui::InputInt("", &randNum1);
 
 	ImGui::Text("Introduce max value:"); ImGui::SameLine();
-	isMaxSelected = ImGui::InputInt(" ", &num2);
+	isMaxSelected = ImGui::InputInt(" ", &randNum2);
 
-	if (num1 > num2)
+	if (randNum1 > randNum2)
 	{
 		if (isMinSelected)
-			num2 = num1;
+			randNum2 = randNum1;
 		else if (isMaxSelected)
-			num1 = num2;
+			randNum1 = randNum2;
 	}
 
-	string buttonText = "Get a random number between " + to_string(num1) + " and " + to_string(num2);
+	string buttonText = "Get a random number between " + to_string(randNum1) + " and " + to_string(randNum2);
 	if (ImGui::Button(buttonText.data(), ImVec2(400, 50)))
 	{
-		int range = num2 - num1 + 1;
+		int range = randNum2 - randNum1 + 1;
 		randomIntNum = pcg32_boundedrand_r(&rng, range);
-		randomIntNum += num1;
+		randomIntNum += randNum1;
 		randNumTextInt = to_string(randomIntNum);
 
 	}
@@ -276,11 +268,8 @@ void ModuleImGui::CreateAboutWindow()
 	ImGui::Begin("About", &aboutWindow);
 	ImGui::Text("Factory Engin3D");
 	ImGui::Separator();
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	ImGui::TextWrapped("This is an incredible description ^^");
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	ImGui::TextWrapped("Factory engin3D is a 3D game engine createt by Oscar Hernandez and Aleix Gabarro. Two students of CITM, UPC in Terrassa.");
+	ImGui::Text("This code is written in C++");
 	if (ImGui::Button("Our repository", ImVec2(150, 25)))
 		ShellExecuteA(NULL, "Open", "https://github.com/OscarHernandezG/3D_Engine", NULL, NULL, SW_SHOWNORMAL);
 	ImGui::Text("Did it by:");
@@ -290,7 +279,7 @@ void ModuleImGui::CreateAboutWindow()
 	if (ImGui::Button("Aleix Gabarro", ImVec2(150, 25)))
 		ShellExecuteA(NULL, "Open", "https://github.com/aleixgab", NULL, NULL, SW_SHOWNORMAL);
 	ImGui::Separator();
-	ImGui::Text("Libraries that we used in this engine");
+	ImGui::Text("External libraries that we used in this engine");
 	///	Todo: ask libraries their version
 
 	//IMGUI BUTTON Link
@@ -368,14 +357,29 @@ void ModuleImGui::CreateConfigWindow()
 		CreateWindowHeader();
 	}	
 
-	if (ImGui::CollapsingHeader("Hardware"))
+	if (ImGui::CollapsingHeader("Input"))
 	{
-		CreateHardwareHeader();
+		CreateInputHeader();
+	}
+
+	if (ImGui::CollapsingHeader("Meshes"))
+	{
+		CreateMeshesHeader();
+	}
+
+	if (ImGui::CollapsingHeader("Texture"))
+	{
+		CreateTextureHeader();
 	}
 
 	if (ImGui::CollapsingHeader("Render"))
 	{
 		CreateRenderHeader();
+	}
+
+	if (ImGui::CollapsingHeader("Hardware"))
+	{
+		CreateHardwareHeader();
 	}
 	ImGui::End();
 }
@@ -429,7 +433,7 @@ void ModuleImGui::CreateTransform()
 
 	}
 	else {
-		ImGui::TextWrapped("There aren't any mesh");
+		ImGui::TextWrapped("There aren't any meshes");
 	}
 		ImGui::End();
 }
@@ -606,17 +610,50 @@ void ModuleImGui::CreateWindowHeader()
 	}
 }
 
-void ModuleImGui::CreateHardwareHeader()
+void ModuleImGui::CreateInputHeader()
 {
-	ImVec4 color(1.0f, 1.0f, 0.1f, 1.0f);
+	ImGui::Text("Mouse position: (%i,%i)", App->input->GetMouseX(), App->input->GetMouseY());
+	ImGui::Text("Mouse motion: (%i,%i)", App->input->GetMouseXMotion(), App->input->GetMouseYMotion());
+	
+	ImGui::Text("Is mouse pressed: %s", App->input->GetIsMousePressed() == true ? "Yes" : "No");
+	ImGui::Text("Is any key pressed: %s", App->input->GetIsKeyPressed() == true ? "Yes" : "No");
+}
 
-	//CPU--------------------------------------------------------
-	CreateCPUInfo(color);
+void ModuleImGui::CreateMeshesHeader()
+{
+	if (App->geometry->currentMesh != nullptr)
+	{
+		uint numVertex = 0u;
+		std::vector<MeshBuffer>::iterator iterator = App->geometry->currentMesh->buffers.begin();
+		while (iterator != App->geometry->currentMesh->buffers.end())
+		{
+			numVertex += (*iterator).vertex.size;
+			++iterator;
+		}
 
-	ImGui::Separator();
+		ImGui::Text("Total vertex: %i", numVertex);
+		ImGui::Text("Total faces: %i", App->geometry->numFaces);
+	}
+	else
+	{
+		ImGui::TextWrapped("There aren't any meshes");
+	}
+}
 
-	//GPU--------------------------------------------------------
-	CreateGPUInfo(color);
+void ModuleImGui::CreateTextureHeader()
+{
+	if (App->geometry->textureID != 0)
+	{
+		ImGui::Text("Texture id: %i", App->geometry->textureID);
+		ImGui::Text("Texture used by %i meshes",App->geometry->currentMesh->buffers.size());
+		ImGui::Text("UV Preview");
+		ImGui::Separator();
+		ImGui::Image((void*)App->geometry->textureID, { 200,200 });
+	}
+	else
+	{
+		ImGui::TextWrapped("There isn't any texture");
+	}
 }
 
 void ModuleImGui::CreateRenderHeader()
@@ -637,6 +674,20 @@ void ModuleImGui::CreateRenderHeader()
 		App->renderer3D->SetLightAmbient();
 	
 }
+
+void ModuleImGui::CreateHardwareHeader()
+{
+	ImVec4 color(1.0f, 1.0f, 0.1f, 1.0f);
+
+	//CPU--------------------------------------------------------
+	CreateCPUInfo(color);
+
+	ImGui::Separator();
+
+	//GPU--------------------------------------------------------
+	CreateGPUInfo(color);
+}
+
 //Create Headers----------------------------------------------------------
 
 
