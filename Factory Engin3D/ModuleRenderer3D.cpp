@@ -252,7 +252,7 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	size.x = currSize.x / prevSize.x;
 	size.y = currSize.y / prevSize.y;
 
-	App->gui->ResizeImGui(size);
+	//App->gui->ResizeImGui(size);
 
 	prevSize = currSize;
 }

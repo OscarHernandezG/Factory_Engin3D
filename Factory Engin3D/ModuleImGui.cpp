@@ -403,7 +403,7 @@ void ModuleImGui::CreateConsole()
 void ModuleImGui::CreateTransform()
 {
 	ImGui::SetWindowSize({ 400,200 }, ImGuiWindowFlags_NoResize);
-	ImGui::Begin("Transform", &transformWindow);
+	ImGui::Begin("Transform", &transformWindow, ImGuiWindowFlags_AlwaysAutoResize);
 
 	if (App->geometry->currentMesh != nullptr)
 	{
