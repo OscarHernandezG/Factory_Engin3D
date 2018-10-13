@@ -15,8 +15,8 @@
 #include "Geometries.h"
 
 //RAM and CPU usage
-#include "windows.h"
-#include "psapi.h"
+#include "Windows.h"
+#include "Psapi.h"
 
 ModuleImGui::ModuleImGui(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -86,24 +86,16 @@ bool ModuleImGui::CleanUp()
 // Update
 update_status ModuleImGui::Update(float dt)
 {
-	//if (resize == 1) 
-	//{
-	//	ResizeImGui({ 0,0 });
-	//	resize++;
-	//}
-	//else
-	//resize++;
-
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleImGui::PostUpdate(float dt)
 {
 
-	PROCESS_MEMORY_COUNTERS counter;
-	GetProcessMemoryInfo(GetCurrentProcess(), &counter, sizeof(counter));
+	PROCESS_MEMORY_COUNTERS counters;
+	GetProcessMemoryInfo(GetCurrentProcess(), &counters, sizeof(counters));
 
-	float ramInUse = counter.WorkingSetSize;
+	float ramInUse = counters.WorkingSetSize;
 	ramInUse /= 1024;
 	ramInUse /= 1024;
 

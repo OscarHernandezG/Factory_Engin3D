@@ -130,6 +130,8 @@ update_status ModuleInput::PreUpdate(float dt)
 				App->geometry->UpdateTexture(e.drop.file);
 
 				break;
+			default:
+				break;
 		}
 	}
 
