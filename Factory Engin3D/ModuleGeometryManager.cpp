@@ -76,35 +76,35 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 				{
 					aiMesh* currentMesh = scene->mMeshes[i];
 
-					MeshBuffer currentBuffer;
-					currentBuffer.vertex.size = currentMesh->mNumVertices * 3;
-					currentBuffer.vertex.buffer = new float[currentBuffer.vertex.size * 3];
+					MeshBuffer newCurrentBuffer;
+					newCurrentBuffer.vertex.size = currentMesh->mNumVertices * 3;
+					newCurrentBuffer.vertex.buffer = new float[newCurrentBuffer.vertex.size * 3];
 
-					memcpy(currentBuffer.vertex.buffer, currentMesh->mVertices, sizeof(float) * currentBuffer.vertex.size);
+					memcpy(newCurrentBuffer.vertex.buffer, currentMesh->mVertices, sizeof(float) * newCurrentBuffer.vertex.size);
 
-					LOG("New mesh loaded with %d vertices", currentBuffer.vertex.size);
+					LOG("New mesh loaded with %d vertices", newCurrentBuffer.vertex.size);
 
-					glGenBuffers(1, (GLuint*)&(currentBuffer.vertex.id));
-					glBindBuffer(GL_ARRAY_BUFFER, currentBuffer.vertex.id);
-					glBufferData(GL_ARRAY_BUFFER, sizeof(float) * currentBuffer.vertex.size, currentBuffer.vertex.buffer, GL_STATIC_DRAW);
+					glGenBuffers(1, (GLuint*)&(newCurrentBuffer.vertex.id));
+					glBindBuffer(GL_ARRAY_BUFFER, newCurrentBuffer.vertex.id);
+					glBufferData(GL_ARRAY_BUFFER, sizeof(float) * newCurrentBuffer.vertex.size, newCurrentBuffer.vertex.buffer, GL_STATIC_DRAW);
 
 					if (currentMesh->HasFaces())
 					{
 						faces += currentMesh->mNumFaces;
-						currentBuffer.index.size = currentMesh->mNumFaces * 3;
-						currentBuffer.index.buffer = new uint[currentBuffer.index.size];
+						newCurrentBuffer.index.size = currentMesh->mNumFaces * 3;
+						newCurrentBuffer.index.buffer = new uint[newCurrentBuffer.index.size];
 						for (uint index = 0; index < currentMesh->mNumFaces; ++index)
 						{
 							if (currentMesh->mFaces[index].mNumIndices != 3)
 								LOG("WARNING, geometry faces != 3 indices")
 							else
 							{
-								memcpy(&currentBuffer.index.buffer[index * 3], currentMesh->mFaces[index].mIndices, sizeof(uint) * 3);
+								memcpy(&newCurrentBuffer.index.buffer[index * 3], currentMesh->mFaces[index].mIndices, sizeof(uint) * 3);
 							}
 						}
-						glGenBuffers(1, (GLuint*)&(currentBuffer.index.id));
-						glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, currentBuffer.index.id);
-						glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * currentBuffer.index.size, currentBuffer.index.buffer, GL_STATIC_DRAW);
+						glGenBuffers(1, (GLuint*)&(newCurrentBuffer.index.id));
+						glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, newCurrentBuffer.index.id);
+						glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * newCurrentBuffer.index.size, newCurrentBuffer.index.buffer, GL_STATIC_DRAW);
 					}
 
 					if (currentMesh->HasTextureCoords(0))
@@ -116,8 +116,8 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 							textCoords[currVertices * 2 + 1] = currentMesh->mTextureCoords[0][currVertices].y;
 						}
 					
-						glGenBuffers(1,&currentBuffer.texture.id);
-						glBindBuffer(GL_ARRAY_BUFFER, currentBuffer.texture.id);
+						glGenBuffers(1,&newCurrentBuffer.texture.id);
+						glBindBuffer(GL_ARRAY_BUFFER, newCurrentBuffer.texture.id);
 						glBufferData(GL_ARRAY_BUFFER, currentMesh->mNumVertices * sizeof(float) * 2, textCoords, GL_STATIC_DRAW);
 						glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -126,7 +126,7 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 					
 					}
 
-					mesh->buffers.push_back(currentBuffer);
+					mesh->buffers.push_back(newCurrentBuffer);
 				}
 			}
 			aiReleaseImport(scene);
