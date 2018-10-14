@@ -33,7 +33,7 @@ private:
 	void CalculateViewMatrix();
 
 public:
-	
+
 	float3 X, Y, Z, Position, Reference;
 
 private:
