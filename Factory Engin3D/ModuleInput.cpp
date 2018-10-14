@@ -142,7 +142,7 @@ update_status ModuleInput::PreUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
-void ModuleInput::DistributeFile(char * file)
+void ModuleInput::DistributeFile(char* file) 
 {
 	//Todo clean
 

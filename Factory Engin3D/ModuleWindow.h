@@ -28,9 +28,9 @@ public:
 	
 	void SetTitle(const char* title);
 
-	void SetFullscreen(bool desktop = false);
-	void SetMaximize();
-	void SetBorderless();
+	void SetFullscreen(bool desktop = false) const;
+	//void SetMaximize();
+	void SetBorderless() const;
 
 public:
 	//The window we'll be rendering to

@@ -196,7 +196,7 @@ AABB* ModuleGeometry::LoadBoundingBox(Mesh* mesh)
 	return boundingBox;
 }
 
-float3 ModuleGeometry::CalcBBPos(math::AABB* boundingBox)
+float3 ModuleGeometry::CalcBBPos(math::AABB* boundingBox) const
 {
 	float3 distance{ 0,0,0 };
 	if (boundingBox != nullptr)
@@ -211,7 +211,7 @@ float3 ModuleGeometry::CalcBBPos(math::AABB* boundingBox)
 	return distance;
 }
 
-float3 ModuleGeometry::GetBBPos()
+float3 ModuleGeometry::GetBBPos() const
 {
 	float3 distance{ 0,0,0 };
 	if (currentMeshBB != nullptr)
@@ -226,7 +226,7 @@ float3 ModuleGeometry::GetBBPos()
 	return distance;
 }
 
-float3 ModuleGeometry::GetCurrentMeshPivot()
+float3 ModuleGeometry::GetCurrentMeshPivot() const
 {
 	return currentMesh->GetPos();
 }
@@ -242,13 +242,13 @@ void ModuleGeometry::Lower(float& val1, float val2)
 	val1 = val1 < val2 ? val1 : val2;
 }
 
-Geometry* ModuleGeometry::LoadPrimitive(PrimitiveTypes type)
-{
-	//TODO
-	return nullptr;
-}
+//Geometry* ModuleGeometry::LoadPrimitive(PrimitiveTypes type)
+//{
+//	//TODO
+//	return nullptr;
+//}
 
-uint ModuleGeometry::LoadTexture(char* path)
+uint ModuleGeometry::LoadTexture(char* path) const
 {
 	bool isSuccess = true;
 	uint newTextureID = 0;
@@ -326,20 +326,23 @@ update_status ModuleGeometry::PostUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
-void ModuleGeometry::Draw3D(bool fill, bool wire)
+void ModuleGeometry::Draw3D(bool fill, bool wire) const
 {
 	PrimitivePlane plane;
 	plane.color = { 1, 1, 1, 1 };
 	plane.axis = true;
 	plane.Render();
 
-	currentMesh->fill = fill;
-	currentMesh->wire = wire;
-	currentMesh->Render();
+	if (currentMesh != nullptr) 
+	{
+		currentMesh->fill = fill;
+		currentMesh->wire = wire;
+		currentMesh->Render();
+	}
 }
 
 void ModuleGeometry::LoadDefaultScene()
 {
-	currentMesh = LoadMesh("assets/BakerHouse.fbx");
-	textureID = LoadTexture("assets/Baker_house.png");
+	currentMesh = LoadMesh("assets/models/BakerHouse.fbx");
+	textureID = LoadTexture("assets/textures/Baker_house.dds");
 }

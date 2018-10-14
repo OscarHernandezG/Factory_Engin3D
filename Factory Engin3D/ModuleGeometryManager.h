@@ -15,7 +15,7 @@ public:
 	update_status Update(float dt);
 	update_status PostUpdate(float dt);
 
-	void Draw3D(bool fill = true, bool wire = false);
+	void Draw3D(bool fill = true, bool wire = false) const;
 	bool CleanUp();
 
 	Mesh* LoadMesh(char* path);
@@ -24,19 +24,19 @@ public:
 
 	AABB * LoadBoundingBox(Mesh * mesh);
 
-	float3 CalcBBPos(math::AABB* boundingBox);
+	float3 CalcBBPos(math::AABB* boundingBox) const;
 
-	float3 GetBBPos();
+	float3 GetBBPos() const;
 
-	float3 GetCurrentMeshPivot();
+	float3 GetCurrentMeshPivot() const;
 
-	void Higher(float & val1, float val2);
+	void Higher(float& val1, float val2);
 
-	void Lower(float & val1, float val2);
+	void Lower(float& val1, float val2);
 
-	Geometry* LoadPrimitive(PrimitiveTypes type);
+	//Geometry* LoadPrimitive(PrimitiveTypes type);
 
-	uint LoadTexture(char* path);
+	uint LoadTexture(char* path) const;
 
 	void UpdateTexture(char* path);
 

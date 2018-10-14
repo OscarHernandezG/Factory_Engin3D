@@ -103,7 +103,7 @@ void ModuleWindow::SetTitle(const char* title)
 	SDL_SetWindowTitle(window, title);
 }
 
-void ModuleWindow::SetFullscreen(bool desktop)
+void ModuleWindow::SetFullscreen(bool desktop) const
 {
 	if (!fullscreen && !fulldesktop)
 	{
@@ -124,14 +124,14 @@ void ModuleWindow::SetFullscreen(bool desktop)
 	}
 }
 
-void ModuleWindow::SetMaximize()
-{
-	//SDL_MaximizeWindow(window);
+//void ModuleWindow::SetMaximize()
+//{
+//	//SDL_MaximizeWindow(window);
+//
+//	//SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+//}
 
-	//SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
-}
-
-void ModuleWindow::SetBorderless()
+void ModuleWindow::SetBorderless() const
 {
 	if (!borderless)
 		SDL_SetWindowBordered(window, SDL_TRUE);
