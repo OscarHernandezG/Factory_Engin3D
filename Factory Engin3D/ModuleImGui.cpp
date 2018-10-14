@@ -663,10 +663,15 @@ void ModuleImGui::CreateTextureHeader()
 	if (App->geometry->textureID != 0)
 	{
 		ImGui::Text("Texture id: %i", App->geometry->textureID);
-		ImGui::Text("Texture used by %i meshes",App->geometry->currentMesh->buffers.size());
+		ImGui::Text("Texture used by %i meshes", App->geometry->currentMesh->buffers.size());
 		ImGui::Text("UV Preview");
 		ImGui::Separator();
 		ImGui::Image((void*)App->geometry->textureID, { 200,200 });
+		if (ImGui::Button("Remove Texture", { 125,25 }))
+		{
+			glDeleteTextures(1, &App->geometry->textureID);
+			App->geometry->textureID = 0;
+		}
 	}
 	else
 	{
