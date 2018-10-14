@@ -67,7 +67,8 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 		char* filePath = path;
 		const aiScene* scene = aiImportFile(filePath, aiProcessPreset_TargetRealtime_MaxQuality);
 
-		if (scene != nullptr) {
+		if (scene != nullptr) 
+		{
 			if (scene->HasMeshes())
 			{
 				mesh = new Mesh();
@@ -126,8 +127,8 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 
 
 						delete[] textCoords;
-
 					}
+
 
 					mesh->buffers.push_back(newCurrentBuffer);
 				}
@@ -135,8 +136,8 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 			currentMeshBB = LoadBoundingBox(mesh);
 			LOG("Loaded geometry with %i faces", numFaces);
 			}
-
-			aiReleaseImport(scene);
+			
+				aiReleaseImport(scene);
 		}
 
 		else

@@ -21,6 +21,7 @@ public:
 
 	bool Init();
 	update_status PreUpdate(float dt);
+	void DistributeFile(char * file);
 	bool CleanUp();
 
 	KEY_STATE GetKey(int id) const
