@@ -342,6 +342,9 @@
     <ClInclude Include="Geometry.h">
       <Filter>Sources\GameObject\Geometries</Filter>
     </ClInclude>
+    <ClInclude Include="Importer.h">
+      <Filter>Sources\Helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">

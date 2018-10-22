@@ -237,19 +237,20 @@ void PrimitiveCube::InnerRender() const
 }
 
 // SPHERE ============================================
-SpherePrim::SpherePrim() : Geometry(), radius(1.0f), horizontalCuts(21), verticalCuts(10)
+SpherePrim::SpherePrim() : Geometry(), radius(1.0f), faces(10)
 {
 	type = PrimitiveTypes::Primitive_Sphere;
 }
 
-SpherePrim::SpherePrim(float radius, int horizontalCuts, int verticalCuts) : Geometry(), radius(radius), horizontalCuts(horizontalCuts), verticalCuts(verticalCuts)
+SpherePrim::SpherePrim(float radius, int faces) : Geometry(), radius(radius), faces(faces)
 {
 	type = PrimitiveTypes::Primitive_Sphere;
 }
 
 void SpherePrim::InnerRender() const
 {
-	glBegin(GL_TRIANGLES);
+	//CONE
+/*	glBegin(GL_TRIANGLES);
 
 	float currentRad = radius;
 	int verticalDeg = 360 / verticalCuts;
@@ -274,7 +275,42 @@ void SpherePrim::InnerRender() const
 		currentRad = newRad;
 }
 	glEnd();
+	*/
 
+	int deg = 360 / faces;
+
+	glBegin(GL_TRIANGLES);
+	for (int i = 360; i > 0; i -= deg)
+	{
+		float a = i * PI / 180; // degrees to radians
+		glVertex3f(0, 0, 0);
+		glVertex3f(radius * cos(a), 0, radius * sin(a));
+		a = (i - deg)* PI / 180; // degrees to radians
+		glVertex3f(radius * cos(a), 0, radius * sin(a));
+	}
+	glEnd();
+
+	glBegin(GL_TRIANGLES);
+	for (int i = 360; i > 0; i -= deg)
+	{
+		float a = i * PI / 180; // degrees to radians
+		glVertex3f(0, radius * cos(a), radius * sin(a));
+		glVertex3f(0, 0, 0);
+		a = (i - deg)* PI / 180; // degrees to radians
+		glVertex3f(0, radius * cos(a), radius * sin(a));
+	}
+	glEnd();
+
+	glBegin(GL_TRIANGLES);
+	for (int i = 360; i > 0; i -= deg)
+	{
+		float a = i * PI / 180; // degrees to radians
+		glVertex3f(0, 0, 0);
+		glVertex3f(radius * sin(a), radius * cos(a), 0);
+		a = (i - deg)* PI / 180; // degrees to radians
+		glVertex3f(radius * sin(a), radius * cos(a), 0);
+	}
+	glEnd();
 }
 
 

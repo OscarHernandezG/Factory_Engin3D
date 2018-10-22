@@ -74,12 +74,11 @@ class SpherePrim : public Geometry
 {
 public:
 	SpherePrim();
-	SpherePrim(float radius,int hortzontalCuts, int verticalCuts);
+	SpherePrim(float radius, int faces);
 	void InnerRender() const;
 public:
 	float radius;
-	int horizontalCuts;
-	int verticalCuts;
+	int faces;
 };
 
 //// ============================================
