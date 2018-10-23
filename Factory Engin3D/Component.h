@@ -22,6 +22,8 @@ public:
 	~Component() {};
 
 private:
+	bool active = true;
+
 	ComponentType type = ComponentType_NONE;
 
 	GameObject* gameObject = nullptr;

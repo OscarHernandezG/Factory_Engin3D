@@ -8,6 +8,8 @@ enum UsingInfo
 	UsingInfo_TRANSFORM
 };
 
+//Use xyz rotate euler angles
+
 struct TransformInfo : ComponentInfo
 {
 	float3 position = float3::zero;
@@ -25,9 +27,11 @@ struct TransformInfo : ComponentInfo
 class Transform : Component
 {
 public:
+
 	Transform(TransformInfo* info);
 	Transform(GameObject* gameObject) : Component(gameObject, ComponentType_TRANSFORM), transform(float4x4::identity) {}
 	Transform(GameObject* gameObject, float4x4 transform) : Component(gameObject, ComponentType_TRANSFORM), transform(transform) {}
+
 
 	~Transform() {}
 
