@@ -3,36 +3,46 @@
 
 GameObject::GameObject(float3 position, Quat rotation, float3 scale)
 {
-	TransformInfo info;
-	info.position = position;
-	info.rotation = rotation;
-	info.whichInfo = UsingInfo_TRS;
+	TransformInfo* info = new TransformInfo();
+	info->position = position;
+	info->rotation = rotation;
+	info->whichInfo = UsingInfo_TRS;
 
 	CreateGameObject(info);
+	delete info;
 }
 
-GameObject::GameObject(TransformInfo info)
+GameObject::GameObject(TransformInfo* info)
 {
 	CreateGameObject(info);
 }
 
 GameObject::GameObject(float4x4 transform)
 {
-	TransformInfo info;
-	info.transform = transform;
-	info.whichInfo = UsingInfo_TRANSFORM;
+	TransformInfo* info = new TransformInfo();
+	info->transform = transform;
+	info->whichInfo = UsingInfo_TRANSFORM;
 
 	CreateGameObject(info);
+
+	delete info;
 }
 
 GameObject::~GameObject()
 {
+	transform = nullptr;
 
+	for (list<Component*>::iterator iterator = components.begin(); iterator != components.end(); ++iterator)
+	{
+		delete (*iterator);
+	}
+
+	components.clear();
 }
 
-void GameObject::CreateGameObject(TransformInfo info)
+void GameObject::CreateGameObject(TransformInfo* info)
 {
-	this->transform = AddComponent(ComponentType_TRANSFORM, info);
+	this->transform = (Transform*)AddComponent(ComponentType_TRANSFORM, info);
 }
 
 Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
@@ -51,4 +61,6 @@ Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
 	default:
 		break;
 	}
+
+	return newComponent;
 }

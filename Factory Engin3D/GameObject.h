@@ -11,18 +11,19 @@ class GameObject
 {
 public:
 	GameObject(float3 position = float3::zero, Quat rotation = Quat::identity, float3 scale = float3::one);
-	GameObject(TransformInfo info);
+	GameObject(TransformInfo* info);
+
 
 	GameObject(float4x4 transform);
 
 	~GameObject();
 
-	void CreateGameObject(TransformInfo info);
+	void CreateGameObject(TransformInfo* info);
 
-	Component* AddComponent(ComponentType type, ComponentInfo info);
+	Component* AddComponent(ComponentType type, ComponentInfo* info);
 
 public:
-	Component* transform = nullptr;
+	Transform* transform = nullptr;
 
 	list<Component*> components;
 };
