@@ -1,21 +1,17 @@
+#include "Module.h"
+#include "Application.h"
 
-class Importer
+struct String;
+
+class ModuleImporter : public Module
 {
 public:
-	Importer();
-	~Importer();
+	ModuleImporter(Application* app, bool start_enabled = true) : Module(app, start_enabled) {};
+	~ModuleImporter() {};
 
-	virtual bool Import() {};
-	virtual bool Load() {};
+	virtual bool Import(const char* file, const char* path, std::string outputFile) { return true; };
+	virtual bool Load() { return true; };
 
 private:
 
 };
-
-Importer::Importer()
-{
-}
-
-Importer::~Importer()
-{
-}

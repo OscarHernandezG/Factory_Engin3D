@@ -11,6 +11,7 @@
 #include "Assimp/include/postprocess.h"
 #include "Assimp/include/cfileio.h"
 
+#include <fstream>  
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -33,6 +34,17 @@ bool ModuleSceneIntro::Start()
 
 update_status ModuleSceneIntro::PreUpdate(float dt)
 {
+
+	fstream myfile("assets/New.txt", ios::out);
+
+	if (myfile.is_open()) {
+		myfile << "for you. \n";
+		myfile << "This is a line.\n";
+	}
+		myfile.close();
+
+
+
 	update_status status = UPDATE_CONTINUE;
 
 	return status;
