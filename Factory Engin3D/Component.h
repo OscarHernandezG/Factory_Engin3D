@@ -1,5 +1,4 @@
 #pragma once
-
 #include "GameObject.h"
 
 enum ComponentType
@@ -7,6 +6,11 @@ enum ComponentType
 	ComponentType_NONE,
 	ComponentType_TRANSFORM,
 	ComponentType_LIGHT
+};
+
+struct ComponentInfo
+{
+	GameObject* gameObject = nullptr;
 };
 
 class Component
