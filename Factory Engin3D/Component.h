@@ -4,7 +4,11 @@
 enum ComponentType
 {
 	ComponentType_NONE,
+
 	ComponentType_TRANSFORM,
+	ComponentType_GEOMETRY,
+	ComponentType_CAMERA,
+	ComponentType_TEXTURE,
 	ComponentType_LIGHT
 };
 

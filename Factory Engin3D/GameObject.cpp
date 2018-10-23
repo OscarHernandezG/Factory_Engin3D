@@ -56,6 +56,12 @@ Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
 	case ComponentType_TRANSFORM:
 		newComponent = (Component*)new Transform((TransformInfo*)info);
 		break;
+	case ComponentType_GEOMETRY:
+		break;
+	case ComponentType_CAMERA:
+		break;
+	case ComponentType_TEXTURE:
+		break;
 	case ComponentType_LIGHT:
 		break;
 	default:
