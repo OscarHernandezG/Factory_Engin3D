@@ -518,5 +518,8 @@
     <ClCompile Include="Transform.cpp">
       <Filter>Sources\GameObject\Component</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Sources\GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
