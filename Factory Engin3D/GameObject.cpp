@@ -1,7 +1,7 @@
 #include "GameObject.h"
 
 
-GameObject::GameObject(float3 position, Quat rotation, float3 scale)
+GameObject::GameObject(float3 position, Quat rotation, float3 scale, GameObject* father) : father(father)
 {
 	TransformInfo* info = new TransformInfo();
 	info->position = position;
@@ -12,12 +12,12 @@ GameObject::GameObject(float3 position, Quat rotation, float3 scale)
 	delete info;
 }
 
-GameObject::GameObject(TransformInfo* info)
+GameObject::GameObject(TransformInfo* info, GameObject* father) : father(father)
 {
 	CreateGameObject(info);
 }
 
-GameObject::GameObject(float4x4 transform)
+GameObject::GameObject(float4x4 transform, GameObject* father) : father(father)
 {
 	TransformInfo* info = new TransformInfo();
 	info->transform = transform;

@@ -10,11 +10,11 @@ using namespace std;
 class GameObject
 {
 public:
-	GameObject(float3 position = float3::zero, Quat rotation = Quat::identity, float3 scale = float3::one);
-	GameObject(TransformInfo* info);
+	GameObject(float3 position = float3::zero, Quat rotation = Quat::identity, float3 scale = float3::one, GameObject* father = nullptr);
+	GameObject(TransformInfo* info, GameObject* father = nullptr);
 
 
-	GameObject(float4x4 transform);
+	GameObject(float4x4 transform, GameObject* father = nullptr);
 
 	~GameObject();
 
@@ -23,7 +23,13 @@ public:
 	Component* AddComponent(ComponentType type, ComponentInfo* info);
 
 public:
+
+	bool active = true;
+
 	Transform* transform = nullptr;
 
 	list<Component*> components;
+
+	list<GameObject*> childs;
+	GameObject* father = nullptr;
 };
