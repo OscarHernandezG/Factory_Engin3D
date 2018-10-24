@@ -1,5 +1,5 @@
 #include "Module.h"
-#include "Application.h"
+#include "Globals.h"
 
 struct String;
 

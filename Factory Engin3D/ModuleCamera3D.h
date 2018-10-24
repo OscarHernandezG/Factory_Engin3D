@@ -1,4 +1,4 @@
-#pragma once
+ #pragma once
 #include "Module.h"
 #include "Globals.h"
 #include "MathGeoLib/Math/float3.h"

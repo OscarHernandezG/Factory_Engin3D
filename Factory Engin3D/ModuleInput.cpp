@@ -7,6 +7,8 @@
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
 
+#include <fstream>
+
 #include	"SDL/include/SDL_syswm.h"
 
 #define MAX_KEYS 300
@@ -142,12 +144,42 @@ update_status ModuleInput::PreUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
+void ModuleInput::CopyFilee(const char* file, const char* futureFile)
+{
+	FILE* currentFile = nullptr;
+	fopen_s(&currentFile, file, "r");
+
+	ofstream copier(futureFile);
+	if(currentFile)
+	if (copier.is_open())
+	{
+
+	}
+	else
+	{
+		LOG("JOKE");
+	}
+
+	fclose(currentFile);
+	copier.close();
+
+}
+
 void ModuleInput::DistributeFile(char* file) 
 {
 	//Todo clean
 
 	string filePath(file);
-	string extension = filePath.substr(filePath.size() - 3, 3);
+	string extension = filePath.substr(filePath.find_last_of(".") + 1);
+	string goodFile = filePath.substr(filePath.find_last_of("\\") + 1);
+
+	goodFile = "/Assets/" + goodFile;
+
+	//---^^^-----Get destination of the file-----------^^^---
+
+	CopyFilee(file, goodFile.c_str());
+
+	//---^^^---- Copy file -------^^^---
 
 	if (!extension.compare("fbx") || !extension.compare("obj"))
 		App->geometry->UpdateMesh(file);

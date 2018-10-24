@@ -35,16 +35,6 @@ bool ModuleSceneIntro::Start()
 update_status ModuleSceneIntro::PreUpdate(float dt)
 {
 
-	fstream myfile("assets/New.txt", ios::out);
-
-	if (myfile.is_open()) {
-		myfile << "for you. \n";
-		myfile << "This is a line.\n";
-	}
-		myfile.close();
-
-
-
 	update_status status = UPDATE_CONTINUE;
 
 	return status;
