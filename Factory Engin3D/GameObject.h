@@ -4,6 +4,8 @@
 #include "Component.h"
 #include <list>
 #include "Transform.h"
+#include "pcg-c-0.94/include/pcg_variants.h"
+
 using namespace std;
 
 
@@ -22,6 +24,7 @@ public:
 
 	Component* AddComponent(ComponentType type, ComponentInfo* info);
 
+	int CreateRandomUID();
 public:
 
 	bool active = true;
@@ -32,4 +35,7 @@ public:
 
 	list<GameObject*> childs;
 	GameObject* father = nullptr;
+
+	int UID = 0u;
+	pcg32_random_t rng;
 };

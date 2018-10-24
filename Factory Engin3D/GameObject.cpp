@@ -1,4 +1,5 @@
 #include "GameObject.h"
+#include "pcg-c-0.94/extras/entropy.h"
 
 
 GameObject::GameObject(float3 position, Quat rotation, float3 scale, GameObject* father) : father(father)
@@ -7,6 +8,8 @@ GameObject::GameObject(float3 position, Quat rotation, float3 scale, GameObject*
 	info->position = position;
 	info->rotation = rotation;
 	info->whichInfo = UsingInfo_TRS;
+
+	pcg32_srandom_r(&rng, 42u, 54u);
 
 	CreateGameObject(info);
 	delete info;
@@ -70,3 +73,10 @@ Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
 
 	return newComponent;
 }
+
+int GameObject::CreateRandomUID()
+{
+	UID = pcg32_boundedrand_r(&rng, UINT_MAX);
+	return UID;
+}
+
