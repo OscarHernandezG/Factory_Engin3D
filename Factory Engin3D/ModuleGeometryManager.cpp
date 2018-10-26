@@ -73,11 +73,13 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 			{
 				mesh = new Mesh();
 				numFaces = 0u;
+				uint totalySize = 0u;
 
 				for (int i = 0; i < scene->mNumMeshes; ++i)
 				{
 					aiMesh* currentMesh = scene->mMeshes[i];
 
+					//////////////////////////////////////////////////////////////////////
 					MeshBuffer newCurrentBuffer;
 					newCurrentBuffer.vertex.size = currentMesh->mNumVertices * 3;
 					newCurrentBuffer.vertex.buffer = new float[newCurrentBuffer.vertex.size * 3];
@@ -85,15 +87,17 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 					memcpy(newCurrentBuffer.vertex.buffer, currentMesh->mVertices, sizeof(float) * newCurrentBuffer.vertex.size);
 
 					LOG("New mesh loaded with %d vertices", newCurrentBuffer.vertex.size);
-
+					//////////////////////////////////////////////////////////////////////
+					/*Dont do it now
 					glGenBuffers(1, (GLuint*)&(newCurrentBuffer.vertex.id));
 					glBindBuffer(GL_ARRAY_BUFFER, newCurrentBuffer.vertex.id);
 					glBufferData(GL_ARRAY_BUFFER, sizeof(float) * newCurrentBuffer.vertex.size, newCurrentBuffer.vertex.buffer, GL_STATIC_DRAW);
-
+					*/
 					if (currentMesh->HasFaces())
 					{
 
 						numFaces += currentMesh->mNumFaces;
+						//////////////////////////////////////////////////////////////////////
 						newCurrentBuffer.index.size = currentMesh->mNumFaces * 3;
 						newCurrentBuffer.index.buffer = new uint[newCurrentBuffer.index.size];
 
@@ -106,13 +110,18 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 								memcpy(&newCurrentBuffer.index.buffer[index * 3], currentMesh->mFaces[index].mIndices, sizeof(uint) * 3);
 							}
 						}
+
+						//////////////////////////////////////////////////////////////////////
+						/*Dont do it now
 						glGenBuffers(1, (GLuint*)&(newCurrentBuffer.index.id));
 						glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, newCurrentBuffer.index.id);
 						glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * newCurrentBuffer.index.size, newCurrentBuffer.index.buffer, GL_STATIC_DRAW);
+						*/
 					}
 
 					if (currentMesh->HasTextureCoords(0))
 					{
+						//////////////////////////////////////////////////////////////////////
 						float* textCoords = new float[currentMesh->mNumVertices * 2];
 						for (int currVertices = 0; currVertices < currentMesh->mNumVertices; ++currVertices)
 						{
@@ -120,17 +129,45 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 							textCoords[currVertices * 2 + 1] = currentMesh->mTextureCoords[0][currVertices].y;
 						}
 
+					////-------------------------- SAME -----------------------------------
+
+						newCurrentBuffer.texture.size = currentMesh->mNumVertices * 2;
+						newCurrentBuffer.texture.buffer = new float[currentMesh->mNumVertices * 2];
+						for (int currVertices = 0; currVertices < currentMesh->mNumVertices; ++currVertices)
+						{
+							newCurrentBuffer.texture.buffer[currVertices * 2] = currentMesh->mTextureCoords[0][currVertices].x;
+							newCurrentBuffer.texture.buffer[currVertices * 2 + 1] = currentMesh->mTextureCoords[0][currVertices].y;
+							//memcpy(&newCurrentBuffer.texture.buffer[currVertices * 3], currentMesh->mTextureCoords[currVertices], sizeof(float) * 3);
+						}
+
+						//////////////////////////////////////////////////////////////////////
+						/*Dont do it now
 						glGenBuffers(1, &newCurrentBuffer.texture.id);
 						glBindBuffer(GL_ARRAY_BUFFER, newCurrentBuffer.texture.id);
 						glBufferData(GL_ARRAY_BUFFER, currentMesh->mNumVertices * sizeof(float) * 2, textCoords, GL_STATIC_DRAW);
 						glBindBuffer(GL_ARRAY_BUFFER, 0);
-
+						*/
 
 						delete[] textCoords;
 					}
 
 
 					mesh->buffers.push_back(newCurrentBuffer);
+					totalySize += 3 * sizeof(float) * (newCurrentBuffer.texture.size + newCurrentBuffer.vertex.size) + sizeof(uint) * newCurrentBuffer.index.size;
+				}
+
+				char* exporter = new char[totalySize];
+
+				for (int i = 0; i < mesh->buffers.size(); ++i)
+				{
+					uint size = mesh->buffers[i].vertex.size * 3 * sizeof(float);
+					memcpy(&exporter, mesh->buffers[i].vertex.buffer, size);
+					
+					size = mesh->buffers[i].texture.size * 3 * sizeof(float);
+					memcpy(&exporter, mesh->buffers[i].texture.buffer, size);
+
+					size = mesh->buffers[i].index.size * sizeof(uint);
+					memcpy(&exporter, mesh->buffers[i].index.buffer, size);
 				}
 
 			currentMeshBB = LoadBoundingBox(mesh);

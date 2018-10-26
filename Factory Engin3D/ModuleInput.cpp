@@ -177,7 +177,7 @@ void ModuleInput::DistributeFile(char* file)
 
 	//---^^^-----Get destination of the file-----------^^^---
 
-	CopyFilee(file, goodFile.c_str());
+	//CopyFilee(file, goodFile.c_str());
 
 	//---^^^---- Copy file -------^^^---
 
