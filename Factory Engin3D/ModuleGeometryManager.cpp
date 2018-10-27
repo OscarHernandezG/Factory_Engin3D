@@ -73,10 +73,9 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 			{
 				mesh = new Mesh();
 				numFaces = 0u;
-				uint totalySize = 0u;
-
 				for (int i = 0; i < scene->mNumMeshes; ++i)
 				{
+					uint totalySize = 0u;
 					aiMesh* currentMesh = scene->mMeshes[i];
 
 					//////////////////////////////////////////////////////////////////////
@@ -129,7 +128,7 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 							textCoords[currVertices * 2 + 1] = currentMesh->mTextureCoords[0][currVertices].y;
 						}
 
-					////-------------------------- SAME -----------------------------------
+						////-------------------------- SAME -----------------------------------
 
 						newCurrentBuffer.texture.size = currentMesh->mNumVertices * 2;
 						newCurrentBuffer.texture.buffer = new float[currentMesh->mNumVertices * 2];
@@ -137,8 +136,8 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 						{
 							newCurrentBuffer.texture.buffer[currVertices * 2] = currentMesh->mTextureCoords[0][currVertices].x;
 							newCurrentBuffer.texture.buffer[currVertices * 2 + 1] = currentMesh->mTextureCoords[0][currVertices].y;
-							//memcpy(&newCurrentBuffer.texture.buffer[currVertices * 3], currentMesh->mTextureCoords[currVertices], sizeof(float) * 3);
 						}
+						memcpy(newCurrentBuffer.texture.buffer, currentMesh->mTextureCoords[0], sizeof(float) * 2 * currentMesh->mNumVertices);
 
 						//////////////////////////////////////////////////////////////////////
 						/*Dont do it now
@@ -153,21 +152,30 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 
 
 					mesh->buffers.push_back(newCurrentBuffer);
-					totalySize += 3 * sizeof(float) * (newCurrentBuffer.texture.size + newCurrentBuffer.vertex.size) + sizeof(uint) * newCurrentBuffer.index.size;
-				}
 
-				char* exporter = new char[totalySize];
+					totalySize = 3 * sizeof(float) * newCurrentBuffer.vertex.size + newCurrentBuffer.index.size;
 
-				for (int i = 0; i < mesh->buffers.size(); ++i)
-				{
-					uint size = mesh->buffers[i].vertex.size * 3 * sizeof(float);
-					memcpy(&exporter, mesh->buffers[i].vertex.buffer, size);
-					
-					size = mesh->buffers[i].texture.size * 3 * sizeof(float);
-					memcpy(&exporter, mesh->buffers[i].texture.buffer, size);
+					if (newCurrentBuffer.texture.buffer != nullptr)
+						totalySize += 2 * sizeof(float) * newCurrentBuffer.texture.size;
 
-					size = mesh->buffers[i].index.size * sizeof(uint);
-					memcpy(&exporter, mesh->buffers[i].index.buffer, size);
+					char* exporter = new char[totalySize];
+
+					uint size = newCurrentBuffer.vertex.size * 3 * sizeof(float);
+					memcpy(exporter, newCurrentBuffer.vertex.buffer, size);
+					string s = exporter;
+
+					size = newCurrentBuffer.index.size;
+					char* indexC = new char[size];
+					memcpy(indexC, newCurrentBuffer.index.buffer, size);
+					s += indexC;
+
+					if (newCurrentBuffer.texture.buffer != nullptr)
+					{
+						size = newCurrentBuffer.texture.size * 2 * sizeof(float);
+						char* textureC = new char[size];
+						memcpy(textureC, newCurrentBuffer.texture.buffer, size);
+						s += textureC;
+					}
 				}
 
 			currentMeshBB = LoadBoundingBox(mesh);
