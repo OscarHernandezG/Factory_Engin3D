@@ -75,7 +75,6 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 				numFaces = 0u;
 				for (int i = 0; i < scene->mNumMeshes; ++i)
 				{
-					uint totalySize = 0u;
 					aiMesh* currentMesh = scene->mMeshes[i];
 
 					//////////////////////////////////////////////////////////////////////
@@ -108,7 +107,13 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 							{
 								memcpy(&newCurrentBuffer.index.buffer[index * 3], currentMesh->mFaces[index].mIndices, sizeof(uint) * 3);
 							}
+
 						}
+						for (int i = 0; i < newCurrentBuffer.index.size; i++)
+						{
+							LOG("%i", newCurrentBuffer.index.buffer[i]);
+						}
+						LOG("-------------------------------------");
 
 						//////////////////////////////////////////////////////////////////////
 						/*Dont do it now
@@ -153,29 +158,7 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 
 					mesh->buffers.push_back(newCurrentBuffer);
 
-					totalySize = 3 * sizeof(float) * newCurrentBuffer.vertex.size + newCurrentBuffer.index.size;
-
-					if (newCurrentBuffer.texture.buffer != nullptr)
-						totalySize += 2 * sizeof(float) * newCurrentBuffer.texture.size;
-
-					char* exporter = new char[totalySize];
-
-					uint size = newCurrentBuffer.vertex.size * 3 * sizeof(float);
-					memcpy(exporter, newCurrentBuffer.vertex.buffer, size);
-					string s = exporter;
-
-					size = newCurrentBuffer.index.size;
-					char* indexC = new char[size];
-					memcpy(indexC, newCurrentBuffer.index.buffer, size);
-					s += indexC;
-
-					if (newCurrentBuffer.texture.buffer != nullptr)
-					{
-						size = newCurrentBuffer.texture.size * 2 * sizeof(float);
-						char* textureC = new char[size];
-						memcpy(textureC, newCurrentBuffer.texture.buffer, size);
-						s += textureC;
-					}
+					CopyInfoToText(newCurrentBuffer);
 				}
 
 			currentMeshBB = LoadBoundingBox(mesh);
@@ -190,6 +173,32 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 
 	}
 	return mesh;
+}
+
+void ModuleGeometry::CopyInfoToText(MeshBuffer &newCurrentBuffer)
+{
+	uint size = newCurrentBuffer.vertex.size * 3 * sizeof(float);
+	char* vertexC = new char[size];
+	memcpy(vertexC, newCurrentBuffer.vertex.buffer, size);
+	string totalyString = vertexC;
+
+	size = newCurrentBuffer.index.size * sizeof(uint);
+	char* indexC = new char[size];
+	memcpy(indexC, newCurrentBuffer.index.buffer, size);
+	for (int i = 0; i < newCurrentBuffer.index.size; i++)
+	{
+		LOG("%i", newCurrentBuffer.index.buffer[i]);
+	}
+
+	totalyString += indexC;
+
+	if (newCurrentBuffer.texture.buffer != nullptr)
+	{
+		size = newCurrentBuffer.texture.size * 2 * sizeof(float);
+		char* textureC = new char[size];
+		memcpy(textureC, newCurrentBuffer.texture.buffer, size);
+		totalyString += textureC;
+	}
 }
 
 void ModuleGeometry::UpdateMesh(char* path)

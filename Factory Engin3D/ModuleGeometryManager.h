@@ -20,6 +20,8 @@ public:
 
 	Mesh* LoadMesh(char* path);
 
+	void CopyInfoToText(MeshBuffer &newCurrentBuffer);
+
 	void UpdateMesh(char * path);
 
 	AABB * LoadBoundingBox(Mesh * mesh);
