@@ -32,8 +32,15 @@ public:
 	Transform(GameObject* gameObject) : Component(gameObject, ComponentType_TRANSFORM), transform(float4x4::identity) {}
 	Transform(GameObject* gameObject, float4x4 transform) : Component(gameObject, ComponentType_TRANSFORM), transform(transform) {}
 
-
 	~Transform() {}
+
+
+	void			SetPos(float x, float y, float z);
+	void			SetRotation(float angle, const float3 &u);
+	void			SetScale(float x, float y, float z);
+	void			SetIdentity();
+
+	float3			GetPos() const;
 
 public:
 

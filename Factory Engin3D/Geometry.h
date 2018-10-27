@@ -4,6 +4,8 @@
 #include "MathGeoLib/MathGeoLib.h"
 #include "Color.h"
 
+#include "Component.h"
+
 enum PrimitiveTypes
 {
 	Primitive_Point,
@@ -15,7 +17,7 @@ enum PrimitiveTypes
 	Primitive_Frustum
 };
 
-class Geometry
+class Geometry : Component
 {
 public:
 
@@ -24,12 +26,6 @@ public:
 	virtual void	Render() const;
 	virtual void	InnerRender() const;
 
-	void			SetPos(float x, float y, float z);
-	void			SetRotation(float angle, const float3 &u);
-	void			SetScale(float x, float y, float z);
-	void			SetIdentity();
-
-	float3			GetPos() const;
 	//float3			GetScale() const;
 	//float3			GetRotation() const;
 
@@ -39,7 +35,6 @@ public:
 public:
 	
 	Color color;
-	float4x4 transform;
 	bool axis = false, wire = false, fill = true;
 
 protected:

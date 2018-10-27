@@ -15,3 +15,37 @@ Transform::Transform(TransformInfo* info) : Component(info->gameObject, Componen
 	}
 
 }
+
+void Transform::SetPos(float x, float y, float z)
+{
+	transform[3][0] = x;
+	transform[3][1] = y;
+	transform[3][2] = z;
+}
+
+// ------------------------------------------------------------
+void Transform::SetRotation(float angle, const float3 &u)
+{
+	transform = float4x4::RotateAxisAngle(u, angle) * transform;
+}
+
+// ------------------------------------------------------------
+void Transform::SetScale(float x, float y, float z)
+{
+	float4x4 initialScale = float4x4::identity;
+	//SetPos
+	initialScale[3][0] = transform[3][0];
+	initialScale[3][1] = transform[3][1];
+	initialScale[3][2] = transform[3][2];
+	transform = float4x4::Scale(x, y, z).ToFloat4x4() * initialScale;
+}
+
+void Transform::SetIdentity()
+{
+	transform = float4x4::identity;
+}
+
+float3 Transform::GetPos() const
+{
+	return { transform[3][0], transform[3][1], transform[3][2] };
+}

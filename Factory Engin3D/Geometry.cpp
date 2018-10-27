@@ -93,40 +93,7 @@ void Geometry::WireframeRender() const
 }
 
 // ------------------------------------------------------------
-void Geometry::SetPos(float x, float y, float z)
-{
-	transform[3][0] = x;
-	transform[3][1] = y;
-	transform[3][2] = z;
-}
 
-// ------------------------------------------------------------
-void Geometry::SetRotation(float angle, const float3 &u)
-{
-	transform = float4x4::RotateAxisAngle(u, angle) * transform;
-}
-
-// ------------------------------------------------------------
-
-void Geometry::SetScale(float x, float y, float z)
-{
-	float4x4 initialScale = float4x4::identity;
-	//SetPos
-	initialScale[3][0] = transform[3][0];
-	initialScale[3][1] = transform[3][1];
-	initialScale[3][2] = transform[3][2];
-	transform = float4x4::Scale(x, y, z).ToFloat4x4() * initialScale;
-}
-
-void Geometry::SetIdentity()
-{
-	transform = float4x4::identity;
-}
-
-float3 Geometry::GetPos() const
-{
-	return { transform[3][0], transform[3][1], transform[3][2] };
-}
 
 /*float3 Primitive::GetScale() const
 { 
