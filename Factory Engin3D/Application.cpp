@@ -22,9 +22,9 @@ Application::Application()
 	AddModule(input);
 	
 	// Scenes
+	AddModule(importer);
 	AddModule(sceneIntro);
 	AddModule(geometry);
-	AddModule(importer);
 	AddModule(gui);
 
 	// Renderer last!

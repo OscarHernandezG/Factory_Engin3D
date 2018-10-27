@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "ModuleGeometryManager.h"
+#include "ModuleImporter.h"
 
 #include "glew-2.1.0/include/GL/glew.h"
 
@@ -12,6 +13,7 @@
 #include "DevIL/includex86/IL/ilu.h"
 #include "DevIL/includex86/IL/ilut.h"
 
+#include <fstream>
 
 #pragma comment( lib, "DevIL/libx86/DevIL.lib" )
 #pragma comment( lib, "DevIL/libx86/ILU.lib" )
@@ -58,6 +60,21 @@ bool ModuleGeometry::CleanUp()
 {
 	return true;
 }
+
+void ModuleGeometry::DistributeFile(char* file)
+{
+	string filePath(file);
+	string extension = filePath.substr(filePath.find_last_of(".") + 1);
+
+
+	if (!extension.compare("fbx") || !extension.compare("obj"))
+	{
+		UpdateMesh(file);
+	}
+	else if (!extension.compare("png") || !extension.compare("dds"))
+		UpdateTexture(file);
+}
+
 
 Mesh* ModuleGeometry::LoadMesh(char* path)
 {
@@ -155,10 +172,9 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 						delete[] textCoords;
 					}
 
-
 					mesh->buffers.push_back(newCurrentBuffer);
 
-					CopyInfoToText(newCurrentBuffer);
+					SaveMesh(newCurrentBuffer,path);
 				}
 
 			currentMeshBB = LoadBoundingBox(mesh);
@@ -175,9 +191,37 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 	return mesh;
 }
 
-void ModuleGeometry::CopyInfoToText(MeshBuffer &newCurrentBuffer)
+void ModuleGeometry::SaveMesh(MeshBuffer newCurrentBuffer, const char* path)
 {
-	uint size = newCurrentBuffer.vertex.size * 3 * sizeof(float);
+	uint ranges[3] = { newCurrentBuffer.index.size, newCurrentBuffer.vertex.size, newCurrentBuffer.texture.size};
+
+	float size = sizeof(ranges) + sizeof(uint) * newCurrentBuffer.index.size + sizeof(float) * newCurrentBuffer.vertex.size * 3;
+
+	if(newCurrentBuffer.texture.buffer != nullptr)
+		size += sizeof(float) * newCurrentBuffer.texture.size * 2;
+
+	char* exporter = new char[size];
+	char* cursor = exporter;
+
+	uint bytes = sizeof(ranges);
+	memcpy(cursor, ranges, bytes);
+
+	cursor += bytes;
+	bytes = sizeof(uint)* newCurrentBuffer.index.size;
+	memcpy(cursor, newCurrentBuffer.index.buffer, bytes);
+
+	cursor += bytes;
+	bytes = sizeof(float)* newCurrentBuffer.vertex.size;
+	memcpy(cursor, newCurrentBuffer.vertex.buffer, bytes);
+
+	if (newCurrentBuffer.texture.buffer != nullptr)
+	{
+		cursor += bytes;
+		bytes = sizeof(float)* newCurrentBuffer.texture.size;
+		memcpy(cursor, newCurrentBuffer.texture.buffer, bytes);
+	}
+
+	/*uint size = newCurrentBuffer.vertex.size * 3 * sizeof(float);
 	char* vertexC = new char[size];
 	memcpy(vertexC, newCurrentBuffer.vertex.buffer, size);
 	string totalyString = vertexC;
@@ -198,8 +242,16 @@ void ModuleGeometry::CopyInfoToText(MeshBuffer &newCurrentBuffer)
 		char* textureC = new char[size];
 		memcpy(textureC, newCurrentBuffer.texture.buffer, size);
 		totalyString += textureC;
+		delete[] textureC;
 	}
+	delete[] indexC;
+	delete[] vertexC;
+	*/
+	
+	App->importer->SaveFile(path,size,exporter);
 }
+
+
 
 void ModuleGeometry::UpdateMesh(char* path)
 {
@@ -397,6 +449,6 @@ void ModuleGeometry::Draw3D(bool fill, bool wire) const
 
 void ModuleGeometry::LoadDefaultScene()
 {
-	currentMesh = LoadMesh("assets/models/BakerHouse.fbx");
-	textureID = LoadTexture("assets/textures/Baker_house.dds");
+	currentMesh = LoadMesh("assets\\models\\BakerHouse.fbx");
+	textureID = LoadTexture("assets\\textures\\Baker_house.dds");
 }

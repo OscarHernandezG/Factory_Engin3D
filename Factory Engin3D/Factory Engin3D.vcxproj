@@ -95,7 +95,7 @@
     <ClInclude Include="imgui_impl_opengl2.h" />
     <ClInclude Include="imgui_impl_sdl.h" />
     <ClInclude Include="imgui_internal.h" />
-    <ClInclude Include="Importer.h" />
+    <ClInclude Include="ModuleImporter.h" />
     <ClInclude Include="imstb_rectpack.h" />
     <ClInclude Include="imstb_textedit.h" />
     <ClInclude Include="imstb_truetype.h" />
@@ -217,6 +217,7 @@
     <ClCompile Include="ModuleGeometryManager.cpp" />
     <ClCompile Include="ModuleImGui.cpp" />
     <ClCompile Include="ModuleCamera3D.cpp" />
+    <ClCompile Include="ModuleImporter.cpp" />
     <ClCompile Include="ModuleInput.cpp" />
     <ClCompile Include="ModuleRenderer3D.cpp" />
     <ClCompile Include="ModuleSceneIntro.cpp" />

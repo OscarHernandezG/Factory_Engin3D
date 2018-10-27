@@ -130,7 +130,7 @@ update_status ModuleInput::PreUpdate(float dt)
 			}
 			break;
 			case SDL_DROPFILE:
-				DistributeFile(e.drop.file);
+				App->geometry->DistributeFile(e.drop.file);
 
 				break;
 			default:
@@ -142,50 +142,6 @@ update_status ModuleInput::PreUpdate(float dt)
 		return UPDATE_STOP;
 
 	return UPDATE_CONTINUE;
-}
-
-void ModuleInput::CopyFilee(const char* file, const char* futureFile)
-{
-	FILE* currentFile = nullptr;
-	fopen_s(&currentFile, file, "r");
-
-	ofstream copier(futureFile);
-	if(currentFile)
-	if (copier.is_open())
-	{
-
-	}
-	else
-	{
-		LOG("JOKE");
-	}
-
-	fclose(currentFile);
-	copier.close();
-
-}
-
-void ModuleInput::DistributeFile(char* file) 
-{
-	//Todo clean
-
-	string filePath(file);
-	string extension = filePath.substr(filePath.find_last_of(".") + 1);
-	string goodFile = filePath.substr(filePath.find_last_of("\\") + 1);
-
-	goodFile = "/Assets/" + goodFile;
-
-	//---^^^-----Get destination of the file-----------^^^---
-
-	//CopyFilee(file, goodFile.c_str());
-
-	//---^^^---- Copy file -------^^^---
-
-	if (!extension.compare("fbx") || !extension.compare("obj"))
-		App->geometry->UpdateMesh(file);
-
-	else if (!extension.compare("png") || !extension.compare("dds"))
-		App->geometry->UpdateTexture(file);
 }
 
 // Called before quitting

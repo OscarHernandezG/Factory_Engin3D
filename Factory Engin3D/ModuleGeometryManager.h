@@ -18,9 +18,11 @@ public:
 	void Draw3D(bool fill = true, bool wire = false) const;
 	bool CleanUp();
 
+	void DistributeFile(char * file);
+
 	Mesh* LoadMesh(char* path);
 
-	void CopyInfoToText(MeshBuffer &newCurrentBuffer);
+	void SaveMesh(MeshBuffer newCurrentBuffer, const char* path);
 
 	void UpdateMesh(char * path);
 
@@ -51,4 +53,6 @@ public:
 	char* droppedFileDir = nullptr;
 
 	AABB* currentMeshBB = nullptr;
+
+	string destination;
 };

@@ -11,7 +11,7 @@
 #include "ModuleCamera3D.h"
 #include "ModuleImGui.h"
 #include "ModuleGeometryManager.h"
-#include "Importer.h"
+#include "ModuleImporter.h"
 
 using namespace std;
 

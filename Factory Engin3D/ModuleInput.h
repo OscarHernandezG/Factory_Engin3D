@@ -21,8 +21,6 @@ public:
 
 	bool Init();
 	update_status PreUpdate(float dt);
-	void CopyFilee(const char * file, const char * futureFile);
-	void DistributeFile(char * file);
 	bool CleanUp();
 
 	KEY_STATE GetKey(int id) const

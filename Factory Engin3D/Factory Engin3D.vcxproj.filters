@@ -342,7 +342,7 @@
     <ClInclude Include="Geometry.h">
       <Filter>Sources\GameObject\Geometries</Filter>
     </ClInclude>
-    <ClInclude Include="Importer.h">
+    <ClInclude Include="ModuleImporter.h">
       <Filter>Sources\Helpers</Filter>
     </ClInclude>
   </ItemGroup>
@@ -502,6 +502,9 @@
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
       <Filter>Sources\GameObject\Geometries</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleImporter.cpp">
+      <Filter>Sources\Helpers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
