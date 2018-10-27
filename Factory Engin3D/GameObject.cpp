@@ -43,6 +43,14 @@ GameObject::~GameObject()
 	components.clear();
 }
 
+void GameObject::Update()
+{
+	for (list<Component*>::iterator iterator = components.begin(); iterator != components.end(); ++iterator)
+	{
+		(*iterator)->Update();
+	}
+}
+
 void GameObject::CreateGameObject(TransformInfo* info)
 {
 	this->transform = (Transform*)AddComponent(ComponentType_TRANSFORM, info);
@@ -70,6 +78,8 @@ Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
 	default:
 		break;
 	}
+
+	components.push_back(newComponent);
 
 	return newComponent;
 }

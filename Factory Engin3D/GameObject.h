@@ -8,17 +8,24 @@
 
 using namespace std;
 
+class Component;
+class Transform;
+
+enum ComponentType;
+
+struct TransformInfo;
+struct  ComponentInfo;
 
 class GameObject
 {
 public:
 	GameObject(float3 position = float3::zero, Quat rotation = Quat::identity, float3 scale = float3::one, GameObject* father = nullptr);
 	GameObject(TransformInfo* info, GameObject* father = nullptr);
-
-
 	GameObject(float4x4 transform, GameObject* father = nullptr);
 
 	~GameObject();
+
+	void Update();
 
 	void CreateGameObject(TransformInfo* info);
 

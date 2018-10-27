@@ -1,6 +1,8 @@
 #pragma once
 #include "GameObject.h"
 
+class GameObject;
+
 enum ComponentType
 {
 	ComponentType_NONE,
@@ -24,6 +26,8 @@ public:
 	Component(GameObject* gameObject, ComponentType type) : gameObject(gameObject), type(ComponentType_NONE) {};
 
 	~Component() {};
+
+	virtual void Update() {}
 
 private:
 	bool active = true;
