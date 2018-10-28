@@ -6,13 +6,6 @@
 
 struct String;
 
-enum LlibraryType
-{
-	LlibratyType_NONE,
-	LlibraryType_TEXTURE,
-	LlibraryType_MESH,
-	LlibraryType_MATERIAL
-};
 using namespace std;
 class ModuleImporter : public Module
 {
@@ -23,8 +16,13 @@ public:
 
 	bool Init();
 
-	void SaveFile(const char * path, uint size, char* outputFile, LlibraryType type);
+	void SaveFile(const char * path, uint size, char* outputFile);
 
-	string GetDirectionName(const char* path, LlibraryType type);
+	string GetDirectionName(const char* path, uint type);
+	//bool Import(const char* file, const char* path, string outputFile) { return true; };
+	//bool Load() { return true; };
+
+private:
+
 };
 #endif

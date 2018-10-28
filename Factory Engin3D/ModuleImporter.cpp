@@ -4,7 +4,7 @@
 #include "ModuleImporter.h"
 
 #include <fstream>
-#include <iostream>
+
 
 ModuleImporter::ModuleImporter(Application* app, bool start_enabled) : Module(app, start_enabled) 
 {
@@ -22,47 +22,26 @@ bool ModuleImporter::Init()
 	return true;
 }
 
-void ModuleImporter::SaveFile(const char* path, uint size, char* outputFile, LlibraryType type)
+void ModuleImporter::SaveFile(const char* path, uint size, char* outputFile)
 {
-	string direction = GetDirectionName(path, type);
+	string direction = GetDirectionName(path,0);
 
-	ofstream newFile (direction.c_str(), ios::out | ios::binary);
-	if (newFile.is_open())
-	{
-		newFile.write(outputFile, size);
-		newFile.close();
-	}
+	ofstream newFile(direction.c_str(), ofstream::out || ofstream::binary);
+	newFile.write(outputFile, size);
+	newFile.close();
 }
 
-void ModuleImporter::LoadFile()
-{
 
-}
-
-string ModuleImporter::GetDirectionName(const char* path, LlibraryType type)
+string ModuleImporter::GetDirectionName(const char* path, uint type)
 {
 	string filePath(path);
-	string goodFile = "Llibrary/";
+	string goodFile = "Llibrary";
 
-	switch (type)
-	{
-	case LlibratyType_NONE:
-		break;
-	case LlibraryType_TEXTURE:
-		break;
-	case LlibraryType_MESH:
+	uint initialPos = filePath.find_last_of("\\");
+	uint finalPos = filePath.find_last_of(".");
 
-		uint initialPos = filePath.find_last_of("\\") + 1;
-		uint finalPos = filePath.find_last_of(".");
-
-		goodFile += filePath.substr(initialPos, (finalPos - initialPos));
-		goodFile += ".fty";
-		break;
-	case LlibraryType_MATERIAL:
-		break;
-	default:
-		break;
-	}
+	goodFile += filePath.substr(initialPos, (finalPos-initialPos));
+	goodFile += ".fty";
 
 	return goodFile;
 }

@@ -94,6 +94,7 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 				{
 					aiMesh* currentMesh = scene->mMeshes[i];
 
+					//////////////////////////////////////////////////////////////////////
 					MeshBuffer newCurrentBuffer;
 					newCurrentBuffer.vertex.size = currentMesh->mNumVertices * 3;
 					newCurrentBuffer.vertex.buffer = new float[newCurrentBuffer.vertex.size * 3];
@@ -101,7 +102,7 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 					memcpy(newCurrentBuffer.vertex.buffer, currentMesh->mVertices, sizeof(float) * newCurrentBuffer.vertex.size);
 
 					LOG("New mesh loaded with %d vertices", newCurrentBuffer.vertex.size);
-
+					//////////////////////////////////////////////////////////////////////
 					/*Dont do it now
 					glGenBuffers(1, (GLuint*)&(newCurrentBuffer.vertex.id));
 					glBindBuffer(GL_ARRAY_BUFFER, newCurrentBuffer.vertex.id);
@@ -111,6 +112,7 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 					{
 
 						numFaces += currentMesh->mNumFaces;
+						//////////////////////////////////////////////////////////////////////
 						newCurrentBuffer.index.size = currentMesh->mNumFaces * 3;
 						newCurrentBuffer.index.buffer = new uint[newCurrentBuffer.index.size];
 
@@ -124,6 +126,13 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 							}
 
 						}
+						for (int i = 0; i < newCurrentBuffer.index.size; i++)
+						{
+							LOG("%i", newCurrentBuffer.index.buffer[i]);
+						}
+						LOG("-------------------------------------");
+
+						//////////////////////////////////////////////////////////////////////
 						/*Dont do it now
 						glGenBuffers(1, (GLuint*)&(newCurrentBuffer.index.id));
 						glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, newCurrentBuffer.index.id);
@@ -133,6 +142,16 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 
 					if (currentMesh->HasTextureCoords(0))
 					{
+						//////////////////////////////////////////////////////////////////////
+						float* textCoords = new float[currentMesh->mNumVertices * 2];
+						for (int currVertices = 0; currVertices < currentMesh->mNumVertices; ++currVertices)
+						{
+							textCoords[currVertices * 2] = currentMesh->mTextureCoords[0][currVertices].x;
+							textCoords[currVertices * 2 + 1] = currentMesh->mTextureCoords[0][currVertices].y;
+						}
+
+						////-------------------------- SAME -----------------------------------
+
 						newCurrentBuffer.texture.size = currentMesh->mNumVertices * 2;
 						newCurrentBuffer.texture.buffer = new float[currentMesh->mNumVertices * 2];
 						for (int currVertices = 0; currVertices < currentMesh->mNumVertices; ++currVertices)
@@ -142,6 +161,7 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 						}
 						memcpy(newCurrentBuffer.texture.buffer, currentMesh->mTextureCoords[0], sizeof(float) * 2 * currentMesh->mNumVertices);
 
+						//////////////////////////////////////////////////////////////////////
 						/*Dont do it now
 						glGenBuffers(1, &newCurrentBuffer.texture.id);
 						glBindBuffer(GL_ARRAY_BUFFER, newCurrentBuffer.texture.id);
@@ -149,6 +169,7 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 						glBindBuffer(GL_ARRAY_BUFFER, 0);
 						*/
 
+						delete[] textCoords;
 					}
 
 					mesh->buffers.push_back(newCurrentBuffer);
@@ -200,9 +221,34 @@ void ModuleGeometry::SaveMesh(MeshBuffer newCurrentBuffer, const char* path)
 		memcpy(cursor, newCurrentBuffer.texture.buffer, bytes);
 	}
 
-	App->importer->SaveFile(path,size,exporter, LlibraryType_MESH);
+	/*uint size = newCurrentBuffer.vertex.size * 3 * sizeof(float);
+	char* vertexC = new char[size];
+	memcpy(vertexC, newCurrentBuffer.vertex.buffer, size);
+	string totalyString = vertexC;
+
+	size = newCurrentBuffer.index.size * sizeof(uint);
+	char* indexC = new char[size];
+	memcpy(indexC, newCurrentBuffer.index.buffer, size);
+	for (int i = 0; i < newCurrentBuffer.index.size; i++)
+	{
+		LOG("%i", newCurrentBuffer.index.buffer[i]);
+	}
+
+	totalyString += indexC;
+
+	if (newCurrentBuffer.texture.buffer != nullptr)
+	{
+		size = newCurrentBuffer.texture.size * 2 * sizeof(float);
+		char* textureC = new char[size];
+		memcpy(textureC, newCurrentBuffer.texture.buffer, size);
+		totalyString += textureC;
+		delete[] textureC;
+	}
+	delete[] indexC;
+	delete[] vertexC;
+	*/
 	
-	delete[] exporter;
+	App->importer->SaveFile(path,size,exporter);
 }
 
 
@@ -301,6 +347,12 @@ void ModuleGeometry::Lower(float& val1, float val2)
 {
 	val1 = val1 < val2 ? val1 : val2;
 }
+
+//Geometry* ModuleGeometry::LoadPrimitive(PrimitiveTypes type)
+//{
+//	//TODO
+//	return nullptr;
+//}
 
 uint ModuleGeometry::LoadTexture(char* path) const
 {
