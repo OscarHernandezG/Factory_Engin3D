@@ -1,6 +1,8 @@
 #pragma once
+
 #include "Component.h"
-#include "GameObject.h"
+
+#include "MathGeoLib/MathGeoLib.h"
 
 class GameObject;
 
@@ -26,13 +28,13 @@ struct TransformInfo : ComponentInfo
 	GameObject* gameObject = nullptr;
 };
 
-class Transform : Component
+class Transform : public Component
 {
 public:
 
 	Transform(TransformInfo* info);
-	Transform(GameObject* gameObject) : Component(gameObject, ComponentType_TRANSFORM), transform(float4x4::identity) {}
-	Transform(GameObject* gameObject, float4x4 transform) : Component(gameObject, ComponentType_TRANSFORM), transform(transform) {}
+	Transform(GameObject* gameObject); 
+	Transform(GameObject* gameObject, float4x4 transform);
 
 	~Transform() {}
 
@@ -45,8 +47,7 @@ public:
 	float3			GetPos() const;
 
 public:
-
-	float4x4 transform;
+	float4x4 matrix;
 
 	AABB boundingBox;
 };
