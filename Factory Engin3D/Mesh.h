@@ -5,6 +5,19 @@
 
 #include "Globals.h"
 
+struct MeshInfo : ComponentInfo
+{
+	//float3 position = float3::zero;
+	//Quat rotation = Quat::identity;
+
+	//float3 scale = float3::one;
+
+	//float4x4 transform = float4x4::identity;
+
+	//UsingInfo whichInfo = UsingInfo_TRS;
+
+	//GameObject* gameObject = nullptr;
+};
 template <typename T>
 struct Buffer
 {
@@ -24,6 +37,7 @@ class Mesh :public Geometry
 {
 public:
 	Mesh() {};
+	Mesh(GameObject* parent) : Geometry(parent) {};
 	~Mesh() { ClearMesh(); };
 
 	void InnerRender() const;

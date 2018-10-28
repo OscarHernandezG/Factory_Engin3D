@@ -3,6 +3,11 @@
 #include "Application.h"
 #include "ModuleGeometryManager.h"
 
+Mesh::~Mesh()
+{
+	ClearMesh();
+}
+
 void Mesh::InnerRender() const
 {
 	for (std::vector<MeshBuffer>::const_iterator iterator = buffers.begin(); iterator != buffers.end(); ++iterator)
@@ -47,4 +52,6 @@ void Mesh::ClearMesh()
 		delete (*iterator).vertex.buffer;
 //		delete (*iterator).texture.buffer;
 	}
+	buffers.clear();
 }
+
