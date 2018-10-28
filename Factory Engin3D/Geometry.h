@@ -6,6 +6,8 @@
 
 #include "Component.h"
 
+class Transform;
+
 enum PrimitiveTypes
 {
 	Primitive_Point,
@@ -20,8 +22,8 @@ enum PrimitiveTypes
 class Geometry : Component
 {
 public:
-
 	Geometry();
+	Geometry(GameObject* parent);
 
 	virtual void	Render() const;
 	virtual void	InnerRender() const;
@@ -37,6 +39,7 @@ public:
 	Color color;
 	bool axis = false, wire = false, fill = true;
 
+	Transform* transform;
 protected:
 	PrimitiveTypes type;
 };
@@ -128,5 +131,6 @@ public:
 	float3 size;
 	uint myIndices = 0u;
 	uint myVertices = 0u;
+
 };
 

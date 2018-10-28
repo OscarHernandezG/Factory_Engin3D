@@ -5,10 +5,18 @@
 #include "MathGeoLib/Math/TransformOps.h"
 #include "MathGeoLib/Math/MathConstants.h"
 
+#include "Component.h"
+#include "GameObject.h"
+#include "Transform.h"
 
 // ------------------------------------------------------------
-Geometry::Geometry() : transform(float4x4::identity), color(White), wire(false), axis(false), fill(true), type(PrimitiveTypes::Primitive_Point)
+Geometry::Geometry() : Component(nullptr), color(White), wire(false), axis(false), fill(true), type(PrimitiveTypes::Primitive_Point)
 {}
+
+Geometry::Geometry(GameObject* parent) : Component(parent), color(White), wire(false), axis(false), fill(true), type(PrimitiveTypes::Primitive_Point)
+{
+	transform = parent->transform;
+}
 
 // ------------------------------------------------------------
 PrimitiveTypes Geometry::GetType() const
@@ -19,52 +27,54 @@ PrimitiveTypes Geometry::GetType() const
 // ------------------------------------------------------------
 void Geometry::Render() const
 {
-	glPushMatrix();
-	glMultMatrixf((GLfloat*)transform.ptr());
-
-	if (axis)
+	if (transform != nullptr)
 	{
-		// Draw Axis Grid
-		glLineWidth(2.0f);
+		glPushMatrix();
+		glMultMatrixf((GLfloat*)transform->matrix.ptr());
 
-		glBegin(GL_LINES);
+		if (axis)
+		{
+			// Draw Axis Grid
+			glLineWidth(2.0f);
 
-		glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
+			glBegin(GL_LINES);
 
-		glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(1.0f, 0.0f, 0.0f);
-		glVertex3f(1.0f, 0.1f, 0.0f); glVertex3f(1.1f, -0.1f, 0.0f);
-		glVertex3f(1.1f, 0.1f, 0.0f); glVertex3f(1.0f, -0.1f, 0.0f);
+			glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
 
-		glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+			glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(1.0f, 0.0f, 0.0f);
+			glVertex3f(1.0f, 0.1f, 0.0f); glVertex3f(1.1f, -0.1f, 0.0f);
+			glVertex3f(1.1f, 0.1f, 0.0f); glVertex3f(1.0f, -0.1f, 0.0f);
 
-		glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(0.0f, 1.0f, 0.0f);
-		glVertex3f(-0.05f, 1.25f, 0.0f); glVertex3f(0.0f, 1.15f, 0.0f);
-		glVertex3f(0.05f, 1.25f, 0.0f); glVertex3f(0.0f, 1.15f, 0.0f);
-		glVertex3f(0.0f, 1.15f, 0.0f); glVertex3f(0.0f, 1.05f, 0.0f);
+			glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
 
-		glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
+			glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(0.0f, 1.0f, 0.0f);
+			glVertex3f(-0.05f, 1.25f, 0.0f); glVertex3f(0.0f, 1.15f, 0.0f);
+			glVertex3f(0.05f, 1.25f, 0.0f); glVertex3f(0.0f, 1.15f, 0.0f);
+			glVertex3f(0.0f, 1.15f, 0.0f); glVertex3f(0.0f, 1.05f, 0.0f);
 
-		glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(0.0f, 0.0f, 1.0f);
-		glVertex3f(-0.05f, 0.1f, 1.05f); glVertex3f(0.05f, 0.1f, 1.05f);
-		glVertex3f(0.05f, 0.1f, 1.05f); glVertex3f(-0.05f, -0.1f, 1.05f);
-		glVertex3f(-0.05f, -0.1f, 1.05f); glVertex3f(0.05f, -0.1f, 1.05f);
+			glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
 
-		glEnd();
+			glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(0.0f, 0.0f, 1.0f);
+			glVertex3f(-0.05f, 0.1f, 1.05f); glVertex3f(0.05f, 0.1f, 1.05f);
+			glVertex3f(0.05f, 0.1f, 1.05f); glVertex3f(-0.05f, -0.1f, 1.05f);
+			glVertex3f(-0.05f, -0.1f, 1.05f); glVertex3f(0.05f, -0.1f, 1.05f);
 
-		glLineWidth(1.0f);
+			glEnd();
+
+			glLineWidth(1.0f);
+		}
+
+		glColor3f(color.r, color.g, color.b);
+
+		if (fill)
+			InnerRender();
+
+		if (wire)
+			WireframeRender();
+
+		glPopMatrix();
 	}
-
-	glColor3f(color.r, color.g, color.b);
-
-	if (fill)
-		InnerRender();
-
-	if (wire)
-		WireframeRender();
-
-	glPopMatrix();
 }
-
 // ------------------------------------------------------------
 void Geometry::InnerRender() const
 {
