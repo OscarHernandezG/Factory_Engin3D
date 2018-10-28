@@ -41,13 +41,20 @@ GameObject::~GameObject()
 	}
 
 	components.clear();
+
+	for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
+	{
+		delete (*iterator);
+	}
+
+	childs.clear();
 }
 
-void GameObject::Update()
+void GameObject::Update(float dt)
 {
 	for (list<Component*>::iterator iterator = components.begin(); iterator != components.end(); ++iterator)
 	{
-		(*iterator)->Update();
+		(*iterator)->Update(dt);
 	}
 }
 

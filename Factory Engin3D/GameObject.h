@@ -25,7 +25,9 @@ public:
 
 	~GameObject();
 
-	void Update();
+	void Update(float dt);
+
+	inline void Delete() { toDelete = true;	}
 
 	void CreateGameObject(TransformInfo* info);
 
@@ -36,6 +38,8 @@ public:
 
 	bool active = true;
 
+	bool toDelete = false;
+
 	Transform* transform = nullptr;
 
 	list<Component*> components;
@@ -43,6 +47,6 @@ public:
 	list<GameObject*> childs;
 	GameObject* father = nullptr;
 
-	int UID = 0u;
+	int UID = 0;
 	pcg32_random_t rng;
 };

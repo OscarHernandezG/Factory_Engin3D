@@ -27,7 +27,7 @@ public:
 
 	~Component() {};
 
-	virtual void Update() {}
+	virtual void Update(float dt) {}
 
 private:
 	bool active = true;
