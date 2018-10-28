@@ -12,6 +12,7 @@
 
 #include "MathGeoLib/Geometry/GeometryAll.h"
 
+#include "GameObject.h"
 #include "Geometries.h"
 
 //RAM and CPU usage
@@ -422,16 +423,18 @@ void ModuleImGui::CreateTransform()
 	{
 		float3 position, scale, angles;
 		Quat rotate;
-		App->geometry->currentMesh->transform.Decompose(position, rotate, scale);
 
-		float* vector3 = &App->geometry->currentMesh->GetPos()[0];
+		if (App->geometry->currentMesh->transform != nullptr)
+		App->geometry->currentMesh->transform->matrix.Decompose(position, rotate, scale);
+
+		float* vector3 = &App->geometry->currentMesh->transform->GetPos()[0];
 		if (ImGui::InputFloat3("Position", vector3)) {
-			App->geometry->currentMesh->SetPos(vector3[0], vector3[1], vector3[2]);
+			App->geometry->currentMesh->transform->SetPos(vector3[0], vector3[1], vector3[2]);
 		}
 
 		vector3 = &scale[0];
 		if (ImGui::InputFloat3("Scale", vector3))
-			App->geometry->currentMesh->SetScale(vector3[0], vector3[1], vector3[2]);
+			App->geometry->currentMesh->transform->SetScale(vector3[0], vector3[1], vector3[2]);
 
 		angles = rotate.ToEulerXYZ();
 
@@ -442,7 +445,7 @@ void ModuleImGui::CreateTransform()
 		ImGui::DragFloat3("Rotation", vector3);
 
 		if (ImGui::Button("Reset", ImVec2(100, 20)))
-			App->geometry->currentMesh->SetIdentity();
+			App->geometry->currentMesh->transform->SetIdentity();
 
 	}
 	else {
@@ -642,11 +645,15 @@ void ModuleImGui::CreateMeshesHeader()
 	if (App->geometry->currentMesh != nullptr)
 	{
 		uint numVertex = 0u;
-		std::vector<MeshBuffer>::iterator iterator = App->geometry->currentMesh->buffers.begin();
-		while (iterator != App->geometry->currentMesh->buffers.end())
+		Mesh* goMesh = (Mesh*)App->geometry->currentMesh->GetComponent(ComponentType::ComponentType_GEOMETRY);
+		if (goMesh != nullptr)
 		{
-			numVertex += (*iterator).vertex.size;
-			++iterator;
+			std::vector<MeshBuffer>::iterator iterator = goMesh->buffers.begin();
+			while (iterator != goMesh->buffers.end())
+			{
+				numVertex += (*iterator).vertex.size;
+				++iterator;
+			}
 		}
 
 		ImGui::Text("Total vertex: %i", numVertex);
