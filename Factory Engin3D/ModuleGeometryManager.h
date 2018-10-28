@@ -59,12 +59,10 @@ public:
 	~ModuleGameObjectManager();
 
 	bool Start();
-	void LoadDefaultScene();
+
 	update_status PreUpdate(float dt);
 	update_status Update(float dt);
 	update_status PostUpdate(float dt);
-
-	void Draw3D(bool fill = true, bool wire = false) const;
 
 	bool CleanUp();
 
@@ -72,10 +70,10 @@ public:
 	GameObject* CreateGameObject(TransformInfo* info, GameObject* father = nullptr);
 	GameObject* CreateGameObject(float4x4 transform, GameObject* father = nullptr);
 
-	float3 GetCurrentGameObjectPivot() const;
-
 public:
 	GameObject* root;
 
-	list<GameObject> gameObjects;
+	list<GameObject*> gameObjects;
+
+	
 };
