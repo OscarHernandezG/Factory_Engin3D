@@ -17,6 +17,8 @@
 #pragma comment( lib, "DevIL/libx86/ILU.lib" )
 #pragma comment( lib, "DevIL/libx86/ILUT.lib" )
 
+#include "GameObject.h"
+
 
 
 ModuleGeometry::ModuleGeometry(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -153,8 +155,9 @@ void ModuleGeometry::UpdateMesh(char* path)
 	if (tempMesh != nullptr)
 		if (!tempMesh->buffers.empty())
 		{
-			currentMesh->ClearMesh();
-			currentMesh = tempMesh;
+			Mesh* mesh = (Mesh*)currentMesh->GetComponent(ComponentType::ComponentType_GEOMETRY);
+			delete mesh;
+			*mesh = *tempMesh;
 		}
 }
 
@@ -335,6 +338,7 @@ void ModuleGeometry::Draw3D(bool fill, bool wire) const
 
 	if (currentMesh != nullptr) 
 	{
+
 		currentMesh->fill = fill;
 		currentMesh->wire = wire;
 		currentMesh->Render();
@@ -343,7 +347,7 @@ void ModuleGeometry::Draw3D(bool fill, bool wire) const
 
 void ModuleGeometry::LoadDefaultScene()
 {
-	currentMesh = LoadMesh("assets/models/BakerHouse.fbx");
+	currentMesh->AddComponent(ComponentType::ComponentType_GEOMETRY) = LoadMesh("assets/models/BakerHouse.fbx");
 	textureID = LoadTexture("assets/textures/Baker_house.dds");
 }
 

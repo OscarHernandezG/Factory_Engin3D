@@ -1,6 +1,7 @@
 #pragma once
 #include "Module.h"
 
+#include "Transform.h"
 #include "Geometries.h"
 
 class ModuleGeometry : public Module
@@ -41,7 +42,7 @@ public:
 	void UpdateTexture(char* path);
 
 public:
-	Mesh* currentMesh = nullptr;
+	GameObject* currentMesh = nullptr;
 
 	uint textureID = 0;
 	uint numFaces = 0;
