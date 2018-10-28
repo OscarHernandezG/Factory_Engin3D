@@ -92,13 +92,13 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 				numFaces = 0u;
 				for (int i = 0; i < scene->mNumMeshes; ++i)
 				{
-					aiMesh* currentMesh = scene->mMeshes[i];
+					aiMesh* newMesh = scene->mMeshes[i];
 
 					MeshBuffer newCurrentBuffer;
-					newCurrentBuffer.vertex.size = currentMesh->mNumVertices * 3;
+					newCurrentBuffer.vertex.size = newMesh->mNumVertices * 3;
 					newCurrentBuffer.vertex.buffer = new float[newCurrentBuffer.vertex.size * 3];
 
-					memcpy(newCurrentBuffer.vertex.buffer, currentMesh->mVertices, sizeof(float) * newCurrentBuffer.vertex.size);
+					memcpy(newCurrentBuffer.vertex.buffer, newMesh->mVertices, sizeof(float) * newCurrentBuffer.vertex.size);
 
 					LOG("New mesh loaded with %d vertices", newCurrentBuffer.vertex.size);
 
@@ -107,20 +107,20 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 					glBindBuffer(GL_ARRAY_BUFFER, newCurrentBuffer.vertex.id);
 					glBufferData(GL_ARRAY_BUFFER, sizeof(float) * newCurrentBuffer.vertex.size, newCurrentBuffer.vertex.buffer, GL_STATIC_DRAW);
 					*/
-					if (currentMesh->HasFaces())
+					if (newMesh->HasFaces())
 					{
 
-						numFaces += currentMesh->mNumFaces;
-						newCurrentBuffer.index.size = currentMesh->mNumFaces * 3;
+						numFaces += newMesh->mNumFaces;
+						newCurrentBuffer.index.size = newMesh->mNumFaces * 3;
 						newCurrentBuffer.index.buffer = new uint[newCurrentBuffer.index.size];
 
-						for (uint index = 0; index < currentMesh->mNumFaces; ++index)
+						for (uint index = 0; index < newMesh->mNumFaces; ++index)
 						{
-							if (currentMesh->mFaces[index].mNumIndices != 3)
+							if (newMesh->mFaces[index].mNumIndices != 3)
 								LOG("WARNING, geometry faces != 3 indices")
 							else
 							{
-								memcpy(&newCurrentBuffer.index.buffer[index * 3], currentMesh->mFaces[index].mIndices, sizeof(uint) * 3);
+								memcpy(&newCurrentBuffer.index.buffer[index * 3], newMesh->mFaces[index].mIndices, sizeof(uint) * 3);
 							}
 
 						}
@@ -131,21 +131,21 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 						*/
 					}
 
-					if (currentMesh->HasTextureCoords(0))
+					if (newMesh->HasTextureCoords(0))
 					{
-						newCurrentBuffer.texture.size = currentMesh->mNumVertices * 2;
-						newCurrentBuffer.texture.buffer = new float[currentMesh->mNumVertices * 2];
-						for (int currVertices = 0; currVertices < currentMesh->mNumVertices; ++currVertices)
+						newCurrentBuffer.texture.size = newMesh->mNumVertices * 2;
+						newCurrentBuffer.texture.buffer = new float[newMesh->mNumVertices * 2];
+						for (int currVertices = 0; currVertices < newMesh->mNumVertices; ++currVertices)
 						{
-							newCurrentBuffer.texture.buffer[currVertices * 2] = currentMesh->mTextureCoords[0][currVertices].x;
-							newCurrentBuffer.texture.buffer[currVertices * 2 + 1] = currentMesh->mTextureCoords[0][currVertices].y;
+							newCurrentBuffer.texture.buffer[currVertices * 2] = newMesh->mTextureCoords[0][currVertices].x;
+							newCurrentBuffer.texture.buffer[currVertices * 2 + 1] = newMesh->mTextureCoords[0][currVertices].y;
 						}
-						memcpy(newCurrentBuffer.texture.buffer, currentMesh->mTextureCoords[0], sizeof(float) * 2 * currentMesh->mNumVertices);
+						memcpy(newCurrentBuffer.texture.buffer, newMesh->mTextureCoords[0], sizeof(float) * 2 * newMesh->mNumVertices);
 
 						/*Dont do it now
 						glGenBuffers(1, &newCurrentBuffer.texture.id);
 						glBindBuffer(GL_ARRAY_BUFFER, newCurrentBuffer.texture.id);
-						glBufferData(GL_ARRAY_BUFFER, currentMesh->mNumVertices * sizeof(float) * 2, textCoords, GL_STATIC_DRAW);
+						glBufferData(GL_ARRAY_BUFFER, newMesh->mNumVertices * sizeof(float) * 2, textCoords, GL_STATIC_DRAW);
 						glBindBuffer(GL_ARRAY_BUFFER, 0);
 						*/
 
@@ -153,9 +153,9 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 
 					mesh->buffers.push_back(newCurrentBuffer);
 
-					SaveMesh(newCurrentBuffer,path);
+					//SaveMesh(newCurrentBuffer,path);
 				}
-
+///
 			currentMeshBB = LoadBoundingBox(mesh);
 			LOG("Loaded geometry with %i faces", numFaces);
 			}
@@ -170,7 +170,7 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 	return mesh;
 }
 
-void ModuleGeometry::SaveMesh(MeshBuffer newCurrentBuffer, const char* path)
+void ModuleGeometry::SaveMeshImporter(MeshBuffer newCurrentBuffer, const char* path)
 {
 	uint ranges[3] = { newCurrentBuffer.index.size, newCurrentBuffer.vertex.size, newCurrentBuffer.texture.size};
 
@@ -205,18 +205,53 @@ void ModuleGeometry::SaveMesh(MeshBuffer newCurrentBuffer, const char* path)
 	delete[] exporter;
 }
 
+Mesh* ModuleGeometry::LoadMeshImporter(const char* path)
+{
+	char* buffer = App->importer->LoadFile(path, LlibraryType_MESH);
+	char* cursor = buffer;
+	MeshBuffer bufferImporter;
+
+	uint ranges[3];
+
+	uint bytes = sizeof(ranges);
+	memcpy(ranges, cursor, bytes);
+
+	bufferImporter.index.size = ranges[0];
+	bufferImporter.vertex.size = ranges[1];
+	bufferImporter.texture.size = ranges[2];
+
+	cursor += bytes;
+	bytes = sizeof(uint)* bufferImporter.index.size;
+	bufferImporter.index.buffer = new uint[bufferImporter.index.size];
+	memcpy(bufferImporter.index.buffer, cursor, bytes);
+
+	cursor += bytes;
+	bytes = sizeof(float)* bufferImporter.vertex.size;
+	bufferImporter.vertex.buffer = new float[bufferImporter.vertex.size];
+	memcpy(bufferImporter.vertex.buffer, cursor, bytes);
+
+
+	cursor += bytes;
+	bytes = sizeof(float)* bufferImporter.texture.size;
+	bufferImporter.texture.buffer = new float[bufferImporter.texture.size];
+	memcpy(bufferImporter.texture.buffer, cursor, bytes);
+
+	delete[] buffer;
+	return nullptr;
+}
 
 void ModuleGeometry::UpdateMesh(char* path)
 {
 	Mesh* tempMesh = LoadMesh(path);
-
-	//SaveMesh(tempMesh, path);
 
 	if (tempMesh != nullptr)
 		if (!tempMesh->buffers.empty())
 		{
 			currentMesh->ClearMesh();
 			currentMesh = tempMesh;
+
+			SaveMeshImporter(tempMesh->buffers.back(), path);
+			LoadMeshImporter(path);
 		}
 
 	
