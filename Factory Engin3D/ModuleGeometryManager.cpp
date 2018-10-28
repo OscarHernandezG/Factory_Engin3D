@@ -346,3 +346,39 @@ void ModuleGeometry::LoadDefaultScene()
 	currentMesh = LoadMesh("assets/models/BakerHouse.fbx");
 	textureID = LoadTexture("assets/textures/Baker_house.dds");
 }
+
+GameObject* ModuleGameObjectManager::CreateGameObject(float3 position, Quat rotation, float3 scale, GameObject* father)
+{
+	GameObject* newGameObject = nullptr;
+
+	if (father == nullptr)
+		father = root;
+
+	newGameObject = new GameObject(position, rotation, scale, father);
+
+	return newGameObject;
+}
+
+GameObject* ModuleGameObjectManager::CreateGameObject(TransformInfo* info, GameObject* father)
+{
+	GameObject* newGameObject = nullptr;
+
+	if (father == nullptr)
+		father = root;
+
+	newGameObject = new GameObject(info, father);
+
+	return newGameObject;
+}
+
+GameObject* ModuleGameObjectManager::CreateGameObject(float4x4 transform, GameObject* father)
+{
+	GameObject* newGameObject = nullptr;
+
+	if (father == nullptr)
+		father = root;
+
+	newGameObject = new GameObject(transform, father);
+
+	return newGameObject;
+}

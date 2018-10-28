@@ -2,6 +2,8 @@
 #include "Component.h"
 #include "GameObject.h"
 
+class GameObject;
+
 enum UsingInfo
 {
 	UsingInfo_TRS,
@@ -45,4 +47,6 @@ public:
 public:
 
 	float4x4 transform;
+
+	AABB boundingBox;
 };
