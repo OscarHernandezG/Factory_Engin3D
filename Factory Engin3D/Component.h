@@ -1,5 +1,4 @@
 #pragma once
-#include "GameObject.h"
 
 class GameObject;
 
@@ -29,10 +28,12 @@ public:
 
 	virtual void Update(float dt) {}
 
+public:
+	ComponentType type = ComponentType_NONE;
+
 private:
 	bool active = true;
 
-	ComponentType type = ComponentType_NONE;
 
 	GameObject* gameObject = nullptr;
 };
