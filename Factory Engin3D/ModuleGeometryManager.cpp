@@ -392,6 +392,13 @@ update_status ModuleGameObjectManager::PostUpdate(float dt)
 
 bool ModuleGameObjectManager::CleanUp()
 {
+	CleanAllGameObjects();
+
+	return true;
+}
+
+void ModuleGameObjectManager::CleanAllGameObjects()
+{
 	// Deleting a GameObject will cause all his childs to be deleted
 	// If we delete the root GameObject, all the GameObjects will be deletet recursively
 	if (root != nullptr)
@@ -399,8 +406,8 @@ bool ModuleGameObjectManager::CleanUp()
 		delete root;
 		root = nullptr;
 	}
-	return true;
 }
+
 
 GameObject* ModuleGameObjectManager::CreateGameObject(float3 position, Quat rotation, float3 scale, GameObject* father)
 {

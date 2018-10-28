@@ -66,6 +66,8 @@ public:
 
 	bool CleanUp();
 
+	void CleanAllGameObjects();
+
 	GameObject* CreateGameObject(float3 position = float3::zero, Quat rotation = Quat::identity, float3 scale = float3::one, GameObject* father = nullptr);
 	GameObject* CreateGameObject(TransformInfo* info, GameObject* father = nullptr);
 	GameObject* CreateGameObject(float4x4 transform, GameObject* father = nullptr);
