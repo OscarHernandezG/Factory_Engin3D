@@ -9,8 +9,6 @@ GameObject::GameObject(float3 position, Quat rotation, float3 scale, GameObject*
 	info->rotation = rotation;
 	info->whichInfo = UsingInfo_TRS;
 
-	pcg32_srandom_r(&rng, 42u, 54u);
-
 	CreateGameObject(info);
 	delete info;
 }
@@ -58,8 +56,26 @@ void GameObject::Update(float dt)
 	}
 }
 
+Component* GameObject::GetComponent(ComponentType type)
+{
+	Component* component = nullptr;
+
+	for (list<Component*>::iterator iterator = components.begin(); iterator != components.end(); ++iterator)
+	{
+		if ((*iterator)->type == type)
+		{
+			component = (*iterator);
+			break;
+		}
+	}
+
+	return component;
+}
+
 void GameObject::CreateGameObject(TransformInfo* info)
 {
+	pcg32_srandom_r(&rng, 42u, 54u);
+
 	this->transform = (Transform*)AddComponent(ComponentType_TRANSFORM, info);
 }
 

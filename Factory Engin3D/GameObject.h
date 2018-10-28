@@ -1,15 +1,15 @@
 #pragma once
 #include "Globals.h"
-#include "Mesh.h"
 #include "Component.h"
+#include "Mesh.h"
 #include <list>
 #include "Transform.h"
 #include "pcg-c-0.94/include/pcg_variants.h"
 
 using namespace std;
 
-class Component;
-class Transform;
+//class Component;
+//class Transform;
 
 enum ComponentType;
 
@@ -28,6 +28,8 @@ public:
 	void Update(float dt);
 
 	inline void Delete() { toDelete = true;	}
+
+	Component* GetComponent(ComponentType type);
 
 	void CreateGameObject(TransformInfo* info);
 
