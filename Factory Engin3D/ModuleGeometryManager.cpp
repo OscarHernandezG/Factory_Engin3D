@@ -153,7 +153,7 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 
 					mesh->buffers.push_back(newCurrentBuffer);
 
-					//SaveMesh(newCurrentBuffer,path);
+					SaveMeshImporter(newCurrentBuffer,path,i);
 				}
 ///
 			currentMeshBB = LoadBoundingBox(mesh);
@@ -170,7 +170,7 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 	return mesh;
 }
 
-void ModuleGeometry::SaveMeshImporter(MeshBuffer newCurrentBuffer, const char* path)
+void ModuleGeometry::SaveMeshImporter(MeshBuffer newCurrentBuffer, const char* path, int number)
 {
 	uint ranges[3] = { newCurrentBuffer.index.size, newCurrentBuffer.vertex.size, newCurrentBuffer.texture.size};
 
@@ -200,7 +200,7 @@ void ModuleGeometry::SaveMeshImporter(MeshBuffer newCurrentBuffer, const char* p
 		memcpy(cursor, newCurrentBuffer.texture.buffer, bytes);
 	}
 
-	App->importer->SaveFile(path,size,exporter, LlibraryType_MESH);
+	App->importer->SaveFile(path,size,exporter, LlibraryType_MESH, number);
 	
 	delete[] exporter;
 }
@@ -259,7 +259,6 @@ void ModuleGeometry::UpdateMesh(char* path)
 	if (tempMesh != nullptr)
 		if (!tempMesh->buffers.empty())
 		{
-			SaveMeshImporter(tempMesh->buffers.back(), path);
 			tempMesh->buffers.push_back(LoadMeshImporter(path));
 			currentMesh->ClearMesh();
 			currentMesh = tempMesh;

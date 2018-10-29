@@ -22,9 +22,9 @@ bool ModuleImporter::Init()
 	return true;
 }
 
-void ModuleImporter::SaveFile(const char* path, uint size, char* outputFile, LlibraryType type)
+void ModuleImporter::SaveFile(const char* path, uint size, char* outputFile, LlibraryType type, int number)
 {
-	string direction = GetDirectionName(path, type);
+	string direction = GetDirectionName(path, type, number);
 
 	ofstream newFile (direction.c_str(), ios::out | ios::binary);
 	if (newFile.is_open())
@@ -36,7 +36,7 @@ void ModuleImporter::SaveFile(const char* path, uint size, char* outputFile, Lli
 
 char* ModuleImporter::LoadFile(const char* path, LlibraryType type)
 {
-	string direction = GetDirectionName(path, type);
+	string direction = GetDirectionName(path, type,0);
 	char *text = nullptr;
 	ifstream loadFile(direction.c_str(), ios::out | ios::binary);
 	if (loadFile.is_open())
@@ -54,7 +54,7 @@ char* ModuleImporter::LoadFile(const char* path, LlibraryType type)
 	return text;
 }
 
-string ModuleImporter::GetDirectionName(const char* path, LlibraryType type)
+string ModuleImporter::GetDirectionName(const char* path, LlibraryType type, int number)
 {
 	string filePath(path);
 	string goodFile = "Llibrary/";
@@ -66,7 +66,7 @@ string ModuleImporter::GetDirectionName(const char* path, LlibraryType type)
 	case LlibraryType_TEXTURE:
 		break;
 	case LlibraryType_MESH:
-		MeshDirection(filePath, goodFile);
+		MeshDirection(filePath, goodFile, number);
 
 		break;
 	case LlibraryType_MATERIAL:
@@ -78,11 +78,12 @@ string ModuleImporter::GetDirectionName(const char* path, LlibraryType type)
 	return goodFile;
 }
 
-void ModuleImporter::MeshDirection(std::string &filePath, std::string &goodFile)
+void ModuleImporter::MeshDirection(std::string &filePath, std::string &goodFile, int number)
 {
 	uint initialPos = filePath.find_last_of("\\") + 1;
 	uint finalPos = filePath.find_last_of(".");
 
 	goodFile += filePath.substr(initialPos, (finalPos - initialPos));
+	goodFile += to_string(number);
 	goodFile += ".fty";
 }
