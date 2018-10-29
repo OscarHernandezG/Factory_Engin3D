@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __ModuleGeometryManager_H__
+#define __ModuleGeometryManager_H__
 #include "Module.h"
 
 #include "Geometries.h"
@@ -23,7 +24,7 @@ public:
 	Mesh* LoadMesh(char* path);
 
 	void SaveMeshImporter(MeshBuffer newCurrentBuffer, const char* path);
-	Mesh * LoadMeshImporter(const char * path);
+	MeshBuffer LoadMeshImporter(const char * path);
 
 	void UpdateMesh(char * path);
 
@@ -57,3 +58,4 @@ public:
 
 	string destination;
 };
+#endif

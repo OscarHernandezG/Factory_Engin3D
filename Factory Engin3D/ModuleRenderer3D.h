@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __ModuleRender_H__
+#define __ModuleRender_H__
 #include "Module.h"
 #include "Globals.h"
 #include "MathGeoLib/Math/float3x3.h"
@@ -49,4 +50,4 @@ public:
 	float3 ambient_lihgt = { 1.0f,1.0f,1.0f };
 
 };
-
+#endif

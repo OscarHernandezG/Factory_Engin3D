@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __ModuleImGui_H__
+#define __ModuleImGui_H__
+
 #include "Module.h"
 #include "Globals.h"
 
@@ -122,3 +124,4 @@ public:
 
 	bool warningDialoge = false;
 };
+#endif

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __ModuleInput_H__
+#define __ModuleInput_H__
 #include "Module.h"
 #include "Globals.h"
 
@@ -79,3 +80,4 @@ private:
 	bool mousePressed = false;
 	//int mouse_z_motion;
 };
+#endif

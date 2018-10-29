@@ -205,7 +205,7 @@ void ModuleGeometry::SaveMeshImporter(MeshBuffer newCurrentBuffer, const char* p
 	delete[] exporter;
 }
 
-Mesh* ModuleGeometry::LoadMeshImporter(const char* path)
+MeshBuffer ModuleGeometry::LoadMeshImporter(const char* path)
 {
 	char* buffer = App->importer->LoadFile(path, LlibraryType_MESH);
 	char* cursor = buffer;
@@ -225,19 +225,31 @@ Mesh* ModuleGeometry::LoadMeshImporter(const char* path)
 	bufferImporter.index.buffer = new uint[bufferImporter.index.size];
 	memcpy(bufferImporter.index.buffer, cursor, bytes);
 
+	glGenBuffers(1, (GLuint*)&(bufferImporter.index.id));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferImporter.index.id);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * bufferImporter.index.size, bufferImporter.index.buffer, GL_STATIC_DRAW);
+
 	cursor += bytes;
 	bytes = sizeof(float)* bufferImporter.vertex.size;
 	bufferImporter.vertex.buffer = new float[bufferImporter.vertex.size];
 	memcpy(bufferImporter.vertex.buffer, cursor, bytes);
 
+	glGenBuffers(1, (GLuint*)&(bufferImporter.vertex.id));
+	glBindBuffer(GL_ARRAY_BUFFER, bufferImporter.vertex.id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * bufferImporter.vertex.size, bufferImporter.vertex.buffer, GL_STATIC_DRAW);
 
 	cursor += bytes;
 	bytes = sizeof(float)* bufferImporter.texture.size;
 	bufferImporter.texture.buffer = new float[bufferImporter.texture.size];
 	memcpy(bufferImporter.texture.buffer, cursor, bytes);
 
+	glGenBuffers(1, &bufferImporter.texture.id);
+	glBindBuffer(GL_ARRAY_BUFFER, bufferImporter.texture.id);
+	glBufferData(GL_ARRAY_BUFFER, bufferImporter.texture.size * sizeof(float) * 2, bufferImporter.texture.buffer, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 	delete[] buffer;
-	return nullptr;
+	return bufferImporter;
 }
 
 void ModuleGeometry::UpdateMesh(char* path)
@@ -247,11 +259,11 @@ void ModuleGeometry::UpdateMesh(char* path)
 	if (tempMesh != nullptr)
 		if (!tempMesh->buffers.empty())
 		{
+			SaveMeshImporter(tempMesh->buffers.back(), path);
+			tempMesh->buffers.push_back(LoadMeshImporter(path));
 			currentMesh->ClearMesh();
 			currentMesh = tempMesh;
 
-			SaveMeshImporter(tempMesh->buffers.back(), path);
-			LoadMeshImporter(path);
 		}
 
 	

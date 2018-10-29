@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __Mesh_H__
+#define __Mesh_H__
 
 #include "MathGeoLib/MathGeoLib.h"
 #include "Geometries.h"
@@ -34,3 +35,4 @@ public:
 	std::vector<MeshBuffer> buffers;
 
 };
+#endif
