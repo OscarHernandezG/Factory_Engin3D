@@ -354,9 +354,6 @@
     <ClInclude Include="Light.h">
       <Filter>Sources\GameObject\Component</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Factory_Engin3D-87bce15ffc57e6ce5da696b34db50cafe215dcbe\Factory Engin3D\Transform.h">
-      <Filter>Sources\GameObject\Component</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Sources\GameObject\Component</Filter>
     </ClInclude>
@@ -367,6 +364,9 @@
       <Filter>Sources\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
+      <Filter>Sources\GameObject\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
       <Filter>Sources\GameObject\Component</Filter>
     </ClInclude>
   </ItemGroup>
@@ -533,9 +533,6 @@
     <ClCompile Include="Light.cpp">
       <Filter>Sources\GameObject\Component</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Factory_Engin3D-87bce15ffc57e6ce5da696b34db50cafe215dcbe\Factory Engin3D\Transform.cpp">
-      <Filter>Sources\GameObject\Component</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Sources\GameObject\Component</Filter>
     </ClCompile>
@@ -546,6 +543,9 @@
       <Filter>Sources\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
+      <Filter>Sources\GameObject\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
       <Filter>Sources\GameObject\Component</Filter>
     </ClCompile>
   </ItemGroup>

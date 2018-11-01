@@ -75,7 +75,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Factory_Engin3D-87bce15ffc57e6ce5da696b34db50cafe215dcbe\Factory Engin3D\Component.h" />
-    <ClInclude Include="..\..\..\Factory_Engin3D-87bce15ffc57e6ce5da696b34db50cafe215dcbe\Factory Engin3D\Transform.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Color.h" />
@@ -177,9 +176,9 @@
     <ClInclude Include="Quadtree.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="Transform.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\Factory_Engin3D-87bce15ffc57e6ce5da696b34db50cafe215dcbe\Factory Engin3D\Transform.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Color.cpp" />
@@ -238,6 +237,7 @@
     <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="Transform.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
