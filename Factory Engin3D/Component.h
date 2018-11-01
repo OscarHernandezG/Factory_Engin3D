@@ -28,12 +28,12 @@ public:
 
 	virtual void Update(float dt) {}
 
+	inline void SetActive(bool isActive) { this->isActive = isActive; }
+
 public:
 	ComponentType type = ComponentType_NONE;
 
-private:
-	bool active = true;
-
+	bool isActive = true;
 
 	GameObject* gameObject = nullptr;
 };
