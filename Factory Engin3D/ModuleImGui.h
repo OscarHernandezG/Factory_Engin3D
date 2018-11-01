@@ -45,6 +45,10 @@ public:
 	void CreateConsole();
 	void CreateTransform();
 
+	void CreateGameObjectHierarchy();
+
+	void CreateGOTreeNode(GameObject * current);
+
 
 	update_status CreateMainMenuBar();
 
@@ -80,6 +84,7 @@ public:
 	bool configurationWindow = false;
 	bool consoleWindow = false;
 	bool transformWindow = false;
+	bool hierarchyWindow = true;
 	bool exitOption = false;
 
 

@@ -69,6 +69,9 @@ update_status ModuleImGui::PreUpdate(float dt)
 	if (transformWindow)
 		CreateTransform();
 
+	if (hierarchyWindow)
+		CreateGameObjectHierarchy();
+
 	status = CreateMainMenuBar();
 
 	created = true;
@@ -419,25 +422,25 @@ void ModuleImGui::CreateTransform()
 	ImGui::SetWindowSize({ 400,200 }, ImGuiWindowFlags_NoResize);
 	ImGui::Begin("Transform", &transformWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 
-	if (App->geometry->currentMesh != nullptr)
+	if (App->camera->camera != nullptr)
 	{
 		float3 position, scale, angles;
 		Quat rotate;
 
-		if (App->geometry->currentMesh->transform != nullptr)
+		if (App->camera->camera->transform != nullptr)
 		{
-			position = App->geometry->currentMesh->transform->GetPos();
-			scale = App->geometry->currentMesh->transform->scale;
-			rotate = App->geometry->currentMesh->transform->GetRotation();
+			position = App->camera->camera->transform->GetPos();
+			scale = App->camera->camera->transform->scale;
+			rotate = App->camera->camera->transform->GetRotation();
 		}
-		float* vector3 = &App->geometry->currentMesh->transform->GetPos()[0];
+		float* vector3 = &App->camera->camera->transform->GetPos()[0];
 		if (ImGui::InputFloat3("Position", vector3)) {
-			App->geometry->currentMesh->transform->SetPos(vector3[0], vector3[1], vector3[2]);
+			App->camera->camera->transform->SetPos(vector3[0], vector3[1], vector3[2]);
 		}
 
 		vector3 = &scale[0];
 		if (ImGui::InputFloat3("Scale", vector3))
-			App->geometry->currentMesh->transform->SetScale(vector3[0], vector3[1], vector3[2]);
+			App->camera->camera->transform->SetScale(vector3[0], vector3[1], vector3[2]);
 
 		angles = rotate.ToEulerXYZ();
 
@@ -448,7 +451,7 @@ void ModuleImGui::CreateTransform()
 		ImGui::DragFloat3("Rotation", vector3);
 
 		if (ImGui::Button("Reset", ImVec2(100, 20)))
-			App->geometry->currentMesh->transform->SetIdentity();
+			App->camera->camera->transform->SetIdentity();
 
 	}
 	else {
@@ -456,6 +459,32 @@ void ModuleImGui::CreateTransform()
 	}
 	ImGui::End();
 }
+
+void ModuleImGui::CreateGameObjectHierarchy()
+{
+	ImGui::Begin("Scene", &hierarchyWindow);
+
+	if (App->gameObject->root)
+	{
+		CreateGOTreeNode(App->gameObject->root);
+	}
+	ImGui::End();
+
+}
+
+void ModuleImGui::CreateGOTreeNode(GameObject* current)
+{
+	if (ImGui::TreeNode(current->name.data()))
+	{
+		for (list<GameObject*>::iterator childs = current->childs.begin(); childs != current->childs.end(); ++childs)
+		{
+			CreateGOTreeNode(*childs);
+		}
+		ImGui::TreePop();
+	}
+}
+
+
 
 update_status ModuleImGui::CreateMainMenuBar()
 {
