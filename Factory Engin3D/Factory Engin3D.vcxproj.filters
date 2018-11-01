@@ -56,7 +56,7 @@
       <UniqueIdentifier>{ea7f7de3-117a-461b-bccf-b4df756ef03d}</UniqueIdentifier>
     </Filter>
     <Filter Include="Sources\GameObject\Component">
-      <UniqueIdentifier>{946cc1eb-e97b-4223-b90c-82e70d8a51d1}</UniqueIdentifier>
+      <UniqueIdentifier>{efb2f799-f49a-41e8-b5e9-e2b561fd1095}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -348,14 +348,20 @@
     <ClInclude Include="Quadtree.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\Factory_Engin3D-87bce15ffc57e6ce5da696b34db50cafe215dcbe\Factory Engin3D\Component.h">
+      <Filter>Sources\GameObject\Component</Filter>
+    </ClInclude>
     <ClInclude Include="Light.h">
       <Filter>Sources\GameObject\Component</Filter>
     </ClInclude>
-    <ClInclude Include="Transform.h">
+    <ClInclude Include="..\..\..\Factory_Engin3D-87bce15ffc57e6ce5da696b34db50cafe215dcbe\Factory Engin3D\Transform.h">
       <Filter>Sources\GameObject\Component</Filter>
     </ClInclude>
-    <ClInclude Include="Component.h">
+    <ClInclude Include="Camera.h">
       <Filter>Sources\GameObject\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleGameObjectManager.h">
+      <Filter>Sources\Modules</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
       <Filter>Sources\GameObject</Filter>
@@ -497,14 +503,6 @@
     <ClCompile Include="Mesh.cpp">
       <Filter>Sources\GameObject\Geometries</Filter>
     </ClCompile>
-    <ClCompile Include="Light.cpp">
-      <Filter>Sources\GameObject\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Transform.cpp">
-      <Filter>Sources\GameObject\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Sources\GameObject</Filter>
     <ClCompile Include="imgui-1.65\imgui.cpp">
       <Filter>Sources\Containers\ImGui</Filter>
     </ClCompile>
@@ -528,6 +526,21 @@
     </ClCompile>
     <ClCompile Include="Quadtree.cpp">
       <Filter>Sources\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Sources\GameObject\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Factory_Engin3D-87bce15ffc57e6ce5da696b34db50cafe215dcbe\Factory Engin3D\Transform.cpp">
+      <Filter>Sources\GameObject\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Sources\GameObject\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleGameObjectManager.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Sources\GameObject</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

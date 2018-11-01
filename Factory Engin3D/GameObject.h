@@ -4,7 +4,7 @@
 #include "Mesh.h"
 #include <list>
 #include "Transform.h"
-#include "Light.h"
+#include "Camera.h"
 #include "pcg-c-0.94/include/pcg_variants.h"
 
 using namespace std;

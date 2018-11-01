@@ -74,9 +74,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\Factory_Engin3D-87bce15ffc57e6ce5da696b34db50cafe215dcbe\Factory Engin3D\Component.h" />
+    <ClInclude Include="..\..\..\Factory_Engin3D-87bce15ffc57e6ce5da696b34db50cafe215dcbe\Factory Engin3D\Transform.h" />
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Color.h" />
-    <ClInclude Include="Component.h" />
     <ClInclude Include="DevIL\includex86\IL\devil_cpp_wrapper.hpp" />
     <ClInclude Include="DevIL\includex86\IL\devil_internal_exports.h" />
     <ClInclude Include="DevIL\includex86\IL\il.h" />
@@ -86,6 +88,7 @@
     <ClInclude Include="DevIL\includex86\IL\ilu_region.h" />
     <ClInclude Include="DevIL\includex86\IL\il_wrap.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="ModuleGameObjectManager.h" />
     <ClInclude Include="Geometries.h" />
     <ClInclude Include="glew-2.1.0\include\GL\eglew.h" />
     <ClInclude Include="glew-2.1.0\include\GL\glew.h" />
@@ -173,12 +176,14 @@
     <ClInclude Include="Geometry.h" />
     <ClInclude Include="Quadtree.h" />
     <ClInclude Include="Timer.h" />
-    <ClInclude Include="Transform.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\Factory_Engin3D-87bce15ffc57e6ce5da696b34db50cafe215dcbe\Factory Engin3D\Transform.cpp" />
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="ModuleGameObjectManager.cpp" />
     <ClCompile Include="imgui-1.65\imgui.cpp" />
     <ClCompile Include="imgui-1.65\imgui_demo.cpp" />
     <ClCompile Include="imgui-1.65\imgui_draw.cpp" />
@@ -231,7 +236,6 @@
     <ClCompile Include="Geometry.cpp" />
     <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="Timer.cpp" />
-    <ClCompile Include="Transform.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
