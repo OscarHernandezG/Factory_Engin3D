@@ -30,26 +30,6 @@ GameObject::GameObject(float3 position, Quat rotation, float3 scale, GameObject*
 	this->father = father;
 }
 
-GameObject::GameObject(TransformInfo* info, GameObject* father) : father(father)
-{
-	CreateGameObject(info);
-
-	this->father = father;
-}
-
-GameObject::GameObject(float4x4 transform, GameObject* father) : father(father)
-{
-	TransformInfo* info = new TransformInfo();
-	info->transform = transform;
-	info->whichInfo = UsingInfo_TRANSFORM;
-
-	CreateGameObject(info);
-
-	delete info;
-
-	this->father = father;
-}
-
 GameObject::~GameObject()
 {
 	transform = nullptr;
@@ -112,17 +92,20 @@ Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
 {
 	Component* newComponent = nullptr;
 
-	info->gameObject = this;
+	//info->gameObject = this;
 
 	switch (type)
 	{
 	case ComponentType_TRANSFORM:
+		if (info)
 		newComponent = (Component*)new Transform((TransformInfo*)info);
 		break;
 	case ComponentType_GEOMETRY:
+		if (info)
 		newComponent = (Component*)(((MeshInfo*)info)->mesh);
 		break;
 	case ComponentType_CAMERA:
+		newComponent = (Component*)new Camera(this);
 		break;
 	case ComponentType_TEXTURE:
 		break;

@@ -4,6 +4,7 @@
 #include "Mesh.h"
 #include <list>
 #include "Transform.h"
+#include "Light.h"
 #include "pcg-c-0.94/include/pcg_variants.h"
 
 using namespace std;
@@ -19,9 +20,9 @@ struct  ComponentInfo;
 class GameObject
 {
 public:
-	GameObject(GameObject* father = nullptr);
-	GameObject(float3 position = float3::zero, Quat rotation = Quat::identity, float3 scale = float3::one, GameObject* father = nullptr);
-	GameObject(TransformInfo* info, GameObject* father = nullptr);
+	GameObject(GameObject* father);
+	GameObject(float3 position, Quat rotation = Quat::identity, float3 scale = float3::one, GameObject* father = nullptr);
+	//GameObject(TransformInfo* info, GameObject* father = nullptr);
 	GameObject(float4x4 transform, GameObject* father = nullptr);
 
 	~GameObject();
