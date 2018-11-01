@@ -82,13 +82,13 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 
 					MeshBuffer newCurrentBuffer;
 					newCurrentBuffer.vertex.size = currentMesh->mNumVertices * 3;
-					newCurrentBuffer.vertex.buffer = new float[newCurrentBuffer.vertex.size * 3];
+					newCurrentBuffer.vertex.buffer = new float[newCurrentBuffer.vertex.size];
 
-					memcpy(newCurrentBuffer.vertex.buffer, currentMesh->mVertices, sizeof(float) * newCurrentBuffer.vertex.size * 3);
+					memcpy(newCurrentBuffer.vertex.buffer, currentMesh->mVertices, sizeof(float) * newCurrentBuffer.vertex.size);
 
 					for (int aaa = 0; aaa < newCurrentBuffer.vertex.size / 3; ++aaa)
 					{
-						LOG("X = %i, Y = %i, Z = %i", newCurrentBuffer.vertex.buffer[aaa * 3 + 0], newCurrentBuffer.vertex.buffer[aaa * 3 + 1], newCurrentBuffer.vertex.buffer[aaa * 3 + 2]);
+						LOG("X = %.2f, Y = %.2f, Z = %.2f", newCurrentBuffer.vertex.buffer[aaa * 3 + 0], newCurrentBuffer.vertex.buffer[aaa * 3 + 1], newCurrentBuffer.vertex.buffer[aaa * 3 + 2]);
 					}
 
 					LOG("New mesh loaded with %d vertices", newCurrentBuffer.vertex.size);
@@ -350,8 +350,8 @@ void ModuleGeometry::Draw3D(bool fill, bool wire) const
 		Mesh* currentGeometry = (Mesh*)currentMesh->GetComponent(ComponentType_GEOMETRY);
 		if (currentGeometry)
 		{
-			currentGeometry->fill = fill;
-			currentGeometry->wire = wire;
+			currentGeometry->fill = true;
+			currentGeometry->wire = false;
 			currentGeometry->Render();
 		}
 	}

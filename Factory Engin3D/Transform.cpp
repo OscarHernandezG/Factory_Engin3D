@@ -6,7 +6,7 @@ Transform::Transform(TransformInfo* info) : Component(info->gameObject, Componen
 	switch (info->whichInfo)
 	{
 	case UsingInfo_TRS:
-		matrix.FromTRS(info->position, info->rotation, info->scale);
+		matrix = float4x4::FromTRS(info->position, info->rotation, info->scale);
 		break;
 	case UsingInfo_TRANSFORM:
 		matrix = info->transform;

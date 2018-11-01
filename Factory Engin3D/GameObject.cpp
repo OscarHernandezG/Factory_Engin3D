@@ -12,6 +12,8 @@ GameObject::GameObject(GameObject* father)
 
 	CreateGameObject(info);
 	delete info;
+
+	this->father = father;
 }
 
 GameObject::GameObject(float3 position, Quat rotation, float3 scale, GameObject* father) : father(father)
@@ -24,11 +26,15 @@ GameObject::GameObject(float3 position, Quat rotation, float3 scale, GameObject*
 
 	CreateGameObject(info);
 	delete info;
+
+	this->father = father;
 }
 
 GameObject::GameObject(TransformInfo* info, GameObject* father) : father(father)
 {
 	CreateGameObject(info);
+
+	this->father = father;
 }
 
 GameObject::GameObject(float4x4 transform, GameObject* father) : father(father)
@@ -40,6 +46,8 @@ GameObject::GameObject(float4x4 transform, GameObject* father) : father(father)
 	CreateGameObject(info);
 
 	delete info;
+
+	this->father = father;
 }
 
 GameObject::~GameObject()
