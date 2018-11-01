@@ -17,6 +17,8 @@ public:
 
 	float* GetProjectionMatrix();
 
+	void UpdateFrustum();
+
 	~Camera() {}
 
 
