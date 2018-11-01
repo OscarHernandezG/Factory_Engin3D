@@ -9,7 +9,6 @@ class GameObject;
 enum UsingInfo
 {
 	UsingInfo_TRS,
-	UsingInfo_TRANSFORM
 };
 
 //Use xyz rotate euler angles
@@ -40,14 +39,22 @@ public:
 
 
 	void		SetPos(float x, float y, float z);
-	void		SetRotation(float angle, const float3 &u);
+	void		SetRotation(Quat rotation);
+	void		Rotate(Quat rotation);
 	void		SetScale(float x, float y, float z);
 	void		SetIdentity();
 
 	float3		GetPos() const;
 
+	Quat		GetRotation() const;
+
+	float4x4 GetMatrix() const;
+
 public:
-	float4x4 matrix;
+
+	float3 position = float3::zero;
+	Quat rotation = Quat::identity;
+	float3 scale = float3::one;
 
 	AABB boundingBox;
 };

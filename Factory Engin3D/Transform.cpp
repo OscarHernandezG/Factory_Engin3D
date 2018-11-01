@@ -6,10 +6,10 @@ Transform::Transform(TransformInfo* info) : Component(info->gameObject, Componen
 	switch (info->whichInfo)
 	{
 	case UsingInfo_TRS:
-		matrix = float4x4::FromTRS(info->position, info->rotation, info->scale);
+		position = info->position;
+		rotation = info->rotation;
+		scale = info->scale;
 		break;
-	case UsingInfo_TRANSFORM:
-		matrix = info->transform;
 	default:
 		break;
 	}
@@ -18,44 +18,49 @@ Transform::Transform(TransformInfo* info) : Component(info->gameObject, Componen
 
 Transform::Transform(GameObject * gameObject) : Component(gameObject, ComponentType_TRANSFORM)
 {
-	matrix = float4x4::identity;
-}
-
-Transform::Transform(GameObject * gameObject, float4x4 transform) : Component(gameObject, ComponentType_TRANSFORM)
-{
-	this->matrix = transform;
+	SetIdentity();
 }
 
 void Transform::SetPos(float x, float y, float z)
 {
-	matrix[3][0] = x;
-	matrix[3][1] = y;
-	matrix[3][2] = z;
+	position = float3(x, y, z);
+}
+
+void Transform::SetRotation(Quat rotation)
+{
+	this->rotation = rotation;
 }
 
 // ------------------------------------------------------------
-void Transform::SetRotation(float angle, const float3 &u)
+void Transform::Rotate(Quat rotation)
 {
-	matrix = float4x4::RotateAxisAngle(u, angle) * matrix;
+	this->rotation = this->rotation * rotation;
 }
 
 // ------------------------------------------------------------
 void Transform::SetScale(float x, float y, float z)
 {
-	float4x4 initialScale = float4x4::identity;
-	//SetPos
-	initialScale[3][0] = matrix[3][0];
-	initialScale[3][1] = matrix[3][1];
-	initialScale[3][2] = matrix[3][2];
-	matrix = float4x4::Scale(x, y, z).ToFloat4x4() * initialScale;
+	scale = float3(x, y, z);
 }
 
 void Transform::SetIdentity()
 {
-	matrix = float4x4::identity;
+	position = float3::zero;
+	rotation = Quat::identity;
+	scale = float3::one;
 }
 
 float3 Transform::GetPos() const
 {
-	return { matrix[3][0], matrix[3][1], matrix[3][2] };
+	return position;
+}
+
+Quat Transform::GetRotation() const
+{
+	return rotation;
+}
+
+float4x4 Transform::GetMatrix() const
+{
+	return float4x4::FromTRS(position, rotation, scale);
 }
