@@ -331,23 +331,29 @@ update_status ModuleGeometry::PostUpdate(float dt)
 
 void ModuleGeometry::Draw3D(bool fill, bool wire) const
 {
-	PrimitivePlane plane;
-	plane.color = { 1, 1, 1, 1 };
-	plane.axis = true;
-	plane.Render();
+	//PrimitivePlane plane;
+	//plane.color = { 1, 1, 1, 1 };
+	//plane.axis = true;
+	//plane.Render();
 
-	if (currentMesh != nullptr) 
+	if (currentMesh != nullptr)
 	{
-
-		currentMesh->fill = fill;
-		currentMesh->wire = wire;
-		currentMesh->Render();
+		Mesh* currentGeometry = (Mesh*)currentMesh->GetComponent(ComponentType_GEOMETRY);
+		if (currentGeometry)
+		{
+			currentGeometry->fill = fill;
+			currentGeometry->wire = wire;
+			currentGeometry->Render();
+		}
 	}
 }
 
 void ModuleGeometry::LoadDefaultScene()
 {
-	currentMesh->AddComponent(ComponentType::ComponentType_GEOMETRY) = LoadMesh("assets/models/BakerHouse.fbx");
+	currentMesh = new GameObject(App->gameObject->root);
+	MeshInfo info;
+	info.mesh = LoadMesh("assets/models/BakerHouse.fbx");
+	currentMesh->AddComponent(ComponentType::ComponentType_GEOMETRY, &info);
 	textureID = LoadTexture("assets/textures/Baker_house.dds");
 }
 
@@ -364,7 +370,7 @@ bool ModuleGameObjectManager::Start()
 {
 	root = new GameObject(float3::zero, Quat::identity, float3::one);
 
-	return false;
+	return true;
 }
 
 update_status ModuleGameObjectManager::PreUpdate(float dt)
