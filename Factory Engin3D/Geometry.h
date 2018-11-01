@@ -19,7 +19,7 @@ enum PrimitiveTypes
 	Primitive_Frustum
 };
 
-class Geometry : Component
+class Geometry : public Component
 {
 public:
 	Geometry();
@@ -39,7 +39,6 @@ public:
 	Color color;
 	bool axis = false, wire = false, fill = true;
 
-	Transform* transform;
 protected:
 	PrimitiveTypes type;
 };

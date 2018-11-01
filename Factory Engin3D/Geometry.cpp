@@ -15,7 +15,6 @@ Geometry::Geometry() : Component(nullptr), color(White), wire(false), axis(false
 
 Geometry::Geometry(GameObject* parent) : Component(parent), color(White), wire(false), axis(false), fill(true), type(PrimitiveTypes::Primitive_Point)
 {
-	transform = parent->transform;
 }
 
 // ------------------------------------------------------------
@@ -27,8 +26,9 @@ PrimitiveTypes Geometry::GetType() const
 // ------------------------------------------------------------
 void Geometry::Render() const
 {
-	if (transform != nullptr)
+	if (gameObject != nullptr)
 	{
+		Transform* transform = gameObject->transform;
 		glPushMatrix();
 		glMultMatrixf((GLfloat*)transform->matrix.ptr());
 
