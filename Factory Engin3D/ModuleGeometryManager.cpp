@@ -98,7 +98,7 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 
 					MeshBuffer newCurrentBuffer;
 
-					newCurrentBuffer.vertex.size = currentMesh->mNumVertices * 3;
+					newCurrentBuffer.vertex.size = newMesh->mNumVertices * 3;
 					newCurrentBuffer.vertex.buffer = new float[newCurrentBuffer.vertex.size];
 
 					memcpy(newCurrentBuffer.vertex.buffer, newMesh->mVertices, sizeof(float) * newCurrentBuffer.vertex.size);
@@ -248,7 +248,7 @@ void ModuleGeometry::UpdateMesh(char* path)
 	Mesh* tempMesh = LoadMesh(path);
 
 	if (tempMesh != nullptr)
-		if (!tempMesh->buffers.empty())
+		if (!tempMesh->buffers.empty() && currentMesh != nullptr)
 		{
 			Mesh* mesh = (Mesh*)currentMesh->GetComponent(ComponentType::ComponentType_GEOMETRY);
 			currentMesh->RemoveComponent(mesh);
@@ -459,15 +459,11 @@ void ModuleGeometry::Draw3D(bool fill, bool wire) const
 void ModuleGeometry::LoadDefaultScene()
 {
 
+	currentMesh = new GameObject(App->gameObject->root);
+
 	DistributeFile("assets\\models\\BakerHouse.fbx");
 	DistributeFile("assets\\textures\\Baker_house.dds");
 
-	
-	currentMesh = new GameObject(App->gameObject->root);
-	//MeshInfo info;
-	//info.mesh = LoadMesh("assets/models/BakerHouse.fbx");
-	//currentMesh->AddComponent(ComponentType::ComponentType_GEOMETRY, &info);
-	//textureID = LoadTexture("assets/textures/Baker_house.dds");
 }
 
 ModuleGameObjectManager::ModuleGameObjectManager(Application * app, bool start_enabled) : Module(app, start_enabled)

@@ -75,9 +75,12 @@ Component* GameObject::GetComponent(ComponentType type)
 
 void GameObject::RemoveComponent(Component* component)
 {
-	components.remove(component);
-	delete component;
-	component = nullptr;
+	if (component != nullptr)
+	{
+		components.remove(component);
+		delete component;
+		component = nullptr;
+	}
 }
 
 
