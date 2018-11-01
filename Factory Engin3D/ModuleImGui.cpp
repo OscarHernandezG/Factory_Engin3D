@@ -425,8 +425,11 @@ void ModuleImGui::CreateTransform()
 		Quat rotate;
 
 		if (App->geometry->currentMesh->transform != nullptr)
-		App->geometry->currentMesh->transform->matrix.Decompose(position, rotate, scale);
-
+		{
+			position = App->geometry->currentMesh->transform->GetPos();
+			scale = App->geometry->currentMesh->transform->scale;
+			rotate = App->geometry->currentMesh->transform->GetRotation();
+		}
 		float* vector3 = &App->geometry->currentMesh->transform->GetPos()[0];
 		if (ImGui::InputFloat3("Position", vector3)) {
 			App->geometry->currentMesh->transform->SetPos(vector3[0], vector3[1], vector3[2]);
