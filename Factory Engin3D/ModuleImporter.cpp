@@ -18,6 +18,8 @@ bool ModuleImporter::Init()
 {
 
 	CreateDirectory("Llibrary",NULL);
+	CreateDirectory("Llibrary/Meshes", NULL);
+	CreateDirectory("Llibrary/Textures", NULL);
 
 	return true;
 }
@@ -64,10 +66,10 @@ string ModuleImporter::GetDirectionName(const char* path, LlibraryType type, int
 	case LlibratyType_NONE:
 		break;
 	case LlibraryType_TEXTURE:
+		TextureDirection(goodFile, filePath);
 		break;
 	case LlibraryType_MESH:
 		MeshDirection(filePath, goodFile, number);
-
 		break;
 	case LlibraryType_MATERIAL:
 		break;
@@ -78,8 +80,20 @@ string ModuleImporter::GetDirectionName(const char* path, LlibraryType type, int
 	return goodFile;
 }
 
+void ModuleImporter::TextureDirection(std::string &goodFile, std::string &filePath)
+{
+	goodFile += "Textures/";
+
+	uint initialPos = filePath.find_last_of("\\") + 1;
+	uint finalPos = filePath.find_last_of(".") + 1;
+
+	goodFile += filePath.substr(initialPos, (finalPos - initialPos)) + "dds";
+}
+
 void ModuleImporter::MeshDirection(std::string &filePath, std::string &goodFile, int number)
 {
+	goodFile += "Meshes/";
+
 	uint initialPos = filePath.find_last_of("\\") + 1;
 	uint finalPos = filePath.find_last_of(".");
 

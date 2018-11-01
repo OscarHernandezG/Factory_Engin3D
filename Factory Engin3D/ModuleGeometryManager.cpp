@@ -351,6 +351,20 @@ uint ModuleGeometry::LoadTexture(char* path) const
 
 	if ((bool)ilLoadImage(path))
 	{
+		ilEnable(IL_FILE_OVERWRITE);
+
+		ILuint size;
+		ILubyte *data;
+
+		ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);
+		size = ilSaveL(IL_DDS, NULL, 0);
+		if (size > 0) {
+			data = new ILubyte[size];
+			if (ilSaveL(IL_DDS, data, size) > 0)
+				App->importer->SaveFile(path, size, (char*)data, LlibraryType_TEXTURE);
+		}
+	
+		/////////////////////////////////////////////////
 		ILinfo info;
 		iluGetImageInfo(&info);
 		if (info.Origin == IL_ORIGIN_UPPER_LEFT)

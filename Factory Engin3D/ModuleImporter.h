@@ -23,11 +23,12 @@ public:
 
 	bool Init();
 
-	void SaveFile(const char * path, uint size, char* outputFile, LlibraryType type, int number);
+	void SaveFile(const char * path, uint size, char* outputFile, LlibraryType type, int number = 0);
 
-	char* LoadFile(const char * path, LlibraryType type, int number);
+	char* LoadFile(const char * path, LlibraryType type, int number = 0);
 
-	string GetDirectionName(const char* path, LlibraryType type, int number);
-	void MeshDirection(std::string &filePath, std::string &goodFile, int number);
+	string GetDirectionName(const char* path, LlibraryType type, int number = 0);
+	void TextureDirection(std::string &goodFile, std::string &filePath);
+	void MeshDirection(std::string &filePath, std::string &goodFile, int number = 0);
 };
 #endif
