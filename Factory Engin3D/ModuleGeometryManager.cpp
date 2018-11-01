@@ -228,7 +228,7 @@ void ModuleGeometry::LoadMeshImporter(const char* path, Mesh* tempMesh)
 
 		glGenBuffers(1, &bufferImporter.texture.id);
 		glBindBuffer(GL_ARRAY_BUFFER, bufferImporter.texture.id);
-		glBufferData(GL_ARRAY_BUFFER, bufferImporter.texture.size * sizeof(float) * 2, bufferImporter.texture.buffer, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, bufferImporter.texture.size * sizeof(float), bufferImporter.texture.buffer, GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		i++;
@@ -248,7 +248,8 @@ void ModuleGeometry::UpdateMesh(char* path)
 		if (!tempMesh->buffers.empty())
 		{
 			LoadMeshImporter(path, tempMesh);
-			currentMesh->ClearMesh();
+			if(currentMesh != nullptr)
+				currentMesh->ClearMesh();
 			currentMesh = tempMesh;
 
 		}
@@ -342,7 +343,7 @@ void ModuleGeometry::Lower(float& val1, float val2)
 uint ModuleGeometry::LoadTexture(char* path) const
 {
 	bool isSuccess = true;
-	uint newTextureID = 0;
+	ILuint newTextureID = 0;
 
 	ilGenImages(1, &newTextureID);
 	ilBindImage(newTextureID);
@@ -361,8 +362,7 @@ uint ModuleGeometry::LoadTexture(char* path) const
 			if (ilSaveL(IL_DDS, data, size) > 0)
 				App->importer->SaveFile(path, size, (char*)data, LlibraryType_TEXTURE);
 		}
-	
-		/////////////////////////////////////////////////
+
 		ILinfo info;
 		iluGetImageInfo(&info);
 		if (info.Origin == IL_ORIGIN_UPPER_LEFT)
@@ -448,6 +448,6 @@ void ModuleGeometry::Draw3D(bool fill, bool wire) const
 
 void ModuleGeometry::LoadDefaultScene()
 {
-	currentMesh = LoadMesh("assets\\models\\BakerHouse.fbx");
-	textureID = LoadTexture("assets\\textures\\Baker_house.dds");
+	DistributeFile("assets\\models\\BakerHouse.fbx");
+	DistributeFile("assets\\textures\\Baker_house.dds");
 }
