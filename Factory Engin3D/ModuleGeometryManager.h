@@ -60,33 +60,4 @@ public:
 
 	string destination;
 };
-
-
-class ModuleGameObjectManager : public Module
-{
-public:
-	ModuleGameObjectManager(Application* app, bool start_enabled = true);
-	~ModuleGameObjectManager();
-
-	bool Start();
-
-	update_status PreUpdate(float dt);
-	update_status Update(float dt);
-	update_status PostUpdate(float dt);
-
-	bool CleanUp();
-
-	void CleanAllGameObjects();
-
-	GameObject* CreateGameObject(float3 position = float3::zero, Quat rotation = Quat::identity, float3 scale = float3::one, GameObject* father = nullptr);
-	GameObject* CreateGameObject(TransformInfo* info, GameObject* father = nullptr);
-	GameObject* CreateGameObject(float4x4 transform, GameObject* father = nullptr);
-
-public:
-	GameObject* root;
-
-	list<GameObject*> gameObjects;
-
-	
-};
 #endif

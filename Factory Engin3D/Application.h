@@ -12,6 +12,7 @@
 #include "ModuleImGui.h"
 #include "ModuleGeometryManager.h"
 #include "ModuleImporter.h"
+#include "ModuleGameObjectManager.h"
 
 using namespace std;
 
