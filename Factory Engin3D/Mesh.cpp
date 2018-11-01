@@ -3,10 +3,7 @@
 #include "Application.h"
 #include "ModuleGeometryManager.h"
 
-Mesh::~Mesh()
-{
-	ClearMesh();
-}
+#include "GameObject.h"
 
 void Mesh::InnerRender() const
 {
@@ -37,6 +34,15 @@ void Mesh::InnerRender() const
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		glDisableClientState(GL_VERTEX_ARRAY);	
 	}
+}
+
+float3 Mesh::GetPos()
+{
+	if (gameObject != nullptr)
+	{
+		return gameObject->GetPos();
+	}
+	return float3::zero;
 }
 
 void Mesh::ClearMesh()
