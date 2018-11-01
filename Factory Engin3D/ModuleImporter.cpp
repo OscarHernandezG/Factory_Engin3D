@@ -34,9 +34,9 @@ void ModuleImporter::SaveFile(const char* path, uint size, char* outputFile, Lli
 	}
 }
 
-char* ModuleImporter::LoadFile(const char* path, LlibraryType type)
+char* ModuleImporter::LoadFile(const char* path, LlibraryType type, int number)
 {
-	string direction = GetDirectionName(path, type,0);
+	string direction = GetDirectionName(path, type, number);
 	char *text = nullptr;
 	ifstream loadFile(direction.c_str(), ios::out | ios::binary);
 	if (loadFile.is_open())

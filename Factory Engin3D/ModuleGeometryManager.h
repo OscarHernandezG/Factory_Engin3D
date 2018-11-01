@@ -25,7 +25,7 @@ public:
 
 	void SaveMeshImporter(MeshBuffer newCurrentBuffer, const char * path, int number);
 
-	MeshBuffer LoadMeshImporter(const char * path);
+	void LoadMeshImporter(const char * path, Mesh * tempMesh);
 
 	void UpdateMesh(char * path);
 

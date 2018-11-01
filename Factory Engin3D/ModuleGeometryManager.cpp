@@ -102,14 +102,8 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 
 					LOG("New mesh loaded with %d vertices", newCurrentBuffer.vertex.size);
 
-					/*Dont do it now
-					glGenBuffers(1, (GLuint*)&(newCurrentBuffer.vertex.id));
-					glBindBuffer(GL_ARRAY_BUFFER, newCurrentBuffer.vertex.id);
-					glBufferData(GL_ARRAY_BUFFER, sizeof(float) * newCurrentBuffer.vertex.size, newCurrentBuffer.vertex.buffer, GL_STATIC_DRAW);
-					*/
 					if (newMesh->HasFaces())
 					{
-
 						numFaces += newMesh->mNumFaces;
 						newCurrentBuffer.index.size = newMesh->mNumFaces * 3;
 						newCurrentBuffer.index.buffer = new uint[newCurrentBuffer.index.size];
@@ -124,11 +118,6 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 							}
 
 						}
-						/*Dont do it now
-						glGenBuffers(1, (GLuint*)&(newCurrentBuffer.index.id));
-						glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, newCurrentBuffer.index.id);
-						glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * newCurrentBuffer.index.size, newCurrentBuffer.index.buffer, GL_STATIC_DRAW);
-						*/
 					}
 
 					if (newMesh->HasTextureCoords(0))
@@ -141,21 +130,12 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 							newCurrentBuffer.texture.buffer[currVertices * 2 + 1] = newMesh->mTextureCoords[0][currVertices].y;
 						}
 						memcpy(newCurrentBuffer.texture.buffer, newMesh->mTextureCoords[0], sizeof(float) * 2 * newMesh->mNumVertices);
-
-						/*Dont do it now
-						glGenBuffers(1, &newCurrentBuffer.texture.id);
-						glBindBuffer(GL_ARRAY_BUFFER, newCurrentBuffer.texture.id);
-						glBufferData(GL_ARRAY_BUFFER, newMesh->mNumVertices * sizeof(float) * 2, textCoords, GL_STATIC_DRAW);
-						glBindBuffer(GL_ARRAY_BUFFER, 0);
-						*/
-
 					}
 
 					mesh->buffers.push_back(newCurrentBuffer);
 
 					SaveMeshImporter(newCurrentBuffer,path,i);
 				}
-///
 			currentMeshBB = LoadBoundingBox(mesh);
 			LOG("Loaded geometry with %i faces", numFaces);
 			}
@@ -205,51 +185,60 @@ void ModuleGeometry::SaveMeshImporter(MeshBuffer newCurrentBuffer, const char* p
 	delete[] exporter;
 }
 
-MeshBuffer ModuleGeometry::LoadMeshImporter(const char* path)
+void ModuleGeometry::LoadMeshImporter(const char* path, Mesh* tempMesh)
 {
-	char* buffer = App->importer->LoadFile(path, LlibraryType_MESH);
-	char* cursor = buffer;
-	MeshBuffer bufferImporter;
+	int i = 0;
+	char* buffer = App->importer->LoadFile(path, LlibraryType_MESH, i);
 
-	uint ranges[3];
+	while (buffer != nullptr)
+	{
+		MeshBuffer bufferImporter;
+		char* cursor = buffer;
 
-	uint bytes = sizeof(ranges);
-	memcpy(ranges, cursor, bytes);
+		uint ranges[3];
 
-	bufferImporter.index.size = ranges[0];
-	bufferImporter.vertex.size = ranges[1];
-	bufferImporter.texture.size = ranges[2];
+		uint bytes = sizeof(ranges);
+		memcpy(ranges, cursor, bytes);
 
-	cursor += bytes;
-	bytes = sizeof(uint)* bufferImporter.index.size;
-	bufferImporter.index.buffer = new uint[bufferImporter.index.size];
-	memcpy(bufferImporter.index.buffer, cursor, bytes);
+		bufferImporter.index.size = ranges[0];
+		bufferImporter.vertex.size = ranges[1];
+		bufferImporter.texture.size = ranges[2];
 
-	glGenBuffers(1, (GLuint*)&(bufferImporter.index.id));
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferImporter.index.id);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * bufferImporter.index.size, bufferImporter.index.buffer, GL_STATIC_DRAW);
+		cursor += bytes;
+		bytes = sizeof(uint)* bufferImporter.index.size;
+		bufferImporter.index.buffer = new uint[bufferImporter.index.size];
+		memcpy(bufferImporter.index.buffer, cursor, bytes);
 
-	cursor += bytes;
-	bytes = sizeof(float)* bufferImporter.vertex.size;
-	bufferImporter.vertex.buffer = new float[bufferImporter.vertex.size];
-	memcpy(bufferImporter.vertex.buffer, cursor, bytes);
+		glGenBuffers(1, (GLuint*)&(bufferImporter.index.id));
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferImporter.index.id);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * bufferImporter.index.size, bufferImporter.index.buffer, GL_STATIC_DRAW);
 
-	glGenBuffers(1, (GLuint*)&(bufferImporter.vertex.id));
-	glBindBuffer(GL_ARRAY_BUFFER, bufferImporter.vertex.id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * bufferImporter.vertex.size, bufferImporter.vertex.buffer, GL_STATIC_DRAW);
+		cursor += bytes;
+		bytes = sizeof(float)* bufferImporter.vertex.size;
+		bufferImporter.vertex.buffer = new float[bufferImporter.vertex.size];
+		memcpy(bufferImporter.vertex.buffer, cursor, bytes);
 
-	cursor += bytes;
-	bytes = sizeof(float)* bufferImporter.texture.size;
-	bufferImporter.texture.buffer = new float[bufferImporter.texture.size];
-	memcpy(bufferImporter.texture.buffer, cursor, bytes);
+		glGenBuffers(1, (GLuint*)&(bufferImporter.vertex.id));
+		glBindBuffer(GL_ARRAY_BUFFER, bufferImporter.vertex.id);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * bufferImporter.vertex.size, bufferImporter.vertex.buffer, GL_STATIC_DRAW);
 
-	glGenBuffers(1, &bufferImporter.texture.id);
-	glBindBuffer(GL_ARRAY_BUFFER, bufferImporter.texture.id);
-	glBufferData(GL_ARRAY_BUFFER, bufferImporter.texture.size * sizeof(float) * 2, bufferImporter.texture.buffer, GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+		cursor += bytes;
+		bytes = sizeof(float)* bufferImporter.texture.size;
+		bufferImporter.texture.buffer = new float[bufferImporter.texture.size];
+		memcpy(bufferImporter.texture.buffer, cursor, bytes);
+
+		glGenBuffers(1, &bufferImporter.texture.id);
+		glBindBuffer(GL_ARRAY_BUFFER, bufferImporter.texture.id);
+		glBufferData(GL_ARRAY_BUFFER, bufferImporter.texture.size * sizeof(float) * 2, bufferImporter.texture.buffer, GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		i++;
+		buffer = App->importer->LoadFile(path, LlibraryType_MESH, i);
+		tempMesh->buffers.push_back(bufferImporter);
+
+	}
 
 	delete[] buffer;
-	return bufferImporter;
 }
 
 void ModuleGeometry::UpdateMesh(char* path)
@@ -259,7 +248,7 @@ void ModuleGeometry::UpdateMesh(char* path)
 	if (tempMesh != nullptr)
 		if (!tempMesh->buffers.empty())
 		{
-			tempMesh->buffers.push_back(LoadMeshImporter(path));
+			LoadMeshImporter(path, tempMesh);
 			currentMesh->ClearMesh();
 			currentMesh = tempMesh;
 
