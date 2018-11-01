@@ -11,6 +11,8 @@ Application::Application()
 	gui = new ModuleImGui(this);
 	geometry = new ModuleGeometry(this);
 	gameObject = new ModuleGameObjectManager(this);
+	importer = new ModuleImporter(this);
+
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -22,6 +24,7 @@ Application::Application()
 	AddModule(input);
 	
 	// Scenes
+	AddModule(importer);
 	AddModule(sceneIntro);
 
 	// Managers

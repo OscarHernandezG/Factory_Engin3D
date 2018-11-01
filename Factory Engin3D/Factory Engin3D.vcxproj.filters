@@ -90,30 +90,6 @@
     <ClInclude Include="Timer.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
-    <ClInclude Include="imconfig.h">
-      <Filter>Sources\Containers\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui.h">
-      <Filter>Sources\Containers\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui_impl_opengl2.h">
-      <Filter>Sources\Containers\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui_impl_sdl.h">
-      <Filter>Sources\Containers\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui_internal.h">
-      <Filter>Sources\Containers\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="imstb_rectpack.h">
-      <Filter>Sources\Containers\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="imstb_textedit.h">
-      <Filter>Sources\Containers\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="imstb_truetype.h">
-      <Filter>Sources\Containers\ImGui</Filter>
-    </ClInclude>
     <ClInclude Include="MathGeoLib\MathGeoLib.h">
       <Filter>Sources\Containers\MathGeoLib</Filter>
     </ClInclude>
@@ -342,8 +318,35 @@
     <ClInclude Include="Geometry.h">
       <Filter>Sources\GameObject\Geometries</Filter>
     </ClInclude>
-    <ClInclude Include="Importer.h">
-      <Filter>Sources\Helpers</Filter>
+    <ClInclude Include="imgui-1.65\imconfig.h">
+      <Filter>Sources\Containers\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui-1.65\imgui.h">
+      <Filter>Sources\Containers\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui-1.65\imgui_impl_opengl2.h">
+      <Filter>Sources\Containers\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui-1.65\imgui_impl_sdl.h">
+      <Filter>Sources\Containers\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui-1.65\imgui_internal.h">
+      <Filter>Sources\Containers\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui-1.65\imstb_rectpack.h">
+      <Filter>Sources\Containers\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui-1.65\imstb_textedit.h">
+      <Filter>Sources\Containers\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui-1.65\imstb_truetype.h">
+      <Filter>Sources\Containers\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleImporter.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Quadtree.h">
+      <Filter>Sources\Tools</Filter>
     </ClInclude>
     <ClInclude Include="Light.h">
       <Filter>Sources\GameObject\Component</Filter>
@@ -388,24 +391,6 @@
     </ClCompile>
     <ClCompile Include="ModuleSceneIntro.cpp">
       <Filter>Sources\Modules\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui.cpp">
-      <Filter>Sources\Containers\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_demo.cpp">
-      <Filter>Sources\Containers\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_draw.cpp">
-      <Filter>Sources\Containers\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_impl_opengl2.cpp">
-      <Filter>Sources\Containers\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_impl_sdl.cpp">
-      <Filter>Sources\Containers\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_widgets.cpp">
-      <Filter>Sources\Containers\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="MathGeoLib\Algorithm\Random\LCG.cpp">
       <Filter>Sources\Containers\MathGeoLib\Algorithm\Random</Filter>
@@ -520,6 +505,29 @@
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
       <Filter>Sources\GameObject</Filter>
+    <ClCompile Include="imgui-1.65\imgui.cpp">
+      <Filter>Sources\Containers\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui-1.65\imgui_demo.cpp">
+      <Filter>Sources\Containers\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui-1.65\imgui_draw.cpp">
+      <Filter>Sources\Containers\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui-1.65\imgui_impl_opengl2.cpp">
+      <Filter>Sources\Containers\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui-1.65\imgui_impl_sdl.cpp">
+      <Filter>Sources\Containers\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui-1.65\imgui_widgets.cpp">
+      <Filter>Sources\Containers\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleImporter.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Quadtree.cpp">
+      <Filter>Sources\Tools</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

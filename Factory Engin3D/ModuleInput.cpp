@@ -4,8 +4,10 @@
 
 #include "ModuleGeometryManager.h"
 
-#include "imgui.h"
-#include "imgui_impl_sdl.h"
+#include "imgui-1.65/imgui.h"
+#include "imgui-1.65/imgui_impl_sdl.h"
+
+#include <fstream>
 
 #include	"SDL/include/SDL_syswm.h"
 
@@ -128,7 +130,7 @@ update_status ModuleInput::PreUpdate(float dt)
 			}
 			break;
 			case SDL_DROPFILE:
-				DistributeFile(e.drop.file);
+				App->geometry->DistributeFile(e.drop.file);
 
 				break;
 			default:
@@ -140,20 +142,6 @@ update_status ModuleInput::PreUpdate(float dt)
 		return UPDATE_STOP;
 
 	return UPDATE_CONTINUE;
-}
-
-void ModuleInput::DistributeFile(char* file) 
-{
-	//Todo clean
-
-	string filePath(file);
-	string extension = filePath.substr(filePath.size() - 3, 3);
-
-	if (!extension.compare("fbx") || !extension.compare("obj"))
-		App->geometry->UpdateMesh(file);
-
-	else if (!extension.compare("png") || !extension.compare("dds"))
-		App->geometry->UpdateTexture(file);
 }
 
 // Called before quitting

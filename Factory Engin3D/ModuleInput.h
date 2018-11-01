@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __ModuleInput_H__
+#define __ModuleInput_H__
 #include "Module.h"
 #include "Globals.h"
 
@@ -21,7 +22,6 @@ public:
 
 	bool Init();
 	update_status PreUpdate(float dt);
-	void DistributeFile(char * file);
 	bool CleanUp();
 
 	KEY_STATE GetKey(int id) const
@@ -80,3 +80,4 @@ private:
 	bool mousePressed = false;
 	//int mouse_z_motion;
 };
+#endif

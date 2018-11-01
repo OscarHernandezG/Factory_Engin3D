@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "ModuleGeometryManager.h"
+#include "ModuleImporter.h"
 
 #include "glew-2.1.0/include/GL/glew.h"
 
@@ -12,6 +13,7 @@
 #include "DevIL/includex86/IL/ilu.h"
 #include "DevIL/includex86/IL/ilut.h"
 
+#include <fstream>
 
 #pragma comment( lib, "DevIL/libx86/DevIL.lib" )
 #pragma comment( lib, "DevIL/libx86/ILU.lib" )
@@ -61,6 +63,21 @@ bool ModuleGeometry::CleanUp()
 	return true;
 }
 
+void ModuleGeometry::DistributeFile(char* file)
+{
+	string filePath(file);
+	string extension = filePath.substr(filePath.find_last_of(".") + 1);
+
+
+	if (!extension.compare("fbx") || !extension.compare("obj"))
+	{
+		UpdateMesh(file);
+	}
+	else if (!extension.compare("png") || !extension.compare("dds") || !extension.compare("jpg") || !extension.compare("jpeg"))
+		UpdateTexture(file);
+}
+
+
 Mesh* ModuleGeometry::LoadMesh(char* path)
 {
 	Mesh* mesh = nullptr;
@@ -75,74 +92,54 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 			{
 				mesh = new Mesh();
 				numFaces = 0u;
-
 				for (int i = 0; i < scene->mNumMeshes; ++i)
 				{
-					aiMesh* currentMesh = scene->mMeshes[i];
+					aiMesh* newMesh = scene->mMeshes[i];
 
 					MeshBuffer newCurrentBuffer;
+
 					newCurrentBuffer.vertex.size = currentMesh->mNumVertices * 3;
 					newCurrentBuffer.vertex.buffer = new float[newCurrentBuffer.vertex.size];
 
-					memcpy(newCurrentBuffer.vertex.buffer, currentMesh->mVertices, sizeof(float) * newCurrentBuffer.vertex.size);
-
-					for (int aaa = 0; aaa < newCurrentBuffer.vertex.size / 3; ++aaa)
-					{
-						LOG("X = %.2f, Y = %.2f, Z = %.2f", newCurrentBuffer.vertex.buffer[aaa * 3 + 0], newCurrentBuffer.vertex.buffer[aaa * 3 + 1], newCurrentBuffer.vertex.buffer[aaa * 3 + 2]);
-					}
+					memcpy(newCurrentBuffer.vertex.buffer, newMesh->mVertices, sizeof(float) * newCurrentBuffer.vertex.size);
 
 					LOG("New mesh loaded with %d vertices", newCurrentBuffer.vertex.size);
 
-					glGenBuffers(1, (GLuint*)&(newCurrentBuffer.vertex.id));
-					glBindBuffer(GL_ARRAY_BUFFER, newCurrentBuffer.vertex.id);
-					glBufferData(GL_ARRAY_BUFFER, sizeof(float) * newCurrentBuffer.vertex.size, newCurrentBuffer.vertex.buffer, GL_STATIC_DRAW);
-
-					if (currentMesh->HasFaces())
+					if (newMesh->HasFaces())
 					{
-
-						numFaces += currentMesh->mNumFaces;
-						newCurrentBuffer.index.size = currentMesh->mNumFaces * 3;
+						numFaces += newMesh->mNumFaces;
+						newCurrentBuffer.index.size = newMesh->mNumFaces * 3;
 						newCurrentBuffer.index.buffer = new uint[newCurrentBuffer.index.size];
 
-						for (uint index = 0; index < currentMesh->mNumFaces; ++index)
+						for (uint index = 0; index < newMesh->mNumFaces; ++index)
 						{
-							if (currentMesh->mFaces[index].mNumIndices != 3)
+							if (newMesh->mFaces[index].mNumIndices != 3)
 								LOG("WARNING, geometry faces != 3 indices")
 							else
 							{
-								LOG("X = %i, Y = %i, Z = %i", currentMesh->mFaces[index].mIndices[0], currentMesh->mFaces[index].mIndices[1], currentMesh->mFaces[index].mIndices[2]);
-								memcpy(&newCurrentBuffer.index.buffer[index * 3], currentMesh->mFaces[index].mIndices, sizeof(uint) * 3);
+								memcpy(&newCurrentBuffer.index.buffer[index * 3], newMesh->mFaces[index].mIndices, sizeof(uint) * 3);
 							}
+
 						}
-						glGenBuffers(1, (GLuint*)&(newCurrentBuffer.index.id));
-						glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, newCurrentBuffer.index.id);
-						glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * newCurrentBuffer.index.size, newCurrentBuffer.index.buffer, GL_STATIC_DRAW);
 					}
 
-					if (currentMesh->HasTextureCoords(0))
+					if (newMesh->HasTextureCoords(0))
 					{
-						float* textCoords = new float[currentMesh->mNumVertices * 2];
-						for (int currVertices = 0; currVertices < currentMesh->mNumVertices; ++currVertices)
+						newCurrentBuffer.texture.size = newMesh->mNumVertices * 2;
+						newCurrentBuffer.texture.buffer = new float[newCurrentBuffer.texture.size];
+						for (int currVertices = 0; currVertices < newMesh->mNumVertices; ++currVertices)
 						{
-							textCoords[currVertices * 2] = currentMesh->mTextureCoords[0][currVertices].x;
-							textCoords[currVertices * 2 + 1] = currentMesh->mTextureCoords[0][currVertices].y;
+							memcpy(&newCurrentBuffer.texture.buffer[currVertices * 2], &newMesh->mTextureCoords[0][currVertices], sizeof(float) * 2);
 						}
 
-						glGenBuffers(1, &newCurrentBuffer.texture.id);
-						glBindBuffer(GL_ARRAY_BUFFER, newCurrentBuffer.texture.id);
-						glBufferData(GL_ARRAY_BUFFER, currentMesh->mNumVertices * sizeof(float) * 2, textCoords, GL_STATIC_DRAW);
-						glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-
-						delete[] textCoords;
 					}
-
 
 					mesh->buffers.push_back(newCurrentBuffer);
-				}
 
-				currentMeshBB = LoadBoundingBox(mesh);
-				LOG("Loaded geometry with %i faces", numFaces);
+					SaveMeshImporter(newCurrentBuffer,path,i);
+				}
+			currentMeshBB = LoadBoundingBox(mesh);
+			LOG("Loaded geometry with %i faces", numFaces);
 			}
 
 			aiReleaseImport(scene);
@@ -155,19 +152,115 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 	return mesh;
 }
 
+void ModuleGeometry::SaveMeshImporter(MeshBuffer newCurrentBuffer, const char* path, int number)
+{
+	uint ranges[3] = { newCurrentBuffer.index.size, newCurrentBuffer.vertex.size, newCurrentBuffer.texture.size};
+
+	float size = sizeof(ranges) + sizeof(uint) * newCurrentBuffer.index.size + sizeof(float) * newCurrentBuffer.vertex.size * 3;
+
+	if(newCurrentBuffer.texture.buffer != nullptr)
+		size += sizeof(float) * newCurrentBuffer.texture.size * 2;
+
+	char* exporter = new char[size];
+	char* cursor = exporter;
+
+	uint bytes = sizeof(ranges);
+	memcpy(cursor, ranges, bytes);
+
+	cursor += bytes;
+	bytes = sizeof(uint)* newCurrentBuffer.index.size;
+	memcpy(cursor, newCurrentBuffer.index.buffer, bytes);
+
+	cursor += bytes;
+	bytes = sizeof(float)* newCurrentBuffer.vertex.size;
+	memcpy(cursor, newCurrentBuffer.vertex.buffer, bytes);
+
+	if (newCurrentBuffer.texture.buffer != nullptr)
+	{
+		cursor += bytes;
+		bytes = sizeof(float)* newCurrentBuffer.texture.size;
+		memcpy(cursor, newCurrentBuffer.texture.buffer, bytes);
+	}
+
+	App->importer->SaveFile(path,size,exporter, LlibraryType_MESH, number);
+	
+	delete[] exporter;
+}
+
+void ModuleGeometry::LoadMeshImporter(const char* path, Mesh* tempMesh)
+{
+	int i = 0;
+	char* buffer = App->importer->LoadFile(path, LlibraryType_MESH, i);
+
+	while (buffer != nullptr)
+	{
+		MeshBuffer bufferImporter;
+		char* cursor = buffer;
+
+		uint ranges[3];
+
+		uint bytes = sizeof(ranges);
+		memcpy(ranges, cursor, bytes);
+
+		bufferImporter.index.size = ranges[0];
+		bufferImporter.vertex.size = ranges[1];
+		bufferImporter.texture.size = ranges[2];
+
+		cursor += bytes;
+		bytes = sizeof(uint)* bufferImporter.index.size;
+		bufferImporter.index.buffer = new uint[bufferImporter.index.size];
+		memcpy(bufferImporter.index.buffer, cursor, bytes);
+
+		glGenBuffers(1, (GLuint*)&(bufferImporter.index.id));
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferImporter.index.id);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * bufferImporter.index.size, bufferImporter.index.buffer, GL_STATIC_DRAW);
+
+		cursor += bytes;
+		bytes = sizeof(float)* bufferImporter.vertex.size;
+		bufferImporter.vertex.buffer = new float[bufferImporter.vertex.size];
+		memcpy(bufferImporter.vertex.buffer, cursor, bytes);
+
+		glGenBuffers(1, (GLuint*)&(bufferImporter.vertex.id));
+		glBindBuffer(GL_ARRAY_BUFFER, bufferImporter.vertex.id);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * bufferImporter.vertex.size, bufferImporter.vertex.buffer, GL_STATIC_DRAW);
+
+		cursor += bytes;
+		bytes = sizeof(float)* bufferImporter.texture.size;
+		bufferImporter.texture.buffer = new float[bufferImporter.texture.size];
+		memcpy(bufferImporter.texture.buffer, cursor, bytes);
+
+		glGenBuffers(1, &bufferImporter.texture.id);
+		glBindBuffer(GL_ARRAY_BUFFER, bufferImporter.texture.id);
+		glBufferData(GL_ARRAY_BUFFER, bufferImporter.texture.size * sizeof(float), bufferImporter.texture.buffer, GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		i++;
+		buffer = App->importer->LoadFile(path, LlibraryType_MESH, i);
+		tempMesh->buffers.push_back(bufferImporter);
+
+	}
+
+	delete[] buffer;
+}
+
 void ModuleGeometry::UpdateMesh(char* path)
 {
 	Mesh* tempMesh = LoadMesh(path);
+
 	if (tempMesh != nullptr)
 		if (!tempMesh->buffers.empty())
 		{
 			Mesh* mesh = (Mesh*)currentMesh->GetComponent(ComponentType::ComponentType_GEOMETRY);
 			currentMesh->RemoveComponent(mesh);
 
+			LoadMeshImporter(path, tempMesh);
+	
 			MeshInfo info;
 			info.mesh = tempMesh;
 			currentMesh->AddComponent(ComponentType_GEOMETRY, &info);
 		}
+
+	
 }
 
 AABB* ModuleGeometry::LoadBoundingBox(Mesh* mesh)
@@ -243,7 +336,6 @@ float3 ModuleGeometry::GetCurrentMeshPivot() const
 	return currentMesh->GetPos();
 }
 
-
 void ModuleGeometry::Higher(float& val1, float val2)
 {
 	val1 = val1 > val2 ? val1 : val2;
@@ -254,22 +346,29 @@ void ModuleGeometry::Lower(float& val1, float val2)
 	val1 = val1 < val2 ? val1 : val2;
 }
 
-//Geometry* ModuleGeometry::LoadPrimitive(PrimitiveTypes type)
-//{
-//	//TODO
-//	return nullptr;
-//}
-
 uint ModuleGeometry::LoadTexture(char* path) const
 {
 	bool isSuccess = true;
-	uint newTextureID = 0;
+	ILuint newTextureID = 0;
 
 	ilGenImages(1, &newTextureID);
 	ilBindImage(newTextureID);
 
 	if ((bool)ilLoadImage(path))
 	{
+		ilEnable(IL_FILE_OVERWRITE);
+
+		ILuint size;
+		ILubyte *data;
+
+		ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);
+		size = ilSaveL(IL_DDS, NULL, 0);
+		if (size > 0) {
+			data = new ILubyte[size];
+			if (ilSaveL(IL_DDS, data, size) > 0)
+				App->importer->SaveFile(path, size, (char*)data, LlibraryType_TEXTURE);
+		}
+
 		ILinfo info;
 		iluGetImageInfo(&info);
 		if (info.Origin == IL_ORIGIN_UPPER_LEFT)
@@ -359,11 +458,16 @@ void ModuleGeometry::Draw3D(bool fill, bool wire) const
 
 void ModuleGeometry::LoadDefaultScene()
 {
+
+	DistributeFile("assets\\models\\BakerHouse.fbx");
+	DistributeFile("assets\\textures\\Baker_house.dds");
+
+	
 	currentMesh = new GameObject(App->gameObject->root);
-	MeshInfo info;
-	info.mesh = LoadMesh("assets/models/BakerHouse.fbx");
-	currentMesh->AddComponent(ComponentType::ComponentType_GEOMETRY, &info);
-	textureID = LoadTexture("assets/textures/Baker_house.dds");
+	//MeshInfo info;
+	//info.mesh = LoadMesh("assets/models/BakerHouse.fbx");
+	//currentMesh->AddComponent(ComponentType::ComponentType_GEOMETRY, &info);
+	//textureID = LoadTexture("assets/textures/Baker_house.dds");
 }
 
 ModuleGameObjectManager::ModuleGameObjectManager(Application * app, bool start_enabled) : Module(app, start_enabled)
@@ -438,4 +542,6 @@ GameObject* ModuleGameObjectManager::CreateGameObject(float3 position, Quat rota
 
 	return newGameObject;
 }
+
+
 

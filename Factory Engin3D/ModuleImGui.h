@@ -1,8 +1,10 @@
-#pragma once
+#ifndef __ModuleImGui_H__
+#define __ModuleImGui_H__
+
 #include "Module.h"
 #include "Globals.h"
 
-#include "imgui.h"
+#include "imgui-1.65/imgui.h"
 
 #include "parson/parson.h"
 #include "pcg-c-0.94/include/pcg_variants.h"
@@ -122,3 +124,4 @@ public:
 
 	bool warningDialoge = false;
 };
+#endif

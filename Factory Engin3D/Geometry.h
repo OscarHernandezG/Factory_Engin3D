@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __ModuleGeometry_H__
+#define __ModuleGeometry_H__
 #include "Globals.h"
 
 #include "MathGeoLib/MathGeoLib.h"
@@ -132,4 +133,4 @@ public:
 	uint myVertices = 0u;
 
 };
-
+#endif

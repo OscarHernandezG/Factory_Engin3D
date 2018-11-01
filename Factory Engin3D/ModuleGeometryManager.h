@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __ModuleGeometryManager_H__
+#define __ModuleGeometryManager_H__
 #include "Module.h"
 
 #include "Transform.h"
@@ -19,7 +20,13 @@ public:
 	void Draw3D(bool fill = true, bool wire = false) const;
 	bool CleanUp();
 
+	void DistributeFile(char * file);
+
 	Mesh* LoadMesh(char* path);
+
+	void SaveMeshImporter(MeshBuffer newCurrentBuffer, const char * path, int number);
+
+	void LoadMeshImporter(const char * path, Mesh * tempMesh);
 
 	void UpdateMesh(char * path);
 
@@ -50,6 +57,8 @@ public:
 	char* droppedFileDir = nullptr;
 
 	AABB* currentMeshBB = nullptr;
+
+	string destination;
 };
 
 
@@ -80,3 +89,4 @@ public:
 
 	
 };
+#endif

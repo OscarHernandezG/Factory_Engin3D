@@ -1,5 +1,6 @@
+#ifndef __Light_H__
+#define __Light_H__
 
-#pragma once
 #include "Color.h"
 #include "MathGeoLib/Math/float3.h"
 
@@ -20,8 +21,6 @@ struct Light
 	int ref;
 	bool on;
 };
-
-
 
 
 // ------------------------------------------------------------
@@ -61,3 +60,6 @@ public:
 		
 	AABB boundingBox;
 };
+
+#endif
+

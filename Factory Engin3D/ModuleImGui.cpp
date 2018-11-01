@@ -3,9 +3,9 @@
 #include "ModuleImGui.h"
 #include "ModuleWindow.h"
 
-#include "imgui_impl_sdl.h"
-#include "imgui_impl_opengl2.h"
-#include "imgui_internal.h"
+#include "imgui-1.65/imgui_impl_sdl.h"
+#include "imgui-1.65/imgui_impl_opengl2.h"
+#include "imgui-1.65/imgui_internal.h"
 #include "SDL/include/SDL_opengl.h"
 
 #include "pcg-c-0.94/extras/entropy.h"
