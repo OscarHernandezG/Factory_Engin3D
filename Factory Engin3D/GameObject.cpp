@@ -2,7 +2,7 @@
 #include "pcg-c-0.94/extras/entropy.h"
 
 
-GameObject::GameObject(GameObject* father)
+GameObject::GameObject(GameObject * father, char * name)
 {
 	TransformInfo* info = new TransformInfo();
 	info->position = float3::zero;
@@ -14,9 +14,11 @@ GameObject::GameObject(GameObject* father)
 	delete info;
 
 	this->father = father;
+	if (name != nullptr)
+	this->name = name;
 }
 
-GameObject::GameObject(float3 position, Quat rotation, float3 scale, GameObject* father) : father(father)
+GameObject::GameObject(float3 position, Quat rotation, float3 scale, GameObject * father, char * name)
 {
 	TransformInfo* info = new TransformInfo();
 	info->position = position;
@@ -28,7 +30,10 @@ GameObject::GameObject(float3 position, Quat rotation, float3 scale, GameObject*
 	delete info;
 
 	this->father = father;
+
+	this->name = name;
 }
+
 
 GameObject::~GameObject()
 {
