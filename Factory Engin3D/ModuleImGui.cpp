@@ -45,31 +45,31 @@ update_status ModuleImGui::PreUpdate(float dt)
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
 
-	if (showDemoWindow)
-		ImGui::ShowDemoWindow(&showDemoWindow);
+	//if (showDemoWindow)
+	//	ImGui::ShowDemoWindow(&showDemoWindow);
 
-	if (exampleWindow)
-		CreateExampleWindow();
+	//if (exampleWindow)
+	//	CreateExampleWindow();
 
-	if (mathGeoLibWindow)
-		CreateMGLWindow();
+	//if (mathGeoLibWindow)
+	//	CreateMGLWindow();
 
-	if (randomNumberWindow)
-		CreateRandomNumberWindow();
+	//if (randomNumberWindow)
+	//	CreateRandomNumberWindow();
 
-	if (aboutWindow)
-		CreateAboutWindow();
+	//if (aboutWindow)
+	//	CreateAboutWindow();
 
-	if (configurationWindow)
-		CreateConfigWindow();
+	//if (configurationWindow)
+	//	CreateConfigWindow();
 
-	if (consoleWindow)
-		CreateConsole();
+	//if (consoleWindow)
+	//	CreateConsole();
 
-	if (transformWindow)
-		CreateTransform();
+	//if (transformWindow)
+	//	CreateTransform();
 
-	status = CreateMainMenuBar();
+	//status = CreateMainMenuBar();
 
 	created = true;
 
@@ -669,15 +669,19 @@ void ModuleImGui::CreateTextureHeader()
 {
 	if (App->geometry->textureID != 0)
 	{
-		ImGui::Text("Texture id: %i", App->geometry->textureID);
-		ImGui::Text("Texture used by %i meshes", App->geometry->currentMesh->buffers.size());
-		ImGui::Text("UV Preview");
-		ImGui::Separator();
-		ImGui::Image((void*)App->geometry->textureID, { 200,200 });
-		if (ImGui::Button("Remove Texture", { 125,25 }))
+		Mesh* currentGeometry = (Mesh*)App->geometry->currentMesh->GetComponent(ComponentType_GEOMETRY);
+		if (currentGeometry != nullptr)
 		{
-			glDeleteTextures(1, &App->geometry->textureID);
-			App->geometry->textureID = 0;
+			ImGui::Text("Texture id: %i", App->geometry->textureID);
+			ImGui::Text("Texture used by %i meshes", currentGeometry->buffers.size());
+			ImGui::Text("UV Preview");
+			ImGui::Separator();
+			ImGui::Image((void*)App->geometry->textureID, { 200,200 });
+			if (ImGui::Button("Remove Texture", { 125,25 }))
+			{
+				glDeleteTextures(1, &App->geometry->textureID);
+				App->geometry->textureID = 0;
+			}
 		}
 	}
 	else

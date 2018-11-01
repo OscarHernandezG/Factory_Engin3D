@@ -39,12 +39,12 @@ public:
 	~Transform() {}
 
 
-	void			SetPos(float x, float y, float z);
-	void			SetRotation(float angle, const float3 &u);
-	void			SetScale(float x, float y, float z);
-	void			SetIdentity();
+	void		SetPos(float x, float y, float z);
+	void		SetRotation(float angle, const float3 &u);
+	void		SetScale(float x, float y, float z);
+	void		SetIdentity();
 
-	float3			GetPos() const;
+	float3		GetPos() const;
 
 public:
 	float4x4 matrix;
