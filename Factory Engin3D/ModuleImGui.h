@@ -124,4 +124,4 @@ public:
 
 	bool warningDialoge = false;
 };
-#endif
+#endif // !__ModuleImGui_H__

@@ -133,4 +133,4 @@ public:
 	uint myVertices = 0u;
 
 };
-#endif
+#endif // !__ModuleGeometry_H__

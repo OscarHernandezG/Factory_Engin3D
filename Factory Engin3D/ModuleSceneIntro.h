@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __ModuleSceneIntro_H__
+#define __ModuleSceneIntro_H__
+
 #include "Module.h"
 #include "Globals.h"
 #include "Mesh.h"
@@ -22,3 +24,4 @@ public:
 
 	char* droppedFileDir = nullptr;
 };
+#endif // !__ModuleSceneIntro_H__

@@ -45,4 +45,4 @@ public:
 	std::vector<MeshBuffer> buffers;
 
 };
-#endif
+#endif // !__Mesh_H__

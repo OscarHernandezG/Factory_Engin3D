@@ -60,4 +60,4 @@ public:
 
 	string destination;
 };
-#endif
+#endif // !__ModuleGeometryManager_H__

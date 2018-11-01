@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __ModuleGameObjectManager_H__
+#define __ModuleGameObjectManager_H__
+
 #include "Module.h"
 
 #include "Transform.h"
@@ -27,5 +29,5 @@ public:
 
 	list<GameObject*> gameObjects;
 
-
 };
+#endif // !__ModuleGameObjectManager_H__

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __Globals_H__
+#define __Globals_H__
 
 // Warning disabled ---
 #pragma warning( disable : 4577 ) // Warning that exceptions are disabled
@@ -38,3 +39,5 @@ enum update_status
 #define WIN_FULLSCREEN_DESKTOP false
 #define VSYNC false
 #define TITLE "Factory Engin3D"
+
+#endif // ! __Globals_H__

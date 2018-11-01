@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __GameObject_H__
+#define __GameObject_H__
+
 #include "Globals.h"
 #include "Component.h"
 #include "Mesh.h"
@@ -53,3 +55,4 @@ public:
 	int UID = 0;
 	pcg32_random_t rng;
 };
+#endif // !__GameObject_H__

@@ -1,5 +1,5 @@
-#ifndef CAMERA_H
-#define CAMERA_H
+#ifndef __Camera_H__
+#define __Camera_H__
 
 #include "Component.h"
 
@@ -33,4 +33,4 @@ public:
 	AABB boundingBox;
 };
 
-#endif
+#endif // !__Camera_H__

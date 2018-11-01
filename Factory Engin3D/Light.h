@@ -21,5 +21,5 @@ struct Light
 	int ref;
 	bool on;
 };
-#endif
+#endif // !__Light_H__
 

@@ -46,6 +46,7 @@ private:
 
 	float4x4 ViewMatrix, ViewMatrixInverse;
 };
+#endif // !__ModuleCamera_H__
 
 
 
@@ -104,5 +105,4 @@ private:
 
 	float4x4 ViewMatrix, ViewMatrixInverse;
 };*/
-#endif
 

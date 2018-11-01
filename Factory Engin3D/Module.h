@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __Module_H__
+#define __Module_H__
+
 #include "parson/parson.h"
 
 class Application;
@@ -61,3 +63,4 @@ public:
 	virtual void OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 	{}
 };
+#endif // !__Module_H__

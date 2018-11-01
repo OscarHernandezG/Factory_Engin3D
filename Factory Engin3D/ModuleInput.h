@@ -80,4 +80,4 @@ private:
 	bool mousePressed = false;
 	//int mouse_z_motion;
 };
-#endif
+#endif // !__ModuleInput_H__

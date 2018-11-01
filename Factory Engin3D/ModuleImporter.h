@@ -31,4 +31,4 @@ public:
 	void TextureDirection(std::string &goodFile, std::string &filePath);
 	void MeshDirection(std::string &filePath, std::string &goodFile, int number = 0);
 };
-#endif
+#endif // !__ModuleImporter_H__
