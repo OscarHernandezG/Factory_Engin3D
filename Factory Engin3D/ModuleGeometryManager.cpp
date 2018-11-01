@@ -123,13 +123,12 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 					if (newMesh->HasTextureCoords(0))
 					{
 						newCurrentBuffer.texture.size = newMesh->mNumVertices * 2;
-						newCurrentBuffer.texture.buffer = new float[newMesh->mNumVertices * 2];
+						newCurrentBuffer.texture.buffer = new float[newCurrentBuffer.texture.size];
 						for (int currVertices = 0; currVertices < newMesh->mNumVertices; ++currVertices)
 						{
-							newCurrentBuffer.texture.buffer[currVertices * 2] = newMesh->mTextureCoords[0][currVertices].x;
-							newCurrentBuffer.texture.buffer[currVertices * 2 + 1] = newMesh->mTextureCoords[0][currVertices].y;
+							memcpy(&newCurrentBuffer.texture.buffer[currVertices * 2], &newMesh->mTextureCoords[0][currVertices], sizeof(float) * 2);
 						}
-						memcpy(newCurrentBuffer.texture.buffer, newMesh->mTextureCoords[0], sizeof(float) * 2 * newMesh->mNumVertices);
+
 					}
 
 					mesh->buffers.push_back(newCurrentBuffer);
