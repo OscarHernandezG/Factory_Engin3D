@@ -71,7 +71,7 @@ void ModuleGeometry::DistributeFile(char* file)
 	{
 		UpdateMesh(file);
 	}
-	else if (!extension.compare("png") || !extension.compare("dds"))
+	else if (!extension.compare("png") || !extension.compare("dds") || !extension.compare("jpg") || !extension.compare("jpeg"))
 		UpdateTexture(file);
 }
 
@@ -329,7 +329,6 @@ float3 ModuleGeometry::GetCurrentMeshPivot() const
 {
 	return currentMesh->GetPos();
 }
-
 
 void ModuleGeometry::Higher(float& val1, float val2)
 {
