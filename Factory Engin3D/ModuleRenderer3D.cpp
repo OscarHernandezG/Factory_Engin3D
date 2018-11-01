@@ -6,8 +6,8 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
-#include "imgui_impl_sdl.h"
-#include "imgui_impl_opengl2.h"
+#include "imgui-1.65/imgui_impl_sdl.h"
+#include "imgui-1.65/imgui_impl_opengl2.h"
 
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"

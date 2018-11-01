@@ -4,8 +4,8 @@
 
 #include "ModuleGeometryManager.h"
 
-#include "imgui.h"
-#include "imgui_impl_sdl.h"
+#include "imgui-1.65/imgui.h"
+#include "imgui-1.65/imgui_impl_sdl.h"
 
 #include <fstream>
 
