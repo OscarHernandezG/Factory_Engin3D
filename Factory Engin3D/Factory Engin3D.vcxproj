@@ -175,6 +175,7 @@
     <ClInclude Include="parson\parson.h" />
     <ClInclude Include="Geometry.h" />
     <ClInclude Include="Quadtree.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -235,6 +236,7 @@
     <ClCompile Include="parson\parson.c" />
     <ClCompile Include="Geometry.cpp" />
     <ClCompile Include="Quadtree.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

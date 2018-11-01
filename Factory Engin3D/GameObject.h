@@ -22,9 +22,7 @@ class GameObject
 public:
 	GameObject(GameObject* father);
 	GameObject(float3 position, Quat rotation = Quat::identity, float3 scale = float3::one, GameObject* father = nullptr);
-	//GameObject(TransformInfo* info, GameObject* father = nullptr);
-	GameObject(float4x4 transform, GameObject* father = nullptr);
-
+	
 	~GameObject();
 
 	void Update(float dt);
