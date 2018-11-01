@@ -19,6 +19,7 @@ struct  ComponentInfo;
 class GameObject
 {
 public:
+	GameObject(GameObject* father = nullptr);
 	GameObject(float3 position = float3::zero, Quat rotation = Quat::identity, float3 scale = float3::one, GameObject* father = nullptr);
 	GameObject(TransformInfo* info, GameObject* father = nullptr);
 	GameObject(float4x4 transform, GameObject* father = nullptr);
@@ -30,11 +31,11 @@ public:
 	inline void Delete() { toDelete = true;	}
 
 	Component* GetComponent(ComponentType type);
+	Component* AddComponent(ComponentType type, ComponentInfo* info);
 
 	void CreateGameObject(TransformInfo* info);
 
-	Component* AddComponent(ComponentType type, ComponentInfo* info);
-
+	float3 GetPos();
 	int CreateRandomUID();
 public:
 

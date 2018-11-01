@@ -2,11 +2,24 @@
 #include "pcg-c-0.94/extras/entropy.h"
 
 
+GameObject::GameObject(GameObject* father)
+{
+	TransformInfo* info = new TransformInfo();
+	info->position = float3::zero;
+	info->rotation = Quat::identity;
+	info->scale = float3::one;
+	info->whichInfo = UsingInfo_TRS;
+
+	CreateGameObject(info);
+	delete info;
+}
+
 GameObject::GameObject(float3 position, Quat rotation, float3 scale, GameObject* father) : father(father)
 {
 	TransformInfo* info = new TransformInfo();
 	info->position = position;
 	info->rotation = rotation;
+	info->scale = scale;
 	info->whichInfo = UsingInfo_TRS;
 
 	CreateGameObject(info);
@@ -91,6 +104,7 @@ Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
 		newComponent = (Component*)new Transform((TransformInfo*)info);
 		break;
 	case ComponentType_GEOMETRY:
+		newComponent = (Component*)(((MeshInfo*)info)->mesh);
 		break;
 	case ComponentType_CAMERA:
 		break;
@@ -102,9 +116,22 @@ Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
 		break;
 	}
 
-	components.push_back(newComponent);
-
+	if (newComponent != nullptr)
+	{
+		newComponent->type = type;
+		newComponent->isActive = true;
+		newComponent->gameObject = this;
+		components.push_back(newComponent);
+	}
 	return newComponent;
+}
+
+float3 GameObject::GetPos()
+{
+	if (transform != nullptr)
+		return transform->GetPos();
+
+	return float3::zero;
 }
 
 int GameObject::CreateRandomUID()
