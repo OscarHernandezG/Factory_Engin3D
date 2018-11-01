@@ -10,6 +10,7 @@ Application::Application()
 	camera = new ModuleCamera3D(this);
 	gui = new ModuleImGui(this);
 	geometry = new ModuleGeometry(this);
+	gameObject = new ModuleGameObjectManager(this);
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -22,6 +23,9 @@ Application::Application()
 	
 	// Scenes
 	AddModule(sceneIntro);
+
+	// Managers
+	AddModule(gameObject);
 	AddModule(geometry);
 	AddModule(gui);
 

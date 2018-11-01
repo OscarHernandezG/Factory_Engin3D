@@ -24,6 +24,7 @@ public:
 	ModuleCamera3D* camera;
 	ModuleImGui* gui;
 	ModuleGeometry* geometry;
+	ModuleGameObjectManager* gameObject;
 
 private:
 
