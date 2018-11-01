@@ -69,7 +69,7 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 		char* filePath = path;
 		const aiScene* scene = aiImportFile(filePath, aiProcessPreset_TargetRealtime_MaxQuality);
 
-		if (scene != nullptr) 
+		if (scene != nullptr)
 		{
 			if (scene->HasMeshes())
 			{
@@ -84,7 +84,12 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 					newCurrentBuffer.vertex.size = currentMesh->mNumVertices * 3;
 					newCurrentBuffer.vertex.buffer = new float[newCurrentBuffer.vertex.size * 3];
 
-					memcpy(newCurrentBuffer.vertex.buffer, currentMesh->mVertices, sizeof(float) * newCurrentBuffer.vertex.size);
+					memcpy(newCurrentBuffer.vertex.buffer, currentMesh->mVertices, sizeof(float) * newCurrentBuffer.vertex.size * 3);
+
+					for (int aaa = 0; aaa < newCurrentBuffer.vertex.size / 3; ++aaa)
+					{
+						LOG("X = %i, Y = %i, Z = %i", newCurrentBuffer.vertex.buffer[aaa * 3 + 0], newCurrentBuffer.vertex.buffer[aaa * 3 + 1], newCurrentBuffer.vertex.buffer[aaa * 3 + 2]);
+					}
 
 					LOG("New mesh loaded with %d vertices", newCurrentBuffer.vertex.size);
 
@@ -105,6 +110,7 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 								LOG("WARNING, geometry faces != 3 indices")
 							else
 							{
+								LOG("X = %i, Y = %i, Z = %i", currentMesh->mFaces[index].mIndices[0], currentMesh->mFaces[index].mIndices[1], currentMesh->mFaces[index].mIndices[2]);
 								memcpy(&newCurrentBuffer.index.buffer[index * 3], currentMesh->mFaces[index].mIndices, sizeof(uint) * 3);
 							}
 						}
@@ -135,11 +141,11 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 					mesh->buffers.push_back(newCurrentBuffer);
 				}
 
-			currentMeshBB = LoadBoundingBox(mesh);
-			LOG("Loaded geometry with %i faces", numFaces);
+				currentMeshBB = LoadBoundingBox(mesh);
+				LOG("Loaded geometry with %i faces", numFaces);
 			}
-			
-				aiReleaseImport(scene);
+
+			aiReleaseImport(scene);
 		}
 
 		else
@@ -156,8 +162,11 @@ void ModuleGeometry::UpdateMesh(char* path)
 		if (!tempMesh->buffers.empty())
 		{
 			Mesh* mesh = (Mesh*)currentMesh->GetComponent(ComponentType::ComponentType_GEOMETRY);
-			delete mesh;
-			*mesh = *tempMesh;
+			currentMesh->RemoveComponent(mesh);
+
+			MeshInfo info;
+			info.mesh = tempMesh;
+			currentMesh->AddComponent(ComponentType_GEOMETRY, &info);
 		}
 }
 

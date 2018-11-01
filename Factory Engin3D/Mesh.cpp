@@ -14,12 +14,12 @@ void Mesh::InnerRender() const
 		glBindBuffer(GL_ARRAY_BUFFER, (*iterator).vertex.id);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*iterator).index.id);
 		glVertexPointer(3, GL_FLOAT, 0, NULL);
-		
+
 		//Load Texture UV
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		glBindBuffer(GL_ARRAY_BUFFER, (*iterator).texture.id);
 		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
-		
+
 		//Load texture
 		glBindTexture(GL_TEXTURE_2D, App->geometry->textureID);
 
@@ -32,7 +32,7 @@ void Mesh::InnerRender() const
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-		glDisableClientState(GL_VERTEX_ARRAY);	
+		glDisableClientState(GL_VERTEX_ARRAY);
 	}
 }
 

@@ -31,6 +31,7 @@ public:
 	inline void Delete() { toDelete = true;	}
 
 	Component* GetComponent(ComponentType type);
+	void RemoveComponent(Component* component);
 	Component* AddComponent(ComponentType type, ComponentInfo* info);
 
 	void CreateGameObject(TransformInfo* info);

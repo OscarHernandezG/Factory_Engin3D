@@ -85,6 +85,14 @@ Component* GameObject::GetComponent(ComponentType type)
 	return component;
 }
 
+void GameObject::RemoveComponent(Component* component)
+{
+	components.remove(component);
+	delete component;
+	component = nullptr;
+}
+
+
 void GameObject::CreateGameObject(TransformInfo* info)
 {
 	pcg32_srandom_r(&rng, 42u, 54u);
