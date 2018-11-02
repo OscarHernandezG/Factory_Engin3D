@@ -18,20 +18,20 @@ QuadtreeNode::~QuadtreeNode()
 	}
 }
 
-void QuadtreeNode::Insert(GameObject object)
+void QuadtreeNode::Insert(GameObject* object)
 {
 
-	if (objectsList.size() > MAX_NODE_ELEMENTS && !HasChilds())
-		Subdivide();
+	if (objectsList.size() < MAX_NODE_ELEMENTS && !HasChilds())
+		objectsList.push_back(object);
 
 	else
 	{
-		//if (!HasChilds())
+		if (!HasChilds())
+			Subdivide();
 
+		objectsList.push_back(object);
+		RedistributeChilds();
 	}
-
-	objectsList.push_back(object);
-	RedistributeChilds();
 }
 
 bool QuadtreeNode::HasChilds()
@@ -48,23 +48,23 @@ void QuadtreeNode::Subdivide()
 {
 	AABB childBox;
 	//NO
-	childBox.minPoint = { limits.MinX(),limits.MinY(), limits.MinZ() + limits.Size().z / 2 };
-	childBox.maxPoint = { limits.MaxX() - limits.Size().x / 2 ,limits.MaxY(), limits.MaxZ()};
+	childBox.minPoint = { limits.MinX(), limits.MinY(), limits.MinZ() + limits.HalfSize().z};
+	childBox.maxPoint = { limits.MaxX() - limits.HalfSize().x, limits.MaxY(), limits.MaxZ()};
 	childs[0] = new QuadtreeNode(childBox);
 
 	//NE
-	childBox.minPoint = limits.CenterPoint();
+	childBox.minPoint = { limits.CenterPoint().x, limits.MinY(), limits.CenterPoint().z };
 	childBox.maxPoint = limits.maxPoint;
 	childs[1] = new QuadtreeNode(childBox);
 
 	//SE
-	childBox.minPoint = { limits.MinX() + limits.Size().x / 2 ,limits.MinY(), limits.MinZ() };
-	childBox.maxPoint = { limits.MaxX(),limits.MaxY(), limits.MaxZ() - limits.Size().z / 2 };
+	childBox.minPoint = { limits.MinX() + limits.HalfSize().x,limits.MinY(), limits.MinZ() };
+	childBox.maxPoint = { limits.MaxX(),limits.MaxY(), limits.MaxZ() - limits.HalfSize().z};
 	childs[2] = new QuadtreeNode(childBox);
 
 	//SO
 	childBox.minPoint = limits.minPoint;
-	childBox.maxPoint = limits.CenterPoint();
+	childBox.maxPoint = { limits.CenterPoint().x, limits.MaxY(), limits.CenterPoint().z };
 	childs[3] = new QuadtreeNode(childBox);
 
 	for (int i = 0; i < 4; ++i)
@@ -75,6 +75,28 @@ void QuadtreeNode::Subdivide()
 
 void QuadtreeNode::RedistributeChilds()
 {
+	std::list<GameObject*>::iterator iterator = objectsList.begin();
+	while (iterator != objectsList.end())
+	{
+		uint intersects = 0u;
+		for (int i = 0; i < 4; ++i)
+		{
+			if (childs[i]->limits.Intersects((*iterator)->transform->boundingBox))
+				intersects++;
+		}
+		if (intersects == 4)
+			++iterator;
+		else
+		{
+
+			for (int i = 0; i < 4; ++i)
+			{
+				if (childs[i]->limits.Intersects((*iterator)->transform->boundingBox))
+					childs[i]->Insert(*iterator);
+			}
+			iterator = objectsList.erase(iterator);
+		}
+	}
 }
 
 void QuadtreeNode::GetBoxLimits(std::vector<const QuadtreeNode*>& nodes) const
@@ -89,18 +111,31 @@ void QuadtreeNode::GetBoxLimits(std::vector<const QuadtreeNode*>& nodes) const
 	}
 }
 
-
+void QuadtreeNode::GetGameObjects(std::vector<GameObject*>& object) const
+{
+	for (std::list<GameObject*>::const_iterator iterator = objectsList.begin(); iterator != objectsList.end(); ++iterator)
+	{
+		object.push_back(*iterator);
+	}
+	for (int i = 0; i < 4; i++)
+	{
+		if (childs[i] != nullptr)
+			childs[i]->GetGameObjects(object);
+		else
+			break;
+	}
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
 
-
 void Quadtree::Create(const AABB& limits)
 {
-	root = new QuadtreeNode(limits);
 	if (root != nullptr)
-		LOG("Quadtree Created");
+		Clear();
+
+	root = new QuadtreeNode(limits);
 }
 void Quadtree::Clear()
 {
@@ -123,6 +158,11 @@ void Quadtree::GetBoxLimits(std::vector<const QuadtreeNode*>& nodes) const
 {
 	if (root != nullptr)
 			root->GetBoxLimits(nodes);
+}
 
+void Quadtree::GetGameObjects(std::vector<GameObject*>& objects) const
+{
+	if (root != nullptr)
+		root->GetGameObjects(objects);
 }
 

@@ -17,15 +17,16 @@ public:
 	QuadtreeNode(const AABB& limits);
 	~QuadtreeNode();
 
-	void Insert(GameObject object);
+	void Insert(GameObject* object);
 	bool HasChilds();
 	void Subdivide();
 	void RedistributeChilds();
 	void GetBoxLimits(std::vector<const QuadtreeNode*>& nodes) const;
+	void GetGameObjects(std::vector<GameObject*>& object) const;
 
 public:
 	AABB limits;
-	std::list<GameObject> objectsList;
+	std::list<GameObject*> objectsList;
 	QuadtreeNode* parent = nullptr;
 	QuadtreeNode* childs[4] = { nullptr, nullptr, nullptr, nullptr };
 };
@@ -39,6 +40,7 @@ public:
 	void Clear();
 	void Insert(GameObject* gameObject);
 	void GetBoxLimits(std::vector<const QuadtreeNode*>& nodes) const;
+	void GetGameObjects(std::vector<GameObject*>& object) const;
 
 public:
 

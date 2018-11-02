@@ -6,6 +6,7 @@
 #include "Mesh.h"
 #include "Quadtree.h"
 
+#include <vector>
 class ModuleSceneIntro : public Module
 {
 public:
@@ -17,7 +18,7 @@ public:
 	update_status Update(float dt);
 	update_status PostUpdate(float dt);
 
-	void DrawQuadtree(float3 * corners);
+	void DrawQuad(float3 * corners, Color color = White);
 
 	bool CleanUp();
 
@@ -26,8 +27,7 @@ public:
 	PrimitiveCube* cube = nullptr;
 
 	char* droppedFileDir = nullptr;
-
-	Quadtree quadtre;
+	Quadtree quadtree;
 	bool debugQuadtree = false;
 };
 #endif // !__ModuleSceneIntro_H__

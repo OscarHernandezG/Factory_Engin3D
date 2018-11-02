@@ -28,7 +28,7 @@ bool ModuleSceneIntro::Start()
 	bool ret = true;
 
 	App->camera->Move(float3(1.0f, 1.0f, 0.0f));
-	quadtre.Create(AABB(float3(-50, 0, -50), float3(50, 15, 50)));
+	quadtree.Create(AABB(float3(-50, 0, -50), float3(50, 15, 50)));
 
 	return ret;
 }
@@ -42,13 +42,27 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 		debugQuadtree = !debugQuadtree;
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
+	{
+		float3 pos = math::float3((rand() % 100 )- 50, rand() % 10, (rand() % 100) - 50);
+
+		GameObject* random = App->gameObject->CreateGameObject(pos);
+
+		const math::float3 center(pos.x, pos.y, pos.z);
+		const math::float3 size(2.0f, 2.0f, 2.0f);
+
+		random->transform->boundingBox.SetFromCenterAndSize(center, size);
+
+		quadtree.Insert(random);
+	}
+
 	return status;
 }
 
-void ModuleSceneIntro::DrawQuadtree(static float3* corners)
+void ModuleSceneIntro::DrawQuad(static float3* corners, Color color)
 {
 	glLineWidth(2.0f);
-	glColor3f(1, 1, 1);
+	glColor3f(color.r,color.g,color.b);
 	glBegin(GL_QUADS);
 
 	glVertex3fv((GLfloat*)&corners[1]);
@@ -107,13 +121,24 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		glDisable(GL_CULL_FACE);
 		std::vector<const QuadtreeNode*> aabb;
-		quadtre.GetBoxLimits(aabb);
+		quadtree.GetBoxLimits(aabb);
 		for (vector<const QuadtreeNode*>::const_iterator iterator = aabb.begin(); iterator != aabb.end(); ++iterator)
 		{
 			static float3 corners[8];
 			(*iterator)->limits.GetCornerPoints(corners);
 
-			DrawQuadtree(corners);
+			DrawQuad(corners);
+		}
+
+		std::vector<GameObject*> objects;
+		quadtree.GetGameObjects(objects);
+
+		for (vector<GameObject*>::const_iterator iterator = objects.begin(); iterator != objects.end(); ++iterator)
+		{
+			static float3 corners[8];
+			(*iterator)->transform->boundingBox.GetCornerPoints(corners);
+
+			DrawQuad(corners, Red);
 		}
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glEnable(GL_CULL_FACE);
