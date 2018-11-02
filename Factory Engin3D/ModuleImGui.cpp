@@ -421,38 +421,37 @@ void ModuleImGui::CreateTransform()
 {
 	ImGui::SetWindowSize({ 400,200 }, ImGuiWindowFlags_NoResize);
 	ImGui::Begin("Transform", &transformWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
-
-	if (App->camera->camera != nullptr)
+	
+	if (App->geometry->currentMesh != nullptr)
 	{
 		float3 position, scale, angles;
 		Quat rotate;
 
-		if (App->camera->camera->transform != nullptr)
+		if (App->geometry->currentMesh->transform != nullptr)
 		{
-			position = App->camera->camera->transform->GetPos();
-			scale = App->camera->camera->transform->scale;
-			rotate = App->camera->camera->transform->GetRotation();
+			position = App->geometry->currentMesh->transform->GetPos();
+			scale = App->geometry->currentMesh->transform->scale;
+			rotate = App->geometry->currentMesh->transform->GetRotation();
+
+			if (ImGui::InputFloat3("Position", &position[0])) {
+				App->geometry->currentMesh->transform->SetPos(position[0], position[1], position[2]);
+			}
+
+			if (ImGui::InputFloat3("Scale", &scale[0]))
+				App->geometry->currentMesh->transform->SetScale(scale[0], scale[1], scale[2]);
+
+			angles = rotate.ToEulerXYZ();
+
+			angles[0] = math::RadToDeg(angles.x);
+			angles[1] = math::RadToDeg(angles.y);
+			angles[2] = math::RadToDeg(angles.z);
+
+			ImGui::DragFloat3("Rotation", &angles[0]);
+
+
+			if (ImGui::Button("Reset", ImVec2(100, 20)))
+				App->geometry->currentMesh->transform->SetIdentity();
 		}
-		float* vector3 = &App->camera->camera->transform->GetPos()[0];
-		if (ImGui::InputFloat3("Position", vector3)) {
-			App->camera->camera->transform->SetPos(vector3[0], vector3[1], vector3[2]);
-		}
-
-		vector3 = &scale[0];
-		if (ImGui::InputFloat3("Scale", vector3))
-			App->camera->camera->transform->SetScale(vector3[0], vector3[1], vector3[2]);
-
-		angles = rotate.ToEulerXYZ();
-
-		vector3[0] = math::RadToDeg(angles.x);
-		vector3[1] = math::RadToDeg(angles.y);
-		vector3[2] = math::RadToDeg(angles.z);
-
-		ImGui::DragFloat3("Rotation", vector3);
-
-		if (ImGui::Button("Reset", ImVec2(100, 20)))
-			App->camera->camera->transform->SetIdentity();
-
 	}
 	else {
 		ImGui::TextWrapped("There aren't any meshes");

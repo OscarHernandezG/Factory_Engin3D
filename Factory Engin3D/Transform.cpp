@@ -26,6 +26,11 @@ void Transform::SetPos(float x, float y, float z)
 	position = float3(x, y, z);
 }
 
+void Transform::SetPos(float3 position)
+{
+	this->position = position;
+}
+
 void Transform::SetRotation(Quat rotation)
 {
 	this->rotation = rotation;
@@ -62,5 +67,6 @@ Quat Transform::GetRotation() const
 
 float4x4 Transform::GetMatrix() const
 {
-	return float4x4::FromTRS(position, rotation, scale);
+	float4x4 mat = float4x4::FromTRS(position, rotation, scale).Transposed();
+		return mat;
 }

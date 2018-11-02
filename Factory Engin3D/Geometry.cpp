@@ -30,10 +30,13 @@ void Geometry::Render() const
 	{
 		Transform* transform = gameObject->transform;
 		glPushMatrix();
-		glMultMatrixf((GLfloat*)transform->GetMatrix().ptr());
+		float4x4 mat = transform->GetMatrix();
+
+		glMultMatrixf(mat.ptr());
 
 		if (axis)
 		{
+
 			// Draw Axis Grid
 			glLineWidth(2.0f);
 

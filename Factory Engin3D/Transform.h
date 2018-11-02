@@ -39,8 +39,11 @@ public:
 
 
 	void		SetPos(float x, float y, float z);
+	void		SetPos(float3 position);
+
 	void		SetRotation(Quat rotation);
 	void		Rotate(Quat rotation);
+
 	void		SetScale(float x, float y, float z);
 	void		SetIdentity();
 
