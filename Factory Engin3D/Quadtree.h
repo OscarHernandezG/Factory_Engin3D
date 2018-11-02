@@ -5,6 +5,7 @@
 #include "SDL/include/SDL.h"
 
 #include <list>
+#include <vector>
 
 #define MAX_NODE_ELEMENTS 4
 
@@ -14,11 +15,13 @@ class QuadtreeNode
 {
 public:
 	QuadtreeNode(const AABB& limits);
-	~QuadtreeNode() {};
+	~QuadtreeNode();
 
 	void Insert(GameObject object);
 	bool HasChilds();
 	void Subdivide();
+	void RedistributeChilds();
+	void GetBoxLimits(std::vector<const QuadtreeNode*>& nodes) const;
 
 public:
 	AABB limits;
@@ -35,6 +38,7 @@ public:
 	void Create(const AABB& limits);
 	void Clear();
 	void Insert(GameObject* gameObject);
+	void GetBoxLimits(std::vector<const QuadtreeNode*>& nodes) const;
 
 public:
 
