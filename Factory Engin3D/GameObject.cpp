@@ -145,6 +145,11 @@ float3 GameObject::GetPos()
 	return float3::zero;
 }
 
+inline Quat GameObject::GetRotation()
+{
+	return transform->GetRotation();
+}
+
 int GameObject::CreateRandomUID()
 {
 	UID = pcg32_boundedrand_r(&rng, UINT_MAX);
