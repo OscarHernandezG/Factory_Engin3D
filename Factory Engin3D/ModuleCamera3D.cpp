@@ -32,7 +32,6 @@ bool ModuleCamera3D::Start()
 	LookAt(float3(0, 0, 0));
 	Look(false);
 
-	CalculateViewMatrix();
 	return ret;
 }
 
@@ -53,27 +52,35 @@ update_status ModuleCamera3D::Update(float dt)
 	{
 		if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)	speed *= 2.0f;
 
+
 		if (App->input->GetMouseButton(SDL_BUTTON_RIGHT))
 		{
+			float3 forward = cameraComponent->frustum.front * speed;
+			float3 right = cameraComponent->frustum.WorldRight() * speed;
+			float3 movement = float3::zero;
+
 			if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT)
-				camera->transform->position += float3::unitY * speed;
+				movement += float3::unitY * speed;
 
 			if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT)
-				camera->transform->position -= float3::unitY * speed;
+				movement -= float3::unitY * speed;
 
 			if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
-				camera->transform->position += camera->transform->rotation * float3::unitZ * speed;
+				movement += forward;
 
 			if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
-				camera->transform->position -= camera->transform->rotation * float3::unitZ * speed;
+				movement -= forward;
 
 			if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
-				camera->transform->position += camera->transform->rotation * float3::unitX * speed;
+				movement -= right;
 
 			if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
-				camera->transform->position -= camera->transform->rotation * float3::unitX * speed;
+				movement += right;
+
+			cameraComponent->frustum.Translate(movement);
 		}
 
+		
 
 		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
 			Look(App->geometry->GetBBPos(), App->geometry->GetCurrentMeshPivot(), false);
@@ -122,11 +129,9 @@ update_status ModuleCamera3D::Update(float dt)
 		if (App->input->GetMouseButton(cameraMovementButton) == KEY_REPEAT)
 		{
 			int dx = -App->input->GetMouseXMotion();
-			int dy = App->input->GetMouseYMotion();
+			int dy = -App->input->GetMouseYMotion();
 
-			Quat rotation = Quat::identity;
-
-			float sensitivity = 1.0f;
+			float sensitivity = 0.01f;
 
 			//camera->transform->position -= Reference;
 
@@ -135,25 +140,32 @@ update_status ModuleCamera3D::Update(float dt)
 				float deltaX = (float)dx * sensitivity;
 
 
-				rotation = Quat::RotateAxisAngle(float3::unitY, deltaX * dt);
-				camera->transform->Rotate(rotation);
+				Quat rotation = Quat::RotateY(deltaX);
+				cameraComponent->frustum.front = (rotation *cameraComponent->frustum.front);
+
+				cameraComponent->frustum.up = (rotation * cameraComponent->frustum.up);
+				//camera->transform->Rotate(rotation);
 
 			}
 
 			if (dy != 0)
 			{
-				float deltaY = (float)dy * sensitivity / 2;
+				float deltaY = (float)dy * sensitivity;
 
-				rotation = Quat::RotateAxisAngle(float3::unitX, deltaY * dt);
-				camera->transform->Rotate(rotation);
+				Quat rotation = Quat::RotateAxisAngle(cameraComponent->frustum.WorldRight(), deltaY);
+
+				float3 newFrustUp = (rotation * cameraComponent->frustum.up);
+
+				if (newFrustUp.y > 0.0f)
+				{
+					cameraComponent->frustum.up = newFrustUp;
+					cameraComponent->frustum.front = (rotation * cameraComponent->frustum.front);
+				}
 
 			}
 			//	camera->transform->position = Reference + Z * camera->transform->position.Length();
 		}
 	}
-	// Recalculate matrix -------------
-	CalculateViewMatrix();
-
 	return UPDATE_CONTINUE;
 }
 
@@ -207,12 +219,4 @@ void ModuleCamera3D::Move(const float3 &Movement)
 float* ModuleCamera3D::GetViewMatrix()
 {
 	return cameraComponent->GetViewMatrix().ptr();
-}
-
-// -----------------------------------------------------------------
-void ModuleCamera3D::CalculateViewMatrix()
-{
-	ViewMatrix = cameraComponent->GetViewMatrix();
-	ViewMatrixInverse = ViewMatrix;
-	ViewMatrixInverse.Inverse();
 }

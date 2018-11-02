@@ -32,10 +32,6 @@ public:
 	void Move(const float3 &Movement);
 	float* GetViewMatrix();
 
-private:
-
-	void CalculateViewMatrix();
-
 public:
 
 	float3 X, Y, Z, Position, Reference;
