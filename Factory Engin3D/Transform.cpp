@@ -1,5 +1,6 @@
 #include "Transform.h"
 
+#include "GameObject.h"
 
 Transform::Transform(TransformInfo* info) : Component(info->gameObject, ComponentType_TRANSFORM)
 {
@@ -57,13 +58,30 @@ void Transform::SetIdentity()
 
 float3 Transform::GetPos() const
 {
-	return position;
+	if (gameObject->father != nullptr)
+		return position + gameObject->father->GetPos();
+
+	else return position;
 }
 
 Quat Transform::GetRotation() const
 {
+	if (gameObject->father != nullptr)
+		return rotation.Mul(gameObject->father->GetRotation());
+
+	else return rotation;
+}
+
+inline float3 Transform::GetLocalPos() const
+{
+	return position;
+}
+
+inline Quat Transform::GetLocalRotation() const
+{
 	return rotation;
 }
+
 
 float4x4 Transform::GetMatrix() const
 {

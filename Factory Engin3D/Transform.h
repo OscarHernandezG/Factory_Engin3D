@@ -38,20 +38,23 @@ public:
 	~Transform() {}
 
 
-	void		SetPos(float x, float y, float z);
-	void		SetPos(float3 position);
+	inline void			SetPos(float x, float y, float z);
+	inline void			SetPos(float3 position);
 
-	void		SetRotation(Quat rotation);
-	void		Rotate(Quat rotation);
+	inline void			SetRotation(Quat rotation);
+	inline void			Rotate(Quat rotation);
 
-	void		SetScale(float x, float y, float z);
-	void		SetIdentity();
+	inline void			SetScale(float x, float y, float z);
+	inline void			SetIdentity();
 
-	float3		GetPos() const;
+	 float3			GetPos() const;
+	inline float3	GetLocalPos() const;
 
-	Quat		GetRotation() const;
+	 Quat			GetRotation() const;
+	inline Quat		GetLocalRotation() const;
 
-	float4x4 GetMatrix() const;
+
+	float4x4		GetMatrix() const;
 
 public:
 
