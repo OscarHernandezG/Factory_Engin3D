@@ -8,6 +8,7 @@
 #include "Component.h"
 
 class Transform;
+class Geometry;
 
 enum PrimitiveTypes
 {
@@ -18,6 +19,13 @@ enum PrimitiveTypes
 	Primitive_Sphere,
 	Primitive_Cylinder,
 	Primitive_Frustum
+};
+
+struct PrimitiveInfo : ComponentInfo
+{
+	PrimitiveInfo(Geometry* prim) : primitive(prim) {}
+
+	Geometry* primitive = nullptr;
 };
 
 class Geometry : public Component

@@ -108,12 +108,16 @@ Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
 		if (info)
 		newComponent = (Component*)new Transform((TransformInfo*)info);
 		break;
-	case ComponentType_GEOMETRY:
+	case ComponentType_MESH:
 		if (info)
 		newComponent = (Component*)(((MeshInfo*)info)->mesh);
 		break;
 	case ComponentType_CAMERA:
 		newComponent = (Component*)new Camera(this);
+		break;
+	case ComponentType_GEOMETRY:
+		if (info)
+		newComponent = (Component*)(((PrimitiveInfo*)info)->primitive);
 		break;
 	case ComponentType_TEXTURE:
 		break;

@@ -250,14 +250,14 @@ void ModuleGeometry::UpdateMesh(char* path)
 	if (tempMesh != nullptr)
 		if (!tempMesh->buffers.empty() && currentMesh != nullptr)
 		{
-			Mesh* mesh = (Mesh*)currentMesh->GetComponent(ComponentType::ComponentType_GEOMETRY);
+			Mesh* mesh = (Mesh*)currentMesh->GetComponent(ComponentType::ComponentType_MESH);
 			currentMesh->RemoveComponent(mesh);
 
 			LoadMeshImporter(path, tempMesh);
 	
 			MeshInfo info;
 			info.mesh = tempMesh;
-			currentMesh->AddComponent(ComponentType_GEOMETRY, &info);
+			currentMesh->AddComponent(ComponentType_MESH, &info);
 		}
 
 	
@@ -439,14 +439,15 @@ update_status ModuleGeometry::PostUpdate(float dt)
 
 void ModuleGeometry::Draw3D(bool fill, bool wire) const
 {
-	//PrimitivePlane plane;
-	//plane.color = { 1, 1, 1, 1 };
-	//plane.axis = true;
-	//plane.Render();
+	PrimitivePlane* ground = (PrimitivePlane*)plane->GetComponent(ComponentType_GEOMETRY);
+
+	ground->color = { 1, 1, 1, 1 };
+	ground->axis = true;
+	ground->Render();
 
 	if (currentMesh != nullptr)
 	{
-		Mesh* currentGeometry = (Mesh*)currentMesh->GetComponent(ComponentType_GEOMETRY);
+		Mesh* currentGeometry = (Mesh*)currentMesh->GetComponent(ComponentType_MESH);
 		if (currentGeometry)
 		{
 			currentGeometry->fill = true;
@@ -468,5 +469,12 @@ void ModuleGeometry::LoadDefaultScene()
 
 	DistributeFile("assets\\models\\BakerHouse.fbx");
 	DistributeFile("assets\\textures\\Baker_house.dds");
+
+
+	plane = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, "Ground");
+
+	PrimitiveInfo planeInfo(new PrimitivePlane());
+	plane->AddComponent(ComponentType_GEOMETRY, &planeInfo);
+
 
 }

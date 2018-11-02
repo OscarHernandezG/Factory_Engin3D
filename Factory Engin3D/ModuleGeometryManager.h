@@ -59,5 +59,7 @@ public:
 	AABB* currentMeshBB = nullptr;
 
 	string destination;
+
+	GameObject* plane = nullptr;
 };
 #endif // !__ModuleGeometryManager_H__
