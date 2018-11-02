@@ -80,7 +80,7 @@ update_status ModuleCamera3D::Update(float dt)
 			cameraComponent->frustum.Translate(movement);
 		}
 
-		
+
 
 		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
 			Look(App->geometry->GetBBPos(), App->geometry->GetCurrentMeshPivot(), false);
@@ -104,7 +104,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 		if (isCameraFocused)
 		{
-			LookAt(App->geometry->GetCurrentMeshPivot());
+			//LookAt(App->geometry->GetCurrentMeshPivot());
 
 			if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_UP)
 			{
@@ -128,47 +128,68 @@ update_status ModuleCamera3D::Update(float dt)
 	   //if(App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RALT) == KEY_REPEAT)
 		if (App->input->GetMouseButton(cameraMovementButton) == KEY_REPEAT)
 		{
-			int dx = -App->input->GetMouseXMotion();
-			int dy = -App->input->GetMouseYMotion();
-
 			float sensitivity = 0.01f;
 
+			float dx = -App->input->GetMouseXMotion() * sensitivity;
+			float dy = -App->input->GetMouseYMotion() * sensitivity;
+
+
 			//camera->transform->position -= Reference;
+			if (isCameraFocused)
+				OrbitArroundReference(dx, dy, App->geometry->GetCurrentMeshPivot());
+			else
+				FreeLook(dx, dy);
 
-			if (dx != 0)
-			{
-				float deltaX = (float)dx * sensitivity;
 
-
-				Quat rotation = Quat::RotateY(deltaX);
-				cameraComponent->frustum.front = (rotation *cameraComponent->frustum.front);
-
-				cameraComponent->frustum.up = (rotation * cameraComponent->frustum.up);
-				//camera->transform->Rotate(rotation);
-
-			}
-
-			if (dy != 0)
-			{
-				float deltaY = (float)dy * sensitivity;
-
-				Quat rotation = Quat::RotateAxisAngle(cameraComponent->frustum.WorldRight(), deltaY);
-
-				float3 newFrustUp = (rotation * cameraComponent->frustum.up);
-
-				if (newFrustUp.y > 0.0f)
-				{
-					cameraComponent->frustum.up = newFrustUp;
-					cameraComponent->frustum.front = (rotation * cameraComponent->frustum.front);
-				}
-
-			}
 			//	camera->transform->position = Reference + Z * camera->transform->position.Length();
 		}
 	}
 	return UPDATE_CONTINUE;
 }
 
+void ModuleCamera3D::OrbitArroundReference(float dx, float dy, float3 reference)
+{
+	float3 focus = cameraComponent->frustum.pos - reference;
+
+	Quat qy(cameraComponent->frustum.up, dx);
+	Quat qx(cameraComponent->frustum.WorldRight(), dy);
+
+	focus = qx.Transform(focus);
+	focus = qy.Transform(focus);
+
+	cameraComponent->frustum.pos = focus + reference;
+
+	LookAt(reference);
+}
+
+void ModuleCamera3D::FreeLook(float dx, float dy)
+{
+	if (dx != 0)
+	{
+		float deltaX = (float)dx;
+
+
+		Quat rotation = Quat::RotateY(deltaX);
+		cameraComponent->frustum.front = (rotation *cameraComponent->frustum.front);
+
+		cameraComponent->frustum.up = (rotation * cameraComponent->frustum.up);
+	}
+
+	if (dy != 0)
+	{
+		float deltaY = (float)dy;
+
+		Quat rotation = Quat::RotateAxisAngle(cameraComponent->frustum.WorldRight(), deltaY);
+
+		float3 newFrustUp = (rotation * cameraComponent->frustum.up);
+
+		if (newFrustUp.y > 0.0f)
+		{
+			cameraComponent->frustum.up = newFrustUp;
+			cameraComponent->frustum.front = (rotation * cameraComponent->frustum.front);
+		}
+	}
+}
 // -----------------------------------------------------------------
 void ModuleCamera3D::Look(const float3 &Position, const float3 &Reference, bool RotateAroundReference)
 {
@@ -194,25 +215,22 @@ void ModuleCamera3D::Look(bool RotateAroundReference)
 }
 
 // -----------------------------------------------------------------
-void ModuleCamera3D::LookAt( const float3 &Spot)
+void ModuleCamera3D::LookAt( const float3 &spot)
 {
-	//Reference = Spot;
+	float3 direction = spot - cameraComponent->frustum.pos;
 
-	//Z = (camera->transform->position - Reference).Normalized();
-	//X = Cross(math::float3(0.0f, 1.0f, 0.0f), Z).Normalized();
-	//Y = Cross(Z, X);
+	float3x3 lookMat = float3x3::LookAt(cameraComponent->frustum.front, direction.Normalized(), cameraComponent->frustum.up, float3::unitY);
 
-	//CalculateViewMatrix();
+	cameraComponent->frustum.front = lookMat.MulDir(cameraComponent->frustum.front).Normalized();
+	cameraComponent->frustum.up = lookMat.MulDir(cameraComponent->frustum.up).Normalized();
 }
 
 
 // -----------------------------------------------------------------
-void ModuleCamera3D::Move(const float3 &Movement)
+void ModuleCamera3D::Move(const float3 &movement)
 {
-	//camera->transform->position += Movement;
-	//Reference += Movement;
+	cameraComponent->frustum.Translate(movement);
 
-	//CalculateViewMatrix();
 }
 
 // -----------------------------------------------------------------
