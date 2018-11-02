@@ -37,8 +37,8 @@ public:
 
 	void CreateGameObject(TransformInfo* info);
 
-	inline float3 GetPos();
-	inline Quat GetRotation();
+	float3 GetPos();
+	Quat GetRotation();
 
 	int CreateRandomUID();
 public:

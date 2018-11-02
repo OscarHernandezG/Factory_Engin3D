@@ -32,29 +32,29 @@ class Transform : public Component
 public:
 
 	Transform(TransformInfo* info);
-	Transform(GameObject* gameObject); 
+	Transform(GameObject* gameObject);
 	Transform(GameObject* gameObject, float4x4 transform);
 
 	~Transform() {}
 
 
-	inline void			SetPos(float x, float y, float z);
-	inline void			SetPos(float3 position);
+	void		SetPos(float x, float y, float z);
+	void		SetPos(float3 position);
 
-	inline void			SetRotation(Quat rotation);
-	inline void			Rotate(Quat rotation);
+	void		SetRotation(Quat rotation);
+	void		Rotate(Quat rotation);
 
-	inline void			SetScale(float x, float y, float z);
-	inline void			SetIdentity();
+	void		SetScale(float x, float y, float z);
+	void		SetIdentity();
 
-	 float3			GetPos() const;
-	inline float3	GetLocalPos() const;
+	float3		GetPos() const;
+	float3		GetLocalPos() const;
 
-	 Quat			GetRotation() const;
-	inline Quat		GetLocalRotation() const;
+	Quat		GetRotation() const;
+	Quat		GetLocalRotation() const;
 
 
-	float4x4		GetMatrix() const;
+	float4x4	GetMatrix() const;
 
 public:
 

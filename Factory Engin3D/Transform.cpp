@@ -72,12 +72,12 @@ Quat Transform::GetRotation() const
 	else return rotation;
 }
 
-inline float3 Transform::GetLocalPos() const
+float3 Transform::GetLocalPos() const
 {
 	return position;
 }
 
-inline Quat Transform::GetLocalRotation() const
+Quat Transform::GetLocalRotation() const
 {
 	return rotation;
 }

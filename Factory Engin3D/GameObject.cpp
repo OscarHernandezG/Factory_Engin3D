@@ -145,7 +145,7 @@ float3 GameObject::GetPos()
 	return float3::zero;
 }
 
-inline Quat GameObject::GetRotation()
+Quat GameObject::GetRotation()
 {
 	return transform->GetRotation();
 }
