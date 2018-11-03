@@ -25,6 +25,7 @@ public:
 	bool Start();
 	update_status Update(float dt);
 	void OrbitArroundReference(float dx, float dy, float3 reference);
+	bool CanMove(float3 originalPosition, float3 newPosition, float3 reference);
 	void FreeLook(float dx, float dy);
 	bool CleanUp();
 

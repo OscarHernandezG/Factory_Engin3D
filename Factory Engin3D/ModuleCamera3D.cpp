@@ -149,18 +149,37 @@ update_status ModuleCamera3D::Update(float dt)
 
 void ModuleCamera3D::OrbitArroundReference(float dx, float dy, float3 reference)
 {
-	float3 focus = cameraComponent->frustum.pos - reference;
 
-	Quat qy(cameraComponent->frustum.up, dx);
-	Quat qx(cameraComponent->frustum.WorldRight(), dy);
+	float3 originalPosition = cameraComponent->frustum.pos;
 
-	focus = qx.Transform(focus);
-	focus = qy.Transform(focus);
+	Quat yRotation(cameraComponent->frustum.up, dx);
+	Quat xRotation(cameraComponent->frustum.WorldRight(), dy);
 
-	cameraComponent->frustum.pos = focus + reference;
+	float3 newPosition = originalPosition;
+
+	newPosition = xRotation.Transform(newPosition);
+	newPosition = yRotation.Transform(newPosition);
+
+	if (CanMove(originalPosition, newPosition, reference))
+		cameraComponent->frustum.pos = newPosition + reference;
 
 	LookAt(reference);
 }
+
+bool ModuleCamera3D::CanMove(float3 originalPosition, float3 newPosition, float3 reference)
+{
+	bool ret = false;
+
+	float margin = 0.5f;
+
+	if (originalPosition.x < reference.x - margin || originalPosition.x >  reference.x + margin || originalPosition.z < reference.z - margin || originalPosition.z >  reference.z + margin)
+		ret = true;
+	else if (abs(originalPosition.x - reference.x) < abs(newPosition.x - reference.x) || abs(originalPosition.z - reference.z) < abs(newPosition.z - reference.z))
+		ret = true;
+
+	return ret;
+}
+
 
 void ModuleCamera3D::FreeLook(float dx, float dy)
 {
