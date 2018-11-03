@@ -69,8 +69,14 @@ GameObject* ModuleGameObjectManager::CreateGameObject(float3 position, Quat rota
 		father = root;
 
 	newGameObject = new GameObject(position, rotation, scale, father, name);
-	
+
 	father->childs.push_back(newGameObject);
+
+	newGameObject->transform->boundingBox.minPoint = float3(-5, -5, -5);
+	newGameObject->transform->boundingBox.minPoint = float3(5, 5, 5);
+
+	if (newGameObject)
+		App->sceneIntro->quadtree.Insert(newGameObject);
 
 	return newGameObject;
 }
