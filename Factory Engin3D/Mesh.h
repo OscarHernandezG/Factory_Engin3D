@@ -11,6 +11,7 @@ class Mesh;
 struct MeshInfo : public ComponentInfo
 {
 	Mesh* mesh = nullptr;
+	AABB boundingBox;
 };
 
 template <typename T>
