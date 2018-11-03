@@ -26,10 +26,7 @@ update_status ModuleGameObjectManager::PreUpdate(float dt)
 
 update_status ModuleGameObjectManager::Update(float dt)
 {
-	for (list<GameObject*>::iterator iterator = gameObjects.begin(); iterator != gameObjects.end(); ++iterator)
-	{
-		(*iterator)->Update(dt);
-	}
+	root->Update(dt);
 
 	return UPDATE_CONTINUE;
 }
