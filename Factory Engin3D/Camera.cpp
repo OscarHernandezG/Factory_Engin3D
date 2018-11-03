@@ -67,3 +67,17 @@ void Camera::UpdateFrustum()
 	//}
 
 }
+
+void Camera::SetPos(float x, float y, float z)
+{
+	frustum.pos = float3(x, y, z);
+}
+void Camera::SetPos(float3 pos)
+{
+	frustum.pos = pos;
+}
+
+float3 Camera::GetPos()
+{
+	return frustum.pos;
+}

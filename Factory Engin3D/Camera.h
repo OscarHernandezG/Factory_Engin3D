@@ -23,10 +23,8 @@ public:
 
 
 	void		SetPos(float x, float y, float z);
-	void		SetRotation(float angle, const float3 &u);
-	void		SetScale(float x, float y, float z);
-	void		SetIdentity();
-
+	void		SetPos(float3 pos);
+	float3		GetPos();
 
 public:
 	Frustum frustum;
