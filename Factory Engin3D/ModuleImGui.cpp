@@ -69,6 +69,9 @@ update_status ModuleImGui::PreUpdate(float dt)
 	if (transformWindow)
 		CreateTransform();
 
+	if (hierarchyWindow)
+		CreateGameObjectHierarchy();
+
 	status = CreateMainMenuBar();
 
 	created = true;
@@ -418,9 +421,11 @@ void ModuleImGui::CreateTransform()
 {
 	ImGui::SetWindowSize({ 400,200 }, ImGuiWindowFlags_NoResize);
 	ImGui::Begin("Transform", &transformWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
-
 	if (App->geometry->currentMesh != nullptr)
 	{
+		string goName = App->geometry->currentMesh->name;
+		ImGui::Text(goName.data());
+
 		float3 position, scale, angles;
 		Quat rotate;
 
@@ -429,33 +434,83 @@ void ModuleImGui::CreateTransform()
 			position = App->geometry->currentMesh->transform->GetPos();
 			scale = App->geometry->currentMesh->transform->scale;
 			rotate = App->geometry->currentMesh->transform->GetRotation();
+
+			if (ImGui::InputFloat3("Position", &position[0])) {
+				App->geometry->currentMesh->transform->SetPos(position[0], position[1], position[2]);
+			}
+
+			if (ImGui::InputFloat3("Scale", &scale[0]))
+				App->geometry->currentMesh->transform->SetScale(scale[0], scale[1], scale[2]);
+
+			angles = rotate.ToEulerXYZ();
+
+			angles[0] = math::RadToDeg(angles.x);
+			angles[1] = math::RadToDeg(angles.y);
+			angles[2] = math::RadToDeg(angles.z);
+
+			if (ImGui::DragFloat3("Rotation", &angles[0]))
+			{
+				angles.x = math::DegToRad(angles.x);
+				angles.y = math::DegToRad(angles.y);
+				angles.z = math::DegToRad(angles.z);
+				App->geometry->currentMesh->transform->SetRotation(angles);
+			}
+
+
+			if (ImGui::Button("Reset", ImVec2(100, 20)))
+				App->geometry->currentMesh->transform->SetIdentity();
 		}
-		float* vector3 = &App->geometry->currentMesh->transform->GetPos()[0];
-		if (ImGui::InputFloat3("Position", vector3)) {
-			App->geometry->currentMesh->transform->SetPos(vector3[0], vector3[1], vector3[2]);
-		}
-
-		vector3 = &scale[0];
-		if (ImGui::InputFloat3("Scale", vector3))
-			App->geometry->currentMesh->transform->SetScale(vector3[0], vector3[1], vector3[2]);
-
-		angles = rotate.ToEulerXYZ();
-
-		vector3[0] = math::RadToDeg(angles.x);
-		vector3[1] = math::RadToDeg(angles.y);
-		vector3[2] = math::RadToDeg(angles.z);
-
-		ImGui::DragFloat3("Rotation", vector3);
-
-		if (ImGui::Button("Reset", ImVec2(100, 20)))
-			App->geometry->currentMesh->transform->SetIdentity();
-
 	}
 	else {
 		ImGui::TextWrapped("There aren't any meshes");
 	}
 	ImGui::End();
 }
+
+void ModuleImGui::CreateGameObjectHierarchy()
+{
+	ImGui::Begin("Scene", &hierarchyWindow);
+
+	if (App->gameObject->root)
+	{
+		CreateGOTreeNode(App->gameObject->root);
+	}
+	ImGui::End();
+
+}
+
+void ModuleImGui::CreateGOTreeNode(GameObject* current)
+{
+	uint flags = ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_OpenOnArrow;// ImGuiTreeNodeFlags_OpenOnArrow;
+	if (current->childs.size() == 0)
+		flags |= ImGuiTreeNodeFlags_Leaf;
+
+	if (current == App->geometry->currentMesh)
+		flags |= ImGuiTreeNodeFlags_Selected;
+
+	char name[80];
+
+	string sName = current->name;
+
+	sprintf_s(name, 80, "%s", sName.c_str());
+
+
+	if (ImGui::TreeNodeEx(name, flags))
+	{
+		if (ImGui::IsItemClicked(0))
+		{
+			App->geometry->currentMesh = current;
+		}
+
+		for (list<GameObject*>::iterator childs = current->childs.begin(); childs != current->childs.end(); ++childs)
+		{
+			CreateGOTreeNode(*childs);
+		}
+		ImGui::TreePop();
+	}
+}
+
+
 
 update_status ModuleImGui::CreateMainMenuBar()
 {
@@ -648,7 +703,7 @@ void ModuleImGui::CreateMeshesHeader()
 	if (App->geometry->currentMesh != nullptr)
 	{
 		uint numVertex = 0u;
-		Mesh* goMesh = (Mesh*)App->geometry->currentMesh->GetComponent(ComponentType::ComponentType_GEOMETRY);
+		Mesh* goMesh = (Mesh*)App->geometry->currentMesh->GetComponent(ComponentType::ComponentType_MESH);
 		if (goMesh != nullptr)
 		{
 			std::vector<MeshBuffer>::iterator iterator = goMesh->buffers.begin();
@@ -672,7 +727,7 @@ void ModuleImGui::CreateTextureHeader()
 {
 	if (App->geometry->textureID != 0)
 	{
-		Mesh* currentGeometry = (Mesh*)App->geometry->currentMesh->GetComponent(ComponentType_GEOMETRY);
+		Mesh* currentGeometry = (Mesh*)App->geometry->currentMesh->GetComponent(ComponentType_MESH);
 		if (currentGeometry != nullptr)
 		{
 			ImGui::Text("Texture id: %i", App->geometry->textureID);

@@ -21,6 +21,11 @@ void Light::SetPos(float x, float y, float z)
 	position.z = z;
 }
 
+void Light::SetPos(float3 pos)
+{
+	position = pos;
+}
+
 void Light::Render()
 {
 	if(on)

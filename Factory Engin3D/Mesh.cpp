@@ -5,6 +5,11 @@
 
 #include "GameObject.h"
 
+void Mesh::Update(float dt)
+{
+	Render();
+}
+
 void Mesh::InnerRender() const
 {
 	for (std::vector<MeshBuffer>::const_iterator iterator = buffers.begin(); iterator != buffers.end(); ++iterator)

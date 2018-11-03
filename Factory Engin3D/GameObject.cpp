@@ -2,7 +2,7 @@
 #include "pcg-c-0.94/extras/entropy.h"
 
 
-GameObject::GameObject(GameObject* father)
+GameObject::GameObject(GameObject* father, char * name)
 {
 	TransformInfo* info = new TransformInfo();
 	info->position = float3::zero;
@@ -14,9 +14,13 @@ GameObject::GameObject(GameObject* father)
 	delete info;
 
 	this->father = father;
+
+	if (name != nullptr)
+		this->name = name;
+	else this->name = "noName";
 }
 
-GameObject::GameObject(float3 position, Quat rotation, float3 scale, GameObject* father) : father(father)
+GameObject::GameObject(float3 position, Quat rotation, float3 scale, GameObject* father, char* name)
 {
 	TransformInfo* info = new TransformInfo();
 	info->position = position;
@@ -28,7 +32,12 @@ GameObject::GameObject(float3 position, Quat rotation, float3 scale, GameObject*
 	delete info;
 
 	this->father = father;
+
+	if (name != nullptr)
+		this->name = name;
+	else this->name = "noName";
 }
+
 
 GameObject::~GameObject()
 {
@@ -52,6 +61,11 @@ GameObject::~GameObject()
 void GameObject::Update(float dt)
 {
 	for (list<Component*>::iterator iterator = components.begin(); iterator != components.end(); ++iterator)
+	{
+		(*iterator)->Update(dt);
+	}
+
+	for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
 	{
 		(*iterator)->Update(dt);
 	}
@@ -103,12 +117,16 @@ Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
 		if (info)
 		newComponent = (Component*)new Transform((TransformInfo*)info);
 		break;
-	case ComponentType_GEOMETRY:
+	case ComponentType_MESH:
 		if (info)
 		newComponent = (Component*)(((MeshInfo*)info)->mesh);
 		break;
 	case ComponentType_CAMERA:
 		newComponent = (Component*)new Camera(this);
+		break;
+	case ComponentType_GEOMETRY:
+		if (info)
+		newComponent = (Component*)(((PrimitiveInfo*)info)->primitive);
 		break;
 	case ComponentType_TEXTURE:
 		break;
@@ -134,6 +152,11 @@ float3 GameObject::GetPos()
 		return transform->GetPos();
 
 	return float3::zero;
+}
+
+Quat GameObject::GetRotation()
+{
+	return transform->GetRotation();
 }
 
 int GameObject::CreateRandomUID()

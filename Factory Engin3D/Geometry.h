@@ -8,6 +8,7 @@
 #include "Component.h"
 
 class Transform;
+class Geometry;
 
 enum PrimitiveTypes
 {
@@ -20,6 +21,13 @@ enum PrimitiveTypes
 	Primitive_Frustum
 };
 
+struct PrimitiveInfo : ComponentInfo
+{
+	PrimitiveInfo(Geometry* prim) : primitive(prim) {}
+
+	Geometry* primitive = nullptr;
+};
+
 class Geometry : public Component
 {
 public:
@@ -29,8 +37,7 @@ public:
 	virtual void	Render() const;
 	virtual void	InnerRender() const;
 
-	//float3			GetScale() const;
-	//float3			GetRotation() const;
+	virtual void	Update(float dt) { Render(); }
 
 	void			WireframeRender() const;
 	PrimitiveTypes	GetType() const;

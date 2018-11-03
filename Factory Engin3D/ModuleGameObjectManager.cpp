@@ -14,7 +14,7 @@ ModuleGameObjectManager::~ModuleGameObjectManager()
 
 bool ModuleGameObjectManager::Start()
 {
-	root = new GameObject(float3::zero, Quat::identity, float3::one);
+	root = new GameObject(float3::zero, Quat::identity, float3::one, nullptr, "Scene");
 
 	return true;
 }
@@ -26,10 +26,7 @@ update_status ModuleGameObjectManager::PreUpdate(float dt)
 
 update_status ModuleGameObjectManager::Update(float dt)
 {
-	for (list<GameObject*>::iterator iterator = gameObjects.begin(); iterator != gameObjects.end(); ++iterator)
-	{
-		(*iterator)->Update(dt);
-	}
+	root->Update(dt);
 
 	return UPDATE_CONTINUE;
 }
@@ -64,14 +61,16 @@ void ModuleGameObjectManager::CleanAllGameObjects()
 	}
 }
 
-GameObject* ModuleGameObjectManager::CreateGameObject(float3 position, Quat rotation, float3 scale, GameObject* father)
+GameObject* ModuleGameObjectManager::CreateGameObject(float3 position, Quat rotation, float3 scale, GameObject* father, char* name)
 {
 	GameObject* newGameObject = nullptr;
 
 	if (father == nullptr)
 		father = root;
 
-	newGameObject = new GameObject(position, rotation, scale, father);
+	newGameObject = new GameObject(position, rotation, scale, father, name);
+	
+	father->childs.push_back(newGameObject);
 
 	return newGameObject;
 }

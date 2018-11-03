@@ -4,7 +4,7 @@
 
 Camera::Camera(GameObject* gameObject) : Component(gameObject)
 {
-	frustum.type = PerspectiveFrustum;
+	frustum.type = InvalidFrustum;
 
 	if (gameObject != nullptr && gameObject->transform != nullptr)
 	{
@@ -19,8 +19,8 @@ Camera::Camera(GameObject* gameObject) : Component(gameObject)
 		frustum.up = float3::unitY;
 	}
 
-	frustum.nearPlaneDistance = 0.0f;
-	frustum.farPlaneDistance = 100.0f;
+	frustum.nearPlaneDistance = 0.1f;
+	frustum.farPlaneDistance = 1000.0f;
 	frustum.verticalFov = 60.0f * DEGTORAD;
 	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) * (SCREEN_WIDTH / SCREEN_HEIGHT));
 }
@@ -28,6 +28,8 @@ Camera::Camera(GameObject* gameObject) : Component(gameObject)
 
 float4x4 Camera::GetViewMatrix()
 {
+	UpdateFrustum();
+
 	float4x4 matrix;
 
 	matrix = frustum.ViewMatrix();
@@ -38,10 +40,44 @@ float4x4 Camera::GetViewMatrix()
 
 float* Camera::GetProjectionMatrix()
 {
+	UpdateFrustum();
+
 	float4x4 matrix;
 
 	matrix = frustum.ProjectionMatrix();
 	matrix.Transpose();
 
 	return (float*)matrix.v;
+}
+
+
+void Camera::UpdateFrustum()
+{
+	//if (gameObject != nullptr && gameObject->transform != nullptr)
+	//{
+	//	frustum.pos = gameObject->transform->GetPos();
+	//	frustum.front = gameObject->transform->GetRotation() * float3::unitZ;
+	//	frustum.up = gameObject->transform->GetRotation() * float3::unitY;
+	//}
+	//else
+	//{
+	//	frustum.pos = float3::zero;
+	//	frustum.front = float3::unitZ;
+	//	frustum.up = float3::unitY;
+	//}
+
+}
+
+void Camera::SetPos(float x, float y, float z)
+{
+	frustum.pos = float3(x, y, z);
+}
+void Camera::SetPos(float3 pos)
+{
+	frustum.pos = pos;
+}
+
+float3 Camera::GetPos()
+{
+	return frustum.pos;
 }

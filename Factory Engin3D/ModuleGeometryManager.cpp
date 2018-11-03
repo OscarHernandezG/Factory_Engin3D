@@ -250,14 +250,14 @@ void ModuleGeometry::UpdateMesh(char* path)
 	if (tempMesh != nullptr)
 		if (!tempMesh->buffers.empty() && currentMesh != nullptr)
 		{
-			Mesh* mesh = (Mesh*)currentMesh->GetComponent(ComponentType::ComponentType_GEOMETRY);
+			Mesh* mesh = (Mesh*)currentMesh->GetComponent(ComponentType::ComponentType_MESH);
 			currentMesh->RemoveComponent(mesh);
 
 			LoadMeshImporter(path, tempMesh);
 	
 			MeshInfo info;
 			info.mesh = tempMesh;
-			currentMesh->AddComponent(ComponentType_GEOMETRY, &info);
+			currentMesh->AddComponent(ComponentType_MESH, &info);
 		}
 
 	
@@ -295,8 +295,9 @@ AABB* ModuleGeometry::LoadBoundingBox(Mesh* mesh)
 
 		boundingBox = new AABB(min, max);
 
-		App->camera->Position = CalcBBPos(boundingBox);
-		App->camera->Look(CalcBBPos(boundingBox), mesh->GetPos(), false);
+		// TODO move camera at drop file
+		//App->camera->Position = CalcBBPos(boundingBox);
+		//App->camera->Look(CalcBBPos(boundingBox), mesh->GetPos(), false);
 	}
 	return boundingBox;
 }
@@ -439,29 +440,42 @@ update_status ModuleGeometry::PostUpdate(float dt)
 
 void ModuleGeometry::Draw3D(bool fill, bool wire) const
 {
-	//PrimitivePlane plane;
-	//plane.color = { 1, 1, 1, 1 };
-	//plane.axis = true;
-	//plane.Render();
+	//PrimitivePlane* ground = (PrimitivePlane*)plane->GetComponent(ComponentType_GEOMETRY);
 
-	if (currentMesh != nullptr)
-	{
-		Mesh* currentGeometry = (Mesh*)currentMesh->GetComponent(ComponentType_GEOMETRY);
-		if (currentGeometry)
-		{
-			currentGeometry->fill = true;
-			currentGeometry->wire = false;
-			currentGeometry->Render();
-		}
-	}
+	//ground->color = { 1, 1, 1, 1 };
+	//ground->axis = true;
+	//ground->Render();
+
+	//if (currentMesh != nullptr)
+	//{
+	//	Mesh* currentGeometry = (Mesh*)currentMesh->GetComponent(ComponentType_MESH);
+	//	if (currentGeometry)
+	//	{
+	//		currentGeometry->fill = true;
+	//		currentGeometry->wire = false;
+	//		currentGeometry->Render();
+	//	}
+	//}
 }
 
 void ModuleGeometry::LoadDefaultScene()
 {
 
-	currentMesh = new GameObject(App->gameObject->root);
+	currentMesh = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, "BakerHouse");
+
+	App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, "Empty");
+	App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, currentMesh, "BakerHouse child ");
+
+	App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, "Root Child ") , "Root child child");
 
 	DistributeFile("assets\\models\\BakerHouse.fbx");
 	DistributeFile("assets\\textures\\Baker_house.dds");
+
+
+	plane = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, "Ground");
+
+	PrimitiveInfo planeInfo(new PrimitivePlane());
+	plane->AddComponent(ComponentType_GEOMETRY, &planeInfo);
+
 
 }

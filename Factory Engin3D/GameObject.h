@@ -22,8 +22,8 @@ struct  ComponentInfo;
 class GameObject
 {
 public:
-	GameObject(GameObject* father);
-	GameObject(float3 position, Quat rotation = Quat::identity, float3 scale = float3::one, GameObject* father = nullptr);
+	GameObject(GameObject* father, char* name = nullptr);
+	GameObject(float3 position, Quat rotation = Quat::identity, float3 scale = float3::one, GameObject* father = nullptr, char* name = nullptr);
 	
 	~GameObject();
 
@@ -38,6 +38,8 @@ public:
 	void CreateGameObject(TransformInfo* info);
 
 	float3 GetPos();
+	Quat GetRotation();
+
 	int CreateRandomUID();
 public:
 
@@ -51,6 +53,8 @@ public:
 
 	list<GameObject*> childs;
 	GameObject* father = nullptr;
+
+	string name;
 
 	int UID = 0;
 	pcg32_random_t rng;

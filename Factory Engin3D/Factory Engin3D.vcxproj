@@ -74,10 +74,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\Factory_Engin3D-87bce15ffc57e6ce5da696b34db50cafe215dcbe\Factory Engin3D\Component.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Color.h" />
+    <ClInclude Include="Component.h" />
     <ClInclude Include="DevIL\includex86\IL\devil_cpp_wrapper.hpp" />
     <ClInclude Include="DevIL\includex86\IL\devil_internal_exports.h" />
     <ClInclude Include="DevIL\includex86\IL\il.h" />
