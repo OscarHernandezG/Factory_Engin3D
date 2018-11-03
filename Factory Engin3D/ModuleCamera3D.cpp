@@ -92,7 +92,7 @@ update_status ModuleCamera3D::Update(float dt)
 		{
 			// We do not use dt to zoom with the mouse wheel, the speed at which the mouse wheel rotates is independent of the fps
 			// The movement of the mouse wheel is not a "KEY_REPEAT" every frame but a "KEY_DOWN" occasionally
-			camera->transform->position += camera->transform->rotation * float3::unitZ * wheel * cameraSpeed;
+			cameraComponent->frustum.pos += cameraComponent->frustum.front * wheel * cameraSpeed;
 		}
 
 		if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_DOWN)
