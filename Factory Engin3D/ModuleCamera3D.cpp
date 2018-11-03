@@ -205,20 +205,9 @@ void ModuleCamera3D::FreeLook(float dx, float dy)
 // -----------------------------------------------------------------
 void ModuleCamera3D::Look(const float3 &Position, const float3 &Reference, bool RotateAroundReference)
 {
-	//camera->transform->position = Position;
-	//this->Reference = Reference;
+	SetPos(Position);
 
-	//Z = (Position - Reference).Normalized();
-	//X = Cross(math::float3(0.0f, 1.0f, 0.0f), Z).Normalized();
-	//Y = Cross(Z, X);
-
-	//if (!RotateAroundReference)
-	//{
-	//	this->Reference = this->camera->transform->position;
-	//	this->camera->transform->position += Z * 0.05f;
-	//}
-
-	//CalculateViewMatrix();
+	LookAt(Reference);
 }
 
 void ModuleCamera3D::Look(bool RotateAroundReference)
