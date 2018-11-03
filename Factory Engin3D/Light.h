@@ -11,6 +11,7 @@ struct Light
 
 	void Init();
 	void SetPos(float x, float y, float z);
+	void SetPos(float3 pos);
 	void Active(bool active);
 	void Render();
 
