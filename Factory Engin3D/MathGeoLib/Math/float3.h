@@ -644,6 +644,10 @@ public:
 	/** @note Due to static data initialization order being undefined in C++, do NOT use this
 			member to initialize other static data in other compilation units! */
 	static const float3 one;
+	/// Specifies a compile-time constant float3 with value (2, 2, 2). [similarOverload: zero]
+/** @note Due to static data initialization order being undefined in C++, do NOT use this
+		member to initialize other static data in other compilation units! */
+	static const float3 two;
 	/// Specifies a compile-time constant float3 with value (1, 0, 0).
 	/** @note Due to static data initialization order being undefined in C++, do NOT use this
 			member to initialize other static data in other compilation units! */

@@ -4,7 +4,9 @@
 #include "Module.h"
 #include "Globals.h"
 #include "Mesh.h"
+#include "Quadtree.h"
 
+#include <vector>
 class ModuleSceneIntro : public Module
 {
 public:
@@ -23,5 +25,6 @@ public:
 	PrimitiveCube* cube = nullptr;
 
 	char* droppedFileDir = nullptr;
+	Quadtree quadtree;
 };
 #endif // !__ModuleSceneIntro_H__

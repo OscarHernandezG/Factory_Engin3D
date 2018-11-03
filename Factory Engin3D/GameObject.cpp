@@ -87,6 +87,20 @@ Component* GameObject::GetComponent(ComponentType type)
 	return component;
 }
 
+bool GameObject::HasComponent(ComponentType type)
+{
+	bool ret = false;
+	for (list<Component*>::iterator iterator = components.begin(); iterator != components.end(); ++iterator)
+	{
+		if ((*iterator)->type == type)
+		{
+			ret = true;
+			break;
+		}
+	}
+	return ret;
+}
+
 void GameObject::RemoveComponent(Component* component)
 {
 	if (component != nullptr)

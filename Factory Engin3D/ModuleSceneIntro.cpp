@@ -28,14 +28,38 @@ bool ModuleSceneIntro::Start()
 	bool ret = true;
 
 	App->camera->Move(float3(1.0f, 1.0f, 0.0f));
+	quadtree.Create(AABB(float3(-50, 0, -50), float3(50, 15, 50)));
 
 	return ret;
 }
 
 update_status ModuleSceneIntro::PreUpdate(float dt)
 {
-
 	update_status status = UPDATE_CONTINUE;
+
+	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
+	{
+		App->renderer3D->debugQuad = !App->renderer3D->debugQuad;
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)//Empty game object
+	{
+		float3 pos = math::float3((rand() % 100 )- 50, rand() % 15, (rand() % 100) - 50);
+
+		GameObject* random = App->gameObject->CreateGameObject(pos);
+
+		const float3 center(pos.x, pos.y, pos.z);
+		const float3 size(float3::two);
+
+		random->transform->boundingBox.SetFromCenterAndSize(center, size);
+
+		quadtree.Insert(random);
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
+	{
+		App->renderer3D->cameraCulling = !App->renderer3D->cameraCulling;
+	}
 
 	return status;
 }
@@ -43,9 +67,6 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 // Load assets
 bool ModuleSceneIntro::CleanUp()
 {	
-	//delete frust;
-	//delete cube;
-
 	return true;
 }
 

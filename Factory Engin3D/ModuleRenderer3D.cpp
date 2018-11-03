@@ -14,6 +14,7 @@
 #include "Assimp/include/postprocess.h"
 #include "Assimp/include/cfileio.h"
 
+#include <vector>
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -177,11 +178,42 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 
-	// 1. Draw geometry
-	App->geometry->Draw3D(isFill, isWire);
+	// 1. Draw geometry Camera Culling
+
+	std::vector<GameObject*> drawerGO;
+	if (cameraCulling)
+	{
+		App->sceneIntro->quadtree.GetIntersects(drawerGO, App->camera->GetCameraFrustrum());
+
+		for (auto iterator : drawerGO)
+		{
+			Component* geometry = iterator->GetComponent(ComponentType_GEOMETRY);
+			if (geometry != nullptr)
+				((Geometry*)geometry)->Render();
+		}
+	}
+	else
+	{
+		App->sceneIntro->quadtree.GetGameObjects(drawerGO);
+		for (auto iterator : drawerGO)
+		{
+			Component* geometry = iterator->GetComponent(ComponentType_GEOMETRY);
+			if (geometry != nullptr)
+				((Geometry*)geometry)->Render();
+		}
+
+	}
 
 	// 2. Debug geometry
-	//TODO
+	if (debugQuad)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glDisable(GL_CULL_FACE);
+		DebugDraw();
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glEnable(GL_CULL_FACE);
+	}
+
 
 	// 3. Draw UI
 	App->gui->DrawUI();
@@ -196,7 +228,6 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	return UPDATE_CONTINUE;
 }
-
 // Called before quitting
 bool ModuleRenderer3D::CleanUp()
 {
@@ -257,6 +288,82 @@ math::float4x4 ModuleRenderer3D::Perspective(float fovy, float aspect, float n, 
 	return Perspective;
 }
 
+
+void ModuleRenderer3D::DebugDraw()
+{
+	std::vector<const QuadtreeNode*> aabb;
+	App->sceneIntro->quadtree.GetBoxLimits(aabb);
+	//Quadtree draw
+	for (vector<const QuadtreeNode*>::const_iterator iterator = aabb.begin(); iterator != aabb.end(); ++iterator)
+	{
+		static float3 corners[8];
+		(*iterator)->limits.GetCornerPoints(corners);
+
+		DrawQuad(corners);
+	}
+
+	std::vector<GameObject*> objects;
+	App->sceneIntro->quadtree.GetGameObjects(objects);
+	//Quadtree Objects
+	for (vector<GameObject*>::const_iterator iterator = objects.begin(); iterator != objects.end(); ++iterator)
+	{
+		static float3 corners[8];
+		(*iterator)->transform->boundingBox.GetCornerPoints(corners);
+
+		DrawQuad(corners, Red);
+	}
+	//Other GO
+	/*for (list<GameObject*>::const_iterator iterator = App->gameObject->root->childs.begin(); iterator != App->gameObject->root->childs.end(); ++iterator)
+	{
+	static float3 corners[8];
+	(*iterator)->transform->boundingBox.GetCornerPoints(corners);
+
+	DrawQuad(corners, Blue);
+	}*/
+}
+
+
+void ModuleRenderer3D::DrawQuad(static float3* corners, Color color)
+{
+	glLineWidth(2.0f);
+	glColor3f(color.r, color.g, color.b);
+	glBegin(GL_QUADS);
+
+	glVertex3fv((GLfloat*)&corners[1]);
+	glVertex3fv((GLfloat*)&corners[5]);
+	glVertex3fv((GLfloat*)&corners[7]);
+	glVertex3fv((GLfloat*)&corners[3]);
+
+	glVertex3fv((GLfloat*)&corners[4]);
+	glVertex3fv((GLfloat*)&corners[0]);
+	glVertex3fv((GLfloat*)&corners[2]);
+	glVertex3fv((GLfloat*)&corners[6]);
+
+	glVertex3fv((GLfloat*)&corners[5]);
+	glVertex3fv((GLfloat*)&corners[4]);
+	glVertex3fv((GLfloat*)&corners[6]);
+	glVertex3fv((GLfloat*)&corners[7]);
+
+	glVertex3fv((GLfloat*)&corners[0]);
+	glVertex3fv((GLfloat*)&corners[1]);
+	glVertex3fv((GLfloat*)&corners[3]);
+	glVertex3fv((GLfloat*)&corners[2]);
+
+	glVertex3fv((GLfloat*)&corners[3]);
+	glVertex3fv((GLfloat*)&corners[7]);
+	glVertex3fv((GLfloat*)&corners[6]);
+	glVertex3fv((GLfloat*)&corners[2]);
+
+	glVertex3fv((GLfloat*)&corners[0]);
+	glVertex3fv((GLfloat*)&corners[4]);
+	glVertex3fv((GLfloat*)&corners[5]);
+	glVertex3fv((GLfloat*)&corners[1]);
+
+	glEnd();
+
+}
+
+
 update_status ModuleRenderer3D::Save(JSON_Object* object)
 {
 	json_object_dotset_number(object, "render.ambientLight.red", ambient_lihgt.x);
@@ -275,4 +382,3 @@ update_status ModuleRenderer3D::Load(JSON_Object * object)
 
 	return UPDATE_CONTINUE;
 }
-

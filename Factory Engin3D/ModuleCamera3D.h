@@ -38,6 +38,8 @@ public:
 	void SetPos(float3 pos);
 
 	float* GetViewMatrix();
+	Frustum GetCameraFrustrum() const;
+
 
 public:
 	GameObject* camera = nullptr;
