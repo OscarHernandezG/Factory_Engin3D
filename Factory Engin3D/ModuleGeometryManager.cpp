@@ -250,15 +250,14 @@ void ModuleGeometry::UpdateMesh(char* path)
 	if (tempMesh != nullptr)
 		if (!tempMesh->buffers.empty() && currentMesh != nullptr)
 		{
-			Mesh* mesh = (Mesh*)currentMesh->GetComponent(ComponentType::ComponentType_MESH);
+			Mesh* mesh = (Mesh*)currentMesh->GetComponent(ComponentType::ComponentType_GEOMETRY);
 			currentMesh->RemoveComponent(mesh);
 
 			LoadMeshImporter(path, tempMesh);
 	
-			MeshInfo info;
-			info.mesh = tempMesh;
+			GeometryInfo info(tempMesh);
 			info.boundingBox = *currentMeshBB;
-			currentMesh->AddComponent(ComponentType_MESH, &info);
+			currentMesh->AddComponent(ComponentType_GEOMETRY, &info);
 		}
 
 	
@@ -463,9 +462,9 @@ void ModuleGeometry::LoadDefaultScene()
 {
 
 	currentMesh = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, "BakerHouse");
+	App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, currentMesh, "BakerHouse child ");
 
 	App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, "Empty");
-	App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, currentMesh, "BakerHouse child ");
 
 	App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, "Root Child ") , "Root child child");
 
@@ -475,13 +474,13 @@ void ModuleGeometry::LoadDefaultScene()
 
 	plane = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, "Ground");
 
-	PrimitiveInfo planeInfo(new PrimitivePlane());
+	GeometryInfo planeInfo(new PrimitivePlane());
 	plane->AddComponent(ComponentType_GEOMETRY, &planeInfo);
 
 
 	GameObject* box = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, "Box at 0,0,0");
 
-	PrimitiveInfo cubeInfo(new PrimitiveCube());
+	GeometryInfo cubeInfo(new PrimitiveCube());
 	box->AddComponent(ComponentType_GEOMETRY, &cubeInfo);
 
 }

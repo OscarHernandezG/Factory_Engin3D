@@ -6,14 +6,6 @@
 
 #include "Globals.h"
 
-class Mesh;
-
-struct MeshInfo : public ComponentInfo
-{
-	Mesh* mesh = nullptr;
-	AABB boundingBox;
-};
-
 template <typename T>
 struct Buffer
 {
@@ -35,8 +27,6 @@ public:
 	Mesh() {};
 	Mesh(GameObject* parent) : Geometry(parent) {};
 	~Mesh() { ClearMesh(); };
-
-	void Update(float dt);
 
 	void InnerRender() const;
 

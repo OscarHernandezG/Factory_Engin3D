@@ -21,11 +21,12 @@ enum PrimitiveTypes
 	Primitive_Frustum
 };
 
-struct PrimitiveInfo : ComponentInfo
+struct GeometryInfo : ComponentInfo
 {
-	PrimitiveInfo(Geometry* prim) : primitive(prim) {}
+	GeometryInfo(Geometry* prim) : geometry(prim) {}
 
-	Geometry* primitive = nullptr;
+	Geometry* geometry = nullptr;
+	AABB boundingBox;
 };
 
 class Geometry : public Component
@@ -37,7 +38,7 @@ public:
 	virtual void	Render() const;
 	virtual void	InnerRender() const;
 
-	virtual void	Update(float dt) { Render(); }
+	//virtual void	Update(float dt) { Render(); }
 
 	void			WireframeRender() const;
 	PrimitiveTypes	GetType() const;
