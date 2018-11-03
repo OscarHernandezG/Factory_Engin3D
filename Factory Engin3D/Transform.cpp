@@ -24,12 +24,17 @@ Transform::Transform(GameObject * gameObject) : Component(gameObject, ComponentT
 
 void Transform::SetPos(float x, float y, float z)
 {
-	position = float3(x, y, z);
+	SetPos(float3(x, y, z));
 }
 
 void Transform::SetPos(float3 position)
 {
-	this->position = position;
+	float3 pos = position;
+
+	if (gameObject->father != nullptr)
+		pos = pos - gameObject->father->GetPos();
+
+	this->position = pos;
 }
 
 void Transform::SetRotation(Quat rotation)
