@@ -42,14 +42,14 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 		debugQuadtree = !debugQuadtree;
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)//Empty game object
 	{
-		float3 pos = math::float3((rand() % 100 )- 50, rand() % 10, (rand() % 100) - 50);
+		float3 pos = math::float3((rand() % 100 )- 50, rand() % 15, (rand() % 100) - 50);
 
 		GameObject* random = App->gameObject->CreateGameObject(pos);
 
 		const math::float3 center(pos.x, pos.y, pos.z);
-		const math::float3 size(2.0f, 2.0f, 2.0f);
+		const math::float3 size(float3::two);
 
 		random->transform->boundingBox.SetFromCenterAndSize(center, size);
 
