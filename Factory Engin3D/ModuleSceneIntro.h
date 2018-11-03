@@ -18,8 +18,6 @@ public:
 	update_status Update(float dt);
 	update_status PostUpdate(float dt);
 
-	void DrawQuad(float3 * corners, Color color = White);
-
 	bool CleanUp();
 
 public:
@@ -28,6 +26,5 @@ public:
 
 	char* droppedFileDir = nullptr;
 	Quadtree quadtree;
-	bool debugQuadtree = false;
 };
 #endif // !__ModuleSceneIntro_H__

@@ -262,3 +262,8 @@ float* ModuleCamera3D::GetViewMatrix()
 {
 	return cameraComponent->GetViewMatrix().ptr();
 }
+
+Frustum ModuleCamera3D::GetCameraFrustrum() const
+{
+	return cameraComponent->frustum;
+}

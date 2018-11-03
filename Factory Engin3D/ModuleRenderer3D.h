@@ -18,6 +18,7 @@ public:
 	bool Start();
 	update_status PreUpdate(float dt);
 	update_status PostUpdate(float dt);
+	void DebugDraw();
 	bool CleanUp();
 
 	void OnResize(int width, int height);
@@ -27,8 +28,11 @@ public:
 
 	math::float4x4 Perspective(float fovy, float aspect, float n, float f) const;
 
+	void DrawQuad(float3 * corners, Color color = White);
+	
 	update_status Save(JSON_Object * object);
 	update_status Load(JSON_Object * object);
+
 
 public:
 
@@ -48,6 +52,9 @@ public:
 	float2 currSize{ SCREEN_WIDTH,SCREEN_HEIGHT };
 
 	float3 ambient_lihgt = { 1.0f,1.0f,1.0f };
+
+	bool debugQuad = false;
+	bool cameraCulling = false;
 
 };
 #endif // !__ModuleRender_H__

@@ -39,7 +39,7 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 	{
-		debugQuadtree = !debugQuadtree;
+		App->renderer3D->debugQuad = !App->renderer3D->debugQuad;
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)//Empty game object
@@ -56,50 +56,13 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 		quadtree.Insert(random);
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
+	{
+		App->renderer3D->cameraCulling = !App->renderer3D->cameraCulling;
+	}
+
 	return status;
 }
-
-void ModuleSceneIntro::DrawQuad(static float3* corners, Color color)
-{
-	glLineWidth(2.0f);
-	glColor3f(color.r,color.g,color.b);
-	glBegin(GL_QUADS);
-
-	glVertex3fv((GLfloat*)&corners[1]);
-	glVertex3fv((GLfloat*)&corners[5]);
-	glVertex3fv((GLfloat*)&corners[7]);
-	glVertex3fv((GLfloat*)&corners[3]);
-
-	glVertex3fv((GLfloat*)&corners[4]);
-	glVertex3fv((GLfloat*)&corners[0]);
-	glVertex3fv((GLfloat*)&corners[2]);
-	glVertex3fv((GLfloat*)&corners[6]);
-
-	glVertex3fv((GLfloat*)&corners[5]);
-	glVertex3fv((GLfloat*)&corners[4]);
-	glVertex3fv((GLfloat*)&corners[6]);
-	glVertex3fv((GLfloat*)&corners[7]);
-
-	glVertex3fv((GLfloat*)&corners[0]);
-	glVertex3fv((GLfloat*)&corners[1]);
-	glVertex3fv((GLfloat*)&corners[3]);
-	glVertex3fv((GLfloat*)&corners[2]);
-
-	glVertex3fv((GLfloat*)&corners[3]);
-	glVertex3fv((GLfloat*)&corners[7]);
-	glVertex3fv((GLfloat*)&corners[6]);
-	glVertex3fv((GLfloat*)&corners[2]);
-
-	glVertex3fv((GLfloat*)&corners[0]);
-	glVertex3fv((GLfloat*)&corners[4]);
-	glVertex3fv((GLfloat*)&corners[5]);
-	glVertex3fv((GLfloat*)&corners[1]);
-
-	glEnd();
-
-}
-
-
 
 // Load assets
 bool ModuleSceneIntro::CleanUp()
@@ -115,34 +78,5 @@ update_status ModuleSceneIntro::Update(float dt)
 
 update_status ModuleSceneIntro::PostUpdate(float dt)
 {
-
-	if (debugQuadtree)
-	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		glDisable(GL_CULL_FACE);
-		std::vector<const QuadtreeNode*> aabb;
-		quadtree.GetBoxLimits(aabb);
-		for (vector<const QuadtreeNode*>::const_iterator iterator = aabb.begin(); iterator != aabb.end(); ++iterator)
-		{
-			static float3 corners[8];
-			(*iterator)->limits.GetCornerPoints(corners);
-
-			DrawQuad(corners);
-		}
-
-		std::vector<GameObject*> objects;
-		quadtree.GetGameObjects(objects);
-
-		for (vector<GameObject*>::const_iterator iterator = objects.begin(); iterator != objects.end(); ++iterator)
-		{
-			static float3 corners[8];
-			(*iterator)->transform->boundingBox.GetCornerPoints(corners);
-
-			DrawQuad(corners, Red);
-		}
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		glEnable(GL_CULL_FACE);
-	}
-
 	return UPDATE_CONTINUE;
 }

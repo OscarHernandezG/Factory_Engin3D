@@ -51,4 +51,33 @@ public:
 	QuadtreeNode* root = nullptr;
 
 };
+
+template<typename TYPE>
+inline void Quadtree::GetIntersects(std::vector<GameObject*>& objects, const TYPE & primitive) const
+{
+	if (root != nullptr)
+		root->GetIntersects(objects, primitive);
+}
+
+template<typename TYPE>
+inline void QuadtreeNode::GetIntersects(std::vector<GameObject*>& objects, const TYPE & primitive) const
+{
+	if (primitive.Intersects(limits))
+	{
+		for (std::list<GameObject*>::const_iterator iterator = objectsList.begin(); iterator != objectsList.end(); ++iterator)
+		{
+			if (primitive.Intersects((*iterator)->transform->boundingBox))
+				objects.push_back(*iterator);
+
+		}
+		for (int i = 0; i < 4; ++i)
+		{
+			if (childs[i] != nullptr)
+				childs[i]->GetIntersects(objects, primitive);
+			else
+				break;
+		}
+	}
+}
+
 #endif
