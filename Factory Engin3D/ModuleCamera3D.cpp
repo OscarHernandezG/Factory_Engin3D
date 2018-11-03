@@ -118,7 +118,7 @@ update_status ModuleCamera3D::Update(float dt)
 				float motion = App->input->GetMouseXMotion() + App->input->GetMouseYMotion();
 				if (motion != 0)
 				{
-					camera->transform->position += camera->transform->rotation * float3::unitZ * motion * dt;
+					cameraComponent->frustum.pos += cameraComponent->frustum.front * motion * dt;
 				}
 			}
 		}
