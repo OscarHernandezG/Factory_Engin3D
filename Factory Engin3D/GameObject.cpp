@@ -117,19 +117,15 @@ Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
 		if (info)
 		newComponent = (Component*)new Transform((TransformInfo*)info);
 		break;
-	case ComponentType_MESH:
+	case ComponentType_GEOMETRY:
 		if (info)
 		{
-			newComponent = (Component*)(((MeshInfo*)info)->mesh);
-			SetABB(((MeshInfo*)info)->boundingBox);
+			newComponent = (Component*)(((GeometryInfo*)info)->geometry);
+			SetABB(((GeometryInfo*)info)->boundingBox);
 		}
 		break;
 	case ComponentType_CAMERA:
 		newComponent = (Component*)new Camera(this);
-		break;
-	case ComponentType_GEOMETRY:
-		if (info)
-		newComponent = (Component*)(((PrimitiveInfo*)info)->primitive);
 		break;
 	case ComponentType_TEXTURE:
 		break;
@@ -149,10 +145,18 @@ Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
 	return newComponent;
 }
 
-float3 GameObject::GetPos()
+float3 GameObject::GetPos() const
 {
 	if (transform != nullptr)
 		return transform->GetPos();
+
+	return float3::zero;
+}
+
+float3 GameObject::GetScale() const
+{
+	if (transform != nullptr)
+		return transform->GetScale();
 
 	return float3::zero;
 }
@@ -167,10 +171,25 @@ const AABB* GameObject::GetAABB() const
 	return &transform->boundingBox;
 }
 
+float3 GameObject::GetBBPos() const
+{
+	float3 distance{ 0,0,0 };
+	if (transform)
+	{
+		float3 size = transform->boundingBox.Size();
+
+		float3 reScale = GetScale();
+		distance.x = (size.x / 2) / math::Tan((0.3333333 * reScale.x));
+		distance.y = (size.y / 2) / math::Tan((0.3333333 * reScale.y));
+		distance.z = (size.z / 2) / math::Tan((0.3333333 * reScale.z));
+	}
+	return distance + GetPos();
+}
+
 void GameObject::SetABB(AABB aabb)
 {
 	if (transform)
-		transform->boundingBox = aabb;
+		transform->originalBoundingBox = aabb;
 }
 
 int GameObject::CreateRandomUID()
