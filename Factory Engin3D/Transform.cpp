@@ -22,6 +22,14 @@ Transform::Transform(GameObject * gameObject) : Component(gameObject, ComponentT
 	SetIdentity();
 }
 
+void Transform::Update(float dt)
+{
+	OBB obb = boundingBox.ToOBB();
+	obb.Transform(GetMatrix());
+
+	boundingBox = obb.MinimalEnclosingAABB();
+}
+
 void Transform::SetPos(float x, float y, float z)
 {
 	SetPos(float3(x, y, z));
@@ -94,6 +102,5 @@ Quat Transform::GetLocalRotation() const
 
 float4x4 Transform::GetMatrix() const
 {
-	float4x4 mat = float4x4::FromTRS(position, rotation, scale).Transposed();
-		return mat;
+	return float4x4::FromTRS(position, rotation, scale).Transposed();
 }

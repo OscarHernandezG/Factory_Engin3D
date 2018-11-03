@@ -133,7 +133,10 @@ Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
 		break;
 	case ComponentType_MESH:
 		if (info)
-		newComponent = (Component*)(((MeshInfo*)info)->mesh);
+		{
+			newComponent = (Component*)(((MeshInfo*)info)->mesh);
+			SetABB(((MeshInfo*)info)->boundingBox);
+		}
 		break;
 	case ComponentType_CAMERA:
 		newComponent = (Component*)new Camera(this);
@@ -171,6 +174,17 @@ float3 GameObject::GetPos()
 Quat GameObject::GetRotation()
 {
 	return transform->GetRotation();
+}
+
+const AABB* GameObject::GetAABB() const
+{
+	return &transform->boundingBox;
+}
+
+void GameObject::SetABB(AABB aabb)
+{
+	if (transform)
+		transform->boundingBox = aabb;
 }
 
 int GameObject::CreateRandomUID()

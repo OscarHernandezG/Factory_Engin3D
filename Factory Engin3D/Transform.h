@@ -37,6 +37,7 @@ public:
 
 	~Transform() {}
 
+	void Update(float dt);
 
 	void		SetPos(float x, float y, float z);
 	void		SetPos(float3 position);
