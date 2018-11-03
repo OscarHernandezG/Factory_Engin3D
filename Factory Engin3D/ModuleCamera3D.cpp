@@ -134,8 +134,6 @@ update_status ModuleCamera3D::Update(float dt)
 				OrbitArroundReference(dx, dy, App->geometry->GetCurrentMeshPivot());
 			else
 				FreeLook(dx, dy);
-
-
 			//	camera->transform->position = Reference + Z * camera->transform->position.Length();
 		}
 	}
@@ -145,9 +143,9 @@ update_status ModuleCamera3D::Update(float dt)
 void ModuleCamera3D::OrbitArroundReference(float dx, float dy, float3 reference)
 {
 
-	float3 originalPosition = cameraComponent->frustum.pos;
+	float3 originalPosition = cameraComponent->frustum.pos - reference;
 
-	Quat yRotation(cameraComponent->frustum.up, dx);
+	Quat yRotation(cameraComponent->frustum.up , dx);
 	Quat xRotation(cameraComponent->frustum.WorldRight(), dy);
 
 	float3 newPosition = originalPosition;
