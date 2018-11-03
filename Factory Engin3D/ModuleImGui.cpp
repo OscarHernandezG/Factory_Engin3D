@@ -421,9 +421,11 @@ void ModuleImGui::CreateTransform()
 {
 	ImGui::SetWindowSize({ 400,200 }, ImGuiWindowFlags_NoResize);
 	ImGui::Begin("Transform", &transformWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
-	
 	if (App->geometry->currentMesh != nullptr)
 	{
+		string goName = App->geometry->currentMesh->name;
+		ImGui::Text(goName.data());
+
 		float3 position, scale, angles;
 		Quat rotate;
 
@@ -479,8 +481,27 @@ void ModuleImGui::CreateGameObjectHierarchy()
 
 void ModuleImGui::CreateGOTreeNode(GameObject* current)
 {
-	if (ImGui::TreeNode(current->name.data()))
+	uint flags = ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_OpenOnArrow;// ImGuiTreeNodeFlags_OpenOnArrow;
+	if (current->childs.size() == 0)
+		flags |= ImGuiTreeNodeFlags_Leaf;
+
+	if (current == App->geometry->currentMesh)
+		flags |= ImGuiTreeNodeFlags_Selected;
+
+	char name[80];
+
+	string sName = current->name;
+
+	sprintf_s(name, 80, "%s", sName.c_str());
+
+
+	if (ImGui::TreeNodeEx(name, flags))
 	{
+		if (ImGui::IsItemClicked(0))
+		{
+			App->geometry->currentMesh = current;
+		}
+
 		for (list<GameObject*>::iterator childs = current->childs.begin(); childs != current->childs.end(); ++childs)
 		{
 			CreateGOTreeNode(*childs);
