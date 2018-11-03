@@ -37,8 +37,7 @@ public:
 	virtual void	Render() const;
 	virtual void	InnerRender() const;
 
-	//float3			GetScale() const;
-	//float3			GetRotation() const;
+	virtual void	Update(float dt) { Render(); }
 
 	void			WireframeRender() const;
 	PrimitiveTypes	GetType() const;
