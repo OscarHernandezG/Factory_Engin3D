@@ -463,12 +463,12 @@ void ModuleGeometry::Draw3D(bool fill, bool wire) const
 void ModuleGeometry::LoadDefaultScene()
 {
 
-	//currentMesh = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, "BakerHouse");
-	//App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, currentMesh, "BakerHouse child ");
+	currentMesh = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, "BakerHouse");
+	App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, currentMesh, "BakerHouse child ");
 
-	//App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, "Empty");
+	App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, "Empty");
 
-	//App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, "Root Child ") , "Root child child");
+	App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, "Root Child ") , "Root child child");
 
 	//DistributeFile("assets\\models\\BakerHouse.fbx");
 	//DistributeFile("assets\\textures\\Baker_house.dds");
