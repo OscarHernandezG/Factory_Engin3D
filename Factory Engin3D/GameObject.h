@@ -37,10 +37,15 @@ public:
 
 	void CreateGameObject(TransformInfo* info);
 
-	float3 GetPos();
+	float3 GetPos() const;
+
+	float3 GetScale() const;
+
 	Quat GetRotation();
 
 	const AABB* GetAABB() const;
+
+	float3 GetBBPos() const;
 
 	void SetABB(AABB aabb);
 
