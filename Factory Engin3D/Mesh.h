@@ -24,8 +24,8 @@ struct MeshBuffer
 class Mesh :public Geometry
 {
 public:
-	Mesh() {};
-	Mesh(GameObject* parent) : Geometry(parent) {};
+	Mesh() { type = PrimitiveTypes::Primitive_Mesh; };
+	Mesh(GameObject* parent) : Geometry(parent) { type = PrimitiveTypes::Primitive_Mesh; };
 	~Mesh() { ClearMesh(); };
 
 	void InnerRender() const;

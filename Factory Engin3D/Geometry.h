@@ -18,7 +18,8 @@ enum PrimitiveTypes
 	Primitive_Cube,
 	Primitive_Sphere,
 	Primitive_Cylinder,
-	Primitive_Frustum
+	Primitive_Frustum,
+	Primitive_Mesh
 };
 
 struct GeometryInfo : ComponentInfo
