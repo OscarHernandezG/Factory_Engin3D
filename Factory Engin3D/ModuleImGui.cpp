@@ -446,7 +446,13 @@ void ModuleImGui::CreateTransform()
 			angles[1] = math::RadToDeg(angles.y);
 			angles[2] = math::RadToDeg(angles.z);
 
-			ImGui::DragFloat3("Rotation", &angles[0]);
+			if (ImGui::DragFloat3("Rotation", &angles[0]))
+			{
+				angles.x = math::DegToRad(angles.x);
+				angles.y = math::DegToRad(angles.y);
+				angles.z = math::DegToRad(angles.z);
+				App->geometry->currentMesh->transform->SetRotation(angles);
+			}
 
 
 			if (ImGui::Button("Reset", ImVec2(100, 20)))
