@@ -440,22 +440,22 @@ update_status ModuleGeometry::PostUpdate(float dt)
 
 void ModuleGeometry::Draw3D(bool fill, bool wire) const
 {
-	PrimitivePlane* ground = (PrimitivePlane*)plane->GetComponent(ComponentType_GEOMETRY);
+	//PrimitivePlane* ground = (PrimitivePlane*)plane->GetComponent(ComponentType_GEOMETRY);
 
-	ground->color = { 1, 1, 1, 1 };
-	ground->axis = true;
-	ground->Render();
+	//ground->color = { 1, 1, 1, 1 };
+	//ground->axis = true;
+	//ground->Render();
 
-	if (currentMesh != nullptr)
-	{
-		Mesh* currentGeometry = (Mesh*)currentMesh->GetComponent(ComponentType_MESH);
-		if (currentGeometry)
-		{
-			currentGeometry->fill = true;
-			currentGeometry->wire = false;
-			currentGeometry->Render();
-		}
-	}
+	//if (currentMesh != nullptr)
+	//{
+	//	Mesh* currentGeometry = (Mesh*)currentMesh->GetComponent(ComponentType_MESH);
+	//	if (currentGeometry)
+	//	{
+	//		currentGeometry->fill = true;
+	//		currentGeometry->wire = false;
+	//		currentGeometry->Render();
+	//	}
+	//}
 }
 
 void ModuleGeometry::LoadDefaultScene()
