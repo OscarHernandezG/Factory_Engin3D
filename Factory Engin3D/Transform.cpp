@@ -37,6 +37,10 @@ void Transform::SetRotation(Quat rotation)
 	this->rotation = rotation;
 }
 
+void Transform::SetRotation(float3 rotation)
+{
+	this->rotation = Quat::FromEulerXYZ(rotation.x, rotation.y, rotation.z);
+}
 // ------------------------------------------------------------
 void Transform::Rotate(Quat rotation)
 {

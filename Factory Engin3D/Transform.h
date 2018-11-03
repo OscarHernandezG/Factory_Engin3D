@@ -42,6 +42,7 @@ public:
 	void		SetPos(float3 position);
 
 	void		SetRotation(Quat rotation);
+	void		SetRotation(float3 rotation);
 	void		Rotate(Quat rotation);
 
 	void		SetScale(float x, float y, float z);
