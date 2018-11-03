@@ -295,8 +295,9 @@ AABB* ModuleGeometry::LoadBoundingBox(Mesh* mesh)
 
 		boundingBox = new AABB(min, max);
 
-		App->camera->Position = CalcBBPos(boundingBox);
-		App->camera->Look(CalcBBPos(boundingBox), mesh->GetPos(), false);
+		// TODO move camera at drop file
+		//App->camera->Position = CalcBBPos(boundingBox);
+		//App->camera->Look(CalcBBPos(boundingBox), mesh->GetPos(), false);
 	}
 	return boundingBox;
 }
