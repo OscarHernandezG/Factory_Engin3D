@@ -232,7 +232,9 @@ void ModuleGeometry::LoadMeshImporter(const char* path, Mesh* tempMesh)
 		glGenBuffers(1, &bufferImporter.texture.id);
 		glBindBuffer(GL_ARRAY_BUFFER, bufferImporter.texture.id);
 		glBufferData(GL_ARRAY_BUFFER, bufferImporter.texture.size * sizeof(float), bufferImporter.texture.buffer, GL_STATIC_DRAW);
+
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 		i++;
 		buffer = App->importer->LoadFile(path, LlibraryType_MESH, i);
@@ -250,7 +252,7 @@ void ModuleGeometry::UpdateMesh(char* path)
 	if (tempMesh != nullptr)
 		if (!tempMesh->buffers.empty() && currentMesh != nullptr)
 		{
-			Mesh* mesh = (Mesh*)currentMesh->GetComponent(ComponentType::ComponentType_GEOMETRY);
+			Geometry* mesh = (Geometry*)currentMesh->GetComponent(ComponentType::ComponentType_GEOMETRY);
 			currentMesh->RemoveComponent(mesh);
 
 			LoadMeshImporter(path, tempMesh);
@@ -450,12 +452,14 @@ void ModuleGeometry::Draw3D(bool fill, bool wire) const
 
 	//if (currentMesh != nullptr)
 	//{
-	//	Mesh* currentGeometry = (Mesh*)currentMesh->GetComponent(ComponentType_MESH);
+	//	Geometry* currentGeometry = (Geometry*)currentMesh->GetComponent(ComponentType_GEOMETRY);
 	//	if (currentGeometry)
+	//	if (currentGeometry->GetType() == Primitive_Mesh)
 	//	{
-	//		currentGeometry->fill = true;
-	//		currentGeometry->wire = false;
-	//		currentGeometry->Render();
+	//		Mesh* mesh = (Mesh*)currentGeometry;
+	//		mesh->fill = true;
+	//		mesh->wire = false;
+	//		mesh->Render();
 	//	}
 	//}
 }
@@ -470,8 +474,8 @@ void ModuleGeometry::LoadDefaultScene()
 
 	App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, "Root Child ") , "Root child child");
 
-	//DistributeFile("assets\\models\\BakerHouse.fbx");
-	//DistributeFile("assets\\textures\\Baker_house.dds");
+	DistributeFile("assets\\models\\BakerHouse.fbx");
+	DistributeFile("assets\\textures\\Baker_house.dds");
 
 
 	plane = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, "Ground");
@@ -480,9 +484,9 @@ void ModuleGeometry::LoadDefaultScene()
 	plane->AddComponent(ComponentType_GEOMETRY, &planeInfo);
 
 
-	GameObject* box = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, "Box at 0,0,0");
+	//GameObject* box = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, "Box at 0,0,0");
 
-	GeometryInfo cubeInfo(new PrimitiveCube());
-	box->AddComponent(ComponentType_GEOMETRY, &cubeInfo);
+	//GeometryInfo cubeInfo(new PrimitiveCube());
+	//box->AddComponent(ComponentType_GEOMETRY, &cubeInfo);
 
 }
