@@ -52,6 +52,8 @@ public:
 	float3		GetPos() const;
 	float3		GetLocalPos() const;
 
+	float3		GetScale() const;
+
 	Quat		GetRotation() const;
 	Quat		GetLocalRotation() const;
 
@@ -65,4 +67,5 @@ public:
 	float3 scale = float3::one;
 
 	AABB boundingBox;
+	AABB originalBoundingBox;
 };

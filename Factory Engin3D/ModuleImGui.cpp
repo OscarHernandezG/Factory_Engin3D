@@ -703,7 +703,7 @@ void ModuleImGui::CreateMeshesHeader()
 	if (App->geometry->currentMesh != nullptr)
 	{
 		uint numVertex = 0u;
-		Mesh* goMesh = (Mesh*)App->geometry->currentMesh->GetComponent(ComponentType::ComponentType_MESH);
+		Mesh* goMesh = (Mesh*)App->geometry->currentMesh->GetComponent(ComponentType::ComponentType_GEOMETRY);
 		if (goMesh != nullptr)
 		{
 			std::vector<MeshBuffer>::iterator iterator = goMesh->buffers.begin();
@@ -727,7 +727,7 @@ void ModuleImGui::CreateTextureHeader()
 {
 	if (App->geometry->textureID != 0)
 	{
-		Mesh* currentGeometry = (Mesh*)App->geometry->currentMesh->GetComponent(ComponentType_MESH);
+		Mesh* currentGeometry = (Mesh*)App->geometry->currentMesh->GetComponent(ComponentType_GEOMETRY);
 		if (currentGeometry != nullptr)
 		{
 			ImGui::Text("Texture id: %i", App->geometry->textureID);
