@@ -123,13 +123,14 @@ Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
 {
 	Component* newComponent = nullptr;
 
-	//info->gameObject = this;
+	if (info)
+		info->gameObject = this;
 
 	switch (type)
 	{
 	case ComponentType_TRANSFORM:
 		if (info)
-		newComponent = (Component*)new Transform((TransformInfo*)info);
+			newComponent = (Component*)new Transform((TransformInfo*)info);
 		break;
 	case ComponentType_GEOMETRY:
 		if (info)
@@ -172,7 +173,7 @@ float3 GameObject::GetScale() const
 	if (transform != nullptr)
 		return transform->GetScale();
 
-	return float3::zero;
+	return float3::one;
 }
 
 Quat GameObject::GetRotation()
