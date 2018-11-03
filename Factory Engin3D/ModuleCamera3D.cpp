@@ -6,13 +6,6 @@
 
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
-	X = math::float3(1.0f, 0.0f, 0.0f);
-	Y = math::float3(0.0f, 1.0f, 0.0f);
-	Z = math::float3(0.0f, 0.0f, 1.0f);
-
-	//camera->transform->position = math::float3(0.0f, 0.0f, 5.0f);
-	Reference = math::float3(0.0f, 0.0f, 0.0f);
-
 }
 
 ModuleCamera3D::~ModuleCamera3D()
@@ -39,6 +32,8 @@ bool ModuleCamera3D::Start()
 bool ModuleCamera3D::CleanUp()
 {
 	LOG("Cleaning camera");
+
+	delete camera;
 	
 	return true;
 }
@@ -250,6 +245,16 @@ void ModuleCamera3D::Move(const float3 &movement)
 {
 	cameraComponent->frustum.Translate(movement);
 
+}
+
+float3 ModuleCamera3D::GetPos()
+{
+	return cameraComponent->GetPos();
+}
+
+void ModuleCamera3D::SetPos(float3 pos)
+{
+	cameraComponent->SetPos(pos);
 }
 
 // -----------------------------------------------------------------

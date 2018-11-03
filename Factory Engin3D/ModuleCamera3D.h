@@ -33,13 +33,15 @@ public:
 	void Look(bool RotateAroundReference);
 	void LookAt(const float3 &Spot);
 	void Move(const float3 &Movement);
+
+	float3 GetPos();
+	void SetPos(float3 pos);
+
 	float* GetViewMatrix();
 
 public:
-
-	float3 X, Y, Z, Position, Reference;
-
 	GameObject* camera = nullptr;
+
 private:
 	MouseButton cameraMovementButton = MouseButton_Right;
 	bool isCameraFocused = false;
@@ -47,9 +49,6 @@ private:
 	float cameraSpeed = 3;
 
 	Camera* cameraComponent = nullptr;
-
-
-	float4x4 ViewMatrix, ViewMatrixInverse;
 };
 
 #endif // !__ModuleCamera_H__
