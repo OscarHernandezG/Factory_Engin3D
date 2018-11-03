@@ -48,8 +48,8 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 
 		GameObject* random = App->gameObject->CreateGameObject(pos);
 
-		const math::float3 center(pos.x, pos.y, pos.z);
-		const math::float3 size(float3::two);
+		const float3 center(pos.x, pos.y, pos.z);
+		const float3 size(float3::two);
 
 		random->transform->boundingBox.SetFromCenterAndSize(center, size);
 

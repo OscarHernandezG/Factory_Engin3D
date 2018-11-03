@@ -23,6 +23,8 @@ public:
 	void RedistributeChilds();
 	void GetBoxLimits(std::vector<const QuadtreeNode*>& nodes) const;
 	void GetGameObjects(std::vector<GameObject*>& object) const;
+	template<typename TYPE>
+	void GetIntersects(std::vector<GameObject*>& objects, const TYPE & primitive) const;
 
 public:
 	AABB limits;
@@ -41,6 +43,8 @@ public:
 	void Insert(GameObject* gameObject);
 	void GetBoxLimits(std::vector<const QuadtreeNode*>& nodes) const;
 	void GetGameObjects(std::vector<GameObject*>& object) const;
+	template<typename TYPE>
+	void GetIntersects(std::vector<GameObject*>& objects, const TYPE & primitive) const;
 
 public:
 
