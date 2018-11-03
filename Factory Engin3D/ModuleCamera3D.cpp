@@ -78,7 +78,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 
 		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
-			Look(App->geometry->GetBBPos(), App->geometry->GetCurrentMeshPivot(), false);
+			Look(App->geometry->currentMesh->GetBBPos(), App->geometry->GetCurrentMeshPivot(), false);
 
 
 		//Zoom with wheel
