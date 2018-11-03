@@ -35,6 +35,8 @@ public:
 	Mesh(GameObject* parent) : Geometry(parent) {};
 	~Mesh() { ClearMesh(); };
 
+	void Update(float dt);
+
 	void InnerRender() const;
 
 	float3 GetPos();
