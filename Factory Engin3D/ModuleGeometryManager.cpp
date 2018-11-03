@@ -329,7 +329,7 @@ float3 ModuleGeometry::GetBBPos() const
 		distance.y = (size.y / 2) / math::Tan(0.33333333333 * reScale);
 		distance.z = (size.z / 2) / math::Tan(0.33333333333 * reScale);
 	}
-	return distance;
+	return distance + currentMesh->GetPos();
 }
 
 float3 ModuleGeometry::GetCurrentMeshPivot() const
@@ -477,5 +477,10 @@ void ModuleGeometry::LoadDefaultScene()
 	PrimitiveInfo planeInfo(new PrimitivePlane());
 	plane->AddComponent(ComponentType_GEOMETRY, &planeInfo);
 
+
+	GameObject* box = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, "Box at 0,0,0");
+
+	PrimitiveInfo cubeInfo(new PrimitiveCube());
+	box->AddComponent(ComponentType_GEOMETRY, &cubeInfo);
 
 }
