@@ -28,8 +28,6 @@ void Transform::Update(float dt)
 	obb.Transform(GetMatrix());
 
 	boundingBox = obb.MinimalEnclosingAABB();
-
-
 }
 
 void Transform::SetPos(float x, float y, float z)

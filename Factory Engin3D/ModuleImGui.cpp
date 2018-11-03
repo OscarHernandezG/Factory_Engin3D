@@ -703,16 +703,20 @@ void ModuleImGui::CreateMeshesHeader()
 	if (App->geometry->currentMesh != nullptr)
 	{
 		uint numVertex = 0u;
-		Mesh* goMesh = (Mesh*)App->geometry->currentMesh->GetComponent(ComponentType::ComponentType_GEOMETRY);
-		if (goMesh != nullptr)
-		{
-			std::vector<MeshBuffer>::iterator iterator = goMesh->buffers.begin();
-			while (iterator != goMesh->buffers.end())
+		Geometry* goGeometry = (Geometry*)App->geometry->currentMesh->GetComponent(ComponentType::ComponentType_GEOMETRY);
+		if (goGeometry != nullptr)
+			if (goGeometry->GetType() == PrimitiveTypes::Primitive_Mesh)
 			{
-				numVertex += (*iterator).vertex.size;
-				++iterator;
+
+				Mesh* mesh = (Mesh*)goGeometry;
+
+				std::vector<MeshBuffer>::iterator iterator = mesh->buffers.begin();
+				while (iterator != mesh->buffers.end())
+				{
+					numVertex += (*iterator).vertex.size;
+					++iterator;
+				}
 			}
-		}
 
 		ImGui::Text("Total vertex: %i", numVertex);
 		ImGui::Text("Total faces: %i", App->geometry->numFaces);
@@ -727,11 +731,14 @@ void ModuleImGui::CreateTextureHeader()
 {
 	if (App->geometry->textureID != 0)
 	{
-		Mesh* currentGeometry = (Mesh*)App->geometry->currentMesh->GetComponent(ComponentType_GEOMETRY);
+		Geometry* currentGeometry = (Geometry*)App->geometry->currentMesh->GetComponent(ComponentType_GEOMETRY);
 		if (currentGeometry != nullptr)
-		{
+			if (currentGeometry->GetType() == PrimitiveTypes::Primitive_Mesh)
+			{
+				Mesh* mesh = (Mesh*)currentGeometry;
+
 			ImGui::Text("Texture id: %i", App->geometry->textureID);
-			ImGui::Text("Texture used by %i meshes", currentGeometry->buffers.size());
+			ImGui::Text("Texture used by %i meshes", mesh->buffers.size());
 			ImGui::Text("UV Preview");
 			ImGui::Separator();
 			ImGui::Image((void*)App->geometry->textureID, { 200,200 });
