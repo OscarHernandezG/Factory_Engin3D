@@ -14,8 +14,10 @@ GameObject::GameObject(GameObject * father, char * name)
 	delete info;
 
 	this->father = father;
+
 	if (name != nullptr)
-	this->name = name;
+		this->name = name;
+	else this->name = "noName";
 }
 
 GameObject::GameObject(float3 position, Quat rotation, float3 scale, GameObject * father, char * name)
@@ -31,7 +33,9 @@ GameObject::GameObject(float3 position, Quat rotation, float3 scale, GameObject 
 
 	this->father = father;
 
-	this->name = name;
+	if (name != nullptr)
+		this->name = name;
+	else this->name = "noName";
 }
 
 
