@@ -257,6 +257,7 @@ void ModuleGeometry::UpdateMesh(char* path)
 	
 			MeshInfo info;
 			info.mesh = tempMesh;
+			info.boundingBox = *currentMeshBB;
 			currentMesh->AddComponent(ComponentType_MESH, &info);
 		}
 
