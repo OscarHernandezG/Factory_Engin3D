@@ -40,6 +40,11 @@ public:
 	float3 GetPos();
 	Quat GetRotation();
 
+	const AABB* GetAABB() const;
+
+	void SetABB(AABB aabb);
+
+
 	int CreateRandomUID();
 public:
 
