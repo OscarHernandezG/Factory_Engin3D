@@ -2,7 +2,7 @@
 #include "pcg-c-0.94/extras/entropy.h"
 
 
-GameObject::GameObject(GameObject* father, char * name)
+GameObject::GameObject(GameObject* father, const char * name)
 {
 	TransformInfo* info = new TransformInfo();
 	info->position = float3::zero;
@@ -20,7 +20,7 @@ GameObject::GameObject(GameObject* father, char * name)
 	else this->name = "noName";
 }
 
-GameObject::GameObject(float3 position, Quat rotation, float3 scale, GameObject* father, char* name)
+GameObject::GameObject(float3 position, Quat rotation, float3 scale, GameObject* father, const char* name)
 {
 	TransformInfo* info = new TransformInfo();
 	info->position = position;
@@ -81,6 +81,21 @@ Component* GameObject::GetComponent(ComponentType type)
 		{
 			component = (*iterator);
 			break;
+		}
+	}
+
+	return component;
+}
+
+list<Component*> GameObject::GetAllComponent(ComponentType type)
+{
+	list<Component*> component;
+
+	for (list<Component*>::iterator iterator = components.begin(); iterator != components.end(); ++iterator)
+	{
+		if ((*iterator)->type == type)
+		{
+			components.push_back(*iterator);
 		}
 	}
 

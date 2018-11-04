@@ -22,8 +22,8 @@ struct  ComponentInfo;
 class GameObject
 {
 public:
-	GameObject(GameObject* father, char* name = nullptr);
-	GameObject(float3 position, Quat rotation = Quat::identity, float3 scale = float3::one, GameObject* father = nullptr, char* name = nullptr);
+	GameObject(GameObject* father, const char* name = nullptr);
+	GameObject(float3 position, Quat rotation = Quat::identity, float3 scale = float3::one, GameObject* father = nullptr, const char* name = nullptr);
 	
 	~GameObject();
 
@@ -32,6 +32,7 @@ public:
 	inline void Delete() { toDelete = true;	}
 
 	Component* GetComponent(ComponentType type);
+	list<Component*> GetAllComponent(ComponentType type);
 	bool HasComponent(ComponentType type);
 	void RemoveComponent(Component* component);
 	Component* AddComponent(ComponentType type, ComponentInfo* info);
