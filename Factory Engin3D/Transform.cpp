@@ -24,6 +24,11 @@ Transform::Transform(GameObject * gameObject) : Component(gameObject, ComponentT
 
 void Transform::Update(float dt)
 {
+	UptadeBoundingBox();
+}
+
+void Transform::UptadeBoundingBox()
+{
 	OBB obb = originalBoundingBox.ToOBB();
 	obb.Transform(GetMatrix());
 

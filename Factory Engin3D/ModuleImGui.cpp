@@ -705,6 +705,7 @@ void ModuleImGui::CreateMeshesHeader()
 		uint numVertex = 0u;
 		Geometry* goGeometry = (Geometry*)App->geometry->currentMesh->GetComponent(ComponentType::ComponentType_GEOMETRY);
 		if (goGeometry != nullptr)
+		{
 			if (goGeometry->GetType() == PrimitiveTypes::Primitive_Mesh)
 			{
 
@@ -716,15 +717,22 @@ void ModuleImGui::CreateMeshesHeader()
 					numVertex += (*iterator).vertex.size;
 					++iterator;
 				}
+				ImGui::Text("Total vertex: %i", numVertex);
+				ImGui::Text("Total faces: %i", App->geometry->numFaces);
+				if (ImGui::Button("Remove Mesh", { 125,25 }))
+				{
+					Geometry* mesh = (Geometry*)App->geometry->currentMesh->GetComponent(ComponentType::ComponentType_GEOMETRY);
+					App->geometry->currentMesh->RemoveComponent(mesh);
+				}
 			}
-
-		ImGui::Text("Total vertex: %i", numVertex);
-		ImGui::Text("Total faces: %i", App->geometry->numFaces);
+		}
+		else
+			ImGui::TextWrapped("There aren't any meshes");
+		
 	}
 	else
-	{
 		ImGui::TextWrapped("There aren't any meshes");
-	}
+	
 }
 
 void ModuleImGui::CreateTextureHeader()

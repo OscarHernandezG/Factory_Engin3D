@@ -39,6 +39,8 @@ public:
 
 	void Update(float dt);
 
+	void UptadeBoundingBox();
+
 	void		SetPos(float x, float y, float z);
 	void		SetPos(float3 position);
 

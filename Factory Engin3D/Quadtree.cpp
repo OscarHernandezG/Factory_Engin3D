@@ -11,7 +11,7 @@ QuadtreeNode::~QuadtreeNode()
 		{
 			if (childs[i] != nullptr)
 			{
-				delete[] childs[i];
+				delete childs[i];
 				childs[i] = nullptr;
 			}
 		}
@@ -132,7 +132,7 @@ void QuadtreeNode::GetGameObjects(std::vector<GameObject*>& object) const
 void Quadtree::Create(const AABB& limits)
 {
 	if (root != nullptr)
-		Clear();
+		ReDoQuadtree(limits);
 
 	root = new QuadtreeNode(limits);
 }
@@ -147,10 +147,13 @@ void Quadtree::Clear()
 
 void Quadtree::Insert(GameObject * gameObject)
 {
-	if(root != nullptr)
+	if (root != nullptr)
+	{
 		if (gameObject->transform->boundingBox.Intersects(root->limits))
 			root->Insert(gameObject);
-		
+		else
+			ReDoLimits(gameObject);
+	}
 }
 
 void Quadtree::GetBoxLimits(std::vector<const QuadtreeNode*>& nodes) const
@@ -163,4 +166,51 @@ void Quadtree::GetGameObjects(std::vector<GameObject*>& objects) const
 {
 	if (root != nullptr)
 		root->GetGameObjects(objects);
+}
+
+void Quadtree::ReDoQuadtree(const AABB& limits)
+{
+	if (root != nullptr)
+	{
+		std::vector<GameObject*> objects;
+		GetGameObjects(objects);
+		Clear();
+		Create(limits);
+
+		for (std::vector<GameObject*>::iterator iterator = objects.begin(); iterator != objects.end(); ++iterator)
+		{
+			Insert(*iterator);
+		}
+	}
+
+	else 
+		Create(limits);
+}
+
+void Quadtree::ReDoLimits(GameObject* newObject)
+{
+	if (root != nullptr)
+	{
+		float3 minPoint = root->limits.minPoint;
+		float3 maxPoint = root->limits.maxPoint;
+		float3 objectMin = newObject->transform->boundingBox.minPoint;
+		float3 objectMax = newObject->transform->boundingBox.maxPoint;
+
+		if (minPoint.x > objectMin.x)
+			minPoint.x = objectMin.x;
+		if (minPoint.y > objectMin.y)
+			minPoint.y = objectMin.y;
+		if (minPoint.z > objectMin.z)
+			minPoint.z = objectMin.z;
+
+		if (maxPoint.x < objectMax.x)
+			maxPoint.x = objectMax.x;
+		if (maxPoint.y < objectMax.y)
+			maxPoint.y = objectMax.y;
+		if (maxPoint.z < objectMax.z)
+			maxPoint.z = objectMax.z;
+
+		ReDoQuadtree(AABB(minPoint, maxPoint));
+		Insert(newObject);
+	}
 }
