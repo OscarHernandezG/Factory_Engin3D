@@ -224,6 +224,7 @@ void GameObject::SetABB(AABB aabb)
 	if (transform)
 	{
 		transform->originalBoundingBox = aabb;
+
 		transform->UpdateBoundingBox();
 	}
 }

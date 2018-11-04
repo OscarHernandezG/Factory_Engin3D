@@ -28,7 +28,7 @@ bool ModuleSceneIntro::Start()
 	bool ret = true;
 
 	App->camera->Move(float3(1.0f, 1.0f, 0.0f));
-	quadtree.Create(AABB(float3(-50, 0, -50), float3(50, 15, 50)));
+	quadtree.Create(AABB(float3(-5, 0, -5), float3(5, 15, 5)));
 
 	return ret;
 }
@@ -51,7 +51,7 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 		const float3 center(pos.x, pos.y, pos.z);
 		const float3 size(float3::two);
 
-		random->transform->boundingBox.SetFromCenterAndSize(center, size);
+		random->SetABB(AABB::FromCenterAndSize(center, size));
 
 		quadtree.Insert(random);
 	}
