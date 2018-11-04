@@ -43,11 +43,16 @@ public:
 	void		SetPos(float x, float y, float z);
 	void		SetPos(float3 position);
 
+	void Move(float3 position);
+
+	void Scale(float3 scale);
+
 	void		SetRotation(Quat rotation);
 	void		SetRotation(float3 rotation);
 	void		Rotate(Quat rotation);
 
 	void		SetScale(float x, float y, float z);
+	void SetScale(float3 scale);
 	void		SetIdentity();
 
 	float3		GetPos() const;
