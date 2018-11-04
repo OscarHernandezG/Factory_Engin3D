@@ -33,11 +33,12 @@ public:
 
 	Transform(TransformInfo* info);
 	Transform(GameObject* gameObject);
-	Transform(GameObject* gameObject, float4x4 transform);
 
 	~Transform() {}
 
-	void Update(float dt);
+	void		Update(float dt);
+
+	void		UpdateBoundingBox();
 
 	void		SetPos(float x, float y, float z);
 	void		SetPos(float3 position);

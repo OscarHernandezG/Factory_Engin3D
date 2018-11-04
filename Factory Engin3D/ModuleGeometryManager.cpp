@@ -320,6 +320,7 @@ void ModuleGeometry::UpdateMesh(char* path)
 		//currentMesh->AddComponent(ComponentType_GEOMETRY, &info);
 		currentMesh = newGameObject;
 		bHouse = newGameObject;
+
 	}
 }
 
