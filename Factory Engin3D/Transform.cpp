@@ -24,10 +24,10 @@ Transform::Transform(GameObject * gameObject) : Component(gameObject, ComponentT
 
 void Transform::Update(float dt)
 {
-	UptadeBoundingBox();
+	UpdateBoundingBox();
 }
 
-void Transform::UptadeBoundingBox()
+void Transform::UpdateBoundingBox()
 {
 	OBB obb = originalBoundingBox.ToOBB();
 	obb.Transform(GetMatrix());
@@ -50,6 +50,16 @@ void Transform::SetPos(float3 position)
 	this->position = pos;
 }
 
+void Transform::Move(float3 position)
+{
+	this->position = this->position.Add(position);
+}
+
+void Transform::Scale(float3 scale)
+{
+	this->scale = this->scale.Mul(scale);
+}
+
 void Transform::SetRotation(Quat rotation)
 {
 	this->rotation = rotation;
@@ -62,13 +72,19 @@ void Transform::SetRotation(float3 rotation)
 // ------------------------------------------------------------
 void Transform::Rotate(Quat rotation)
 {
-	this->rotation = this->rotation * rotation;
+	float3 angles = this->rotation.ToEulerXYZ();
+	this->rotation = rotation.Mul(this->rotation).Normalized();
 }
 
 // ------------------------------------------------------------
 void Transform::SetScale(float x, float y, float z)
 {
 	scale = float3(x, y, z);
+}
+
+void Transform::SetScale(float3 scale)
+{
+	this->scale = scale;
 }
 
 void Transform::SetIdentity()

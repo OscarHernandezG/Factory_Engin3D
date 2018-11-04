@@ -2,7 +2,7 @@
 #include "pcg-c-0.94/extras/entropy.h"
 
 
-GameObject::GameObject(GameObject* father, char * name)
+GameObject::GameObject(GameObject* father, const char * name)
 {
 	TransformInfo* info = new TransformInfo();
 	info->position = float3::zero;
@@ -20,7 +20,7 @@ GameObject::GameObject(GameObject* father, char * name)
 	else this->name = "noName";
 }
 
-GameObject::GameObject(float3 position, Quat rotation, float3 scale, GameObject* father, char* name)
+GameObject::GameObject(float3 position, Quat rotation, float3 scale, GameObject* father, const char* name)
 {
 	TransformInfo* info = new TransformInfo();
 	info->position = position;
@@ -60,14 +60,17 @@ GameObject::~GameObject()
 
 void GameObject::Update(float dt)
 {
-	for (list<Component*>::iterator iterator = components.begin(); iterator != components.end(); ++iterator)
+	if (isActive)
 	{
-		(*iterator)->Update(dt);
-	}
+		for (list<Component*>::iterator iterator = components.begin(); iterator != components.end(); ++iterator)
+		{
+			(*iterator)->Update(dt);
+		}
 
-	for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
-	{
-		(*iterator)->Update(dt);
+		for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
+		{
+			(*iterator)->Update(dt);
+		}
 	}
 }
 
@@ -81,6 +84,21 @@ Component* GameObject::GetComponent(ComponentType type)
 		{
 			component = (*iterator);
 			break;
+		}
+	}
+
+	return component;
+}
+
+list<Component*> GameObject::GetAllComponent(ComponentType type)
+{
+	list<Component*> component;
+
+	for (list<Component*>::iterator iterator = components.begin(); iterator != components.end(); ++iterator)
+	{
+		if ((*iterator)->type == type)
+		{
+			components.push_back(*iterator);
 		}
 	}
 
@@ -134,10 +152,7 @@ Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
 		break;
 	case ComponentType_GEOMETRY:
 		if (info)
-		{
 			newComponent = (Component*)(((GeometryInfo*)info)->geometry);
-			SetABB(((GeometryInfo*)info)->boundingBox);
-		}
 		break;
 	case ComponentType_CAMERA:
 		newComponent = (Component*)new Camera(this);
@@ -181,6 +196,77 @@ Quat GameObject::GetRotation()
 	return transform->GetRotation();
 }
 
+void GameObject::SetPos(float3 pos)
+{
+	LOG("Desired pos %f  %f  %f", pos.x, pos.y, pos.z);
+	float3 movement = float3::zero;
+	if (transform)
+	{
+		movement = pos - transform->GetPos();
+		LOG("Movement to pos %f  %f  %f", movement.x, movement.y, movement.z);
+	}
+	Move(movement);
+
+}
+
+void GameObject::Move(float3 movement)
+{
+	if (transform)
+		transform->Move(movement);
+
+	for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
+	{
+		(*iterator)->Move(movement);
+	}
+}
+
+void GameObject::SetScale(float3 scale)
+{
+	float3 scaleVariation;
+	float3 scaleGO = GetScale();
+
+	scaleVariation.x = scaleGO.x / scale.x;
+	scaleVariation.y = scaleGO.y / scale.y;
+	scaleVariation.z = scaleGO.z / scale.z;
+
+	if (transform)
+		transform->SetScale(scale);
+
+	for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
+	{
+		(*iterator)->Scale(scaleVariation);
+	}
+}
+
+void GameObject::Scale(float3 scale)
+{
+	if (transform)
+		transform->Scale(scale);
+
+	for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
+	{
+		(*iterator)->Scale(scale);
+	}
+}
+
+void GameObject::SetRotation(Quat rotation)
+{
+	Quat rotate = rotation.Mul(GetRotation().Inverted()).Normalized();
+
+	Rotate(rotate);
+}
+
+void GameObject::Rotate(Quat rotation)
+{
+	for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
+	{
+		(*iterator)->Rotate(rotation);
+	}
+
+	if (transform)
+		transform->Rotate(rotation);
+}
+
 const AABB* GameObject::GetAABB() const
 {
 	return &transform->boundingBox;
@@ -206,8 +292,18 @@ void GameObject::SetABB(AABB aabb)
 	if (transform)
 	{
 		transform->originalBoundingBox = aabb;
-		transform->UptadeBoundingBox();
+
+		transform->UpdateBoundingBox();
 	}
+}
+
+void GameObject::SetActive(bool active)
+{
+	for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
+	{
+		(*iterator)->SetActive(active);
+	}
+	isActive = active;
 }
 
 int GameObject::CreateRandomUID()

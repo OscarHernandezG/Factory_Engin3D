@@ -7,35 +7,32 @@
 
 void Mesh::InnerRender() const
 {
-	for (std::vector<MeshBuffer>::const_iterator iterator = buffers.begin(); iterator != buffers.end(); ++iterator)
-	{
-		//Load vertex and index
-		glEnableClientState(GL_VERTEX_ARRAY);
-		glBindBuffer(GL_ARRAY_BUFFER, (*iterator).vertex.id);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*iterator).index.id);
-		glVertexPointer(3, GL_FLOAT, 0, NULL);
 
-		//Load Texture UV
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		glBindBuffer(GL_ARRAY_BUFFER, (*iterator).texture.id);
-		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+	//Load vertex and index
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, buffer.vertex.id);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer.index.id);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
 
-		//Load texture
-		glBindTexture(GL_TEXTURE_2D, App->geometry->textureID);
+	//Load Texture UV
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, buffer.texture.id);
+	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
-		//Draw mesh
-		glDrawElements(GL_TRIANGLES, (*iterator).index.size, GL_UNSIGNED_INT, NULL);
+	//Load texture
+	glBindTexture(GL_TEXTURE_2D, App->geometry->textureID);
 
-		//Free buffers
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		glBindTexture(GL_TEXTURE_2D, 0);
+	//Draw mesh
+	glDrawElements(GL_TRIANGLES, buffer.index.size, GL_UNSIGNED_INT, NULL);
 
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-		glDisableClientState(GL_VERTEX_ARRAY);
-	}
+	//Free buffers
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableClientState(GL_VERTEX_ARRAY);
 }
-
 float3 Mesh::GetPos()
 {
 	if (gameObject != nullptr)
@@ -47,17 +44,13 @@ float3 Mesh::GetPos()
 
 void Mesh::ClearMesh()
 {
-	for (std::vector<MeshBuffer>::iterator iterator = buffers.begin(); iterator != buffers.end(); ++iterator)
-	{
-		glDeleteBuffers(1, (GLuint*)&((*iterator).index.id));
-		glDeleteBuffers(1, (GLuint*)&((*iterator).vertex.id));
-		glDeleteBuffers(1, (GLuint*)&((*iterator).texture.id));
+	glDeleteBuffers(1, (GLuint*)&(buffer.index.id));
+	glDeleteBuffers(1, (GLuint*)&(buffer.vertex.id));
+	glDeleteBuffers(1, (GLuint*)&(buffer.texture.id));
 
 
-		delete (*iterator).index.buffer;
-		delete (*iterator).vertex.buffer;
-//		delete (*iterator).texture.buffer;
-	}
-	buffers.clear();
+	delete buffer.index.buffer;
+	delete buffer.vertex.buffer;
+	//		delete (*iterator).texture.buffer;
 }
 
