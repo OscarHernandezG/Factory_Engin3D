@@ -4,7 +4,7 @@
 
 Camera::Camera(GameObject* gameObject) : Component(gameObject)
 {
-	frustum.type = InvalidFrustum;
+	frustum.type = PerspectiveFrustum;
 
 	if (gameObject != nullptr && gameObject->transform != nullptr)
 	{
@@ -20,7 +20,7 @@ Camera::Camera(GameObject* gameObject) : Component(gameObject)
 	}
 
 	frustum.nearPlaneDistance = 0.1f;
-	frustum.farPlaneDistance = 1000.0f;
+	frustum.farPlaneDistance = 100.0f;
 	frustum.verticalFov = 60.0f * DEGTORAD;
 	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) * (SCREEN_WIDTH / SCREEN_HEIGHT));
 }
