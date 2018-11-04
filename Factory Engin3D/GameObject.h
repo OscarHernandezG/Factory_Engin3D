@@ -51,14 +51,16 @@ public:
 
 	void SetABB(AABB aabb);
 
+	void SetActive(bool active);
+
+	inline bool GetActive() { return isActive; }
+	inline bool* GetActiveReference() { return &isActive; }
+
+
 
 	int CreateRandomUID();
+
 public:
-
-	bool active = true;
-
-	bool toDelete = false;
-
 	Transform* transform = nullptr;
 
 	list<Component*> components;
@@ -68,7 +70,13 @@ public:
 
 	string name;
 
+	bool toDelete = false;
+
+private:
+	bool isActive = true;
+	
 	int UID = 0;
 	pcg32_random_t rng;
+
 };
 #endif // !__GameObject_H__

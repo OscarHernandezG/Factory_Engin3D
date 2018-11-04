@@ -60,14 +60,17 @@ GameObject::~GameObject()
 
 void GameObject::Update(float dt)
 {
-	for (list<Component*>::iterator iterator = components.begin(); iterator != components.end(); ++iterator)
+	if (isActive)
 	{
-		(*iterator)->Update(dt);
-	}
+		for (list<Component*>::iterator iterator = components.begin(); iterator != components.end(); ++iterator)
+		{
+			(*iterator)->Update(dt);
+		}
 
-	for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
-	{
-		(*iterator)->Update(dt);
+		for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
+		{
+			(*iterator)->Update(dt);
+		}
 	}
 }
 
@@ -220,6 +223,15 @@ void GameObject::SetABB(AABB aabb)
 {
 	if (transform)
 		transform->originalBoundingBox = aabb;
+}
+
+void GameObject::SetActive(bool active)
+{
+	for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
+	{
+		(*iterator)->SetActive(active);
+	}
+		isActive = active;
 }
 
 int GameObject::CreateRandomUID()
