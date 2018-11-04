@@ -299,27 +299,27 @@ void ModuleRenderer3D::DebugDraw()
 		static float3 corners[8];
 		(*iterator)->limits.GetCornerPoints(corners);
 
-		DrawQuad(corners);
+		DrawQuad(corners, Orange);
 	}
 
 	std::vector<GameObject*> objects;
 	App->sceneIntro->quadtree.GetGameObjects(objects);
 	//Quadtree Objects
-	for (vector<GameObject*>::const_iterator iterator = objects.begin(); iterator != objects.end(); ++iterator)
+	/*for (vector<GameObject*>::const_iterator iterator = objects.begin(); iterator != objects.end(); ++iterator)
 	{
 		static float3 corners[8];
 		(*iterator)->transform->boundingBox.GetCornerPoints(corners);
 
 		DrawQuad(corners, Red);
-	}
+	}*/
 	//Other GO
-	/*for (list<GameObject*>::const_iterator iterator = App->gameObject->root->childs.begin(); iterator != App->gameObject->root->childs.end(); ++iterator)
+	for (list<GameObject*>::const_iterator iterator = App->gameObject->root->childs.begin(); iterator != App->gameObject->root->childs.end(); ++iterator)
 	{
 	static float3 corners[8];
 	(*iterator)->transform->boundingBox.GetCornerPoints(corners);
 
 	DrawQuad(corners, Blue);
-	}*/
+	}
 }
 
 

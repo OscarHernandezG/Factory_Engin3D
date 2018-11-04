@@ -369,6 +369,9 @@
     <ClInclude Include="Transform.h">
       <Filter>Sources\GameObject\Component</Filter>
     </ClInclude>
+    <ClInclude Include="ModulePicking.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -547,6 +550,9 @@
     </ClCompile>
     <ClCompile Include="Transform.cpp">
       <Filter>Sources\GameObject\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="ModulePicking.cpp">
+      <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

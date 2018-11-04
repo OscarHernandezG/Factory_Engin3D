@@ -28,7 +28,7 @@ bool ModuleSceneIntro::Start()
 	bool ret = true;
 
 	App->camera->Move(float3(1.0f, 1.0f, 0.0f));
-	quadtree.Create(AABB(float3(-5, 0, -5), float3(5, 15, 5)));
+	quadtree.Create(AABB(float3(-5, 0, -5), float3(5, 5, 5)));
 
 	return ret;
 }
