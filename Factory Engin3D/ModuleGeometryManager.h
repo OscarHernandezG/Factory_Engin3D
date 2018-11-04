@@ -22,11 +22,11 @@ public:
 
 	void DistributeFile(char * file);
 
-	Mesh* LoadMesh(char* path);
+	MeshInfo LoadMesh(char* path);
 
 	void SaveMeshImporter(MeshBuffer newCurrentBuffer, const char * path, int number);
 
-	void LoadMeshImporter(const char * path, Mesh * tempMesh);
+	void LoadMeshImporter(const char * path, list<MeshBuffer>* tempMesh);
 
 	void UpdateMesh(char * path);
 
@@ -50,6 +50,8 @@ public:
 
 public:
 	GameObject* currentMesh = nullptr;
+	GameObject* bHouse = nullptr;
+
 
 	uint textureID = 0;
 	uint numFaces = 0;

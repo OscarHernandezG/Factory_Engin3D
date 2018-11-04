@@ -78,9 +78,9 @@ void ModuleGeometry::DistributeFile(char* file)
 }
 
 
-Mesh* ModuleGeometry::LoadMesh(char* path)
+MeshInfo ModuleGeometry::LoadMesh(char* path)
 {
-	Mesh* mesh = nullptr;
+	MeshInfo meshBuffer;
 	if (path != nullptr)
 	{
 		char* filePath = path;
@@ -88,15 +88,27 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 
 		if (scene != nullptr)
 		{
+			// Todo: GameObject name here
+			// Todo: Save names in fty
+			meshBuffer.name = scene->mRootNode->mName.C_Str();
 			if (scene->HasMeshes())
 			{
-				mesh = new Mesh();
 				numFaces = 0u;
 				for (int i = 0; i < scene->mNumMeshes; ++i)
 				{
 					aiMesh* newMesh = scene->mMeshes[i];
-
+					
 					MeshBuffer newCurrentBuffer;
+					
+					if (i < scene->mRootNode->mNumChildren)
+					{
+						aiNode* meshName = scene->mRootNode->mChildren[i];
+
+						newCurrentBuffer.name = meshName->mName.C_Str();
+					}
+					else
+						newCurrentBuffer.name = newMesh->mName.C_Str();
+
 
 					newCurrentBuffer.vertex.size = newMesh->mNumVertices * 3;
 					newCurrentBuffer.vertex.buffer = new float[newCurrentBuffer.vertex.size];
@@ -134,11 +146,12 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 
 					}
 
-					mesh->buffers.push_back(newCurrentBuffer);
+					meshBuffer.meshes.push_back(newCurrentBuffer);
 
 					SaveMeshImporter(newCurrentBuffer,path,i);
 				}
-			currentMeshBB = LoadBoundingBox(mesh);
+				//Todo calculate bounding box
+			//currentMeshBB = LoadBoundingBox(mesh);
 			LOG("Loaded geometry with %i faces", numFaces);
 			}
 
@@ -149,7 +162,7 @@ Mesh* ModuleGeometry::LoadMesh(char* path)
 			LOG("Error loading geometry %s", filePath);
 
 	}
-	return mesh;
+	return meshBuffer;
 }
 
 void ModuleGeometry::SaveMeshImporter(MeshBuffer newCurrentBuffer, const char* path, int number)
@@ -187,11 +200,12 @@ void ModuleGeometry::SaveMeshImporter(MeshBuffer newCurrentBuffer, const char* p
 	delete[] exporter;
 }
 
-void ModuleGeometry::LoadMeshImporter(const char* path, Mesh* tempMesh)
+void ModuleGeometry::LoadMeshImporter(const char* path, list<MeshBuffer>* tempMesh)
 {
 	int i = 0;
 	char* buffer = App->importer->LoadFile(path, LlibraryType_MESH, i);
 
+	// UUID
 	while (buffer != nullptr)
 	{
 		MeshBuffer bufferImporter;
@@ -238,7 +252,7 @@ void ModuleGeometry::LoadMeshImporter(const char* path, Mesh* tempMesh)
 
 		i++;
 		buffer = App->importer->LoadFile(path, LlibraryType_MESH, i);
-		tempMesh->buffers.push_back(bufferImporter);
+		tempMesh->push_back(bufferImporter);
 
 	}
 
@@ -247,22 +261,62 @@ void ModuleGeometry::LoadMeshImporter(const char* path, Mesh* tempMesh)
 
 void ModuleGeometry::UpdateMesh(char* path)
 {
-	Mesh* tempMesh = LoadMesh(path);
+	MeshInfo tempMesh = LoadMesh(path);
 
-	if (tempMesh != nullptr)
-		if (!tempMesh->buffers.empty() && currentMesh != nullptr)
+	if (!tempMesh.meshes.empty())
+	{
+		//Geometry* mesh = (Geometry*)currentMesh->GetComponent(ComponentType::ComponentType_GEOMETRY);
+		//currentMesh->RemoveComponent(mesh);
+
+		list<string> names;
+		for (list<MeshBuffer>::iterator iterator = tempMesh.meshes.begin(); iterator != tempMesh.meshes.end(); ++iterator)
 		{
-			Geometry* mesh = (Geometry*)currentMesh->GetComponent(ComponentType::ComponentType_GEOMETRY);
-			currentMesh->RemoveComponent(mesh);
-
-			LoadMeshImporter(path, tempMesh);
-	
-			GeometryInfo info(tempMesh);
-			info.boundingBox = *currentMeshBB;
-			currentMesh->AddComponent(ComponentType_GEOMETRY, &info);
+			string data((*iterator).name.data());
+			names.push_back(data);
 		}
 
-	
+		tempMesh.meshes.clear();
+		LoadMeshImporter(path, &tempMesh.meshes);
+
+		list<string>::iterator name = names.begin();
+		list<MeshBuffer>::iterator mesh = tempMesh.meshes.begin();
+		for (; name != names.end() && mesh != tempMesh.meshes.end(); ++name, ++mesh)
+		{
+			(*mesh).name = (*name);
+		}
+		GameObject* newGameObject = nullptr;
+		if (tempMesh.meshes.size() > 1)
+		{
+			newGameObject = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, tempMesh.name.data());
+
+			for (list<MeshBuffer>::iterator iterator = tempMesh.meshes.begin(); iterator != tempMesh.meshes.end(); ++iterator)
+			{
+				GameObject* temp  = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, newGameObject, (*iterator).name.data());
+
+				Mesh* currMesh = new Mesh(temp);
+				currMesh->buffer = *iterator;
+				GeometryInfo info(currMesh);
+				//info.boundingBox = *currentMeshBB;
+				temp->AddComponent(ComponentType_GEOMETRY, &info);
+			}
+		}
+		else
+		{
+			newGameObject = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, tempMesh.name.data());
+
+			Mesh* currMesh = new Mesh(newGameObject);
+			currMesh->buffer = *tempMesh.meshes.begin();
+
+			GeometryInfo info(currMesh);
+			//info.boundingBox = *currentMeshBB;
+			newGameObject->AddComponent(ComponentType_GEOMETRY, &info);
+		}
+		//GeometryInfo info(tempMesh);
+		//info.boundingBox = *currentMeshBB;
+		//currentMesh->AddComponent(ComponentType_GEOMETRY, &info);
+		currentMesh = newGameObject;
+		bHouse = newGameObject;
+	}
 }
 
 AABB* ModuleGeometry::LoadBoundingBox(Mesh* mesh)
@@ -271,29 +325,26 @@ AABB* ModuleGeometry::LoadBoundingBox(Mesh* mesh)
 	if (mesh != nullptr)
 	{
 		float3 max, min;
-		std::vector<MeshBuffer>::iterator iterator = mesh->buffers.begin();
-		max.x = (*iterator).vertex.buffer[0];
-		max.y = (*iterator).vertex.buffer[1];
-		max.z = (*iterator).vertex.buffer[2];
+
+		max.x = mesh->buffer.vertex.buffer[0];
+		max.y = mesh->buffer.vertex.buffer[1];
+		max.z = mesh->buffer.vertex.buffer[2];
 
 		min = max;
 
-
-		for (iterator; iterator != mesh->buffers.end(); ++iterator)
+		int vertexSize = mesh->buffer.vertex.size / 3;
+		float* buffer = mesh->buffer.vertex.buffer;
+		for (int i = 0; i < vertexSize; ++i)
 		{
-			int vertexSize = (*iterator).vertex.size / 3;
-			float* buffer = (*iterator).vertex.buffer;
-			for (int i = 0; i < vertexSize; ++i)
-			{
-				Higher(max.x, buffer[i * 3]);
-				Higher(max.y, buffer[i * 3 + 1]);
-				Higher(max.z, buffer[i * 3 + 2]);
+			Higher(max.x, buffer[i * 3]);
+			Higher(max.y, buffer[i * 3 + 1]);
+			Higher(max.z, buffer[i * 3 + 2]);
 
-				Lower(min.x, buffer[i * 3]);
-				Lower(min.y, buffer[i * 3 + 1]);
-				Lower(min.z, buffer[i * 3 + 2]);
-			}
+			Lower(min.x, buffer[i * 3]);
+			Lower(min.y, buffer[i * 3 + 1]);
+			Lower(min.z, buffer[i * 3 + 2]);
 		}
+
 
 		boundingBox = new AABB(min, max);
 
@@ -445,16 +496,19 @@ update_status ModuleGeometry::PostUpdate(float dt)
 	ground->axis = true;
 	ground->Render();
 
-	if (currentMesh != nullptr)
+	if (bHouse != nullptr)
 	{
-		Geometry* currentGeometry = (Geometry*)currentMesh->GetComponent(ComponentType_GEOMETRY);
-		if (currentGeometry)
-		if (currentGeometry->GetType() == Primitive_Mesh)
+		for (list<GameObject*>::iterator it = bHouse->childs.begin(); it != bHouse->childs.end(); ++it)
 		{
-			Mesh* mesh = (Mesh*)currentGeometry;
-			mesh->fill = true;
-			mesh->wire = false;
-			mesh->Render();
+			Geometry* currentGeometry = (Geometry*)(*it)->GetComponent(ComponentType_GEOMETRY);
+			if (currentGeometry)
+				if (currentGeometry->GetType() == Primitive_Mesh)
+				{
+					Mesh* mesh = (Mesh*)currentGeometry;
+					mesh->fill = true;
+					mesh->wire = false;
+					mesh->Render();
+				}
 		}
 	}
 	return UPDATE_CONTINUE;
