@@ -22,8 +22,8 @@ struct  ComponentInfo;
 class GameObject
 {
 public:
-	GameObject(GameObject* father, char* name = nullptr);
-	GameObject(float3 position, Quat rotation = Quat::identity, float3 scale = float3::one, GameObject* father = nullptr, char* name = nullptr);
+	GameObject(GameObject* father, const char* name = nullptr);
+	GameObject(float3 position, Quat rotation = Quat::identity, float3 scale = float3::one, GameObject* father = nullptr, const char* name = nullptr);
 	
 	~GameObject();
 
@@ -32,11 +32,11 @@ public:
 	inline void Delete() { toDelete = true;	}
 
 	Component* GetComponent(ComponentType type);
+	list<Component*> GetAllComponent(ComponentType type);
 	bool HasComponent(ComponentType type);
 	void RemoveComponent(Component* component);
 	Component* AddComponent(ComponentType type, ComponentInfo* info);
 
-	void CreateGameObject(TransformInfo* info);
 
 	float3 GetPos() const;
 
@@ -50,14 +50,20 @@ public:
 
 	void SetABB(AABB aabb);
 
+	void SetActive(bool active);
+
+	inline bool GetActive() { return isActive; }
+	inline bool* GetActiveReference() { return &isActive; }
+
+
 
 	int CreateRandomUID();
+
+private:
+	void CreateGameObject(TransformInfo* info);
+
+
 public:
-
-	bool active = true;
-
-	bool toDelete = false;
-
 	Transform* transform = nullptr;
 
 	list<Component*> components;
@@ -67,7 +73,13 @@ public:
 
 	string name;
 
+	bool toDelete = false;
+
+private:
+	bool isActive = true;
+	
 	int UID = 0;
 	pcg32_random_t rng;
+
 };
 #endif // !__GameObject_H__

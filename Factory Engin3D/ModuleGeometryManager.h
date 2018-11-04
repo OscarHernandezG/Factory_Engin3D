@@ -22,15 +22,15 @@ public:
 
 	void DistributeFile(char * file);
 
-	Mesh* LoadMesh(char* path);
+	MeshInfo LoadMesh(char* path);
 
 	void SaveMeshImporter(MeshBuffer newCurrentBuffer, const char * path, int number);
 
-	void LoadMeshImporter(const char * path, Mesh * tempMesh);
+	void LoadMeshImporter(const char * path, list<MeshBuffer>* tempMesh);
 
 	void UpdateMesh(char * path);
 
-	AABB * LoadBoundingBox(Mesh * mesh);
+	AABB LoadBoundingBox(MeshInfo * mesh);
 
 	float3 CalcBBPos(math::AABB* boundingBox) const;
 
@@ -50,13 +50,15 @@ public:
 
 public:
 	GameObject* currentMesh = nullptr;
+	GameObject* bHouse = nullptr;
+
 
 	uint textureID = 0;
 	uint numFaces = 0;
 
 	char* droppedFileDir = nullptr;
 
-	AABB* currentMeshBB = nullptr;
+	AABB currentMeshBB = AABB(float3::zero, float3::zero);
 
 	string destination;
 

@@ -426,6 +426,9 @@ void ModuleImGui::CreateTransform()
 		string goName = App->geometry->currentMesh->name;
 		ImGui::Text(goName.data());
 
+		ImGui::Checkbox("Active", App->geometry->currentMesh->GetActiveReference());
+		App->geometry->currentMesh->SetActive(App->geometry->currentMesh->GetActive());
+
 		float3 position, scale, angles;
 		Quat rotate;
 
@@ -702,7 +705,6 @@ void ModuleImGui::CreateMeshesHeader()
 {
 	if (App->geometry->currentMesh != nullptr)
 	{
-		uint numVertex = 0u;
 		Geometry* goGeometry = (Geometry*)App->geometry->currentMesh->GetComponent(ComponentType::ComponentType_GEOMETRY);
 		if (goGeometry != nullptr)
 		{
@@ -711,13 +713,7 @@ void ModuleImGui::CreateMeshesHeader()
 
 				Mesh* mesh = (Mesh*)goGeometry;
 
-				std::vector<MeshBuffer>::iterator iterator = mesh->buffers.begin();
-				while (iterator != mesh->buffers.end())
-				{
-					numVertex += (*iterator).vertex.size;
-					++iterator;
-				}
-				ImGui::Text("Total vertex: %i", numVertex);
+				ImGui::Text("Total vertex: %i", mesh->buffer.vertex.size);
 				ImGui::Text("Total faces: %i", App->geometry->numFaces);
 				if (ImGui::Button("Remove Mesh", { 125,25 }))
 				{
@@ -728,7 +724,6 @@ void ModuleImGui::CreateMeshesHeader()
 		}
 		else
 			ImGui::TextWrapped("There aren't any meshes");
-		
 	}
 	else
 		ImGui::TextWrapped("There aren't any meshes");
@@ -746,7 +741,8 @@ void ModuleImGui::CreateTextureHeader()
 				Mesh* mesh = (Mesh*)currentGeometry;
 
 			ImGui::Text("Texture id: %i", App->geometry->textureID);
-			ImGui::Text("Texture used by %i meshes", mesh->buffers.size());
+			// TODO
+			//ImGui::Text("Texture used by %i meshes", mesh->buffers.size());
 			ImGui::Text("UV Preview");
 			ImGui::Separator();
 			ImGui::Image((void*)App->geometry->textureID, { 200,200 });
