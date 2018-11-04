@@ -705,32 +705,30 @@ void ModuleImGui::CreateMeshesHeader()
 {
 	if (App->geometry->currentMesh != nullptr)
 	{
-		uint numVertex = 0u;
 		Geometry* goGeometry = (Geometry*)App->geometry->currentMesh->GetComponent(ComponentType::ComponentType_GEOMETRY);
 		if (goGeometry != nullptr)
+		{
 			if (goGeometry->GetType() == PrimitiveTypes::Primitive_Mesh)
 			{
 
 				Mesh* mesh = (Mesh*)goGeometry;
 
-				numVertex += mesh->buffer.vertex.size;
-
-
-				//std::vector<MeshBuffer>::iterator iterator = mesh->buffers.begin();
-				//while (iterator != mesh->buffers.end())
-				//{
-				//	numVertex += (*iterator).vertex.size;
-				//	++iterator;
-				//}
+				ImGui::Text("Total vertex: %i", mesh->buffer.vertex.size);
+				ImGui::Text("Total faces: %i", App->geometry->numFaces);
+				if (ImGui::Button("Remove Mesh", { 125,25 }))
+				{
+					Geometry* mesh = (Geometry*)App->geometry->currentMesh->GetComponent(ComponentType::ComponentType_GEOMETRY);
+					App->geometry->currentMesh->RemoveComponent(mesh);
+				}
 			}
+		}
+		else
+			ImGui::TextWrapped("There aren't any meshes");
 
-		ImGui::Text("Total vertex: %i", numVertex);
-		ImGui::Text("Total faces: %i", App->geometry->numFaces);
 	}
 	else
-	{
 		ImGui::TextWrapped("There aren't any meshes");
-	}
+	
 }
 
 void ModuleImGui::CreateTextureHeader()

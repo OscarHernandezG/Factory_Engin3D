@@ -222,7 +222,10 @@ float3 GameObject::GetBBPos() const
 void GameObject::SetABB(AABB aabb)
 {
 	if (transform)
+	{
 		transform->originalBoundingBox = aabb;
+		transform->UptadeBoundingBox();
+	}
 }
 
 void GameObject::SetActive(bool active)

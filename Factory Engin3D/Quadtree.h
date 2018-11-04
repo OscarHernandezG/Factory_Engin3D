@@ -43,6 +43,8 @@ public:
 	void Insert(GameObject* gameObject);
 	void GetBoxLimits(std::vector<const QuadtreeNode*>& nodes) const;
 	void GetGameObjects(std::vector<GameObject*>& object) const;
+	void ReDoQuadtree(const AABB & limits);
+	void ReDoLimits(GameObject * newObject);
 	template<typename TYPE>
 	void GetIntersects(std::vector<GameObject*>& objects, const TYPE & primitive) const;
 
