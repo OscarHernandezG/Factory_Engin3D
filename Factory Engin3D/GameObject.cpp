@@ -303,7 +303,7 @@ void GameObject::SetActive(bool active)
 	{
 		(*iterator)->SetActive(active);
 	}
-		isActive = active;
+	isActive = active;
 }
 
 int GameObject::CreateRandomUID()

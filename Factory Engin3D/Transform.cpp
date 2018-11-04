@@ -24,7 +24,6 @@ Transform::Transform(GameObject * gameObject) : Component(gameObject, ComponentT
 
 void Transform::Update(float dt)
 {
-
 	UpdateBoundingBox();
 }
 

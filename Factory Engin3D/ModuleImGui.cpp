@@ -724,11 +724,10 @@ void ModuleImGui::CreateMeshesHeader()
 		}
 		else
 			ImGui::TextWrapped("There aren't any meshes");
-
 	}
 	else
 		ImGui::TextWrapped("There aren't any meshes");
-	
+
 }
 
 void ModuleImGui::CreateTextureHeader()
