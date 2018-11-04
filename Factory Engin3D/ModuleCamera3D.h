@@ -35,7 +35,6 @@ public:
 	void Move(const float3 &Movement);
 
 	float3 GetPos() const;
-	float3 GetCenter() const;
 	void SetPos(float3 pos);
 
 	float * GetViewMatrix() const;

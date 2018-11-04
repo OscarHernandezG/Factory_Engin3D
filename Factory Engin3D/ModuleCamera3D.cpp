@@ -238,11 +238,6 @@ float3 ModuleCamera3D::GetPos() const
 	return cameraComponent->GetPos();
 }
 
-float3 ModuleCamera3D::GetCenter() const
-{
-	return cameraComponent->frustum.CenterPoint();
-}
-
 void ModuleCamera3D::SetPos(float3 pos)
 {
 	cameraComponent->SetPos(pos);

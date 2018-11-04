@@ -33,6 +33,9 @@ public:
 	void SetBorderless() const;
 
 public:
+	int width = 0;
+	int height = 0;
+
 	//The window we'll be rendering to
 	SDL_Window* window;
 
