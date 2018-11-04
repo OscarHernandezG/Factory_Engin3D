@@ -426,6 +426,9 @@ void ModuleImGui::CreateTransform()
 		string goName = App->geometry->currentMesh->name;
 		ImGui::Text(goName.data());
 
+		ImGui::Checkbox("Active", App->geometry->currentMesh->GetActiveReference());
+		App->geometry->currentMesh->SetActive(App->geometry->currentMesh->GetActive());
+
 		float3 position, scale, angles;
 		Quat rotate;
 
