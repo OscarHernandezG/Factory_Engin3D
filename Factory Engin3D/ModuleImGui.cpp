@@ -439,11 +439,11 @@ void ModuleImGui::CreateTransform()
 			rotate = App->geometry->currentMesh->transform->GetRotation();
 
 			if (ImGui::InputFloat3("Position", &position[0])) {
-				App->geometry->currentMesh->transform->SetPos(position[0], position[1], position[2]);
+				App->geometry->currentMesh->SetPos(position);
 			}
 
 			if (ImGui::InputFloat3("Scale", &scale[0]))
-				App->geometry->currentMesh->transform->SetScale(scale[0], scale[1], scale[2]);
+				App->geometry->currentMesh->SetScale(scale);
 
 			angles = rotate.ToEulerXYZ();
 
@@ -456,7 +456,7 @@ void ModuleImGui::CreateTransform()
 				angles.x = math::DegToRad(angles.x);
 				angles.y = math::DegToRad(angles.y);
 				angles.z = math::DegToRad(angles.z);
-				App->geometry->currentMesh->transform->SetRotation(angles);
+				App->geometry->currentMesh->SetRotation(Quat::FromEulerXYZ(angles.x, angles.y, angles.z));
 			}
 
 

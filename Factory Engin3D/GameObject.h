@@ -39,10 +39,16 @@ public:
 
 
 	float3 GetPos() const;
-
 	float3 GetScale() const;
-
 	Quat GetRotation();
+
+	void SetPos(float3 pos);
+	void Move(float3 movement);
+	void SetScale(float3 scale);
+	void Scale(float3 scale);
+	void SetRotation(Quat rotation);
+
+	void Rotate(Quat rotation);
 
 	const AABB* GetAABB() const;
 

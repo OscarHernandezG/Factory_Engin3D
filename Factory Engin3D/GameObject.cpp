@@ -152,10 +152,7 @@ Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
 		break;
 	case ComponentType_GEOMETRY:
 		if (info)
-		{
 			newComponent = (Component*)(((GeometryInfo*)info)->geometry);
-			SetABB(((GeometryInfo*)info)->boundingBox);
-		}
 		break;
 	case ComponentType_CAMERA:
 		newComponent = (Component*)new Camera(this);
@@ -197,6 +194,77 @@ float3 GameObject::GetScale() const
 Quat GameObject::GetRotation()
 {
 	return transform->GetRotation();
+}
+
+void GameObject::SetPos(float3 pos)
+{
+	LOG("Desired pos %f  %f  %f", pos.x, pos.y, pos.z);
+	float3 movement = float3::zero;
+	if (transform)
+	{
+		movement = pos - transform->GetPos();
+		LOG("Movement to pos %f  %f  %f", movement.x, movement.y, movement.z);
+	}
+	Move(movement);
+
+}
+
+void GameObject::Move(float3 movement)
+{
+	if (transform)
+		transform->Move(movement);
+
+	for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
+	{
+		(*iterator)->Move(movement);
+	}
+}
+
+void GameObject::SetScale(float3 scale)
+{
+	float3 scaleVariation;
+	float3 scaleGO = GetScale();
+
+	scaleVariation.x = scaleGO.x / scale.x;
+	scaleVariation.y = scaleGO.y / scale.y;
+	scaleVariation.z = scaleGO.z / scale.z;
+
+	if (transform)
+		transform->SetScale(scale);
+
+	for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
+	{
+		(*iterator)->Scale(scaleVariation);
+	}
+}
+
+void GameObject::Scale(float3 scale)
+{
+	if (transform)
+		transform->Scale(scale);
+
+	for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
+	{
+		(*iterator)->Scale(scale);
+	}
+}
+
+void GameObject::SetRotation(Quat rotation)
+{
+	Quat rotate = rotation.Mul(GetRotation().Inverted()).Normalized();
+
+	Rotate(rotate);
+}
+
+void GameObject::Rotate(Quat rotation)
+{
+	for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
+	{
+		(*iterator)->Rotate(rotation);
+	}
+
+	if (transform)
+		transform->Rotate(rotation);
 }
 
 const AABB* GameObject::GetAABB() const
