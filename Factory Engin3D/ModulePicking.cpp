@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModulePicking.h"
 #include "ModuleCamera3D.h"
+#include "ModuleSceneIntro.h"
 
 ModulePicking::ModulePicking(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -31,11 +32,20 @@ update_status ModulePicking::Update(float dt)
 		float mouseX = -(1.0f - ((float(App->input->GetMouseX()) * 2.0f) / (float)App->window->width));
 		float mouseY = 1.0f - ((float(App->input->GetMouseY()) * 2.0f) / (float)App->window->height);
 
-		LineSegment line = App->camera->GetCameraFrustrum().UnProjectLineSegment(mouseX, mouseY);
+		LineSegment ray = App->camera->GetCameraFrustrum().UnProjectLineSegment(mouseX, mouseY);
 
-		ray = RayLine(line.a, line.b);
-		ray.gameObject = App->gameObject->root;
+		std::vector<GameObject*> objects;
+		App->sceneIntro->quadtree.GetIntersects(objects, ray);
+
+		for (std::vector<GameObject*>::const_iterator iterator = objects.begin(); iterator != objects.end(); ++iterator)
+		{
+
+		}
+
+
+		rayDraw = RayLine(ray.a, ray.b);
+		rayDraw.gameObject = App->gameObject->root;
 	}
-	ray.Render();
+	rayDraw.Render();
 	return UPDATE_CONTINUE;
 }

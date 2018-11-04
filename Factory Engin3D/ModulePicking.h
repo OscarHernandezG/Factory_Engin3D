@@ -15,7 +15,7 @@ public:
 	update_status Update(float dt);
 
 public:
-	RayLine ray;
+	RayLine rayDraw;
 };
 
 #endif // !__ModulePicking_H__
