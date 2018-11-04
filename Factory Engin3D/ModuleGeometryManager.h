@@ -30,7 +30,7 @@ public:
 
 	void UpdateMesh(char * path);
 
-	AABB * LoadBoundingBox(Mesh * mesh);
+	AABB LoadBoundingBox(MeshInfo * mesh);
 
 	float3 CalcBBPos(math::AABB* boundingBox) const;
 
@@ -58,7 +58,7 @@ public:
 
 	char* droppedFileDir = nullptr;
 
-	AABB* currentMeshBB = nullptr;
+	AABB currentMeshBB = AABB(float3::zero, float3::zero);
 
 	string destination;
 

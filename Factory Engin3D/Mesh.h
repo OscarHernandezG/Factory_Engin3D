@@ -7,6 +7,7 @@
 #include "Globals.h"
 
 #include <list>
+#include "MathGeoLib/Geometry/AABB.h"
 
 using namespace std;
 
@@ -26,6 +27,7 @@ struct MeshBuffer
 	Buffer<float> texture;
 
 	string name;
+	AABB boundingBox;
 };
 
 struct MeshInfo
@@ -33,6 +35,8 @@ struct MeshInfo
 	list<MeshBuffer> meshes;
 
 	string name;
+
+	AABB boundingBox;
 };
 
 class Mesh :public Geometry

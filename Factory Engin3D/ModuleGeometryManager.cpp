@@ -151,7 +151,7 @@ MeshInfo ModuleGeometry::LoadMesh(char* path)
 					SaveMeshImporter(newCurrentBuffer,path,i);
 				}
 				//Todo calculate bounding box
-			//currentMeshBB = LoadBoundingBox(mesh);
+			currentMeshBB = LoadBoundingBox(&meshBuffer);
 			LOG("Loaded geometry with %i faces", numFaces);
 			}
 
@@ -169,6 +169,8 @@ void ModuleGeometry::SaveMeshImporter(MeshBuffer newCurrentBuffer, const char* p
 {
 	uint ranges[3] = { newCurrentBuffer.index.size, newCurrentBuffer.vertex.size, newCurrentBuffer.texture.size};
 
+	string;
+
 	float size = sizeof(ranges) + sizeof(uint) * newCurrentBuffer.index.size + sizeof(float) * newCurrentBuffer.vertex.size * 3;
 
 	if(newCurrentBuffer.texture.buffer != nullptr)
@@ -181,7 +183,7 @@ void ModuleGeometry::SaveMeshImporter(MeshBuffer newCurrentBuffer, const char* p
 	memcpy(cursor, ranges, bytes);
 
 	cursor += bytes;
-	bytes = sizeof(uint)* newCurrentBuffer.index.size;
+	bytes = sizeof(uint) * newCurrentBuffer.index.size;
 	memcpy(cursor, newCurrentBuffer.index.buffer, bytes);
 
 	cursor += bytes;
@@ -288,11 +290,12 @@ void ModuleGeometry::UpdateMesh(char* path)
 		if (tempMesh.meshes.size() > 1)
 		{
 			newGameObject = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, tempMesh.name.data());
+			newGameObject->SetABB(tempMesh.boundingBox);
 
 			for (list<MeshBuffer>::iterator iterator = tempMesh.meshes.begin(); iterator != tempMesh.meshes.end(); ++iterator)
 			{
 				GameObject* temp  = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, newGameObject, (*iterator).name.data());
-
+				temp->SetABB((*iterator).boundingBox);
 				Mesh* currMesh = new Mesh(temp);
 				currMesh->buffer = *iterator;
 				GeometryInfo info(currMesh);
@@ -303,6 +306,7 @@ void ModuleGeometry::UpdateMesh(char* path)
 		else
 		{
 			newGameObject = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, (*tempMesh.meshes.begin()).name.data());
+			newGameObject->SetABB(tempMesh.boundingBox);
 
 			Mesh* currMesh = new Mesh(newGameObject);
 			currMesh->buffer = *tempMesh.meshes.begin();
@@ -319,40 +323,58 @@ void ModuleGeometry::UpdateMesh(char* path)
 	}
 }
 
-AABB* ModuleGeometry::LoadBoundingBox(Mesh* mesh)
+AABB ModuleGeometry::LoadBoundingBox(MeshInfo* mesh)
 {
-	AABB* boundingBox = nullptr;
+	AABB boundingBox(float3::zero, float3::zero);
 	if (mesh != nullptr)
 	{
 		float3 max, min;
-
-		max.x = mesh->buffer.vertex.buffer[0];
-		max.y = mesh->buffer.vertex.buffer[1];
-		max.z = mesh->buffer.vertex.buffer[2];
-
-		min = max;
-
-		int vertexSize = mesh->buffer.vertex.size / 3;
-		float* buffer = mesh->buffer.vertex.buffer;
-		for (int i = 0; i < vertexSize; ++i)
+		std::list<MeshBuffer>::iterator iterator = mesh->meshes.begin();
+		for (iterator; iterator != mesh->meshes.end(); ++iterator)
 		{
-			Higher(max.x, buffer[i * 3]);
-			Higher(max.y, buffer[i * 3 + 1]);
-			Higher(max.z, buffer[i * 3 + 2]);
+			max.x = (*iterator).vertex.buffer[0];
+			max.y = (*iterator).vertex.buffer[1];
+			max.z = (*iterator).vertex.buffer[2];
 
-			Lower(min.x, buffer[i * 3]);
-			Lower(min.y, buffer[i * 3 + 1]);
-			Lower(min.z, buffer[i * 3 + 2]);
+			min = max;
+
+			int vertexSize = (*iterator).vertex.size / 3;
+			float* buffer = (*iterator).vertex.buffer;
+			for (int i = 0; i < vertexSize; ++i)
+			{
+				Higher(max.x, buffer[i * 3]);
+				Higher(max.y, buffer[i * 3 + 1]);
+				Higher(max.z, buffer[i * 3 + 2]);
+
+				Lower(min.x, buffer[i * 3]);
+				Lower(min.y, buffer[i * 3 + 1]);
+				Lower(min.z, buffer[i * 3 + 2]);
+			}
+
+			(*iterator).boundingBox = AABB(min, max);
 		}
 
+		iterator = mesh->meshes.begin();
+		max = (*iterator).boundingBox.maxPoint;
+		min = max;
+		for (iterator; iterator != mesh->meshes.end(); ++iterator)
+		{
+				Higher(max.x, (*iterator).boundingBox.maxPoint.x);
+				Higher(max.y, (*iterator).boundingBox.maxPoint.y);
+				Higher(max.z, (*iterator).boundingBox.maxPoint.z);
 
-		boundingBox = new AABB(min, max);
+				Lower(min.x, (*iterator).boundingBox.minPoint.x);
+				Lower(min.y, (*iterator).boundingBox.minPoint.y);
+				Lower(min.z, (*iterator).boundingBox.minPoint.z);
+
+		}
+		mesh->boundingBox = AABB(min, max);
 
 		// TODO move camera at drop file
 		//App->camera->Position = CalcBBPos(boundingBox);
 		//App->camera->Look(CalcBBPos(boundingBox), mesh->GetPos(), false);
 	}
-	return boundingBox;
+	return mesh->boundingBox;
 }
 
 float3 ModuleGeometry::CalcBBPos(math::AABB* boundingBox) const
@@ -373,15 +395,14 @@ float3 ModuleGeometry::CalcBBPos(math::AABB* boundingBox) const
 float3 ModuleGeometry::GetBBPos() const
 {
 	float3 distance{ 0,0,0 };
-	if (currentMeshBB != nullptr)
-	{
-		float3 size = currentMeshBB->Size();
 
-		float reScale = 1.25;
-		distance.x = (size.x / 2) / math::Tan(0.33333333333 * reScale);
-		distance.y = (size.y / 2) / math::Tan(0.33333333333 * reScale);
-		distance.z = (size.z / 2) / math::Tan(0.33333333333 * reScale);
-	}
+	float3 size = currentMeshBB.Size();
+
+	float reScale = 1.25;
+	distance.x = (size.x / 2) / math::Tan(0.33333333333 * reScale);
+	distance.y = (size.y / 2) / math::Tan(0.33333333333 * reScale);
+	distance.z = (size.z / 2) / math::Tan(0.33333333333 * reScale);
+
 	return distance + currentMesh->GetPos();
 }
 
