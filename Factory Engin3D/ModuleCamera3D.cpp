@@ -231,12 +231,16 @@ void ModuleCamera3D::LookAt( const float3 &spot)
 void ModuleCamera3D::Move(const float3 &movement)
 {
 	cameraComponent->frustum.Translate(movement);
-
 }
 
-float3 ModuleCamera3D::GetPos()
+float3 ModuleCamera3D::GetPos() const
 {
 	return cameraComponent->GetPos();
+}
+
+float3 ModuleCamera3D::GetCenter() const
+{
+	return cameraComponent->frustum.CenterPoint();
 }
 
 void ModuleCamera3D::SetPos(float3 pos)
@@ -245,7 +249,7 @@ void ModuleCamera3D::SetPos(float3 pos)
 }
 
 // -----------------------------------------------------------------
-float* ModuleCamera3D::GetViewMatrix()
+float* ModuleCamera3D::GetViewMatrix() const
 {
 	return cameraComponent->GetViewMatrix().ptr();
 }

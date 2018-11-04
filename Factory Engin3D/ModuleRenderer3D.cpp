@@ -179,29 +179,21 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 
 	// 1. Draw geometry Camera Culling
-
 	std::vector<GameObject*> drawerGO;
-	if (cameraCulling)
+	if (cameraCulling)//Only draw what camera see
 	{
 		App->sceneIntro->quadtree.GetIntersects(drawerGO, App->camera->GetCameraFrustrum());
 
 		for (auto iterator : drawerGO)
-		{
-			Component* geometry = iterator->GetComponent(ComponentType_GEOMETRY);
-			if (geometry != nullptr)
-				((Geometry*)geometry)->Render();
-		}
+			DrawQuadtreeObjects(iterator);
+		
 	}
 	else
-	{
+	{//Draw all
 		App->sceneIntro->quadtree.GetGameObjects(drawerGO);
 		for (auto iterator : drawerGO)
-		{
-			Component* geometry = iterator->GetComponent(ComponentType_GEOMETRY);
-			if (geometry != nullptr)
-				((Geometry*)geometry)->Render();
-		}
-
+			DrawQuadtreeObjects(iterator);
+		
 	}
 
 	// 2. Debug geometry
@@ -227,6 +219,56 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	auto Height = DM.h;
 
 	return UPDATE_CONTINUE;
+}
+void ModuleRenderer3D::DrawQuadtreeObjects(GameObject * iterator)
+{
+	if (iterator->GetActive())
+	{
+		for (list<GameObject*>::iterator it = iterator->childs.begin(); it != iterator->childs.end(); ++it)
+		{
+			if ((*it)->GetActive())
+			{
+				Geometry* currentGeometry = (Geometry*)(*it)->GetComponent(ComponentType_GEOMETRY);
+				if (currentGeometry)
+					DrawObject(currentGeometry);
+			}
+		}
+		Geometry* currentGeometry = (Geometry*)(iterator)->GetComponent(ComponentType_GEOMETRY);
+		if (currentGeometry)
+			DrawObject(currentGeometry);
+	}
+}
+void ModuleRenderer3D::DrawObject(Component * geometry)
+{
+	switch (((Geometry*)geometry)->GetType())
+	{
+	case Primitive_Point:
+		((Geometry*)geometry)->Render();
+		break;
+	case Primitive_Ray:
+		((RayLine*)geometry)->Render();
+		break;
+	case Primitive_Plane:
+		((PrimitivePlane*)geometry)->Render();
+		break;
+	case Primitive_Cube:
+		((PrimitiveCube*)geometry)->Render();
+		break;
+	case Primitive_Sphere:
+		((PrimitiveSphere*)geometry)->Render();
+		break;
+	case Primitive_Cylinder:
+		((PrimitiveCylinder*)geometry)->Render();
+		break;
+	case Primitive_Frustum:
+		((PrimitivePlane*)geometry)->Render();
+		break;
+	case Primitive_Mesh:
+		((Mesh*)geometry)->Render();
+		break;
+	default:
+		break;
+	}
 }
 // Called before quitting
 bool ModuleRenderer3D::CleanUp()
@@ -299,7 +341,7 @@ void ModuleRenderer3D::DebugDraw()
 		static float3 corners[8];
 		(*iterator)->limits.GetCornerPoints(corners);
 
-		DrawQuad(corners);
+		DrawQuad(corners, Orange);
 	}
 
 	std::vector<GameObject*> objects;
@@ -312,8 +354,8 @@ void ModuleRenderer3D::DebugDraw()
 
 		DrawQuad(corners, Red);
 	}
-	//Other GO
-	/*for (list<GameObject*>::const_iterator iterator = App->gameObject->root->childs.begin(); iterator != App->gameObject->root->childs.end(); ++iterator)
+	/*//Other GO
+	for (list<GameObject*>::const_iterator iterator = App->gameObject->root->childs.begin(); iterator != App->gameObject->root->childs.end(); ++iterator)
 	{
 	static float3 corners[8];
 	(*iterator)->transform->boundingBox.GetCornerPoints(corners);

@@ -77,11 +77,11 @@ public:
 };
 
 //// ============================================
-class SpherePrim : public Geometry
+class PrimitiveSphere : public Geometry
 {
 public:
-	SpherePrim();
-	SpherePrim(float radius, int faces);
+	PrimitiveSphere();
+	PrimitiveSphere(float radius, int faces);
 	void InnerRender() const;
 public:
 	float radius;

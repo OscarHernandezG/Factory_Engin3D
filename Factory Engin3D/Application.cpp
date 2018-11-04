@@ -12,6 +12,7 @@ Application::Application()
 	geometry = new ModuleGeometry(this);
 	gameObject = new ModuleGameObjectManager(this);
 	importer = new ModuleImporter(this);
+	picking = new ModulePicking(this);
 
 
 	// The order of calls is very important!
@@ -23,14 +24,15 @@ Application::Application()
 	AddModule(camera);
 	AddModule(input);
 
+	// Scenes
+	AddModule(importer);
+	AddModule(sceneIntro);
+
 	// Managers
 	AddModule(gameObject);
 	AddModule(geometry);
 	AddModule(gui);
-	
-	// Scenes
-	AddModule(importer);
-	AddModule(sceneIntro);
+	AddModule(picking);
 
 	// Renderer last!
 	AddModule(renderer3D);
