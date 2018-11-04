@@ -24,15 +24,15 @@ Application::Application()
 	AddModule(camera);
 	AddModule(input);
 
+	// Scenes
+	AddModule(importer);
+	AddModule(sceneIntro);
+
 	// Managers
 	AddModule(gameObject);
 	AddModule(geometry);
 	AddModule(gui);
 	AddModule(picking);
-
-	// Scenes
-	AddModule(importer);
-	AddModule(sceneIntro);
 
 	// Renderer last!
 	AddModule(renderer3D);

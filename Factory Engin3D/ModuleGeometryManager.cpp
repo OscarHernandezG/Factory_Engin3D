@@ -315,11 +315,10 @@ void ModuleGeometry::UpdateMesh(char* path)
 			//info.boundingBox = *currentMeshBB;
 			newGameObject->AddComponent(ComponentType_GEOMETRY, &info);
 		}
-		//GeometryInfo info(tempMesh);
-		//info.boundingBox = *currentMeshBB;
-		//currentMesh->AddComponent(ComponentType_GEOMETRY, &info);
+
 		currentMesh = newGameObject;
 		bHouse = newGameObject;
+		//App->sceneIntro->quadtree.Insert(bHouse);
 	}
 }
 
@@ -521,42 +520,7 @@ update_status ModuleGeometry::PostUpdate(float dt)
 		ground->axis = true;
 		ground->Render();
 	}
-	if (bHouse != nullptr)
-	{
-		if (bHouse->GetActive())
-		{
-			for (list<GameObject*>::iterator it = bHouse->childs.begin(); it != bHouse->childs.end(); ++it)
-			{
-				if ((*it)->GetActive())
-				{
-					Geometry* currentGeometry = (Geometry*)(*it)->GetComponent(ComponentType_GEOMETRY);
-					if (currentGeometry)
-						if (currentGeometry->GetType() == Primitive_Mesh)
-						{
-							Mesh* mesh = (Mesh*)currentGeometry;
-							mesh->fill = true;
-							mesh->wire = false;
-							mesh->Render();
-						}
-				}
-			}
-			Geometry* currentGeometry = (Geometry*)(bHouse)->GetComponent(ComponentType_GEOMETRY);
-			if (currentGeometry)
-				if (currentGeometry->GetType() == Primitive_Mesh)
-				{
-					Mesh* mesh = (Mesh*)currentGeometry;
-					mesh->fill = true;
-					mesh->wire = false;
-					mesh->Render();
-
-				}
-		}
-	}
-	//----------------------------------------------------------------------------------------------
 		return UPDATE_CONTINUE;
-}
-void ModuleGeometry::Draw3D(bool fill, bool wire) const
-{
 }
 
 void ModuleGeometry::LoadDefaultScene()

@@ -17,7 +17,6 @@ public:
 	update_status Update(float dt);
 	update_status PostUpdate(float dt);
 
-	void Draw3D(bool fill = true, bool wire = false) const;
 	bool CleanUp();
 
 	void DistributeFile(char * file);

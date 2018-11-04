@@ -149,7 +149,7 @@ void Quadtree::Insert(GameObject * gameObject)
 {
 	if (root != nullptr)
 	{
-		if (gameObject->transform->boundingBox.Intersects(root->limits))
+		if (root->limits.Contains(gameObject->transform->boundingBox))
 			root->Insert(gameObject);
 		else
 			ReDoLimits(gameObject);

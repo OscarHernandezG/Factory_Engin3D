@@ -152,10 +152,7 @@ Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
 		break;
 	case ComponentType_GEOMETRY:
 		if (info)
-		{
 			newComponent = (Component*)(((GeometryInfo*)info)->geometry);
-			SetABB(((GeometryInfo*)info)->boundingBox);
-		}
 		break;
 	case ComponentType_CAMERA:
 		newComponent = (Component*)new Camera(this);

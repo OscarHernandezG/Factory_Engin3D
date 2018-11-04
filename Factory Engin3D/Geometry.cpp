@@ -217,17 +217,17 @@ void PrimitiveCube::InnerRender() const
 }
 
 // SPHERE ============================================
-SpherePrim::SpherePrim() : Geometry(), radius(1.0f), faces(10)
+PrimitiveSphere::PrimitiveSphere() : Geometry(), radius(1.0f), faces(10)
 {
 	type = PrimitiveTypes::Primitive_Sphere;
 }
 
-SpherePrim::SpherePrim(float radius, int faces) : Geometry(), radius(radius), faces(faces)
+PrimitiveSphere::PrimitiveSphere(float radius, int faces) : Geometry(), radius(radius), faces(faces)
 {
 	type = PrimitiveTypes::Primitive_Sphere;
 }
 
-void SpherePrim::InnerRender() const
+void PrimitiveSphere::InnerRender() const
 {
 	//CONE
 /*	glBegin(GL_TRIANGLES);

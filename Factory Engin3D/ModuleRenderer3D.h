@@ -18,6 +18,7 @@ public:
 	bool Start();
 	update_status PreUpdate(float dt);
 	update_status PostUpdate(float dt);
+	void DrawObjects(Component * geometry);
 	void DebugDraw();
 	bool CleanUp();
 

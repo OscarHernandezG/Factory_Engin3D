@@ -179,9 +179,8 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 {
 
 	// 1. Draw geometry Camera Culling
-
 	std::vector<GameObject*> drawerGO;
-	if (cameraCulling)
+	if (cameraCulling)//Only draw what camera see
 	{
 		App->sceneIntro->quadtree.GetIntersects(drawerGO, App->camera->GetCameraFrustrum());
 
@@ -189,19 +188,18 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 		{
 			Component* geometry = iterator->GetComponent(ComponentType_GEOMETRY);
 			if (geometry != nullptr)
-				((Geometry*)geometry)->Render();
+				DrawObjects(geometry);
 		}
 	}
 	else
-	{
+	{//Draw all
 		App->sceneIntro->quadtree.GetGameObjects(drawerGO);
 		for (auto iterator : drawerGO)
 		{
 			Component* geometry = iterator->GetComponent(ComponentType_GEOMETRY);
 			if (geometry != nullptr)
-				((Geometry*)geometry)->Render();
+				DrawObjects(geometry);
 		}
-
 	}
 
 	// 2. Debug geometry
@@ -227,6 +225,38 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	auto Height = DM.h;
 
 	return UPDATE_CONTINUE;
+}
+void ModuleRenderer3D::DrawObjects(Component * geometry)
+{
+	switch (((Geometry*)geometry)->GetType())
+	{
+	case Primitive_Point:
+		((Geometry*)geometry)->Render();
+		break;
+	case Primitive_Ray:
+		((RayLine*)geometry)->Render();
+		break;
+	case Primitive_Plane:
+		((PrimitivePlane*)geometry)->Render();
+		break;
+	case Primitive_Cube:
+		((PrimitiveCube*)geometry)->Render();
+		break;
+	case Primitive_Sphere:
+		((PrimitiveSphere*)geometry)->Render();
+		break;
+	case Primitive_Cylinder:
+		((PrimitiveCylinder*)geometry)->Render();
+		break;
+	case Primitive_Frustum:
+		((PrimitivePlane*)geometry)->Render();
+		break;
+	case Primitive_Mesh:
+		((Mesh*)geometry)->Render();
+		break;
+	default:
+		break;
+	}
 }
 // Called before quitting
 bool ModuleRenderer3D::CleanUp()
@@ -305,21 +335,21 @@ void ModuleRenderer3D::DebugDraw()
 	std::vector<GameObject*> objects;
 	App->sceneIntro->quadtree.GetGameObjects(objects);
 	//Quadtree Objects
-	/*for (vector<GameObject*>::const_iterator iterator = objects.begin(); iterator != objects.end(); ++iterator)
+	for (vector<GameObject*>::const_iterator iterator = objects.begin(); iterator != objects.end(); ++iterator)
 	{
 		static float3 corners[8];
 		(*iterator)->transform->boundingBox.GetCornerPoints(corners);
 
 		DrawQuad(corners, Red);
-	}*/
-	//Other GO
+	}
+	/*//Other GO
 	for (list<GameObject*>::const_iterator iterator = App->gameObject->root->childs.begin(); iterator != App->gameObject->root->childs.end(); ++iterator)
 	{
 	static float3 corners[8];
 	(*iterator)->transform->boundingBox.GetCornerPoints(corners);
 
 	DrawQuad(corners, Blue);
-	}
+	}*/
 }
 
 
