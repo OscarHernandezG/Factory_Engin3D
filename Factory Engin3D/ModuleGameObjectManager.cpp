@@ -61,7 +61,7 @@ void ModuleGameObjectManager::CleanAllGameObjects()
 	}
 }
 
-GameObject* ModuleGameObjectManager::CreateGameObject(float3 position, Quat rotation, float3 scale, GameObject* father, char* name)
+GameObject* ModuleGameObjectManager::CreateGameObject(float3 position, Quat rotation, float3 scale, GameObject* father, const char* name)
 {
 	GameObject* newGameObject = nullptr;
 

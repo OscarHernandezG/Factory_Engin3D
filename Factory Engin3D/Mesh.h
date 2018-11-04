@@ -6,6 +6,11 @@
 
 #include "Globals.h"
 
+#include <list>
+
+using namespace std;
+
+
 template <typename T>
 struct Buffer
 {
@@ -19,6 +24,15 @@ struct MeshBuffer
 	Buffer<uint> index;
 	Buffer<float> vertex;
 	Buffer<float> texture;
+
+	string name;
+};
+
+struct MeshInfo
+{
+	list<MeshBuffer> meshes;
+
+	string name;
 };
 
 class Mesh :public Geometry
@@ -35,7 +49,8 @@ public:
 	void ClearMesh();
 
 public:
-	std::vector<MeshBuffer> buffers;
+	MeshBuffer buffer;
+
 
 };
 #endif // !__Mesh_H__

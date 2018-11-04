@@ -710,12 +710,15 @@ void ModuleImGui::CreateMeshesHeader()
 
 				Mesh* mesh = (Mesh*)goGeometry;
 
-				std::vector<MeshBuffer>::iterator iterator = mesh->buffers.begin();
-				while (iterator != mesh->buffers.end())
-				{
-					numVertex += (*iterator).vertex.size;
-					++iterator;
-				}
+				numVertex += mesh->buffer.vertex.size;
+
+
+				//std::vector<MeshBuffer>::iterator iterator = mesh->buffers.begin();
+				//while (iterator != mesh->buffers.end())
+				//{
+				//	numVertex += (*iterator).vertex.size;
+				//	++iterator;
+				//}
 			}
 
 		ImGui::Text("Total vertex: %i", numVertex);
@@ -738,7 +741,8 @@ void ModuleImGui::CreateTextureHeader()
 				Mesh* mesh = (Mesh*)currentGeometry;
 
 			ImGui::Text("Texture id: %i", App->geometry->textureID);
-			ImGui::Text("Texture used by %i meshes", mesh->buffers.size());
+			// TODO
+			//ImGui::Text("Texture used by %i meshes", mesh->buffers.size());
 			ImGui::Text("UV Preview");
 			ImGui::Separator();
 			ImGui::Image((void*)App->geometry->textureID, { 200,200 });
