@@ -99,7 +99,7 @@ MeshInfo ModuleGeometry::LoadMesh(char* path)
 					aiMesh* newMesh = scene->mMeshes[i];
 					
 					MeshBuffer newCurrentBuffer;
-					
+
 					if (i < scene->mRootNode->mNumChildren)
 					{
 						aiNode* meshName = scene->mRootNode->mChildren[i];
@@ -302,7 +302,7 @@ void ModuleGeometry::UpdateMesh(char* path)
 		}
 		else
 		{
-			newGameObject = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, tempMesh.name.data());
+			newGameObject = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, (*tempMesh.meshes.begin()).name.data());
 
 			Mesh* currMesh = new Mesh(newGameObject);
 			currMesh->buffer = *tempMesh.meshes.begin();
@@ -490,17 +490,36 @@ update_status ModuleGeometry::Update(float dt)
 
 update_status ModuleGeometry::PostUpdate(float dt)
 {
-	PrimitivePlane* ground = (PrimitivePlane*)plane->GetComponent(ComponentType_GEOMETRY);
+	//TEMP
+	//----------------------------------------------------------------------------------------------
+	if (plane != nullptr && plane->GetActive())
+	{
+		PrimitivePlane* ground = (PrimitivePlane*)plane->GetComponent(ComponentType_GEOMETRY);
 
-	ground->color = { 1, 1, 1, 1 };
-	ground->axis = true;
-	ground->Render();
-
+		ground->color = { 1, 1, 1, 1 };
+		ground->axis = true;
+		ground->Render();
+	}
 	if (bHouse != nullptr)
 	{
-		for (list<GameObject*>::iterator it = bHouse->childs.begin(); it != bHouse->childs.end(); ++it)
+		if (bHouse->GetActive())
 		{
-			Geometry* currentGeometry = (Geometry*)(*it)->GetComponent(ComponentType_GEOMETRY);
+			for (list<GameObject*>::iterator it = bHouse->childs.begin(); it != bHouse->childs.end(); ++it)
+			{
+				if ((*it)->GetActive())
+				{
+					Geometry* currentGeometry = (Geometry*)(*it)->GetComponent(ComponentType_GEOMETRY);
+					if (currentGeometry)
+						if (currentGeometry->GetType() == Primitive_Mesh)
+						{
+							Mesh* mesh = (Mesh*)currentGeometry;
+							mesh->fill = true;
+							mesh->wire = false;
+							mesh->Render();
+						}
+				}
+			}
+			Geometry* currentGeometry = (Geometry*)(bHouse)->GetComponent(ComponentType_GEOMETRY);
 			if (currentGeometry)
 				if (currentGeometry->GetType() == Primitive_Mesh)
 				{
@@ -508,12 +527,13 @@ update_status ModuleGeometry::PostUpdate(float dt)
 					mesh->fill = true;
 					mesh->wire = false;
 					mesh->Render();
+
 				}
 		}
 	}
-	return UPDATE_CONTINUE;
+	//----------------------------------------------------------------------------------------------
+		return UPDATE_CONTINUE;
 }
-
 void ModuleGeometry::Draw3D(bool fill, bool wire) const
 {
 }
@@ -528,7 +548,7 @@ void ModuleGeometry::LoadDefaultScene()
 
 	App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, "Root Child ") , "Root child child");
 
-	DistributeFile("assets\\models\\BakerHouse.fbx");
+	DistributeFile("assets\\models\\Moon.fbx");
 	DistributeFile("assets\\textures\\Baker_house.dds");
 
 
