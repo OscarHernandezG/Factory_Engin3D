@@ -37,7 +37,6 @@ public:
 	void RemoveComponent(Component* component);
 	Component* AddComponent(ComponentType type, ComponentInfo* info);
 
-	void CreateGameObject(TransformInfo* info);
 
 	float3 GetPos() const;
 
@@ -59,6 +58,10 @@ public:
 
 
 	int CreateRandomUID();
+
+private:
+	void CreateGameObject(TransformInfo* info);
+
 
 public:
 	Transform* transform = nullptr;
