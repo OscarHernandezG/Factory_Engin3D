@@ -3,6 +3,7 @@
 #include "ModuleImGui.h"
 #include "ModuleWindow.h"
 
+#include "ImGuizmo/ImGuizmo.h"
 #include "imgui-1.65/imgui_impl_sdl.h"
 #include "imgui-1.65/imgui_impl_opengl2.h"
 #include "imgui-1.65/imgui_internal.h"
@@ -44,6 +45,8 @@ update_status ModuleImGui::PreUpdate(float dt)
 	ImGui_ImplOpenGL2_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
+
+	ImGuizmo::BeginFrame();
 
 	if (showDemoWindow)
 		ImGui::ShowDemoWindow(&showDemoWindow);
@@ -333,6 +336,9 @@ void ModuleImGui::CreateAboutWindow()
 	if (ImGui::Button(nameChar, ImVec2(125, 20)))
 		ShellExecuteA(NULL, "Open", "http://openil.sourceforge.net", NULL, NULL, SW_SHOWNORMAL);
 
+	sprintf_s(nameChar, 25, "Guizmos");
+	if (ImGui::Button(nameChar, ImVec2(125, 20)))
+		ShellExecuteA(NULL, "Open", "https://github.com/CedricGuillemet/ImGuizmo", NULL, NULL, SW_SHOWNORMAL);
 	///---------------------------------
 	ImGui::Separator();
 	ImGui::TextWrapped("MIT License Copyright(c) 2018 Oscar Hernandez and Aleix Gabarro	Permission is hereby granted, free of charge, to any person obtaining a copy of this software"
@@ -458,7 +464,6 @@ void ModuleImGui::CreateTransform()
 				angles.z = math::DegToRad(angles.z);
 				App->geometry->currentMesh->SetRotation(Quat::FromEulerXYZ(angles.x, angles.y, angles.z));
 			}
-
 
 			if (ImGui::Button("Reset", ImVec2(100, 20)))
 				App->geometry->currentMesh->transform->SetIdentity();
