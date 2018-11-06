@@ -193,7 +193,7 @@ float3 GameObject::GetScale() const
 
 Quat GameObject::GetRotation()
 {
-	return transform->GetRotation();
+	return transform->GetRotation().Normalized();
 }
 
 void GameObject::SetTransform(float4x4 trans)
@@ -206,12 +206,10 @@ void GameObject::SetTransform(float4x4 trans)
 
 void GameObject::SetPos(float3 pos)
 {
-	LOG("Desired pos %f  %f  %f", pos.x, pos.y, pos.z);
 	float3 movement = float3::zero;
 	if (transform)
 	{
 		movement = pos - transform->GetPos();
-		LOG("Movement to pos %f  %f  %f", movement.x, movement.y, movement.z);
 	}
 	Move(movement);
 
@@ -268,6 +266,11 @@ void GameObject::Rotate(Quat rotation)
 {
 	for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
 	{
+		float3 originalPosition = (*iterator)->GetPos() - GetPos();
+		float3 newPosition = originalPosition;
+		newPosition = rotation.Transform(newPosition);
+
+		(*iterator)->SetPos(newPosition);
 		(*iterator)->Rotate(rotation);
 	}
 
