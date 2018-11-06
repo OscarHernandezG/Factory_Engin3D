@@ -6,6 +6,8 @@
 #include "Mesh.h"
 #include "Quadtree.h"
 
+#include "ImGuizmo/ImGuizmo.h"
+
 #include <vector>
 class ModuleSceneIntro : public Module
 {
@@ -26,5 +28,10 @@ public:
 
 	char* droppedFileDir = nullptr;
 	Quadtree quadtree;
+
+private:
+	ImGuizmo::OPERATION guizOperation;
+	ImGuizmo::MODE guizMode;
+
 };
 #endif // !__ModuleSceneIntro_H__

@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "ModuleSceneIntro.h"
 #include "ModuleImGui.h"
+//#include "ModuleGeometryManager.h"
 
 #include "Geometries.h"
 
@@ -76,6 +77,12 @@ update_status ModuleSceneIntro::Update(float dt)
 {
 	ImGuizmo::Enable(true);
 
+
+	//ImGui::PushID(3);
+	ImGuiIO& io = ImGui::GetIO();
+	ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+
+	ImGuizmo::Manipulate(App->camera->GetViewMatrix(), App->camera->GetProjectionMatrix(), guizOperation, guizMode, (float*)App->geometry->currentGameObject->transform->GetMatrix().ptr());
 
 
 	return UPDATE_CONTINUE;

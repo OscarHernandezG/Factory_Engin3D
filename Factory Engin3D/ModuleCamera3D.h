@@ -38,6 +38,7 @@ public:
 	void SetPos(float3 pos);
 
 	float * GetViewMatrix() const;
+	float * GetProjectionMatrix() const;
 	Frustum GetCameraFrustrum() const;
 
 

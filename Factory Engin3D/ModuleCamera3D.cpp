@@ -251,6 +251,11 @@ float* ModuleCamera3D::GetViewMatrix() const
 	return cameraComponent->GetViewMatrix().ptr();
 }
 
+float* ModuleCamera3D::GetProjectionMatrix() const
+{
+	return cameraComponent->GetProjectionMatrix();
+}
+
 Frustum ModuleCamera3D::GetCameraFrustrum() const
 {
 	return cameraComponent->frustum;
