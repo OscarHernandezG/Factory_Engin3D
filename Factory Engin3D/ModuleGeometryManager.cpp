@@ -431,7 +431,7 @@ uint ModuleGeometry::LoadTexture(char* path) const
 {
 	bool isSuccess = true;
 	ILuint newTextureID = 0;
-
+	uint opengGlTexture = 0u;
 	ilGenImages(1, &newTextureID);
 	ilBindImage(newTextureID);
 
@@ -461,8 +461,8 @@ uint ModuleGeometry::LoadTexture(char* path) const
 		{
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-			glGenTextures(1, &newTextureID);
-			glBindTexture(GL_TEXTURE_2D, newTextureID);
+			glGenTextures(1, &opengGlTexture);
+			glBindTexture(GL_TEXTURE_2D, opengGlTexture);
 
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
@@ -488,9 +488,9 @@ uint ModuleGeometry::LoadTexture(char* path) const
 	ilDeleteImages(1, &newTextureID);
 
 	if (!isSuccess)
-		newTextureID = 0;
+		opengGlTexture = 0;
 
-	return newTextureID;
+	return opengGlTexture;
 }
 
 void ModuleGeometry::UpdateTexture(char* path)
@@ -571,8 +571,8 @@ void ModuleGeometry::LoadDefaultScene()
 
 	App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, "Root Child ") , "Root child child");
 
-	DistributeFile("assets\\models\\BakerHouse.fbx");
-	//DistributeFile("assets\\textures\\Baker_house.dds");
+	DistributeFile("assets\\models\\Street.fbx");
+	DistributeFile("assets\\textures\\Baker_house.dds");
 
 
 	plane = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, "Ground");
