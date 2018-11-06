@@ -30,7 +30,7 @@ void Transform::Update(float dt)
 void Transform::UpdateBoundingBox()
 {
 	OBB obb = originalBoundingBox.ToOBB();
-	obb.Transform(GetMatrixOGL());
+	obb.Transform(GetMatrix());
 
 	boundingBox = obb.MinimalEnclosingAABB();
 }
