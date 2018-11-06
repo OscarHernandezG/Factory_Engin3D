@@ -55,6 +55,11 @@ void Transform::Move(float3 position)
 	this->position = this->position.Add(position);
 }
 
+void Transform::SetTransform(float4x4 trans)
+{
+	trans.Decompose(position, rotation, scale);
+}
+
 void Transform::Scale(float3 scale)
 {
 	this->scale = this->scale.Mul(scale);
@@ -131,8 +136,5 @@ Quat Transform::GetLocalRotation() const
 
 float4x4 Transform::GetMatrix() const
 {
-	if (scale.y == 2.0f)
-		bool pase = 0;
-
 	return float4x4::FromTRS(position, rotation, scale).Transposed();
 }
