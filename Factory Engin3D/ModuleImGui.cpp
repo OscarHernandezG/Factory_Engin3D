@@ -427,29 +427,29 @@ void ModuleImGui::CreateTransform()
 {
 	ImGui::SetWindowSize({ 400,200 }, ImGuiWindowFlags_NoResize);
 	ImGui::Begin("Transform", &transformWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
-	if (App->geometry->currentMesh != nullptr)
+	if (App->geometry->currentGameObject != nullptr)
 	{
-		string goName = App->geometry->currentMesh->name;
+		string goName = App->geometry->currentGameObject->name;
 		ImGui::Text(goName.data());
 
-		ImGui::Checkbox("Active", App->geometry->currentMesh->GetActiveReference());
-		App->geometry->currentMesh->SetActive(App->geometry->currentMesh->GetActive());
+		ImGui::Checkbox("Active", App->geometry->currentGameObject->GetActiveReference());
+		App->geometry->currentGameObject->SetActive(App->geometry->currentGameObject->GetActive());
 
 		float3 position, scale, angles;
 		Quat rotate;
 
-		if (App->geometry->currentMesh->transform != nullptr)
+		if (App->geometry->currentGameObject->transform != nullptr)
 		{
-			position = App->geometry->currentMesh->transform->GetPos();
-			scale = App->geometry->currentMesh->transform->scale;
-			rotate = App->geometry->currentMesh->transform->GetRotation();
+			position = App->geometry->currentGameObject->transform->GetPos();
+			scale = App->geometry->currentGameObject->transform->scale;
+			rotate = App->geometry->currentGameObject->transform->GetRotation();
 
 			if (ImGui::InputFloat3("Position", &position[0])) {
-				App->geometry->currentMesh->SetPos(position);
+				App->geometry->currentGameObject->SetPos(position);
 			}
 
 			if (ImGui::InputFloat3("Scale", &scale[0]))
-				App->geometry->currentMesh->SetScale(scale);
+				App->geometry->currentGameObject->SetScale(scale);
 
 			angles = rotate.ToEulerXYZ();
 
@@ -462,11 +462,11 @@ void ModuleImGui::CreateTransform()
 				angles.x = math::DegToRad(angles.x);
 				angles.y = math::DegToRad(angles.y);
 				angles.z = math::DegToRad(angles.z);
-				App->geometry->currentMesh->SetRotation(Quat::FromEulerXYZ(angles.x, angles.y, angles.z));
+				App->geometry->currentGameObject->SetRotation(Quat::FromEulerXYZ(angles.x, angles.y, angles.z));
 			}
 
 			if (ImGui::Button("Reset", ImVec2(100, 20)))
-				App->geometry->currentMesh->transform->SetIdentity();
+				App->geometry->currentGameObject->transform->SetIdentity();
 		}
 	}
 	else {
@@ -493,7 +493,7 @@ void ModuleImGui::CreateGOTreeNode(GameObject* current)
 	if (current->childs.size() == 0)
 		flags |= ImGuiTreeNodeFlags_Leaf;
 
-	if (current == App->geometry->currentMesh)
+	if (current == App->geometry->currentGameObject)
 		flags |= ImGuiTreeNodeFlags_Selected;
 
 	char name[80];
@@ -507,7 +507,7 @@ void ModuleImGui::CreateGOTreeNode(GameObject* current)
 	{
 		if (ImGui::IsItemClicked(0))
 		{
-			App->geometry->currentMesh = current;
+			App->geometry->currentGameObject = current;
 		}
 
 		for (list<GameObject*>::iterator childs = current->childs.begin(); childs != current->childs.end(); ++childs)
@@ -708,9 +708,9 @@ void ModuleImGui::CreateInputHeader()
 
 void ModuleImGui::CreateMeshesHeader()
 {
-	if (App->geometry->currentMesh != nullptr)
+	if (App->geometry->currentGameObject != nullptr)
 	{
-		Geometry* goGeometry = (Geometry*)App->geometry->currentMesh->GetComponent(ComponentType::ComponentType_GEOMETRY);
+		Geometry* goGeometry = (Geometry*)App->geometry->currentGameObject->GetComponent(ComponentType::ComponentType_GEOMETRY);
 		if (goGeometry != nullptr)
 		{
 			if (goGeometry->GetType() == PrimitiveTypes::Primitive_Mesh)
@@ -722,8 +722,8 @@ void ModuleImGui::CreateMeshesHeader()
 				ImGui::Text("Total faces: %i", App->geometry->numFaces);
 				if (ImGui::Button("Remove Mesh", { 125,25 }))
 				{
-					Geometry* mesh = (Geometry*)App->geometry->currentMesh->GetComponent(ComponentType::ComponentType_GEOMETRY);
-					App->geometry->currentMesh->RemoveComponent(mesh);
+					Geometry* mesh = (Geometry*)App->geometry->currentGameObject->GetComponent(ComponentType::ComponentType_GEOMETRY);
+					App->geometry->currentGameObject->RemoveComponent(mesh);
 				}
 			}
 		}
@@ -739,7 +739,7 @@ void ModuleImGui::CreateTextureHeader()
 {
 	if (App->geometry->textureID != 0)
 	{
-		Geometry* currentGeometry = (Geometry*)App->geometry->currentMesh->GetComponent(ComponentType_GEOMETRY);
+		Geometry* currentGeometry = (Geometry*)App->geometry->currentGameObject->GetComponent(ComponentType_GEOMETRY);
 		if (currentGeometry != nullptr)
 			if (currentGeometry->GetType() == PrimitiveTypes::Primitive_Mesh)
 			{

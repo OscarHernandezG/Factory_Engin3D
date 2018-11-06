@@ -68,7 +68,7 @@ public:
 	void UpdateTexture(char* path);
 
 public:
-	GameObject* currentMesh = nullptr;
+	GameObject* currentGameObject = nullptr;
 	GameObject* bHouse = nullptr;
 
 

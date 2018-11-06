@@ -41,7 +41,7 @@ update_status ModulePicking::Update(float dt)
 		GameObject* nearObject = nullptr;
 		for (std::vector<GameObject*>::const_iterator iterator = objects.begin(); iterator != objects.end(); ++iterator)
 		{
-			if ((*iterator)->HasComponent(ComponentType_GEOMETRY))
+			if ((*iterator)->HasComponent(ComponentType_GEOMETRY) && (*iterator)->GetActive())
 			{
 				LineSegment rayTransformed(ray);
 				rayTransformed.Transform((*iterator)->transform->GetMatrix().Inverted());
@@ -56,7 +56,7 @@ update_status ModulePicking::Update(float dt)
 		}
 
 		if (nearObject != nullptr)
-			App->geometry->currentMesh = nearObject;
+			App->geometry->currentGameObject = nearObject;
 
 		rayDraw = RayLine(ray.a, ray.b);
 		rayDraw.gameObject = App->gameObject->root;

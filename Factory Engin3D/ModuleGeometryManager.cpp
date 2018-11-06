@@ -341,7 +341,7 @@ void ModuleGeometry::UpdateMesh(char* path)
 
 		GameObject* newGameObject = LoadGameObjectsFromMeshNode(tempMesh, App->gameObject->root);
 
-		currentMesh = newGameObject;
+		currentGameObject = newGameObject;
 		bHouse = newGameObject;
 		//App->sceneIntro->quadtree.Insert(bHouse);
 	}
@@ -407,13 +407,13 @@ float3 ModuleGeometry::GetBBPos() const
 	distance.y = (size.y / 2) / math::Tan(0.33333333333 * reScale);
 	distance.z = (size.z / 2) / math::Tan(0.33333333333 * reScale);
 
-	return distance + currentMesh->GetPos();
+	return distance + currentGameObject->GetPos();
 }
 
 float3 ModuleGeometry::GetCurrentMeshPivot() const
 {
-	if (currentMesh)
-		return currentMesh->GetPos();
+	if (currentGameObject)
+		return currentGameObject->GetPos();
 	else return float3::zero;
 }
 
