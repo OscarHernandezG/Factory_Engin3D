@@ -11,6 +11,7 @@
 #include "Assimp/include/postprocess.h"
 #include "Assimp/include/cfileio.h"
 
+#include "ImGuizmo/ImGuizmo.h"
 #include <fstream>  
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -73,6 +74,10 @@ bool ModuleSceneIntro::CleanUp()
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
+	ImGuizmo::Enable(true);
+
+
+
 	return UPDATE_CONTINUE;
 }
 

@@ -58,6 +58,9 @@
     <Filter Include="Sources\GameObject\Component">
       <UniqueIdentifier>{efb2f799-f49a-41e8-b5e9-e2b561fd1095}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Containers\ImGui\Guizmo">
+      <UniqueIdentifier>{55651df5-a11d-41d3-bca9-442a5baa29a3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -372,6 +375,9 @@
     <ClInclude Include="ModulePicking.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="ImGuizmo\ImGuizmo.h">
+      <Filter>Sources\Containers\ImGui\Guizmo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -553,6 +559,9 @@
     </ClCompile>
     <ClCompile Include="ModulePicking.cpp">
       <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGuizmo\ImGuizmo.cpp">
+      <Filter>Sources\Containers\ImGui\Guizmo</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
