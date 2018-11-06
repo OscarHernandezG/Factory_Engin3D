@@ -30,7 +30,7 @@ void Transform::Update(float dt)
 void Transform::UpdateBoundingBox()
 {
 	OBB obb = originalBoundingBox.ToOBB();
-	obb.Transform(GetMatrix());
+	obb.Transform(GetMatrixOGL());
 
 	boundingBox = obb.MinimalEnclosingAABB();
 }
@@ -94,7 +94,7 @@ void Transform::SetIdentity()
 	scale = float3::one;
 }
 
-float3 Transform::GetPos() const
+const float3 Transform::GetPos() const
 {
 	if (gameObject->father != nullptr)
 		return position + gameObject->father->GetPos();
@@ -102,7 +102,7 @@ float3 Transform::GetPos() const
 	else return position;
 }
 
-float3 Transform::GetScale() const
+const float3 Transform::GetScale() const
 {
 	if (gameObject->father != nullptr)
 		return position + gameObject->father->GetScale();
@@ -110,7 +110,7 @@ float3 Transform::GetScale() const
 	else return scale;
 }
 
-Quat Transform::GetRotation() const
+const Quat Transform::GetRotation() const
 {
 	if (gameObject->father != nullptr)
 		return rotation.Mul(gameObject->father->GetRotation());
@@ -118,21 +118,23 @@ Quat Transform::GetRotation() const
 	else return rotation;
 }
 
-float3 Transform::GetLocalPos() const
+const float3 Transform::GetLocalPos() const
 {
 	return position;
 }
 
-Quat Transform::GetLocalRotation() const
+const Quat Transform::GetLocalRotation() const
 {
 	return rotation;
 }
 
 
-float4x4 Transform::GetMatrix() const
+const float4x4 Transform::GetMatrixOGL() const
 {
-	if (scale.y == 2.0f)
-		bool pase = 0;
-
 	return float4x4::FromTRS(position, rotation, scale).Transposed();
+}
+
+const float4x4 Transform::GetMatrix() const
+{
+	return float4x4::FromTRS(position, rotation, scale);
 }

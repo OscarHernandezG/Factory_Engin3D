@@ -14,6 +14,10 @@ public:
 	bool CleanUp();
 	update_status Update(float dt);
 
+	bool CheckMeshTri(Geometry * geometry, LineSegment & rayTransformed, float & smallerDist);
+
+	float3 SetTrianglePoint(Buffer<float> vertex, Buffer<uint> index, uint idIndex);
+
 public:
 	RayLine rayDraw;
 };

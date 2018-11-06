@@ -43,28 +43,29 @@ public:
 	void		SetPos(float x, float y, float z);
 	void		SetPos(float3 position);
 
-	void Move(float3 position);
+	void		 Move(float3 position);
 
-	void Scale(float3 scale);
+	void		 Scale(float3 scale);
 
 	void		SetRotation(Quat rotation);
 	void		SetRotation(float3 rotation);
 	void		Rotate(Quat rotation);
 
 	void		SetScale(float x, float y, float z);
-	void SetScale(float3 scale);
+	void		SetScale(float3 scale);
 	void		SetIdentity();
 
-	float3		GetPos() const;
-	float3		GetLocalPos() const;
+	const float3	GetPos() const;
+	const float3	GetLocalPos() const;
 
-	float3		GetScale() const;
+	const float3	GetScale() const;
 
-	Quat		GetRotation() const;
-	Quat		GetLocalRotation() const;
+	const Quat		GetRotation() const;
+	const Quat		GetLocalRotation() const;
 
 
-	float4x4	GetMatrix() const;
+	const float4x4	GetMatrixOGL() const;
+	const float4x4	GetMatrix() const;
 
 public:
 
