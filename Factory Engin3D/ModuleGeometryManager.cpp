@@ -77,10 +77,104 @@ void ModuleGeometry::DistributeFile(char* file)
 		UpdateTexture(file);
 }
 
-
-MeshInfo ModuleGeometry::LoadMesh(char* path)
+MeshBuffer ModuleGeometry::LoadMeshBuffer(const aiScene* scene, uint index, char* path)
 {
-	MeshInfo meshBuffer;
+	MeshBuffer buffer;
+
+	aiMesh* newMesh = scene->mMeshes[index];
+
+	LoadMeshVertex(buffer, newMesh);
+
+	if (newMesh->HasFaces())
+	{
+		LoadMeshIndex(newMesh, buffer);
+	}
+
+	if (newMesh->HasTextureCoords(0))
+	{
+		LoadMeshTextureCoords(buffer, newMesh);
+	}
+
+	buffer.id = index;
+
+	SaveMeshImporter(buffer, path, index);
+
+	buffer.boundingBox = LoadBoundingBox(buffer.vertex);
+
+	return buffer;
+}
+
+void ModuleGeometry::LoadMeshTextureCoords(MeshBuffer &buffer, aiMesh * newMesh)
+{
+	buffer.texture.size = newMesh->mNumVertices * 2;
+	buffer.texture.buffer = new float[buffer.texture.size];
+	for (int currVertices = 0; currVertices < newMesh->mNumVertices; ++currVertices)
+	{
+		memcpy(&buffer.texture.buffer[currVertices * 2], &newMesh->mTextureCoords[0][currVertices], sizeof(float) * 2);
+	}
+}
+
+void ModuleGeometry::LoadMeshIndex(aiMesh * newMesh, MeshBuffer &buffer)
+{
+	numFaces += newMesh->mNumFaces;
+	buffer.index.size = newMesh->mNumFaces * 3;
+	buffer.index.buffer = new uint[buffer.index.size];
+
+	for (uint index = 0; index < newMesh->mNumFaces; ++index)
+	{
+		if (newMesh->mFaces[index].mNumIndices != 3)
+			LOG("WARNING, geometry faces != 3 indices")
+		else
+		{
+			memcpy(&buffer.index.buffer[index * 3], newMesh->mFaces[index].mIndices, sizeof(uint) * 3);
+		}
+
+	}
+}
+
+void ModuleGeometry::LoadMeshVertex(MeshBuffer &buffer, aiMesh * newMesh)
+{
+	buffer.vertex.size = newMesh->mNumVertices * 3;
+	buffer.vertex.buffer = new float[buffer.vertex.size];
+
+	memcpy(buffer.vertex.buffer, newMesh->mVertices, sizeof(float) * buffer.vertex.size);
+
+	LOG("New mesh loaded with %d vertices", buffer.vertex.size);
+}
+
+MeshNode ModuleGeometry::LoadMeshNode(const aiScene* scene, aiNode* node, char* path)
+{
+	MeshNode meshNode;
+
+	meshNode.name = node->mName.C_Str();
+
+	if (node->mNumMeshes > 0)
+	{
+		MeshBuffer currMeshBuff = LoadMeshBuffer(scene, node->mMeshes[0], path);
+		meshNode.buffer = currMeshBuff;
+	}
+	for (int child = 0; child < node->mNumChildren; ++child)
+	{
+		meshNode.childs.push_back(LoadMeshNode(scene, node->mChildren[child], path));
+	}
+	
+	meshNode.transform = AiNatrixToFloatMat(node->mTransformation);
+
+	return meshNode;
+}
+
+float4x4 ModuleGeometry::AiNatrixToFloatMat(const aiMatrix4x4 & aiMat)
+{
+	float4x4 mat(aiMat.a1, aiMat.a2, aiMat.a3, aiMat.a4,
+				aiMat.b1, aiMat.b2, aiMat.b3, aiMat.b4,
+				aiMat.c1, aiMat.c2, aiMat.c3, aiMat.c4,
+				aiMat.d1, aiMat.d2, aiMat.d3, aiMat.d4);
+	return mat;
+}
+
+MeshNode ModuleGeometry::LoadMesh(char* path)
+{
+	MeshNode meshRoot;
 	if (path != nullptr)
 	{
 		char* filePath = path;
@@ -90,70 +184,8 @@ MeshInfo ModuleGeometry::LoadMesh(char* path)
 		{
 			// Todo: GameObject name here
 			// Todo: Save names in fty
-			meshBuffer.name = scene->mRootNode->mName.C_Str();
 			if (scene->HasMeshes())
-			{
-				numFaces = 0u;
-				for (int i = 0; i < scene->mNumMeshes; ++i)
-				{
-					aiMesh* newMesh = scene->mMeshes[i];
-					
-					MeshBuffer newCurrentBuffer;
-
-					if (i < scene->mRootNode->mNumChildren)
-					{
-						aiNode* meshName = scene->mRootNode->mChildren[i];
-
-						newCurrentBuffer.name = meshName->mName.C_Str();
-					}
-					else
-						newCurrentBuffer.name = newMesh->mName.C_Str();
-
-
-					newCurrentBuffer.vertex.size = newMesh->mNumVertices * 3;
-					newCurrentBuffer.vertex.buffer = new float[newCurrentBuffer.vertex.size];
-
-					memcpy(newCurrentBuffer.vertex.buffer, newMesh->mVertices, sizeof(float) * newCurrentBuffer.vertex.size);
-
-					LOG("New mesh loaded with %d vertices", newCurrentBuffer.vertex.size);
-
-					if (newMesh->HasFaces())
-					{
-						numFaces += newMesh->mNumFaces;
-						newCurrentBuffer.index.size = newMesh->mNumFaces * 3;
-						newCurrentBuffer.index.buffer = new uint[newCurrentBuffer.index.size];
-
-						for (uint index = 0; index < newMesh->mNumFaces; ++index)
-						{
-							if (newMesh->mFaces[index].mNumIndices != 3)
-								LOG("WARNING, geometry faces != 3 indices")
-							else
-							{
-								memcpy(&newCurrentBuffer.index.buffer[index * 3], newMesh->mFaces[index].mIndices, sizeof(uint) * 3);
-							}
-
-						}
-					}
-
-					if (newMesh->HasTextureCoords(0))
-					{
-						newCurrentBuffer.texture.size = newMesh->mNumVertices * 2;
-						newCurrentBuffer.texture.buffer = new float[newCurrentBuffer.texture.size];
-						for (int currVertices = 0; currVertices < newMesh->mNumVertices; ++currVertices)
-						{
-							memcpy(&newCurrentBuffer.texture.buffer[currVertices * 2], &newMesh->mTextureCoords[0][currVertices], sizeof(float) * 2);
-						}
-
-					}
-
-					meshBuffer.meshes.push_back(newCurrentBuffer);
-
-					SaveMeshImporter(newCurrentBuffer,path,i);
-				}
-				//Todo calculate bounding box
-			currentMeshBB = LoadBoundingBox(&meshBuffer);
-			LOG("Loaded geometry with %i faces", numFaces);
-			}
+				meshRoot = LoadMeshNode(scene, scene->mRootNode, path);
 
 			aiReleaseImport(scene);
 		}
@@ -162,7 +194,7 @@ MeshInfo ModuleGeometry::LoadMesh(char* path)
 			LOG("Error loading geometry %s", filePath);
 
 	}
-	return meshBuffer;
+	return meshRoot;
 }
 
 void ModuleGeometry::SaveMeshImporter(MeshBuffer newCurrentBuffer, const char* path, int number)
@@ -202,13 +234,14 @@ void ModuleGeometry::SaveMeshImporter(MeshBuffer newCurrentBuffer, const char* p
 	delete[] exporter;
 }
 
-void ModuleGeometry::LoadMeshImporter(const char* path, list<MeshBuffer>* tempMesh)
+void ModuleGeometry::LoadMeshImporter(const char* path, MeshNode* tempMesh)
 {
 	int i = 0;
+	i = tempMesh->buffer.id;
 	char* buffer = App->importer->LoadFile(path, LlibraryType_MESH, i);
 
 	// UUID
-	while (buffer != nullptr)
+	if (buffer != nullptr)
 	{
 		MeshBuffer bufferImporter;
 		char* cursor = buffer;
@@ -252,127 +285,100 @@ void ModuleGeometry::LoadMeshImporter(const char* path, list<MeshBuffer>* tempMe
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-		i++;
-		buffer = App->importer->LoadFile(path, LlibraryType_MESH, i);
-		tempMesh->push_back(bufferImporter);
+	//	i++;
+		//buffer = App->importer->LoadFile(path, LlibraryType_MESH, i);
 
+		bufferImporter.boundingBox = LoadBoundingBox(bufferImporter.vertex);
+
+		tempMesh->buffer = bufferImporter;
+	}
+	else
+	{
+		;
+
+		tempMesh->buffer.boundingBox = AABB(float3::zero, float3::zero);
+	}
+
+	for (list<MeshNode>::iterator childs = tempMesh->childs.begin(); childs != tempMesh->childs.end(); ++childs)
+	{
+		LoadMeshImporter(path, &*childs);
 	}
 
 	delete[] buffer;
 }
 
+GameObject* ModuleGeometry::LoadGameObjectsFromMeshNode(MeshNode node, GameObject* father)
+{
+	GameObject* newGameObject = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, father, node.name.data());
+	newGameObject->SetTransform(node.transform);
+	newGameObject->SetABB((node.buffer).boundingBox);
+
+	Mesh* currMesh = new Mesh(newGameObject);
+	currMesh->buffer = node.buffer;
+	GeometryInfo info(currMesh);
+	newGameObject->AddComponent(ComponentType_GEOMETRY, &info);
+	App->sceneIntro->quadtree.Insert(newGameObject);
+
+
+	for (list<MeshNode>::iterator childs = node.childs.begin(); childs != node.childs.end(); ++childs)
+	{
+		LoadGameObjectsFromMeshNode(*childs, newGameObject);
+	}
+	return newGameObject;
+}
+
+
 void ModuleGeometry::UpdateMesh(char* path)
 {
-	MeshInfo tempMesh = LoadMesh(path);
+	MeshNode tempMesh = LoadMesh(path);
 
-	if (!tempMesh.meshes.empty())
+	//if (!tempMesh.buffer.empty() || !tempMesh.childs.empty())
 	{
 		//Geometry* mesh = (Geometry*)currentMesh->GetComponent(ComponentType::ComponentType_GEOMETRY);
 		//currentMesh->RemoveComponent(mesh);
 
-		list<string> names;
-		for (list<MeshBuffer>::iterator iterator = tempMesh.meshes.begin(); iterator != tempMesh.meshes.end(); ++iterator)
-		{
-			string data((*iterator).name.data());
-			names.push_back(data);
-		}
+		LoadMeshImporter(path, &tempMesh);
 
-		tempMesh.meshes.clear();
-		LoadMeshImporter(path, &tempMesh.meshes);
-
-		list<string>::iterator name = names.begin();
-		list<MeshBuffer>::iterator mesh = tempMesh.meshes.begin();
-		for (; name != names.end() && mesh != tempMesh.meshes.end(); ++name, ++mesh)
-		{
-			(*mesh).name = (*name);
-		}
-		GameObject* newGameObject = nullptr;
-		if (tempMesh.meshes.size() > 1)
-		{
-			newGameObject = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, tempMesh.name.data());
-			newGameObject->SetABB(tempMesh.boundingBox);
-
-			for (list<MeshBuffer>::iterator iterator = tempMesh.meshes.begin(); iterator != tempMesh.meshes.end(); ++iterator)
-			{
-				GameObject* temp  = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, newGameObject, (*iterator).name.data());
-				temp->SetABB((*iterator).boundingBox);
-				Mesh* currMesh = new Mesh(temp);
-				currMesh->buffer = *iterator;
-				GeometryInfo info(currMesh);
-				temp->AddComponent(ComponentType_GEOMETRY, &info);
-			}
-		}
-		else
-		{
-			newGameObject = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, (*tempMesh.meshes.begin()).name.data());
-			newGameObject->SetABB(tempMesh.boundingBox);
-
-			Mesh* currMesh = new Mesh(newGameObject);
-			currMesh->buffer = *tempMesh.meshes.begin();
-
-			GeometryInfo info(currMesh);
-			//info.boundingBox = *currentMeshBB;
-			newGameObject->AddComponent(ComponentType_GEOMETRY, &info);
-		}
+		GameObject* newGameObject = LoadGameObjectsFromMeshNode(tempMesh, App->gameObject->root);
 
 		currentMesh = newGameObject;
 		bHouse = newGameObject;
-		App->sceneIntro->quadtree.Insert(bHouse);
+		//App->sceneIntro->quadtree.Insert(bHouse);
 	}
 }
 
-AABB ModuleGeometry::LoadBoundingBox(MeshInfo* mesh)
+AABB ModuleGeometry::LoadBoundingBox(Buffer<float> vertex)
 {
 	AABB boundingBox(float3::zero, float3::zero);
-	if (mesh != nullptr)
+	float3 max, min;
+
+	if (vertex.size >= 3)
 	{
-		float3 max, min;
-		std::list<MeshBuffer>::iterator iterator = mesh->meshes.begin();
-		for (iterator; iterator != mesh->meshes.end(); ++iterator)
-		{
-			max.x = (*iterator).vertex.buffer[0];
-			max.y = (*iterator).vertex.buffer[1];
-			max.z = (*iterator).vertex.buffer[2];
+		max.x = vertex.buffer[0];
+		max.y = vertex.buffer[1];
+		max.z = vertex.buffer[2];
 
-			min = max;
-
-			int vertexSize = (*iterator).vertex.size / 3;
-			float* buffer = (*iterator).vertex.buffer;
-			for (int i = 0; i < vertexSize; ++i)
-			{
-				Higher(max.x, buffer[i * 3]);
-				Higher(max.y, buffer[i * 3 + 1]);
-				Higher(max.z, buffer[i * 3 + 2]);
-
-				Lower(min.x, buffer[i * 3]);
-				Lower(min.y, buffer[i * 3 + 1]);
-				Lower(min.z, buffer[i * 3 + 2]);
-			}
-
-			(*iterator).boundingBox = AABB(min, max);
-		}
-
-		iterator = mesh->meshes.begin();
-		max = (*iterator).boundingBox.maxPoint;
 		min = max;
-		for (iterator; iterator != mesh->meshes.end(); ++iterator)
+
+		int vertexSize = vertex.size / 3;
+		float* buffer = vertex.buffer;
+		for (int i = 0; i < vertexSize; ++i)
 		{
-				Higher(max.x, (*iterator).boundingBox.maxPoint.x);
-				Higher(max.y, (*iterator).boundingBox.maxPoint.y);
-				Higher(max.z, (*iterator).boundingBox.maxPoint.z);
+			Higher(max.x, buffer[i * 3]);
+			Higher(max.y, buffer[i * 3 + 1]);
+			Higher(max.z, buffer[i * 3 + 2]);
 
-				Lower(min.x, (*iterator).boundingBox.minPoint.x);
-				Lower(min.y, (*iterator).boundingBox.minPoint.y);
-				Lower(min.z, (*iterator).boundingBox.minPoint.z);
-
+			Lower(min.x, buffer[i * 3]);
+			Lower(min.y, buffer[i * 3 + 1]);
+			Lower(min.z, buffer[i * 3 + 2]);
 		}
-		mesh->boundingBox = AABB(min, max);
 
+		boundingBox = AABB(min, max);
 		// TODO move camera at drop file
 		//App->camera->Position = CalcBBPos(boundingBox);
 		//App->camera->Look(CalcBBPos(boundingBox), mesh->GetPos(), false);
 	}
-	return mesh->boundingBox;
+	return boundingBox;
 }
 
 float3 ModuleGeometry::CalcBBPos(math::AABB* boundingBox) const
@@ -425,7 +431,7 @@ uint ModuleGeometry::LoadTexture(char* path) const
 {
 	bool isSuccess = true;
 	ILuint newTextureID = 0;
-
+	uint opengGlTexture = 0u;
 	ilGenImages(1, &newTextureID);
 	ilBindImage(newTextureID);
 
@@ -455,8 +461,8 @@ uint ModuleGeometry::LoadTexture(char* path) const
 		{
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-			glGenTextures(1, &newTextureID);
-			glBindTexture(GL_TEXTURE_2D, newTextureID);
+			glGenTextures(1, &opengGlTexture);
+			glBindTexture(GL_TEXTURE_2D, opengGlTexture);
 
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
@@ -482,9 +488,9 @@ uint ModuleGeometry::LoadTexture(char* path) const
 	ilDeleteImages(1, &newTextureID);
 
 	if (!isSuccess)
-		newTextureID = 0;
+		opengGlTexture = 0;
 
-	return newTextureID;
+	return opengGlTexture;
 }
 
 void ModuleGeometry::UpdateTexture(char* path)
@@ -519,6 +525,43 @@ update_status ModuleGeometry::PostUpdate(float dt)
 		ground->axis = true;
 		ground->Render();
 	}
+
+
+
+	//if (bHouse != nullptr)
+	//{
+	//	if (bHouse->GetActive())
+	//	{
+	//		for (list<GameObject*>::iterator it = bHouse->childs.begin(); it != bHouse->childs.end(); ++it)
+	//		{
+	//			if ((*it)->GetActive())
+	//			{
+	//				Geometry* currentGeometry = (Geometry*)(*it)->GetComponent(ComponentType_GEOMETRY);
+	//				if (currentGeometry)
+	//					if (currentGeometry->GetType() == Primitive_Mesh)
+	//					{
+	//						Mesh* mesh = (Mesh*)currentGeometry;
+	//						mesh->fill = true;
+	//						mesh->wire = false;
+	//						mesh->Render();
+	//					}
+	//			}
+	//		}
+	//		Geometry* currentGeometry = (Geometry*)(bHouse)->GetComponent(ComponentType_GEOMETRY);
+	//		if (currentGeometry)
+	//			if (currentGeometry->GetType() == Primitive_Mesh)
+	//			{
+	//				Mesh* mesh = (Mesh*)currentGeometry;
+	//				mesh->fill = true;
+	//				mesh->wire = false;
+	//				mesh->Render();
+
+	//			}
+	//	}
+	//}
+
+
+
 		return UPDATE_CONTINUE;
 }
 
@@ -528,7 +571,7 @@ void ModuleGeometry::LoadDefaultScene()
 
 	App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, "Root Child ") , "Root child child");
 
-	DistributeFile("assets\\models\\BakerHouse.fbx");
+	DistributeFile("assets\\models\\Street.fbx");
 	DistributeFile("assets\\textures\\Baker_house.dds");
 
 

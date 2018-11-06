@@ -30,7 +30,7 @@ void Transform::Update(float dt)
 void Transform::UpdateBoundingBox()
 {
 	OBB obb = originalBoundingBox.ToOBB();
-	obb.Transform(GetMatrixOGL());
+	obb.Transform(GetMatrix());
 
 	boundingBox = obb.MinimalEnclosingAABB();
 }
@@ -53,6 +53,11 @@ void Transform::SetPos(float3 position)
 void Transform::Move(float3 position)
 {
 	this->position = this->position.Add(position);
+}
+
+void Transform::SetTransform(float4x4 trans)
+{
+	trans.Decompose(position, rotation, scale);
 }
 
 void Transform::Scale(float3 scale)

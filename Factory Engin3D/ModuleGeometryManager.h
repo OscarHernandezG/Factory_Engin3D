@@ -5,6 +5,12 @@
 #include "Transform.h"
 #include "Geometries.h"
 
+#include "Assimp/include/matrix4x4.h"
+
+struct aiMesh;
+struct aiScene;
+struct aiNode;
+
 class ModuleGeometry : public Module
 {
 public:
@@ -21,15 +27,29 @@ public:
 
 	void DistributeFile(char * file);
 
-	MeshInfo LoadMesh(char* path);
+	MeshBuffer LoadMeshBuffer(const aiScene * scene, uint index, char* path);
+
+	void LoadMeshTextureCoords(MeshBuffer &buffer, aiMesh* newMesh);
+
+	void LoadMeshIndex(aiMesh* newMesh, MeshBuffer &buffer);
+
+	void LoadMeshVertex(MeshBuffer &buffer, aiMesh* newMesh);
+
+	MeshNode LoadMeshNode(const aiScene* scene, aiNode* node, char* path);
+
+	float4x4 AiNatrixToFloatMat(const aiMatrix4x4 &aiMat);
+
+	MeshNode LoadMesh(char* path);
 
 	void SaveMeshImporter(MeshBuffer newCurrentBuffer, const char * path, int number);
 
-	void LoadMeshImporter(const char * path, list<MeshBuffer>* tempMesh);
+	void LoadMeshImporter(const char * path, MeshNode* tempMesh);
+
+	GameObject* LoadGameObjectsFromMeshNode(MeshNode node, GameObject * father);
 
 	void UpdateMesh(char * path);
 
-	AABB LoadBoundingBox(MeshInfo * mesh);
+	AABB LoadBoundingBox(Buffer<float> vertex);
 
 	float3 CalcBBPos(math::AABB* boundingBox) const;
 

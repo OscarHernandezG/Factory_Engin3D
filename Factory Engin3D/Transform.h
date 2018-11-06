@@ -43,9 +43,9 @@ public:
 	void		SetPos(float x, float y, float z);
 	void		SetPos(float3 position);
 
-	void		 Move(float3 position);
-
-	void		 Scale(float3 scale);
+	void		Move(float3 position);
+	void		SetTransform(float4x4 trans);
+	void		Scale(float3 scale);
 
 	void		SetRotation(Quat rotation);
 	void		SetRotation(float3 rotation);
