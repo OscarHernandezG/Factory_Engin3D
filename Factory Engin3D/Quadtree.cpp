@@ -115,7 +115,14 @@ void QuadtreeNode::GetGameObjects(std::vector<GameObject*>& object) const
 {
 	for (std::list<GameObject*>::const_iterator iterator = objectsList.begin(); iterator != objectsList.end(); ++iterator)
 	{
-		object.push_back(*iterator);
+		bool copy = false;
+		for (std::vector<GameObject*>::iterator vecIterator = object.begin(); vecIterator != object.end(); ++vecIterator)
+		{
+			if ((*iterator) == (*vecIterator))
+				copy = true;
+		}
+		if(!copy)
+			object.push_back(*iterator);
 	}
 	for (int i = 0; i < 4; i++)
 	{
@@ -168,23 +175,27 @@ void Quadtree::GetGameObjects(std::vector<GameObject*>& objects) const
 		root->GetGameObjects(objects);
 }
 
-void Quadtree::ReDoQuadtree(const AABB& limits)
+void Quadtree::ReDoQuadtree(const AABB& limits, bool external)
 {
 	if (root != nullptr)
 	{
 		std::vector<GameObject*> objects;
 		GetGameObjects(objects);
-		Clear();
-		Create(limits);
-
+		if (external)
+		{
+			Clear();
+			Create(AABB(-float3::one,float3::one));
+		}
+		else
+		{
+			Clear();
+			Create(limits);
+		}
 		for (std::vector<GameObject*>::iterator iterator = objects.begin(); iterator != objects.end(); ++iterator)
 		{
 			Insert(*iterator);
 		}
 	}
-
-	else 
-		Create(limits);
 }
 
 void Quadtree::ReDoLimits(GameObject* newObject)

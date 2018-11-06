@@ -446,11 +446,14 @@ void ModuleImGui::CreateTransform()
 
 			if (ImGui::InputFloat3("Position", &position[0])) {
 				App->geometry->currentGameObject->SetPos(position);
+				//App->sceneIntro->quadtree.ReDoQuadtree(AABB(), true);
 			}
 
 			if (ImGui::InputFloat3("Scale", &scale[0]))
+			{
 				App->geometry->currentGameObject->SetScale(scale);
-
+				//App->sceneIntro->quadtree.ReDoQuadtree(AABB(), true);
+			}
 			angles = rotate.ToEulerXYZ();
 
 			angles[0] = math::RadToDeg(angles.x);
@@ -463,6 +466,8 @@ void ModuleImGui::CreateTransform()
 				angles.y = math::DegToRad(angles.y);
 				angles.z = math::DegToRad(angles.z);
 				App->geometry->currentGameObject->SetRotation(Quat::FromEulerXYZ(angles.x, angles.y, angles.z));
+
+				App->sceneIntro->quadtree.ReDoQuadtree(AABB(), true);
 			}
 
 			if (ImGui::Button("Reset", ImVec2(100, 20)))

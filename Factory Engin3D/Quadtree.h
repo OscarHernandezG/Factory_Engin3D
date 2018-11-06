@@ -7,7 +7,7 @@
 #include <list>
 #include <vector>
 
-#define MAX_NODE_ELEMENTS 40
+#define MAX_NODE_ELEMENTS 50
 
 class GameObject;
 
@@ -43,7 +43,7 @@ public:
 	void Insert(GameObject* gameObject);
 	void GetBoxLimits(std::vector<const QuadtreeNode*>& nodes) const;
 	void GetGameObjects(std::vector<GameObject*>& object) const;
-	void ReDoQuadtree(const AABB & limits);
+	void ReDoQuadtree(const AABB & limits = AABB(float3::zero,float3::zero), bool external = false);
 	void ReDoLimits(GameObject * newObject);
 	template<typename TYPE>
 	void GetIntersects(std::vector<GameObject*>& objects, const TYPE & primitive) const;
