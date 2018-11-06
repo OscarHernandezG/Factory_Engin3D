@@ -7,7 +7,6 @@
 
 void Mesh::InnerRender() const
 {
-
 	//Load vertex and index
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, buffer.vertex.id);

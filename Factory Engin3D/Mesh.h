@@ -15,9 +15,9 @@ using namespace std;
 template <typename T>
 struct Buffer
 {
-	uint id;
-	uint size;
-	T* buffer;
+	uint id = 0u;
+	uint size = 0u;
+	T* buffer = nullptr;
 };
 
 struct MeshBuffer
@@ -26,17 +26,21 @@ struct MeshBuffer
 	Buffer<float> vertex;
 	Buffer<float> texture;
 
-	string name;
 	AABB boundingBox;
+
+	int id;
 };
 
-struct MeshInfo
+struct MeshNode
 {
-	list<MeshBuffer> meshes;
+	MeshBuffer buffer;
 
 	string name;
 
-	AABB boundingBox;
+	list<MeshNode> childs;
+
+	float4x4 transform;
+
 };
 
 class Mesh :public Geometry
