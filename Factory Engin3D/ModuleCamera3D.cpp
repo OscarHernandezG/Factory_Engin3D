@@ -22,6 +22,8 @@ bool ModuleCamera3D::Start()
 
 	cameraComponent = (Camera*)camera->AddComponent(ComponentType_CAMERA, nullptr);
 
+	cameraComponent->frustum.pos = float3(5, 5, 5);
+
 	LookAt(float3(0, 0, 0));
 	Look(false);
 
