@@ -42,6 +42,8 @@ public:
 	float3 GetScale() const;
 	Quat GetRotation();
 
+	void SetTransform(float4x4 transform);
+
 	void SetPos(float3 pos);
 	void Move(float3 movement);
 	void SetScale(float3 scale);

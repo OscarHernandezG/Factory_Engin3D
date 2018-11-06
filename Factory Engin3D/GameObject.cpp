@@ -196,6 +196,14 @@ Quat GameObject::GetRotation()
 	return transform->GetRotation();
 }
 
+void GameObject::SetTransform(float4x4 trans)
+{
+	if (transform)
+	{
+		transform->SetTransform(trans);
+	}
+}
+
 void GameObject::SetPos(float3 pos)
 {
 	LOG("Desired pos %f  %f  %f", pos.x, pos.y, pos.z);
