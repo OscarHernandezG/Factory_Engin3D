@@ -571,7 +571,7 @@ void ModuleGeometry::LoadDefaultScene()
 
 	App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, "Root Child ") , "Root child child");
 
-	DistributeFile("assets\\models\\Street.fbx");
+	DistributeFile("assets\\models\\BakerHouse.fbx");
 	//DistributeFile("assets\\textures\\Baker_house.dds");
 
 

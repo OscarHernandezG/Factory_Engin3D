@@ -30,7 +30,7 @@ void Geometry::Render() const
 	{
 		Transform* transform = gameObject->transform;
 		glPushMatrix();
-		float4x4 mat = transform->GetMatrix();
+		float4x4 mat = transform->GetMatrixOGL();
 
 		glMultMatrixf(mat.ptr());
 
