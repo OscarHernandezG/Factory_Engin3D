@@ -14,12 +14,15 @@ void Mesh::InnerRender() const
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 
 	//Load Texture UV
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, buffer.texture.id);
-	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+	if (buffer.texture.buffer != nullptr && buffer.texture.size > 0)
+	{
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		glBindBuffer(GL_ARRAY_BUFFER, buffer.texture.id);
+		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
-	//Load texture
-	glBindTexture(GL_TEXTURE_2D, App->geometry->textureID);
+		//Load texture
+		glBindTexture(GL_TEXTURE_2D, App->geometry->textureID);
+	}
 
 	//Draw mesh
 	glDrawElements(GL_TRIANGLES, buffer.index.size, GL_UNSIGNED_INT, NULL);
