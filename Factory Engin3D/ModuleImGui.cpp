@@ -466,7 +466,7 @@ void ModuleImGui::CreateTransform()
 			}
 
 			if (ImGui::Button("Reset", ImVec2(100, 20)))
-				App->geometry->currentGameObject->transform->SetIdentity();
+				App->geometry->currentGameObject->SetIdentity();
 		}
 	}
 	else {

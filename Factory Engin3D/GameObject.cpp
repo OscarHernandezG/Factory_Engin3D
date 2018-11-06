@@ -278,6 +278,16 @@ void GameObject::Rotate(Quat rotation)
 		transform->Rotate(rotation);
 }
 
+void GameObject::SetIdentity()
+{
+	if (transform)
+	{
+		SetScale(float3::one);
+		SetPos(float3::zero);
+		SetRotation(Quat::identity);
+	}
+}
+
 const AABB* GameObject::GetAABB() const
 {
 	return &transform->boundingBox;
