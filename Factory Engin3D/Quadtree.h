@@ -7,7 +7,7 @@
 #include <list>
 #include <vector>
 
-#define MAX_NODE_ELEMENTS 4
+#define MAX_NODE_ELEMENTS 40
 
 class GameObject;
 
