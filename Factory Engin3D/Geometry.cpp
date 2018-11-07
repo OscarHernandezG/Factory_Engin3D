@@ -369,6 +369,7 @@ void RayLine::InnerRender() const
 	glLineWidth(2.0f);
 
 	glBegin(GL_LINES);
+	glColor3f(0, 0, 1);
 
 	glVertex3f(origin.x, origin.y, origin.z);
 	glVertex3f(destination.x, destination.y, destination.z);
@@ -376,6 +377,7 @@ void RayLine::InnerRender() const
 	glEnd();
 
 	glLineWidth(1.0f);
+
 }
 
 // PLANE ==================================================

@@ -1541,7 +1541,7 @@ namespace ImGuizmo
    }
 
    static void HandleTranslation(float *matrix, float *deltaMatrix, int& type, float *snap)
-   {
+    {
       ImGuiIO& io = ImGui::GetIO();
       bool applyRotationLocaly = gContext.mMode == LOCAL || type == MOVE_SCREEN;
 

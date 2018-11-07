@@ -77,25 +77,45 @@ update_status ModuleSceneIntro::Update(float dt)
 {
 	ImGuizmo::Enable(true);
 
+	Transform* transform = App->geometry->currentGameObject->transform;
+	if (transform != nullptr)
+	{
+		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN)
+			guizOperation = ImGuizmo::OPERATION::TRANSLATE;
 
-	//ImGui::PushID(3);
-	ImGuiIO& io = ImGui::GetIO();
-	ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+		if (App->input->GetKey(SDL_SCANCODE_E) == KEY_DOWN)
+			guizOperation = ImGuizmo::OPERATION::SCALE;
 
-	ImGuizmo::Manipulate(App->camera->GetViewMatrix().ptr(), App->camera->GetProjectionMatrix().ptr(), guizOperation, guizMode, App->geometry->currentGameObject->transform->GetMatrix().Transposed().ptr());
+		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
+			guizOperation = ImGuizmo::OPERATION::ROTATE;
 
-	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN)
-		guizOperation = ImGuizmo::OPERATION::TRANSLATE;
+		if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN)
+			guizOperation = ImGuizmo::OPERATION::BOUNDS;
 
-	if (App->input->GetKey(SDL_SCANCODE_E) == KEY_DOWN)
-		guizOperation = ImGuizmo::OPERATION::SCALE;
-	
-	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
-		guizOperation = ImGuizmo::OPERATION::ROTATE;
-	
-	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN)
-		guizOperation = ImGuizmo::OPERATION::BOUNDS;
+		/*float pos[3];
+		float rot[3];
+		float scale[3];
 
+		ImGuizmo::DecomposeMatrixToComponents(transform->GetMatrix().ptr(), pos, rot, scale);
+		ImGui::InputFloat3("Tr", pos, 3);
+		ImGui::InputFloat3("Rt", rot, 3);
+		ImGui::InputFloat3("Sc", scale, 3);
+		ImGuizmo::RecomposeMatrixFromComponents(pos, rot, scale, (float*)transform->GetMatrix().ptr());
+
+		transform->SetPos(pos[0], pos[1], pos[2]);
+		transform->SetRotation({ math::DegToRad(rot[0]),  math::DegToRad(rot[1]),  math::DegToRad(rot[2]) });
+		transform->SetScale(scale[0], scale[1], scale[2]);*/
+		float4x4 globalMatrix = transform->GetMatrix();
+		globalMatrix.Transpose();
+		ImGuiIO& io = ImGui::GetIO();
+		ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+		ImGuizmo::Manipulate(App->camera->GetViewMatrix().ptr(), App->camera->GetProjectionMatrix().ptr(), guizOperation, guizMode, globalMatrix.ptr());
+		if (ImGuizmo::IsUsing())
+		{
+			transform->SetTransform(globalMatrix.Transposed());
+			quadtree.ReDoQuadtree(AABB(), true);
+		}
+	}
 	return UPDATE_CONTINUE;
 }
 

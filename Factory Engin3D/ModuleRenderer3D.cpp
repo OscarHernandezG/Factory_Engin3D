@@ -186,25 +186,34 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 		for (auto iterator : drawerGO)
 			DrawQuadtreeObjects(iterator);
-		
+
 	}
 	else
 	{//Draw all
 		App->sceneIntro->quadtree.GetGameObjects(drawerGO);
 		for (auto iterator : drawerGO)
 			DrawQuadtreeObjects(iterator);
-		
+
 	}
 
 	// 2. Debug geometry
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glDisable(GL_CULL_FACE);
 	if (debugQuad)
-	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		glDisable(GL_CULL_FACE);
 		DebugDraw();
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		glEnable(GL_CULL_FACE);
+
+	else
+	{
+		if (App->geometry->currentGameObject != nullptr)
+		{
+			static float3 corners[8];
+			App->geometry->currentGameObject->transform->boundingBox.GetCornerPoints(corners);
+
+			DrawQuad(corners, Green);
+		}
 	}
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glEnable(GL_CULL_FACE);
 
 
 	// 3. Draw UI

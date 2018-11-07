@@ -3,6 +3,7 @@
 #include "ModulePicking.h"
 #include "ModuleCamera3D.h"
 #include "ModuleSceneIntro.h"
+#include "ModuleImGui.h"
 
 ModulePicking::ModulePicking(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -27,8 +28,8 @@ bool ModulePicking::CleanUp()
 update_status ModulePicking::Update(float dt)
 {
 
-	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && (App->input->GetKey(SDL_SCANCODE_LALT) != KEY_REPEAT
-																&& App->input->GetKey(SDL_SCANCODE_RALT) != KEY_REPEAT))
+	if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_DOWN && !App->gui->IsAnyWindowHovered()
+		&& App->input->GetKey(SDL_SCANCODE_LALT) != KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_RALT) != KEY_REPEAT)
 	{
 		float mouseX = -(1.0f - ((float(App->input->GetMouseX()) * 2.0f) / (float)App->window->width));
 		float mouseY = 1.0f - ((float(App->input->GetMouseY()) * 2.0f) / (float)App->window->height);
