@@ -52,8 +52,6 @@ public:
 
 	void Rotate(Quat rotation);
 
-	void SetIdentity();
-
 	const AABB* GetAABB() const;
 
 	float3 GetBBPos() const;

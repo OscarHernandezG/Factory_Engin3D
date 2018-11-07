@@ -231,18 +231,17 @@ void GameObject::SetScale(float3 scale)
 	float3 scaleVariation;
 	float3 scaleGO = GetScale();
 
-	scaleVariation.x = scale.x / scaleGO.x;
-	scaleVariation.y = scale.y / scaleGO.y;
-	scaleVariation.z = scale.z / scaleGO.z;
+	scaleVariation.x = scaleGO.x / scale.x;
+	scaleVariation.y = scaleGO.y / scale.y;
+	scaleVariation.z = scaleGO.z / scale.z;
 
-	//if (transform)
-	//	transform->SetScale(scale);
+	if (transform)
+		transform->SetScale(scale);
 
-	Scale(scaleVariation);
-	/*for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
+	for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
 	{
 		(*iterator)->Scale(scaleVariation);
-	}*/
+	}
 }
 
 void GameObject::Scale(float3 scale)
@@ -253,7 +252,6 @@ void GameObject::Scale(float3 scale)
 	for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
 	{
 		(*iterator)->Scale(scale);
-		(*iterator)->SetPos(scale.Mul((*iterator)->transform->GetLocalPos()));
 	}
 }
 
@@ -278,16 +276,6 @@ void GameObject::Rotate(Quat rotation)
 
 	if (transform)
 		transform->Rotate(rotation);
-}
-
-void GameObject::SetIdentity()
-{
-	if (transform)
-	{
-		SetScale(float3::one);
-		SetPos(float3::zero);
-		SetRotation(Quat::identity);
-	}
 }
 
 const AABB* GameObject::GetAABB() const

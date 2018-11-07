@@ -110,7 +110,7 @@ const float3 Transform::GetPos() const
 const float3 Transform::GetScale() const
 {
 	if (gameObject->father != nullptr)
-		return scale.Mul(gameObject->father->GetScale());
+		return position + gameObject->father->GetScale();
 
 	else return scale;
 }
