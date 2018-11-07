@@ -11,7 +11,6 @@
 
 using namespace std;
 
-struct PhysBody3D;
 struct ImVec2;
 struct ImVec3;
 struct ImVec4;
@@ -40,12 +39,12 @@ public:
 	void CreateExampleWindow();
 	void CreateMGLWindow();
 	void CreateRandomNumberWindow();
-	void CreateAboutWindow();
-	void CreateConfigWindow();
-	void CreateConsole();
-	void CreateTransform();
+	void CreateAboutWindow(float2 scale);
+	void CreateConfigWindow(float2 scale);
+	void CreateConsole(float2 scale);
+	void CreateTransform(float2 scale);
 
-	void CreateGameObjectHierarchy();
+	void CreateGameObjectHierarchy(float2 scale);
 
 	void CreateGOTreeNode(GameObject * current);
 
@@ -128,5 +127,20 @@ public:
 	int resize = 0;
 
 	bool warningDialoge = false;
+
+	//--------------------------
+	// Window position
+	float2 aboutPos = float2::zero;
+	float2 configurationPos = float2::zero;
+	float2 transformPos = float2::zero;
+	float2 consolePos = float2::zero;
+	float2 scenePos = float2::zero;
+	// Window sizes
+	float2 aboutSize = float2::zero;
+	float2 configurationSize = float2::zero;
+	float2 transformSize = float2::zero;
+	float2 consoleSize = float2::zero;
+	float2 sceneSize = float2::zero;
+	//--------------------------
 };
 #endif // !__ModuleImGui_H__
