@@ -15,6 +15,7 @@
 #include "ModuleImporter.h"
 #include "ModuleGameObjectManager.h"
 #include "ModulePicking.h"
+#include "ModuleTimeManager.h"
 
 using namespace std;
 
@@ -31,6 +32,7 @@ public:
 	ModuleGameObjectManager* gameObject;
 	ModuleImporter* importer;
 	ModulePicking* picking;
+	ModuleTimeManager* time;
 
 private:
 

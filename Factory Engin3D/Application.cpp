@@ -13,7 +13,7 @@ Application::Application()
 	gameObject = new ModuleGameObjectManager(this);
 	importer = new ModuleImporter(this);
 	picking = new ModulePicking(this);
-
+	time = new ModuleTimeManager(this);
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -33,6 +33,7 @@ Application::Application()
 	AddModule(geometry);
 	AddModule(gui);
 	AddModule(picking);
+	AddModule(time);
 
 	// Renderer last!
 	AddModule(renderer3D);
