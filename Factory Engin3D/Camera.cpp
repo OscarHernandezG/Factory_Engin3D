@@ -38,7 +38,7 @@ float4x4 Camera::GetViewMatrix()
 	return matrix;
 }
 
-float* Camera::GetProjectionMatrix()
+float4x4 Camera::GetProjectionMatrix()
 {
 	UpdateFrustum();
 
@@ -47,7 +47,7 @@ float* Camera::GetProjectionMatrix()
 	matrix = frustum.ProjectionMatrix();
 	matrix.Transpose();
 
-	return (float*)matrix.v;
+	return matrix;
 }
 
 

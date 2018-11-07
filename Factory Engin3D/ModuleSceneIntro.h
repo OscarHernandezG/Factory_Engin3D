@@ -30,8 +30,8 @@ public:
 	Quadtree quadtree;
 
 private:
-	ImGuizmo::OPERATION guizOperation;
-	ImGuizmo::MODE guizMode;
+	ImGuizmo::OPERATION guizOperation = ImGuizmo::OPERATION::TRANSLATE;
+	ImGuizmo::MODE guizMode = ImGuizmo::MODE::WORLD;
 
 };
 #endif // !__ModuleSceneIntro_H__

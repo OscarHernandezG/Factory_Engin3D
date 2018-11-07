@@ -27,7 +27,8 @@ bool ModulePicking::CleanUp()
 update_status ModulePicking::Update(float dt)
 {
 
-	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_DOWN)
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && (App->input->GetKey(SDL_SCANCODE_LALT) != KEY_REPEAT
+																&& App->input->GetKey(SDL_SCANCODE_RALT) != KEY_REPEAT))
 	{
 		float mouseX = -(1.0f - ((float(App->input->GetMouseX()) * 2.0f) / (float)App->window->width));
 		float mouseY = 1.0f - ((float(App->input->GetMouseY()) * 2.0f) / (float)App->window->height);

@@ -82,8 +82,19 @@ update_status ModuleSceneIntro::Update(float dt)
 	ImGuiIO& io = ImGui::GetIO();
 	ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
 
-	ImGuizmo::Manipulate(App->camera->GetViewMatrix(), App->camera->GetProjectionMatrix(), guizOperation, guizMode, (float*)App->geometry->currentGameObject->transform->GetMatrix().ptr());
+	ImGuizmo::Manipulate(App->camera->GetViewMatrix().ptr(), App->camera->GetProjectionMatrix().ptr(), guizOperation, guizMode, App->geometry->currentGameObject->transform->GetMatrix().Transposed().ptr());
 
+	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN)
+		guizOperation = ImGuizmo::OPERATION::TRANSLATE;
+
+	if (App->input->GetKey(SDL_SCANCODE_E) == KEY_DOWN)
+		guizOperation = ImGuizmo::OPERATION::SCALE;
+	
+	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
+		guizOperation = ImGuizmo::OPERATION::ROTATE;
+	
+	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN)
+		guizOperation = ImGuizmo::OPERATION::BOUNDS;
 
 	return UPDATE_CONTINUE;
 }

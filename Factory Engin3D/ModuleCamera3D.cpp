@@ -246,12 +246,12 @@ void ModuleCamera3D::SetPos(float3 pos)
 }
 
 // -----------------------------------------------------------------
-float* ModuleCamera3D::GetViewMatrix() const
+float4x4 ModuleCamera3D::GetViewMatrix() const
 {
-	return cameraComponent->GetViewMatrix().ptr();
+	return cameraComponent->GetViewMatrix();
 }
 
-float* ModuleCamera3D::GetProjectionMatrix() const
+float4x4 ModuleCamera3D::GetProjectionMatrix() const
 {
 	return cameraComponent->GetProjectionMatrix();
 }

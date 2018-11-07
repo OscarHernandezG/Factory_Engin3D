@@ -40,7 +40,7 @@ bool QuadtreeNode::HasChilds()
 
 	if (childs[0] != nullptr)
 		ret = true;
-	
+
 	return ret;
 }
 
@@ -48,8 +48,8 @@ void QuadtreeNode::Subdivide()
 {
 	AABB childBox;
 	//NO
-	childBox.minPoint = { limits.MinX(), limits.MinY(), limits.MinZ() + limits.HalfSize().z};
-	childBox.maxPoint = { limits.MaxX() - limits.HalfSize().x, limits.MaxY(), limits.MaxZ()};
+	childBox.minPoint = { limits.MinX(), limits.MinY(), limits.MinZ() + limits.HalfSize().z };
+	childBox.maxPoint = { limits.MaxX() - limits.HalfSize().x, limits.MaxY(), limits.MaxZ() };
 	childs[0] = new QuadtreeNode(childBox);
 
 	//NE
@@ -59,7 +59,7 @@ void QuadtreeNode::Subdivide()
 
 	//SE
 	childBox.minPoint = { limits.MinX() + limits.HalfSize().x,limits.MinY(), limits.MinZ() };
-	childBox.maxPoint = { limits.MaxX(),limits.MaxY(), limits.MaxZ() - limits.HalfSize().z};
+	childBox.maxPoint = { limits.MaxX(),limits.MaxY(), limits.MaxZ() - limits.HalfSize().z };
 	childs[2] = new QuadtreeNode(childBox);
 
 	//SO
@@ -115,13 +115,7 @@ void QuadtreeNode::GetGameObjects(std::vector<GameObject*>& object) const
 {
 	for (std::list<GameObject*>::const_iterator iterator = objectsList.begin(); iterator != objectsList.end(); ++iterator)
 	{
-		bool copy = false;
-		for (std::vector<GameObject*>::iterator vecIterator = object.begin(); vecIterator != object.end(); ++vecIterator)
-		{
-			if ((*iterator) == (*vecIterator))
-				copy = true;
-		}
-		if(!copy)
+		if (std::find(object.begin(), object.end(), (*iterator)) == object.end())
 			object.push_back(*iterator);
 	}
 	for (int i = 0; i < 4; i++)
@@ -166,7 +160,7 @@ void Quadtree::Insert(GameObject * gameObject)
 void Quadtree::GetBoxLimits(std::vector<const QuadtreeNode*>& nodes) const
 {
 	if (root != nullptr)
-			root->GetBoxLimits(nodes);
+		root->GetBoxLimits(nodes);
 }
 
 void Quadtree::GetGameObjects(std::vector<GameObject*>& objects) const
@@ -184,7 +178,7 @@ void Quadtree::ReDoQuadtree(const AABB& limits, bool external)
 		if (external)
 		{
 			Clear();
-			Create(AABB(-float3::one,float3::one));
+			Create(AABB(-float3::one, float3::one));
 		}
 		else
 		{

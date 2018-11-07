@@ -446,13 +446,13 @@ void ModuleImGui::CreateTransform()
 
 			if (ImGui::InputFloat3("Position", &position[0])) {
 				App->geometry->currentGameObject->SetPos(position);
-				//App->sceneIntro->quadtree.ReDoQuadtree(AABB(), true);
+				App->sceneIntro->quadtree.ReDoQuadtree(AABB(), true);
 			}
 
 			if (ImGui::InputFloat3("Scale", &scale[0]))
 			{
 				App->geometry->currentGameObject->SetScale(scale);
-				//App->sceneIntro->quadtree.ReDoQuadtree(AABB(), true);
+				App->sceneIntro->quadtree.ReDoQuadtree(AABB(), true);
 			}
 			angles = rotate.ToEulerXYZ();
 
@@ -471,7 +471,10 @@ void ModuleImGui::CreateTransform()
 			}
 
 			if (ImGui::Button("Reset", ImVec2(100, 20)))
+			{
 				App->geometry->currentGameObject->transform->SetIdentity();
+				App->sceneIntro->quadtree.ReDoQuadtree(AABB(), true);
+			}
 		}
 	}
 	else {
@@ -555,7 +558,7 @@ void ModuleImGui::CreateMenu()
 
 		else if (ImGui::MenuItem("Configuration", "Ctrl+C", configurationWindow))
 			configurationWindow = !configurationWindow;
-		
+
 		else if (ImGui::MenuItem("Demo window", "Ctrl+D", showDemoWindow))
 			showDemoWindow = !showDemoWindow;
 
@@ -588,7 +591,7 @@ bool ModuleImGui::CreateOptions()
 
 		if (ImGui::MenuItem("Save", "Ctrl+S"))
 			App->canSave = true;
-		
+
 		else if (ImGui::MenuItem("Load", "Ctrl+L"))
 			App->canLoad = true;
 
@@ -646,8 +649,8 @@ void ModuleImGui::CreateAppHeader()
 {
 
 	static char appName[64];
-	sprintf_s(appName,64,App->aplicationName.data());
-	if(ImGui::InputText("Aplication Name", appName, 64, ImGuiInputTextFlags_EnterReturnsTrue))
+	sprintf_s(appName, 64, App->aplicationName.data());
+	if (ImGui::InputText("Aplication Name", appName, 64, ImGuiInputTextFlags_EnterReturnsTrue))
 		App->ChangeAppName(appName);
 
 	ImGui::SliderInt("Max Fps", &App->capFrames, 30, 144);
@@ -706,7 +709,7 @@ void ModuleImGui::CreateInputHeader()
 {
 	ImGui::Text("Mouse position: (%i,%i)", App->input->GetMouseX(), App->input->GetMouseY());
 	ImGui::Text("Mouse motion: (%i,%i)", App->input->GetMouseXMotion(), App->input->GetMouseYMotion());
-	
+
 	ImGui::Text("Is mouse pressed: %s", App->input->GetIsMousePressed() == true ? "Yes" : "No");
 	ImGui::Text("Is any key pressed: %s", App->input->GetIsKeyPressed() == true ? "Yes" : "No");
 }
@@ -750,18 +753,18 @@ void ModuleImGui::CreateTextureHeader()
 			{
 				Mesh* mesh = (Mesh*)currentGeometry;
 
-			ImGui::Text("Texture id: %i", App->geometry->textureID);
-			// TODO
-			//ImGui::Text("Texture used by %i meshes", mesh->buffers.size());
-			ImGui::Text("UV Preview");
-			ImGui::Separator();
-			ImGui::Image((void*)App->geometry->textureID, { 200,200 });
-			if (ImGui::Button("Remove Texture", { 125,25 }))
-			{
-				glDeleteTextures(1, &App->geometry->textureID);
-				App->geometry->textureID = 0;
+				ImGui::Text("Texture id: %i", App->geometry->textureID);
+				// TODO
+				//ImGui::Text("Texture used by %i meshes", mesh->buffers.size());
+				ImGui::Text("UV Preview");
+				ImGui::Separator();
+				ImGui::Image((void*)App->geometry->textureID, { 200,200 });
+				if (ImGui::Button("Remove Texture", { 125,25 }))
+				{
+					glDeleteTextures(1, &App->geometry->textureID);
+					App->geometry->textureID = 0;
+				}
 			}
-		}
 	}
 	else
 	{
@@ -785,7 +788,7 @@ void ModuleImGui::CreateRenderHeader()
 
 	if (ImGui::ColorPicker3("Light Model Ambient", (float*)&App->renderer3D->ambient_lihgt))
 		App->renderer3D->SetLightAmbient();
-	
+
 }
 
 void ModuleImGui::CreateHardwareHeader()
@@ -863,7 +866,7 @@ void ModuleImGui::CreateGPUInfo(ImVec4 color)
 	//nCurAvailMemoryInKB = 0;
 	//glGetIntegerv(GL_TEXTURE_FREE_MEMORY_ATI,
 	//	&nCurAvailMemoryInKB);
- 
+
 	ImGui::Text("VRAM total: "); ImGui::SameLine();
 	ImGui::TextColored(color, "%.2f MB", (float)nTotalMemoryInKB / 1024);
 
@@ -922,7 +925,6 @@ void ModuleImGui::ResizeImGui(float2 scale)
 
 		(*currentWindow)->Size.x *= scale.x;
 		(*currentWindow)->Size.y *= scale.y;
-		
+
 	}
 }
-

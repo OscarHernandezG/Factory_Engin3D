@@ -68,7 +68,7 @@ inline void QuadtreeNode::GetIntersects(std::vector<GameObject*>& objects, const
 	{
 		for (std::list<GameObject*>::const_iterator iterator = objectsList.begin(); iterator != objectsList.end(); ++iterator)
 		{
-			if (primitive.Intersects((*iterator)->transform->boundingBox))
+			if (primitive.Intersects((*iterator)->transform->boundingBox) && std::find(objects.begin(), objects.end(), (*iterator)) == objects.end())
 				objects.push_back(*iterator);
 
 		}
