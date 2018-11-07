@@ -32,6 +32,7 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(float3(1.0f, 1.0f, 0.0f));
 	quadtree.Create(AABB(float3(-5, 0, -5), float3(5, 5, 5)));
 
+	ImGuizmo::Enable(true);
 	return ret;
 }
 
@@ -63,34 +64,36 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 		App->renderer3D->cameraCulling = !App->renderer3D->cameraCulling;
 	}
 
-	return status;
-}
+	//Guizmos Options
 
-// Load assets
-bool ModuleSceneIntro::CleanUp()
-{	
-	return true;
+	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN)
+		guizOperation = ImGuizmo::OPERATION::TRANSLATE;
+
+	if (App->input->GetKey(SDL_SCANCODE_E) == KEY_DOWN)
+		guizOperation = ImGuizmo::OPERATION::SCALE;
+
+	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
+		guizOperation = ImGuizmo::OPERATION::ROTATE;
+
+	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN)
+		guizOperation = ImGuizmo::OPERATION::BOUNDS;
+
+	return status;
 }
 
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
-	ImGuizmo::Enable(true);
 
+	GuizmoUpdate();
+	return UPDATE_CONTINUE;
+}
+
+void ModuleSceneIntro::GuizmoUpdate()
+{
 	Transform* transform = App->geometry->currentGameObject->transform;
 	if (transform != nullptr)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN)
-			guizOperation = ImGuizmo::OPERATION::TRANSLATE;
-
-		if (App->input->GetKey(SDL_SCANCODE_E) == KEY_DOWN)
-			guizOperation = ImGuizmo::OPERATION::SCALE;
-
-		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
-			guizOperation = ImGuizmo::OPERATION::ROTATE;
-
-		if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN)
-			guizOperation = ImGuizmo::OPERATION::BOUNDS;
 
 		/*float pos[3];
 		float rot[3];
@@ -116,10 +119,35 @@ update_status ModuleSceneIntro::Update(float dt)
 			quadtree.ReDoQuadtree(AABB(), true);
 		}
 	}
-	return UPDATE_CONTINUE;
 }
 
 update_status ModuleSceneIntro::PostUpdate(float dt)
 {
 	return UPDATE_CONTINUE;
+}
+
+void ModuleSceneIntro::SetGuizOperation(ImGuizmo::OPERATION operation)
+{
+	guizOperation = operation;
+}
+
+ImGuizmo::OPERATION ModuleSceneIntro::GetGuizOperation() const
+{
+	return guizOperation;
+}
+
+void ModuleSceneIntro::SetGuizMode(ImGuizmo::MODE mode)
+{
+	guizMode = mode;
+}
+
+ImGuizmo::MODE ModuleSceneIntro::GetGuizMode() const
+{
+	return guizMode;
+}
+
+// Load assets
+bool ModuleSceneIntro::CleanUp()
+{
+	return true;
 }

@@ -18,7 +18,13 @@ public:
 	bool Start();
 	update_status PreUpdate(float dt);
 	update_status Update(float dt);
+	void GuizmoUpdate();
 	update_status PostUpdate(float dt);
+
+	void SetGuizOperation(ImGuizmo::OPERATION operation);
+	ImGuizmo::OPERATION GetGuizOperation() const;
+	void SetGuizMode(ImGuizmo::MODE mode);
+	ImGuizmo::MODE GetGuizMode() const;
 
 	bool CleanUp();
 

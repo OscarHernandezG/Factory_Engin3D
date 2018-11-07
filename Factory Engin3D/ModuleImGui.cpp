@@ -475,6 +475,18 @@ void ModuleImGui::CreateTransform()
 				App->geometry->currentGameObject->transform->SetIdentity();
 				App->sceneIntro->quadtree.ReDoQuadtree(AABB(), true);
 			}
+
+			if (ImGui::RadioButton("None", App->sceneIntro->GetGuizOperation() == ImGuizmo::BOUNDS))
+				App->sceneIntro->SetGuizOperation(ImGuizmo::BOUNDS);
+			ImGui::SameLine();
+			if (ImGui::RadioButton("Move", App->sceneIntro->GetGuizOperation() == ImGuizmo::TRANSLATE))
+				App->sceneIntro->SetGuizOperation(ImGuizmo::TRANSLATE);
+			ImGui::SameLine();
+			if (ImGui::RadioButton("Scale", App->sceneIntro->GetGuizOperation() == ImGuizmo::SCALE))
+				App->sceneIntro->SetGuizOperation(ImGuizmo::SCALE);
+			ImGui::SameLine();
+			if (ImGui::RadioButton("Rotate", App->sceneIntro->GetGuizOperation() == ImGuizmo::ROTATE))
+				App->sceneIntro->SetGuizOperation(ImGuizmo::ROTATE);
 		}
 	}
 	else {
