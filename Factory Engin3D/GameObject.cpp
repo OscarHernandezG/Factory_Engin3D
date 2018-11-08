@@ -191,7 +191,18 @@ float3 GameObject::GetScale() const
 	return float3::one;
 }
 
-Quat GameObject::GetRotation()
+float4x4 GameObject::GetGlobalMatrix() const
+{
+	float4x4 mat = float4x4::identity;
+	if (transform)
+	{
+		mat = transform->GetGlobalMatrix();
+	}
+
+	return mat;
+}
+
+Quat GameObject::GetRotation() const
 {
 	return transform->GetRotation().Normalized();
 }
@@ -241,14 +252,7 @@ void GameObject::SetScale(float3 scale)
 	scaleVariation.y = scale.y / scaleGO.y;
 	scaleVariation.z = scale.z / scaleGO.z;
 
-	//if (transform)
-	//	transform->SetScale(scale);
-
 	Scale(scaleVariation);
-	/*for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
-	{
-		(*iterator)->Scale(scaleVariation);
-	}*/
 }
 
 void GameObject::Scale(float3 scale)
