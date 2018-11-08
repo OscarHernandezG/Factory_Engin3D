@@ -96,8 +96,8 @@ update_status ModuleSceneIntro::Update(float dt)
 
 void ModuleSceneIntro::GuizmoUpdate()
 {
-	Transform* transform = App->geometry->currentGameObject->transform;
-	if (transform != nullptr)
+	GameObject* transformObject = App->geometry->currentGameObject;
+	if (transformObject != nullptr)
 	{
 
 		/*float pos[3];
@@ -113,7 +113,7 @@ void ModuleSceneIntro::GuizmoUpdate()
 		transform->SetPos(pos[0], pos[1], pos[2]);
 		transform->SetRotation({ math::DegToRad(rot[0]),  math::DegToRad(rot[1]),  math::DegToRad(rot[2]) });
 		transform->SetScale(scale[0], scale[1], scale[2]);*/
-		float4x4 globalMatrix = transform->GetMatrix();
+		float4x4 globalMatrix = transformObject->GetGlobalMatrix();
 		globalMatrix.Transpose();
 		ImGuiIO& io = ImGui::GetIO();
 		ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
@@ -121,7 +121,7 @@ void ModuleSceneIntro::GuizmoUpdate()
 
 		if (ImGuizmo::IsUsing())
 		{
-			transform->SetTransform(globalMatrix.Transposed());
+			transformObject->SetTransform(globalMatrix.Transposed());
 			quadtree.ReDoQuadtree(AABB(), true);
 			saveTransform = true;
 		}
@@ -132,7 +132,7 @@ void ModuleSceneIntro::GuizmoUpdate()
 				SaveLastTransform(lastMat);
 				saveTransform = false;
 			}
-			lastMat = transform->GetMatrix();
+			lastMat = transformObject->GetGlobalMatrix();
 		}
 	}
 }
@@ -140,7 +140,7 @@ void ModuleSceneIntro::GuizmoUpdate()
 void ModuleSceneIntro::SaveLastTransform(float4x4 matrix)
 {
 	LastTransform prevTrans;
-	if (prevTransforms.empty() || App->geometry->currentGameObject->transform->GetMatrix().ptr() != prevTransforms.top().matrix.ptr())
+	if (prevTransforms.empty() || App->geometry->currentGameObject->GetGlobalMatrix().ptr() != prevTransforms.top().matrix.ptr())
 	{
 		prevTrans.matrix = matrix;
 		prevTrans.object = App->geometry->currentGameObject;
@@ -154,7 +154,7 @@ void ModuleSceneIntro::GetPreviousTransform()
 	{
 		LastTransform prevTrans = prevTransforms.top();
 		App->geometry->currentGameObject = prevTrans.object;
-		App->geometry->currentGameObject->transform->SetTransform(prevTrans.matrix);
+		App->geometry->currentGameObject->SetTransform(prevTrans.matrix);
 		prevTransforms.pop();
 	}
 }

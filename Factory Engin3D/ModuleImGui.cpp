@@ -486,7 +486,7 @@ void ModuleImGui::CreateTransform(float2 scale)
 
 		if (App->geometry->currentGameObject->transform != nullptr)
 		{
-			float4x4 prevTransformMat = App->geometry->currentGameObject->transform->GetMatrix();
+			float4x4 prevTransformMat = App->geometry->currentGameObject->GetGlobalMatrix();
 			position = App->geometry->currentGameObject->transform->GetPos();
 			scale = App->geometry->currentGameObject->transform->scale;
 			rotate = App->geometry->currentGameObject->transform->GetRotation();
