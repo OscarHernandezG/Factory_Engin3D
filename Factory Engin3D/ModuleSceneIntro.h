@@ -9,6 +9,13 @@
 #include "ImGuizmo/ImGuizmo.h"
 
 #include <vector>
+#include <stack>
+
+struct LastTransform
+{
+	float4x4 matrix;
+	GameObject* object;
+};
 class ModuleSceneIntro : public Module
 {
 public:
@@ -19,6 +26,8 @@ public:
 	update_status PreUpdate(float dt);
 	update_status Update(float dt);
 	void GuizmoUpdate();
+	void SaveLastTransform(float4x4 matrix);
+	void GetPreviousTransform();
 	update_status PostUpdate(float dt);
 
 	void SetGuizOperation(ImGuizmo::OPERATION operation);
@@ -34,7 +43,9 @@ public:
 
 	char* droppedFileDir = nullptr;
 	Quadtree quadtree;
-
+	
+	stack<LastTransform> prevTransforms;
+	bool saveTransform = false;
 private:
 	ImGuizmo::OPERATION guizOperation = ImGuizmo::OPERATION::TRANSLATE;
 	ImGuizmo::MODE guizMode = ImGuizmo::MODE::WORLD;

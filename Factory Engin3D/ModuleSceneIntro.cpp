@@ -78,6 +78,11 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN)
 		guizOperation = ImGuizmo::OPERATION::BOUNDS;
 
+	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RCTRL) == KEY_REPEAT)
+		if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
+			GetPreviousTransform();
+		
+
 	return status;
 }
 
@@ -113,13 +118,49 @@ void ModuleSceneIntro::GuizmoUpdate()
 		ImGuiIO& io = ImGui::GetIO();
 		ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
 		ImGuizmo::Manipulate(App->camera->GetViewMatrix().ptr(), App->camera->GetProjectionMatrix().ptr(), guizOperation, guizMode, globalMatrix.ptr());
-		if (ImGuizmo::IsUsing())
+		if (ImGuizmo::IsOver())
+		{
+			saveTransform = false;
+			LOG("Over");
+		}
+		
+		else if (ImGuizmo::IsUsing())
 		{
 			transform->SetTransform(globalMatrix.Transposed());
 			quadtree.ReDoQuadtree(AABB(), true);
+			saveTransform = true;
 		}
+		else 
+			if (saveTransform)
+			{
+				//SaveLastTransform();
+				saveTransform = false;
+			}
 	}
 }
+
+void ModuleSceneIntro::SaveLastTransform(float4x4 matrix)
+{
+	LastTransform prevTrans;
+	if (prevTransforms.empty() || App->geometry->currentGameObject->transform->GetMatrix().ptr() != prevTransforms.top().matrix.ptr())
+	{
+		prevTrans.matrix = App->geometry->currentGameObject->transform->GetMatrix();
+		prevTrans.object = App->geometry->currentGameObject;
+		prevTransforms.push(prevTrans);
+	}
+}
+
+void ModuleSceneIntro::GetPreviousTransform()
+{
+	if (!prevTransforms.empty())
+	{
+		LastTransform prevTrans = prevTransforms.top();
+		App->geometry->currentGameObject = prevTrans.object;
+		App->geometry->currentGameObject->transform->SetTransform(prevTrans.matrix);
+		prevTransforms.pop();
+	}
+}
+
 
 update_status ModuleSceneIntro::PostUpdate(float dt)
 {
