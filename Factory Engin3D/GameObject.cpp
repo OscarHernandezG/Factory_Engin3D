@@ -200,7 +200,13 @@ void GameObject::SetTransform(float4x4 trans)
 {
 	if (transform)
 	{
-		transform->SetTransform(trans);
+		float3 pos, scale;
+		Quat rot;
+		trans.Decompose(pos, rot, scale);
+
+		SetPos(pos);
+		SetScale(scale);
+		SetRotation(rot);
 	}
 }
 
