@@ -801,7 +801,7 @@ void ModuleImGui::CreateMeshesHeader()
 
 				Mesh* mesh = (Mesh*)goGeometry;
 
-				ImGui::Text("Total vertex: %i", mesh->buffer.vertex.size);
+				ImGui::Text("Total vertex: %i", mesh->buffer->vertex.size);
 				ImGui::Text("Total faces: %i", App->geometry->numFaces);
 				if (ImGui::Button("Remove Mesh", { 125,25 }))
 				{
