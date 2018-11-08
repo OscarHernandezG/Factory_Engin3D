@@ -7,6 +7,8 @@
 
 #include "Assimp/include/matrix4x4.h"
 
+#include <vector>
+
 struct aiMesh;
 struct aiScene;
 struct aiNode;
@@ -27,7 +29,7 @@ public:
 
 	void DistributeFile(char * file);
 
-	MeshBuffer LoadMeshBuffer(const aiScene * scene, uint index, char* path);
+	MeshNode LoadMeshBuffer(const aiScene * scene, uint index, char* path);
 
 	void LoadMeshTextureCoords(MeshBuffer &buffer, aiMesh* newMesh);
 
@@ -43,7 +45,7 @@ public:
 
 	void SaveMeshImporter(MeshBuffer newCurrentBuffer, const char * path, int number);
 
-	void LoadMeshImporter(const char * path, MeshNode* tempMesh);
+	vector<MeshBuffer*> LoadMeshImporter(const char * path, const vector<MeshNode>& nodes);
 
 	GameObject* LoadGameObjectsFromMeshNode(MeshNode node, GameObject * father);
 
@@ -72,7 +74,7 @@ public:
 	GameObject* bHouse = nullptr;
 
 	vector<MeshNode> nodes;
-	vector<Mesh*> loadedMeshes;
+	vector<MeshBuffer*> loadedMeshes;
 
 	uint textureID = 0;
 	uint numFaces = 0;
