@@ -114,10 +114,8 @@ void QuadtreeNode::GetBoxLimits(std::vector<const QuadtreeNode*>& nodes) const
 void QuadtreeNode::GetGameObjects(std::vector<GameObject*>& object) const
 {
 	for (std::list<GameObject*>::const_iterator iterator = objectsList.begin(); iterator != objectsList.end(); ++iterator)
-	{
-		if (std::find(object.begin(), object.end(), (*iterator)) == object.end())
 			object.push_back(*iterator);
-	}
+	
 	for (int i = 0; i < 4; i++)
 	{
 		if (childs[i] != nullptr)
@@ -166,7 +164,10 @@ void Quadtree::GetBoxLimits(std::vector<const QuadtreeNode*>& nodes) const
 void Quadtree::GetGameObjects(std::vector<GameObject*>& objects) const
 {
 	if (root != nullptr)
+	{
 		root->GetGameObjects(objects);
+		UniqueObjects(objects);
+	}
 }
 
 void Quadtree::ReDoQuadtree(const AABB& limits, bool external)
@@ -218,4 +219,11 @@ void Quadtree::ReDoLimits(GameObject* newObject)
 		ReDoQuadtree(AABB(minPoint, maxPoint));
 		Insert(newObject);
 	}
+}
+
+void Quadtree::UniqueObjects(std::vector<GameObject *> & objects) const
+{
+	std::sort(objects.begin(), objects.end()); //all equals objects together
+	objects.erase(std::unique(objects.begin(), objects.end()), objects.end()); 
+	//erase corrupt objects after unique(that returns the new last object position)
 }

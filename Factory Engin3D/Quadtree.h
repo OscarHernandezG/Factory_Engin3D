@@ -6,8 +6,9 @@
 
 #include <list>
 #include <vector>
+#include <algorithm>
 
-#define MAX_NODE_ELEMENTS 50
+#define MAX_NODE_ELEMENTS 10
 
 class GameObject;
 
@@ -45,6 +46,7 @@ public:
 	void GetGameObjects(std::vector<GameObject*>& object) const;
 	void ReDoQuadtree(const AABB & limits = AABB(float3::zero,float3::zero), bool external = false);
 	void ReDoLimits(GameObject * newObject);
+	void UniqueObjects(std::vector<GameObject *> & objects) const;
 	template<typename TYPE>
 	void GetIntersects(std::vector<GameObject*>& objects, const TYPE & primitive) const;
 
@@ -58,7 +60,10 @@ template<typename TYPE>
 inline void Quadtree::GetIntersects(std::vector<GameObject*>& objects, const TYPE & primitive) const
 {
 	if (root != nullptr)
+	{
 		root->GetIntersects(objects, primitive);
+		UniqueObjects(objects);
+	}
 }
 
 template<typename TYPE>
@@ -68,7 +73,7 @@ inline void QuadtreeNode::GetIntersects(std::vector<GameObject*>& objects, const
 	{
 		for (std::list<GameObject*>::const_iterator iterator = objectsList.begin(); iterator != objectsList.end(); ++iterator)
 		{
-			if (primitive.Intersects((*iterator)->transform->boundingBox) && std::find(objects.begin(), objects.end(), (*iterator)) == objects.end())
+			if (primitive.Intersects((*iterator)->transform->boundingBox))
 				objects.push_back(*iterator);
 
 		}
