@@ -486,17 +486,20 @@ void ModuleImGui::CreateTransform(float2 scale)
 
 		if (App->geometry->currentGameObject->transform != nullptr)
 		{
+			float4x4 prevTransformMat = App->geometry->currentGameObject->transform->GetMatrix();
 			position = App->geometry->currentGameObject->transform->GetPos();
 			scale = App->geometry->currentGameObject->transform->scale;
 			rotate = App->geometry->currentGameObject->transform->GetRotation();
 
 			if (ImGui::InputFloat3("Position", &position[0])) {
+				App->sceneIntro->SaveLastTransform(prevTransformMat);
 				App->geometry->currentGameObject->SetPos(position);
 				App->sceneIntro->quadtree.ReDoQuadtree(AABB(), true);
 			}
 
 			if (ImGui::InputFloat3("Scale", &scale[0]))
 			{
+				App->sceneIntro->SaveLastTransform(prevTransformMat);
 				App->geometry->currentGameObject->SetScale(scale);
 				App->sceneIntro->quadtree.ReDoQuadtree(AABB(), true);
 			}
@@ -514,10 +517,18 @@ void ModuleImGui::CreateTransform(float2 scale)
 				App->geometry->currentGameObject->SetRotation(Quat::FromEulerXYZ(angles.x, angles.y, angles.z));
 
 				App->sceneIntro->quadtree.ReDoQuadtree(AABB(), true);
+				if (dragRotTransform)
+				{
+					App->sceneIntro->SaveLastTransform(prevTransformMat);
+					dragRotTransform = false;
+				}
 			}
+			else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP)
+				dragRotTransform = true;
 
 			if (ImGui::Button("Reset", ImVec2(100, 20)))
 			{
+				App->sceneIntro->SaveLastTransform(prevTransformMat);
 				App->geometry->currentGameObject->SetIdentity();
 				App->sceneIntro->quadtree.ReDoQuadtree(AABB(), true);
 			}

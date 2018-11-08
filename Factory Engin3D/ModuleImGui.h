@@ -128,6 +128,8 @@ public:
 
 	bool warningDialoge = false;
 
+	bool dragRotTransform = false;
+
 	//--------------------------
 	// Window position
 	float2 aboutPos = float2::zero;
