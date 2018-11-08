@@ -518,7 +518,7 @@ void ModuleImGui::CreateTransform(float2 scale)
 
 			if (ImGui::Button("Reset", ImVec2(100, 20)))
 			{
-				App->geometry->currentGameObject->transform->SetIdentity();
+				App->geometry->currentGameObject->SetIdentity();
 				App->sceneIntro->quadtree.ReDoQuadtree(AABB(), true);
 			}
 
