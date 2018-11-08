@@ -19,19 +19,14 @@ bool ModuleGameObjectManager::Start()
 	return true;
 }
 
-update_status ModuleGameObjectManager::PreUpdate(float dt)
+update_status ModuleGameObjectManager::Update()
 {
-	return UPDATE_CONTINUE;
-}
-
-update_status ModuleGameObjectManager::Update(float dt)
-{
-	root->Update(dt);
+	root->Update(App->time->dtReal);
 
 	return UPDATE_CONTINUE;
 }
 
-update_status ModuleGameObjectManager::PostUpdate(float dt)
+update_status ModuleGameObjectManager::PostUpdate()
 {
 	for (list<GameObject*>::iterator iterator = gameObjects.begin(); iterator != gameObjects.end(); ++iterator)
 	{

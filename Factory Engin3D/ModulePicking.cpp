@@ -25,7 +25,7 @@ bool ModulePicking::CleanUp()
 	return true;
 }
 
-update_status ModulePicking::Update(float dt)
+update_status ModulePicking::Update()
 {
 
 	if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_DOWN && !App->gui->IsAnyWindowHovered()

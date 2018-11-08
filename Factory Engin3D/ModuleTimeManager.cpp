@@ -24,6 +24,7 @@ bool ModuleTimeManager::Init()
 
 bool ModuleTimeManager::Start()
 {
+	ms_timer.Start();
 	return true;
 }
 
@@ -31,6 +32,40 @@ bool ModuleTimeManager::Start()
 bool ModuleTimeManager::CleanUp()
 {
 	return true;
+}
+
+update_status ModuleTimeManager::PreUpdate()
+{
+	//Update
+	dtReal = (float)ms_timer.Read() / 1000.0f;
+	ms_timer.Start();
+
+	fpsLog.push_back(1 / dtReal);
+
+	if (fpsLog.size() > 75)
+	{
+		fpsLog.erase(fpsLog.begin());
+	}
+
+	return UPDATE_CONTINUE;
+}
+
+update_status ModuleTimeManager::Update()
+{
+	return UPDATE_CONTINUE;
+}
+
+update_status ModuleTimeManager::PostUpdate()
+{
+
+	msLog.push_back(dtReal * 1000);
+
+	if (msLog.size() > 75)
+	{
+		msLog.erase(msLog.begin());
+	}
+
+	return UPDATE_CONTINUE;
 }
 
 

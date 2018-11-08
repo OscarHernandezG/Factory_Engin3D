@@ -35,9 +35,6 @@ public:
 	ModuleTimeManager* time;
 
 private:
-
-	Timer	ms_timer;
-	float	dt;
 	list<Module*> list_modules;
 
 public:
@@ -64,9 +61,6 @@ private:
 	void FinishUpdate();
 
 public:
-
-	vector<float> fpsLog;
-	vector<float> msLog;
 
 	bool toCap = true;
 	bool canSave = false;

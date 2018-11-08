@@ -23,9 +23,8 @@ public:
 	~ModuleImGui();
 
 	bool Start();
-	update_status PreUpdate(float dt);
-	update_status Update(float dt);
-	update_status PostUpdate(float dt);
+	update_status PreUpdate();
+	update_status PostUpdate();
 	update_status Save(JSON_Object* object);
 	update_status Load(JSON_Object* object);
 

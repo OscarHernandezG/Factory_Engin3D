@@ -55,7 +55,7 @@ bool ModuleImGui::Start()
 	return ret;
 }
 
-update_status ModuleImGui::PreUpdate(float dt)
+update_status ModuleImGui::PreUpdate()
 {
 	update_status status = UPDATE_CONTINUE;
 
@@ -112,13 +112,7 @@ bool ModuleImGui::CleanUp()
 	return true;
 }
 
-// Update
-update_status ModuleImGui::Update(float dt)
-{
-	return UPDATE_CONTINUE;
-}
-
-update_status ModuleImGui::PostUpdate(float dt)
+update_status ModuleImGui::PostUpdate()
 {
 
 	PROCESS_MEMORY_COUNTERS counters;
@@ -734,11 +728,11 @@ void ModuleImGui::CreateAppHeader()
 
 	char graphTitle[25];
 
-	sprintf_s(graphTitle, 25, "Framerate %.1f", App->fpsLog[App->fpsLog.size() - 1]);
-	ImGui::PlotHistogram("##Framerate", &App->fpsLog[0], App->fpsLog.size(), 0, graphTitle, 0.0f, 150.0f, ImVec2(310, 100));
+	sprintf_s(graphTitle, 25, "Framerate %.1f", App->time->fpsLog[App->time->fpsLog.size() - 1]);
+	ImGui::PlotHistogram("##Framerate", &App->time->fpsLog[0], App->time->fpsLog.size(), 0, graphTitle, 0.0f, 150.0f, ImVec2(310, 100));
 
-	sprintf_s(graphTitle, 25, "Milliseconds %.1f", App->msLog[App->msLog.size() - 1]);
-	ImGui::PlotHistogram("##Milliseconds", &App->msLog[0], App->msLog.size(), 0, graphTitle, 0.0f, 40.0f, ImVec2(310, 100));
+	sprintf_s(graphTitle, 25, "Milliseconds %.1f", App->time->msLog[App->time->msLog.size() - 1]);
+	ImGui::PlotHistogram("##Milliseconds", &App->time->msLog[0], App->time->msLog.size(), 0, graphTitle, 0.0f, 40.0f, ImVec2(310, 100));
 
 	sprintf_s(graphTitle, 25, "RAM Usage %.1f", ramLog[ramLog.size() - 1]);
 	ImGui::PlotHistogram("##RAM", &ramLog[0], ramLog.size(), 0, graphTitle, 0.0f, 125.0f, ImVec2(310, 100));

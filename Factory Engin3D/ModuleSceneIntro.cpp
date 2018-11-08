@@ -36,7 +36,7 @@ bool ModuleSceneIntro::Start()
 	return ret;
 }
 
-update_status ModuleSceneIntro::PreUpdate(float dt)
+update_status ModuleSceneIntro::PreUpdate()
 {
 	update_status status = UPDATE_CONTINUE;
 
@@ -90,7 +90,7 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 }
 
 // Update
-update_status ModuleSceneIntro::Update(float dt)
+update_status ModuleSceneIntro::Update()
 {
 
 	GuizmoUpdate();
@@ -124,25 +124,7 @@ void ModuleSceneIntro::GuizmoUpdate()
 
 		if (ImGuizmo::IsUsing())
 		{
-			float3 pos, scale;
-			Quat rot;
-			globalMatrix.Transposed().Decompose(pos, rot, scale);
-			switch (guizOperation)
-			{
-			case ImGuizmo::TRANSLATE:
-				transformObject->SetPos(pos);
-				break;
-			case ImGuizmo::ROTATE:
-				transformObject->SetRotation(rot);
-				break;
-			case ImGuizmo::SCALE:
-				transformObject->SetScale(scale);
-				break;
-			default:
-				break;
-			}
-			quadtree.ReDoQuadtree(AABB(), true);
-			saveTransform = true;
+			MoveGO(globalMatrix, transformObject);
 		}
 		else
 		{
@@ -154,6 +136,29 @@ void ModuleSceneIntro::GuizmoUpdate()
 			lastMat = transformObject->GetGlobalMatrix();
 		}
 	}
+}
+
+void ModuleSceneIntro::MoveGO(math::float4x4 &globalMatrix, GameObject * transformObject)
+{
+	float3 pos, scale;
+	Quat rot;
+	globalMatrix.Transposed().Decompose(pos, rot, scale);
+	switch (guizOperation)
+	{
+	case ImGuizmo::TRANSLATE:
+		transformObject->SetPos(pos);
+		break;
+	case ImGuizmo::ROTATE:
+		transformObject->SetRotation(rot);
+		break;
+	case ImGuizmo::SCALE:
+		transformObject->SetScale(scale);
+		break;
+	default:
+		break;
+	}
+	quadtree.ReDoQuadtree(AABB(), true);
+	saveTransform = true;
 }
 
 void ModuleSceneIntro::SaveLastTransform(float4x4 matrix)
@@ -176,12 +181,6 @@ void ModuleSceneIntro::GetPreviousTransform()
 		App->geometry->currentGameObject->SetTransform(prevTrans.matrix);
 		prevTransforms.pop();
 	}
-}
-
-
-update_status ModuleSceneIntro::PostUpdate(float dt)
-{
-	return UPDATE_CONTINUE;
 }
 
 void ModuleSceneIntro::SetGuizOperation(ImGuizmo::OPERATION operation)
