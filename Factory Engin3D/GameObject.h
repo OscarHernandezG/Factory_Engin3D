@@ -45,6 +45,8 @@ public:
 
 	void SetTransform(float4x4 transform);
 
+	void ForceTransform(float4x4 trans);
+
 	void SetPos(float3 pos);
 	void Move(float3 movement);
 	void SetScale(float3 scale);
