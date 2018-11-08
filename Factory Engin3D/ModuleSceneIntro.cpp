@@ -118,24 +118,22 @@ void ModuleSceneIntro::GuizmoUpdate()
 		ImGuiIO& io = ImGui::GetIO();
 		ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
 		ImGuizmo::Manipulate(App->camera->GetViewMatrix().ptr(), App->camera->GetProjectionMatrix().ptr(), guizOperation, guizMode, globalMatrix.ptr());
-		if (ImGuizmo::IsOver())
-		{
-			saveTransform = false;
-			LOG("Over");
-		}
-		
-		else if (ImGuizmo::IsUsing())
+
+		if (ImGuizmo::IsUsing())
 		{
 			transform->SetTransform(globalMatrix.Transposed());
 			quadtree.ReDoQuadtree(AABB(), true);
 			saveTransform = true;
 		}
-		else 
+		else
+		{
 			if (saveTransform)
 			{
-				//SaveLastTransform();
+				SaveLastTransform(lastMat);
 				saveTransform = false;
 			}
+			lastMat = transform->GetMatrix();
+		}
 	}
 }
 
@@ -144,7 +142,7 @@ void ModuleSceneIntro::SaveLastTransform(float4x4 matrix)
 	LastTransform prevTrans;
 	if (prevTransforms.empty() || App->geometry->currentGameObject->transform->GetMatrix().ptr() != prevTransforms.top().matrix.ptr())
 	{
-		prevTrans.matrix = App->geometry->currentGameObject->transform->GetMatrix();
+		prevTrans.matrix = matrix;
 		prevTrans.object = App->geometry->currentGameObject;
 		prevTransforms.push(prevTrans);
 	}

@@ -44,6 +44,7 @@ public:
 	char* droppedFileDir = nullptr;
 	Quadtree quadtree;
 	
+	float4x4 lastMat;
 	stack<LastTransform> prevTransforms;
 	bool saveTransform = false;
 private:

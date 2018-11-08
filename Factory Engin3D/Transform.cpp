@@ -143,3 +143,9 @@ const float4x4 Transform::GetMatrix() const
 {
 	return float4x4::FromTRS(position, rotation, scale);
 }
+
+const float4x4 Transform::GetGlobalMatrix() const
+{
+	return float4x4::FromTRS(GetPos(), GetRotation(), GetScale());
+}
+

@@ -40,7 +40,8 @@ public:
 
 	float3 GetPos() const;
 	float3 GetScale() const;
-	Quat GetRotation();
+	Quat GetRotation() const;
+	float4x4 GetGlobalMatrix() const;
 
 	void SetTransform(float4x4 transform);
 
