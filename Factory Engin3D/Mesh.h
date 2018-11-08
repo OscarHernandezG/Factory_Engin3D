@@ -29,11 +29,18 @@ struct MeshBuffer
 	AABB boundingBox;
 
 	int id = -1;
+
+	bool operator ==(MeshBuffer* mesh2)
+	{
+		return (this->id == mesh2->id);
+	}
 };
 
 struct MeshNode
 {
 	string name;
+	
+	int id = -1;
 	
 	MeshBuffer buffer;
 	list<MeshNode> childs;
@@ -42,16 +49,16 @@ struct MeshNode
 
 	bool operator ==(MeshNode node2)
 	{
-		return (this->buffer.id == node2.buffer.id);
+		return (this->id == node2.id);
 	}
 	bool operator !=(MeshNode node2)
 	{
-		return !(this->buffer.id == node2.buffer.id);
+		return !(this->id == node2.id);
 	}
 
 	bool operator <(MeshNode node2)
 	{
-		return (this->buffer.id < node2.buffer.id);
+		return (this->id < node2.id);
 	}
 };
 
@@ -69,7 +76,7 @@ public:
 	void ClearMesh();
 
 public:
-	MeshBuffer buffer;
+	MeshBuffer* buffer;
 
 	int meshId;
 };
