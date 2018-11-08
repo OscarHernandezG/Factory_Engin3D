@@ -30,8 +30,8 @@ public:
 public:
 	AABB limits;
 	std::list<GameObject*> objectsList;
-	QuadtreeNode* parent = nullptr;
 	QuadtreeNode* childs[4] = { nullptr, nullptr, nullptr, nullptr };
+	int subdivisions = 0;
 };
 
 class Quadtree

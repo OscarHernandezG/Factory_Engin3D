@@ -653,7 +653,7 @@ void ModuleImGui::CreateMenu()
 			consoleWindow = !consoleWindow;
 
 		else if (ImGui::MenuItem("Close All", "Ctrl+X"))
-			showDemoWindow = exampleWindow = mathGeoLibWindow = randomNumberWindow = aboutWindow = configurationWindow = consoleWindow = transformWindow = false;
+			showDemoWindow = exampleWindow = mathGeoLibWindow = randomNumberWindow = aboutWindow = configurationWindow = consoleWindow = transformWindow = hierarchyWindow = false;
 
 		ImGui::EndMenu();
 	}
@@ -713,7 +713,7 @@ void ModuleImGui::CheckShortCuts()
 			consoleWindow = !consoleWindow;
 
 		else if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN)
-			showDemoWindow = exampleWindow = mathGeoLibWindow = randomNumberWindow = aboutWindow = configurationWindow = consoleWindow = transformWindow = false;
+			showDemoWindow = exampleWindow = mathGeoLibWindow = randomNumberWindow = aboutWindow = configurationWindow = consoleWindow = transformWindow = hierarchyWindow = false;
 	}
 }
 //Create Menu-------------------------------------------------------------

@@ -79,9 +79,12 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 		guizOperation = ImGuizmo::OPERATION::BOUNDS;
 
 	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RCTRL) == KEY_REPEAT)
+	{
 		if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
 			GetPreviousTransform();
-		
+
+		isSnap = true;
+	}
 
 	return status;
 }
@@ -117,11 +120,27 @@ void ModuleSceneIntro::GuizmoUpdate()
 		globalMatrix.Transpose();
 		ImGuiIO& io = ImGui::GetIO();
 		ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
-		ImGuizmo::Manipulate(App->camera->GetViewMatrix().ptr(), App->camera->GetProjectionMatrix().ptr(), guizOperation, guizMode, globalMatrix.ptr());
+		ImGuizmo::Manipulate(App->camera->GetViewMatrix().ptr(), App->camera->GetProjectionMatrix().ptr(), guizOperation, guizMode, globalMatrix.ptr(), nullptr, isSnap ? snap.ptr() : nullptr);
 
 		if (ImGuizmo::IsUsing())
 		{
-			transformObject->SetTransform(globalMatrix.Transposed());
+			float3 pos, scale;
+			Quat rot;
+			globalMatrix.Transposed().Decompose(pos, rot, scale);
+			switch (guizOperation)
+			{
+			case ImGuizmo::TRANSLATE:
+				transformObject->SetPos(pos);
+				break;
+			case ImGuizmo::ROTATE:
+				transformObject->SetRotation(rot);
+				break;
+			case ImGuizmo::SCALE:
+				transformObject->SetScale(scale);
+				break;
+			default:
+				break;
+			}
 			quadtree.ReDoQuadtree(AABB(), true);
 			saveTransform = true;
 		}

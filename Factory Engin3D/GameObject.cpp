@@ -215,12 +215,7 @@ void GameObject::SetTransform(float4x4 trans)
 		Quat rot;
 		trans.Decompose(pos, rot, scale);
 
-		LOG("--------------");
-		LOG("%.2f,%.2f,%.2f", pos.x, pos.y, pos.z);
 		SetPos(pos);
-		LOG("%.2f,%.2f,%.2f", pos.x, pos.y, pos.z);
-		LOG("--------------");
-
 		SetScale(scale);
 		SetRotation(rot);
 	}
