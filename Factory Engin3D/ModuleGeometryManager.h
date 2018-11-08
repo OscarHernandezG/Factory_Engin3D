@@ -57,9 +57,9 @@ public:
 
 	float3 GetCurrentMeshPivot() const;
 
-	void Higher(float& val1, float val2);
+	inline void Higher(float& val1, float val2);
 
-	void Lower(float& val1, float val2);
+	inline void Lower(float& val1, float val2);
 
 	//Geometry* LoadPrimitive(PrimitiveTypes type);
 
@@ -71,6 +71,8 @@ public:
 	GameObject* currentGameObject = nullptr;
 	GameObject* bHouse = nullptr;
 
+	vector<MeshNode> nodes;
+	vector<Mesh*> loadedMeshes;
 
 	uint textureID = 0;
 	uint numFaces = 0;

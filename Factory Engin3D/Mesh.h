@@ -28,19 +28,31 @@ struct MeshBuffer
 
 	AABB boundingBox;
 
-	int id;
+	int id = -1;
 };
 
 struct MeshNode
 {
-	MeshBuffer buffer;
-
 	string name;
-
+	
+	MeshBuffer buffer;
 	list<MeshNode> childs;
 
 	float4x4 transform;
 
+	bool operator ==(MeshNode node2)
+	{
+		return (this->buffer.id == node2.buffer.id);
+	}
+	bool operator !=(MeshNode node2)
+	{
+		return !(this->buffer.id == node2.buffer.id);
+	}
+
+	bool operator <(MeshNode node2)
+	{
+		return (this->buffer.id < node2.buffer.id);
+	}
 };
 
 class Mesh :public Geometry
@@ -59,6 +71,6 @@ public:
 public:
 	MeshBuffer buffer;
 
-
+	int meshId;
 };
 #endif // !__Mesh_H__

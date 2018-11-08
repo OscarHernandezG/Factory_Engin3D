@@ -81,6 +81,8 @@ MeshBuffer ModuleGeometry::LoadMeshBuffer(const aiScene* scene, uint index, char
 {
 	MeshBuffer buffer;
 
+	LOG("Mesh index = %u", index);
+
 	aiMesh* newMesh = scene->mMeshes[index];
 
 	LoadMeshVertex(buffer, newMesh);
@@ -160,6 +162,8 @@ MeshNode ModuleGeometry::LoadMeshNode(const aiScene* scene, aiNode* node, char* 
 	
 	meshNode.transform = AiNatrixToFloatMat(node->mTransformation);
 
+	nodes.push_back(meshNode);
+
 	return meshNode;
 }
 
@@ -182,8 +186,6 @@ MeshNode ModuleGeometry::LoadMesh(char* path)
 
 		if (scene != nullptr)
 		{
-			// Todo: GameObject name here
-			// Todo: Save names in fty
 			if (scene->HasMeshes())
 				meshRoot = LoadMeshNode(scene, scene->mRootNode, path);
 
@@ -285,17 +287,12 @@ void ModuleGeometry::LoadMeshImporter(const char* path, MeshNode* tempMesh)
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-	//	i++;
-		//buffer = App->importer->LoadFile(path, LlibraryType_MESH, i);
-
 		bufferImporter.boundingBox = LoadBoundingBox(bufferImporter.vertex);
 
 		tempMesh->buffer = bufferImporter;
 	}
 	else
 	{
-		;
-
 		tempMesh->buffer.boundingBox = AABB(float3::zero, float3::zero);
 	}
 
@@ -332,19 +329,19 @@ void ModuleGeometry::UpdateMesh(char* path)
 {
 	MeshNode tempMesh = LoadMesh(path);
 
-	//if (!tempMesh.buffer.empty() || !tempMesh.childs.empty())
-	{
-		//Geometry* mesh = (Geometry*)currentMesh->GetComponent(ComponentType::ComponentType_GEOMETRY);
-		//currentMesh->RemoveComponent(mesh);
+	//std::sort(loadedMeshes.begin(), loadedMeshes.end());
 
-		LoadMeshImporter(path, &tempMesh);
 
-		GameObject* newGameObject = LoadGameObjectsFromMeshNode(tempMesh, App->gameObject->root);
+	sort(nodes.begin(), nodes.end());
+	nodes.erase(unique(nodes.begin(), nodes.end()), nodes.end());
 
-		currentGameObject = newGameObject;
-		bHouse = newGameObject;
-		//App->sceneIntro->quadtree.Insert(bHouse);
-	}
+	LoadMeshImporter(path, &tempMesh);
+
+	GameObject* newGameObject = LoadGameObjectsFromMeshNode(tempMesh, App->gameObject->root);
+
+	currentGameObject = newGameObject;
+	bHouse = newGameObject;
+
 }
 
 AABB ModuleGeometry::LoadBoundingBox(Buffer<float> vertex)
