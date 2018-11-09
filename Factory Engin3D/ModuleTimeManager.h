@@ -23,28 +23,34 @@ public:
 	update_status Update();
 	update_status PostUpdate();
 
+	uint GetFrameCount() const;
+	float Getdt() const;
+	float GetStartGame() const;
+
+	float GetdtGame() const;
+	float GetdtGameScale() const;
+	float GetGameTimer() const;
+
 	update_status Save(JSON_Object * object);
 	update_status Load(JSON_Object * object);
 
 public:
-
-	uint frameCount;			//app graphics frames since game start
-
-	float dtReal;				//last frame time expressed in seconds(Real)
-	float dtRealGameStart;		//seconds since game start(Real)
-	
-	float dtGame;				//last frame time expressed in seconds(Game)
-	float dtGameScale;			//scale at which time is passing(Game)
-	float dtGameStart;			//seconds since game start(Game)
-
-	bool isPaused;
+	bool isPaused = false;
 
 	vector<float> fpsLog;
 	vector<float> msLog;
 
 private:
-	Timer	ms_timer;
+	Timer	dtTimer;
 
+	uint frameCount = 0u;			//app graphics frames since game start
+
+	float dtReal = 0.0f;			//last frame time expressed in seconds(Real)
+	float startsTime = 0.0f;		//seconds since game start(Real)
+	
+	float dtGame = 0.0f;			//last frame time expressed in seconds(Game)
+	float dtGameScale = 0.0f;		//scale at which time is passing(Game)
+	float gameTimer = 0.0f;			//seconds since game start(Game)
 };
 
 #endif // __ModuleTimeManager_H__

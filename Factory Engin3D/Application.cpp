@@ -89,20 +89,14 @@ void Application::PrepareUpdate()
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
-	//if (!isMaximized)
-	//{
-	//	App->window->SetMaximize();
-	//	isMaximized = true;
-	//}
-
 	if (!renderer3D->vsync && toCap) {
-		float toVsync = App->time->dtReal;
+		float toVsync = App->time->Getdt();
 	
 		if (capFrames > 0)
 			toVsync = 1000 / capFrames;
 	
-		if (App->time->dtReal < toVsync)
-			SDL_Delay(toVsync - App->time->dtReal);
+		if (App->time->Getdt() < toVsync)
+			SDL_Delay(toVsync - App->time->Getdt());
 	}
 }
 

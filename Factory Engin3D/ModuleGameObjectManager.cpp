@@ -21,7 +21,7 @@ bool ModuleGameObjectManager::Start()
 
 update_status ModuleGameObjectManager::Update()
 {
-	root->Update(App->time->dtReal);
+	root->Update(App->time->Getdt());
 
 	return UPDATE_CONTINUE;
 }

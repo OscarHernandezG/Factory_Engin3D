@@ -24,7 +24,7 @@ bool ModuleTimeManager::Init()
 
 bool ModuleTimeManager::Start()
 {
-	ms_timer.Start();
+	dtTimer.Start();
 	return true;
 }
 
@@ -36,17 +36,20 @@ bool ModuleTimeManager::CleanUp()
 
 update_status ModuleTimeManager::PreUpdate()
 {
-	//Update
-	dtReal = (float)ms_timer.Read() / 1000.0f;
-	ms_timer.Start();
+	//Calculate dtReal
+	dtReal = (float)dtTimer.Read() / 1000.0f;
+	dtTimer.Start();
 
+	//frames since start
+	frameCount++;
+
+	//FPS app window
 	fpsLog.push_back(1 / dtReal);
 
 	if (fpsLog.size() > 75)
 	{
 		fpsLog.erase(fpsLog.begin());
 	}
-
 	return UPDATE_CONTINUE;
 }
 
@@ -66,6 +69,32 @@ update_status ModuleTimeManager::PostUpdate()
 	}
 
 	return UPDATE_CONTINUE;
+}
+
+
+uint ModuleTimeManager::GetFrameCount() const
+{
+	return frameCount;
+}
+float ModuleTimeManager::Getdt() const
+{
+	return dtReal;
+}
+float ModuleTimeManager::GetStartGame() const
+{
+	return startsTime;
+}
+float ModuleTimeManager::GetdtGame() const
+{
+	return dtGame;
+}
+float ModuleTimeManager::GetdtGameScale() const
+{
+	return dtGameScale;
+}
+float ModuleTimeManager::GetGameTimer() const
+{
+	return gameTimer;
 }
 
 
