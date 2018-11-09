@@ -308,7 +308,6 @@ GameObject* ModuleGeometry::LoadGameObjectsFromMeshNode(MeshNode node, GameObjec
 	newGameObject->SetABB((node.buffer).boundingBox);
 
 	// TODO remove and use the vector
-	Mesh* currMesh = new Mesh(newGameObject);
 
 	vector<MeshBuffer*>::iterator currentMeshBuffer;
 	for (currentMeshBuffer = loadedMeshes.begin(); currentMeshBuffer != loadedMeshes.end(); ++currentMeshBuffer)
@@ -316,6 +315,8 @@ GameObject* ModuleGeometry::LoadGameObjectsFromMeshNode(MeshNode node, GameObjec
 		LOG("%i", (*currentMeshBuffer)->id);
 		if ((*currentMeshBuffer)->id == node.id)
 		{
+			Mesh* currMesh = new Mesh(newGameObject);
+			
 			currMesh->buffer = (*currentMeshBuffer);
 			GeometryInfo info(currMesh);
 			newGameObject->AddComponent(ComponentType_GEOMETRY, &info);
@@ -331,10 +332,43 @@ GameObject* ModuleGeometry::LoadGameObjectsFromMeshNode(MeshNode node, GameObjec
 	return newGameObject;
 }
 
+// Create a new gameObject wich only stores the name, the component geometry asociated and the hierarchy
+// This is used to create a temporal gameObject when we load a new geometry to the engine
+// This way we create a shell that will serve as a guide to save the geometry in .fty and load the real GameObject afterwards
+GameObject* ModuleGeometry::LoadEmptyGameObjectsFromMeshNode(MeshNode node, GameObject* father)
+{
+	GameObject* newGameObject = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, father, node.name.data());
+	newGameObject->SetTransform(node.transform);
+	newGameObject->SetABB((node.buffer).boundingBox);
+
+
+	vector<MeshNode>::iterator currentMeshBuffer;
+	for (currentMeshBuffer = nodes.begin(); currentMeshBuffer != nodes.end(); ++currentMeshBuffer)
+	{
+		if ((*currentMeshBuffer).id == node.id)
+		{
+			Mesh* currMesh = new Mesh(newGameObject);
+			
+			GeometryInfo info(currMesh);
+			newGameObject->AddComponent(ComponentType_GEOMETRY, &info);
+			break;
+		}
+	}
+
+	for (list<MeshNode>::iterator childs = node.childs.begin(); childs != node.childs.end(); ++childs)
+	{
+		LoadGameObjectsFromMeshNode(*childs, newGameObject);
+	}
+	return newGameObject;
+}
+
 
 void ModuleGeometry::UpdateMesh(char* path)
 {
 	MeshNode tempMesh = LoadMesh(path);
+	
+	// This GO is the one we have to save in the scene
+	GameObject* tempGO = LoadEmptyGameObjectsFromMeshNode(tempMesh, App->gameObject->root);
 
 	//std::sort(loadedMeshes.begin(), loadedMeshes.end());
 

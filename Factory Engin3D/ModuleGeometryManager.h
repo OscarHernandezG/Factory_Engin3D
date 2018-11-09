@@ -49,6 +49,8 @@ public:
 
 	GameObject* LoadGameObjectsFromMeshNode(MeshNode node, GameObject * father);
 
+	GameObject * LoadEmptyGameObjectsFromMeshNode(MeshNode node, GameObject * father);
+
 	void UpdateMesh(char * path);
 
 	AABB LoadBoundingBox(Buffer<float> vertex);
