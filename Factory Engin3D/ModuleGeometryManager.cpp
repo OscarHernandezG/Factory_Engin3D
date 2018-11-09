@@ -370,6 +370,9 @@ void ModuleGeometry::UpdateMesh(char* path)
 	// This GO is the one we have to save in the scene
 	GameObject* tempGO = LoadEmptyGameObjectsFromMeshNode(tempMesh, App->gameObject->root);
 
+
+	// Save scene in json and use the info to load the new gameObject
+	// TODO: check the UUID from the gameobject, we have to save the uuid in the scene file (components too?)
 	//std::sort(loadedMeshes.begin(), loadedMeshes.end());
 
 
