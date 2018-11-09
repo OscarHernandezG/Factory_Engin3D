@@ -44,12 +44,14 @@ bool ModuleImGui::Start()
 	transformPos = float2(955.0f, 315.0f);
 	consolePos = float2(0.0f, 575.0f);
 	scenePos = float2(0.0f, 225.0f);
+	playPos = float2(547.0f, 25.0f);
 	// Window sizes
 	aboutSize = float2(325.0f, 340.0f);
 	configurationSize = float2(600.0f, 287.0f);
 	transformSize = float2(325.0f, 206.0f);
 	consoleSize = float2(355.0f, 287.0f);
 	sceneSize = float2(295.0f, 354.0f);
+	playSize = float2(185.0f, 40.0f);
 	//--------------------------
 
 	return ret;
@@ -96,6 +98,8 @@ update_status ModuleImGui::PreUpdate()
 
 	if (hierarchyWindow)
 		CreateGameObjectHierarchy(scale);
+
+	CreateGameManager(scale);
 
 	status = CreateMainMenuBar();
 
@@ -419,6 +423,7 @@ void ModuleImGui::CreateConfigWindow(float2 scale)
 	{
 		CreateHardwareHeader();
 	}
+
 	ImGui::End();
 
 	if (warningDialoge)
@@ -560,6 +565,38 @@ void ModuleImGui::CreateGameObjectHierarchy(float2 scale)
 	{
 		CreateGOTreeNode(App->gameObject->root);
 	}
+	ImGui::End();
+
+}
+
+void ModuleImGui::CreateGameManager(float2 scale)
+{
+	float2 realPos = playPos.Mul(scale);
+	float2 realSize = playSize.Mul(scale);
+	bool canShow = true;
+	ImGui::Begin("", &canScroll, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar);
+
+	ImGui::SetWindowPos({ playPos.x, playPos.y });
+	ImGui::SetWindowSize({ playSize.x, playSize.y });
+
+	if (ImGui::Button("Play", { 50,25 }))
+	{
+		if (App->time->gameState == GameState_NONE)
+			App->time->gameState = GameState_PLAYING;
+		else
+			App->time->gameState = GameState_STOP;
+	}
+	ImGui::SameLine();
+
+	if (ImGui::Button("Pause", { 50,25 }))
+		if (App->time->gameState == GameState_PLAYING)
+			App->time->gameState = GameState_PAUSE;
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Tick", { 50,25 }))
+		App->time->gameState = GameState_TICK;
+	
 	ImGui::End();
 
 }

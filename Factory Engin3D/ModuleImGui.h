@@ -42,8 +42,8 @@ public:
 	void CreateConfigWindow(float2 scale);
 	void CreateConsole(float2 scale);
 	void CreateTransform(float2 scale);
-
 	void CreateGameObjectHierarchy(float2 scale);
+	void CreateGameManager(float2 scale);
 
 	void CreateGOTreeNode(GameObject * current);
 
@@ -137,12 +137,14 @@ public:
 	float2 transformPos = float2::zero;
 	float2 consolePos = float2::zero;
 	float2 scenePos = float2::zero;
+	float2 playPos = float2::zero;
 	// Window sizes
 	float2 aboutSize = float2::zero;
 	float2 configurationSize = float2::zero;
 	float2 transformSize = float2::zero;
 	float2 consoleSize = float2::zero;
 	float2 sceneSize = float2::zero;
+	float2 playSize = float2::zero;
 	//--------------------------
 };
 #endif // !__ModuleImGui_H__

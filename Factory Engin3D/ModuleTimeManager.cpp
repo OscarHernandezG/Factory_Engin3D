@@ -38,10 +38,45 @@ update_status ModuleTimeManager::PreUpdate()
 {
 	//Calculate dtReal
 	dtReal = (float)dtTimer.Read() / 1000.0f;
+
+	//Calculate dtGame
+	dtGame = (float)dtTimer.Read() / 1000.0f;
+	if (dtGameScale != 1)
+	{
+		dtGame *= dtGameScale;
+	}
 	dtTimer.Start();
 
 	//frames since start
 	frameCount++;
+
+	LOG("%i", gameState);
+	switch (gameState)
+	{
+	case GameState_NONE:
+		break;
+	case GameState_PLAYING:
+		gameTimer += dtGame;
+		break;
+	case GameState_PAUSE:
+		break;
+	case GameState_STOP:
+		gameTimer = 0.0f;
+		gameState = GameState_NONE;
+		break;
+	case GameState_TICK:
+		if (!oneFrame)
+			oneFrame = true;
+		else
+		{
+			gameState = GameState_PAUSE;
+			oneFrame = false;
+		}
+		break;
+	default:
+		break;
+	}
+
 
 	//FPS app window
 	fpsLog.push_back(1 / dtReal);
@@ -71,6 +106,10 @@ update_status ModuleTimeManager::PostUpdate()
 	return UPDATE_CONTINUE;
 }
 
+void ModuleTimeManager::SetScaleGame(float scale)
+{
+	dtGameScale = scale;
+}
 
 uint ModuleTimeManager::GetFrameCount() const
 {

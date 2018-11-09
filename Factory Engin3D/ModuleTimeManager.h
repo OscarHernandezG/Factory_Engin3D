@@ -6,6 +6,14 @@
 
 class Application;
 
+enum GameState
+{
+	GameState_NONE,
+	GameState_PLAYING,
+	GameState_PAUSE,
+	GameState_STOP,
+	GameState_TICK
+};
 class ModuleTimeManager : public Module
 {
 public:
@@ -23,6 +31,8 @@ public:
 	update_status Update();
 	update_status PostUpdate();
 
+	void SetScaleGame(float scale);
+
 	uint GetFrameCount() const;
 	float Getdt() const;
 	float GetStartGame() const;
@@ -35,11 +45,12 @@ public:
 	update_status Load(JSON_Object * object);
 
 public:
-	bool isPaused = false;
+	GameState gameState = GameState_NONE;
 
 	vector<float> fpsLog;
 	vector<float> msLog;
 
+	bool oneFrame = false;
 private:
 	Timer	dtTimer;
 
@@ -49,7 +60,7 @@ private:
 	float startsTime = 0.0f;		//seconds since game start(Real)
 	
 	float dtGame = 0.0f;			//last frame time expressed in seconds(Game)
-	float dtGameScale = 0.0f;		//scale at which time is passing(Game)
+	float dtGameScale = 1.0f;		//scale at which time is passing(Game)
 	float gameTimer = 0.0f;			//seconds since game start(Game)
 };
 
