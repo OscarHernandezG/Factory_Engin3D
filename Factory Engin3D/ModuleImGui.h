@@ -53,6 +53,7 @@ public:
 	void CreateMenu();
 	bool CreateOptions();
 	void CheckShortCuts();
+	void CreateDebugMenu();
 
 	void CreateAppHeader();
 	void CreateWindowHeader();

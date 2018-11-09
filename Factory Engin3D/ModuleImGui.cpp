@@ -595,14 +595,14 @@ void ModuleImGui::CreateGOTreeNode(GameObject* current)
 	}
 }
 
-
-
 update_status ModuleImGui::CreateMainMenuBar()
 {
 	update_status ret = UPDATE_CONTINUE;
 	if (ImGui::BeginMainMenuBar())
 	{
 		CreateMenu();
+
+		CreateDebugMenu();
 
 		CheckShortCuts();
 
@@ -708,6 +708,23 @@ void ModuleImGui::CheckShortCuts()
 
 		else if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN)
 			showDemoWindow = exampleWindow = mathGeoLibWindow = randomNumberWindow = aboutWindow = configurationWindow = consoleWindow = transformWindow = hierarchyWindow = false;
+	}
+}
+
+void ModuleImGui::CreateDebugMenu()
+{
+	if (ImGui::BeginMenu("Debug"))
+	{
+
+		if (ImGui::MenuItem("AABB & quadtree", "1", App->renderer3D->debugQuad))
+			App->renderer3D->debugQuad = !App->renderer3D->debugQuad;
+
+		ImGui::MenuItem("Create empty object", "2");
+
+		if (ImGui::MenuItem("Camera culling", "3", App->renderer3D->cameraCulling))
+			App->renderer3D->cameraCulling = !App->renderer3D->cameraCulling;
+
+		ImGui::EndMenu();
 	}
 }
 //Create Menu-------------------------------------------------------------
