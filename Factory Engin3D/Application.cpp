@@ -188,9 +188,17 @@ update_status Application::Update()
 			ret = (*item)->Save(dataObj);
 			item++;
 		}
+		//This saves de json more readable
+		//int sizeBuf = json_serialization_size_pretty(user_data);
+		//char* buf = new char[sizeBuf];
+		//json_serialize_to_buffer_pretty(user_data, buf, sizeBuf);
+		//App->importer->SaveFile("test", sizeBuf, buf, LlibraryType::LlibraryType_MESH);
+		//delete[] buf;
+
 		json_serialize_to_file(user_data, "user_data.json");
 		json_value_free(user_data);
 		canSave = false;
+
 	}
 	
 	FinishUpdate();
