@@ -194,6 +194,7 @@ update_status ModuleRenderer3D::PostUpdate()
 		for (auto iterator : drawerGO)
 			DrawOctreeObjects(iterator);
 
+		//TODO: Have to draw Dynamic objects
 	}
 
 	// 2. Debug geometry

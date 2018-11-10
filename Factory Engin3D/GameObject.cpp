@@ -349,6 +349,15 @@ void GameObject::SetActive(bool active)
 	isActive = active;
 }
 
+void GameObject::SetObjectStatic(bool isStatic)
+{
+	for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
+	{
+		(*iterator)->SetObjectStatic(isStatic);
+	}
+	isStatic = isStatic;
+}
+
 int GameObject::CreateRandomUID()
 {
 	UID = pcg32_boundedrand_r(&rng, UINT_MAX);

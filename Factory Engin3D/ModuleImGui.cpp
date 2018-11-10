@@ -463,9 +463,17 @@ void ModuleImGui::CreateTransform(float2 scale)
 		string goName = App->geometry->currentGameObject->name;
 		ImGui::Text(goName.data());
 
-		ImGui::Checkbox("Active", App->geometry->currentGameObject->GetActiveReference());
-		App->geometry->currentGameObject->SetActive(App->geometry->currentGameObject->GetActive());
-
+		if (ImGui::Checkbox("Active", App->geometry->currentGameObject->GetActiveReference()))
+		{
+			App->geometry->currentGameObject->SetActive(App->geometry->currentGameObject->GetActive());
+			App->sceneIntro->octree.ReDoOctree(AABB(), true);
+		}
+		ImGui::SameLine();
+		if (ImGui::Checkbox("Static Object", App->geometry->currentGameObject->GetStaticReference()))
+		{
+			App->geometry->currentGameObject->SetObjectStatic(App->geometry->currentGameObject->GetObjectStatic());
+			App->sceneIntro->octree.ReDoOctree(AABB(), true);
+		}
 		float3 position, scale, angles;
 		Quat rotate;
 

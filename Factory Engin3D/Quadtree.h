@@ -77,7 +77,7 @@ inline void OctreeNode::GetIntersects(std::vector<GameObject*>& objects, const T
 				objects.push_back(*iterator);
 
 		}
-		for (int i = 0; i < 4; ++i)
+		for (int i = 0; i < 8; ++i)
 		{
 			if (childs[i] != nullptr)
 				childs[i]->GetIntersects(objects, primitive);

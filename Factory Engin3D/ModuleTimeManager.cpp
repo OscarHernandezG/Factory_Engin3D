@@ -50,7 +50,6 @@ update_status ModuleTimeManager::PreUpdate()
 	//frames since start
 	frameCount++;
 
-	LOG("%i", gameState);
 	switch (gameState)
 	{
 	case GameState_NONE:

@@ -64,9 +64,13 @@ public:
 	void SetABB(AABB aabb);
 
 	void SetActive(bool active);
+	void SetObjectStatic(bool isStatic);
 
 	inline bool GetActive() { return isActive; }
+	inline bool GetObjectStatic() { return isStatic; }
+
 	inline bool* GetActiveReference() { return &isActive; }
+	inline bool* GetStaticReference() { return &isStatic; }
 
 
 
@@ -90,7 +94,8 @@ public:
 
 private:
 	bool isActive = true;
-	
+	bool isStatic = true;
+
 	int UID = 0;
 	pcg32_random_t rng;
 
