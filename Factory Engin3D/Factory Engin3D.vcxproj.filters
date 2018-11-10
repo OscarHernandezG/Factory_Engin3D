@@ -578,5 +578,8 @@
     <ClCompile Include="pcg-c-basic-0.9\pcg_basic.c">
       <Filter>Sources\Containers\PCG</Filter>
     </ClCompile>
+    <ClCompile Include="Globals.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

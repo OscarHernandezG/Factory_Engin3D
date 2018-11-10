@@ -187,6 +187,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="Globals.cpp" />
     <ClCompile Include="ImGuizmo\ImGuizmo.cpp" />
     <ClCompile Include="ModuleGameObjectManager.cpp" />
     <ClCompile Include="imgui-1.65\imgui.cpp" />
