@@ -29,6 +29,8 @@ public:
 	void MoveGO(math::float4x4 &globalMatrix, GameObject * transformObject);
 	void SaveLastTransform(float4x4 matrix);
 	void GetPreviousTransform();
+	void ReInsertOctree(GameObject * object);
+
 
 	void SetGuizOperation(ImGuizmo::OPERATION operation);
 	ImGuizmo::OPERATION GetGuizOperation() const;

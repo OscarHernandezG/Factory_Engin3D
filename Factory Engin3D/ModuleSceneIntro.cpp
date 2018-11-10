@@ -181,7 +181,17 @@ void ModuleSceneIntro::GetPreviousTransform()
 		App->geometry->currentGameObject = prevTrans.object;
 		App->geometry->currentGameObject->SetTransform(prevTrans.matrix);
 		prevTransforms.pop();
+		octree.ReDoOctree(AABB(), true);
 	}
+}
+
+void ModuleSceneIntro::ReInsertOctree(GameObject* object)
+{
+	for (list<GameObject*>::iterator iterator = object->childs.begin(); iterator != object->childs.end(); ++iterator)
+	{
+		ReInsertOctree(*iterator);
+	}
+	octree.Insert(object);
 }
 
 void ModuleSceneIntro::SetGuizOperation(ImGuizmo::OPERATION operation)

@@ -23,10 +23,15 @@ public:
 
 	GameObject* CreateGameObject(float3 position = float3::zero, Quat rotation = Quat::identity, float3 scale = float3::one, GameObject* father = nullptr, const char* name = nullptr);
 
+	void AddNewDynamic(GameObject * object);
+	void RemoveDynamic(GameObject * object);
+
 public:
 	GameObject* root;
 
-	list<GameObject*> gameObjects;
+	//list<GameObject*> gameObjects;
+
+	list<GameObject*> dynamicObjects;
 
 };
 #endif // !__ModuleGameObjectManager_H__

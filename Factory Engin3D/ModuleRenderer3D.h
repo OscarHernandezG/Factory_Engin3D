@@ -19,7 +19,7 @@ public:
 	update_status PreUpdate(float dt);
 	update_status PostUpdate(float dt);
 	void DrawOctreeObjects(GameObject * iterator);
-	void DrawDynamicObjects(GameObject * iterator, bool cameraCulling);
+	void DrawDynamicObjects(bool cameraCulling);
 	update_status PreUpdate();
 	update_status PostUpdate();
 	void DrawObject(Component * geometry);

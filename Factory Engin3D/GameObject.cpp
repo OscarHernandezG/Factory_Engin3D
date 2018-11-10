@@ -355,7 +355,7 @@ void GameObject::SetObjectStatic(bool isStatic)
 	{
 		(*iterator)->SetObjectStatic(isStatic);
 	}
-	isStatic = isStatic;
+	this->isStatic = isStatic;
 }
 
 int GameObject::CreateRandomUID()

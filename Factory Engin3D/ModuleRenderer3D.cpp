@@ -180,7 +180,7 @@ update_status ModuleRenderer3D::PostUpdate()
 
 	// 1. Draw geometry Camera Culling
 	std::vector<GameObject*> drawerGO;
-	if (cameraCulling)//Only draw what camera see
+	if (cameraCulling)//Only draw camera View
 	{
 		App->sceneIntro->octree.GetIntersects(drawerGO, App->camera->GetCameraFrustrum());
 
@@ -194,9 +194,9 @@ update_status ModuleRenderer3D::PostUpdate()
 			DrawOctreeObjects(iterator);
 	}
 
-	//Draw Dynamic objects
-	if(App->gameObject->root)
-		DrawDynamicObjects(App->gameObject->root, cameraCulling);
+	//Draw Dynamic objects (there aren't in octree)
+	if(!App->gameObject->dynamicObjects.empty())
+		DrawDynamicObjects(cameraCulling);
 
 	// 2. Debug geometry
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -240,20 +240,14 @@ void ModuleRenderer3D::DrawOctreeObjects(GameObject * iterator)
 			DrawObject(currentGeometry);
 	}
 }
-void ModuleRenderer3D::DrawDynamicObjects(GameObject * iterator, bool cameraCulling)
+void ModuleRenderer3D::DrawDynamicObjects(bool cameraCulling)
 {
-	for (list<GameObject*>::iterator it = iterator->childs.begin(); it != iterator->childs.end(); ++it)
+	for (list<GameObject*>::iterator it = App->gameObject->dynamicObjects.begin(); it != App->gameObject->dynamicObjects.end(); ++it)
 	{
-		if ((*it)->GetActive())
-			DrawDynamicObjects(*it, cameraCulling);
-	}
-
-	if (iterator->GetActive() && !iterator->GetObjectStatic())
-	{
-		Geometry* currentGeometry = (Geometry*)(iterator)->GetComponent(ComponentType_GEOMETRY);
-		if (currentGeometry)
+		Geometry* currentGeometry = (Geometry*)(*it)->GetComponent(ComponentType_GEOMETRY);
+		if (currentGeometry && (*it)->GetActive())
 		{
-			if(!cameraCulling || App->camera->GetCameraFrustrum().Intersects(*iterator->GetAABB()))
+			if (!cameraCulling || App->camera->GetCameraFrustrum().Intersects(*(*it)->GetAABB()))
 				DrawObject(currentGeometry);
 		}
 	}
