@@ -49,14 +49,6 @@ bool ModuleGeometry::Start()
 	return ret;
 }
 
-
-update_status ModuleGeometry::PreUpdate(float dt)
-{
-	update_status status = UPDATE_CONTINUE;
-
-	return status;
-}
-
 // Load assets
 bool ModuleGeometry::CleanUp()
 {
@@ -336,7 +328,7 @@ GameObject* ModuleGeometry::LoadGameObjectsFromMeshNode(MeshNode node, GameObjec
 GameObject* ModuleGeometry::LoadEmptyGameObjectsFromMeshNode(MeshNode node, GameObject* father)
 {
 	GameObject* newGameObject = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, father, node.name.data());
-	newGameObject->SetTransform(node.transform);
+	newGameObject->ForceTransform(node.transform);
 	newGameObject->SetABB((node.buffer).boundingBox);
 
 
@@ -614,14 +606,7 @@ void ModuleGeometry::UpdateTexture(char* path)
 	}
 }
 
-
-// Update
-update_status ModuleGeometry::Update(float dt)
-{
-	return UPDATE_CONTINUE;
-}
-
-update_status ModuleGeometry::PostUpdate(float dt)
+update_status ModuleGeometry::PostUpdate()
 {
 	//TEMP
 	//----------------------------------------------------------------------------------------------

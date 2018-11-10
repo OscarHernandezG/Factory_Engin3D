@@ -22,9 +22,8 @@ public:
 	~ModuleImGui();
 
 	bool Start();
-	update_status PreUpdate(float dt);
-	update_status Update(float dt);
-	update_status PostUpdate(float dt);
+	update_status PreUpdate();
+	update_status PostUpdate();
 	update_status Save(JSON_Object* object);
 	update_status Load(JSON_Object* object);
 
@@ -42,8 +41,9 @@ public:
 	void CreateConfigWindow(float2 scale);
 	void CreateConsole(float2 scale);
 	void CreateTransform(float2 scale);
-
 	void CreateGameObjectHierarchy(float2 scale);
+	void SetWindowDim(float2 & pos, float2 & size, float2 & scale, bool gameWindow = false);
+	void CreateGameManager(float2 scale);
 
 	void CreateGOTreeNode(GameObject * current);
 
@@ -53,6 +53,7 @@ public:
 	void CreateMenu();
 	bool CreateOptions();
 	void CheckShortCuts();
+	void CreateDebugMenu();
 
 	void CreateAppHeader();
 	void CreateWindowHeader();
@@ -134,12 +135,16 @@ public:
 	float2 transformPos = float2::zero;
 	float2 consolePos = float2::zero;
 	float2 scenePos = float2::zero;
+	float2 playPos = float2::zero;
+	float2 playCountPos = float2::zero;
 	// Window sizes
 	float2 aboutSize = float2::zero;
 	float2 configurationSize = float2::zero;
 	float2 transformSize = float2::zero;
 	float2 consoleSize = float2::zero;
 	float2 sceneSize = float2::zero;
+	float2 playSize = float2::zero;
+	float2 playCountSize = float2::zero;
 	//--------------------------
 };
 #endif // !__ModuleImGui_H__

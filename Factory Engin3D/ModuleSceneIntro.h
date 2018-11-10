@@ -23,12 +23,12 @@ public:
 	~ModuleSceneIntro();
 
 	bool Start();
-	update_status PreUpdate(float dt);
-	update_status Update(float dt);
+	update_status PreUpdate();
+	update_status Update();
 	void GuizmoUpdate();
+	void MoveGO(math::float4x4 &globalMatrix, GameObject * transformObject);
 	void SaveLastTransform(float4x4 matrix);
 	void GetPreviousTransform();
-	update_status PostUpdate(float dt);
 
 	void SetGuizOperation(ImGuizmo::OPERATION operation);
 	ImGuizmo::OPERATION GetGuizOperation() const;
@@ -47,6 +47,8 @@ public:
 	float4x4 lastMat;
 	stack<LastTransform> prevTransforms;
 	bool saveTransform = false;
+	bool isSnap = false;
+	float3 snap = float3::two;
 private:
 	ImGuizmo::OPERATION guizOperation = ImGuizmo::OPERATION::TRANSLATE;
 	ImGuizmo::MODE guizMode = ImGuizmo::MODE::WORLD;

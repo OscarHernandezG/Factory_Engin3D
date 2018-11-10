@@ -16,8 +16,8 @@ public:
 
 	bool Init();
 	bool Start();
-	update_status PreUpdate(float dt);
-	update_status PostUpdate(float dt);
+	update_status PreUpdate();
+	update_status PostUpdate();
 	void DrawQuadtreeObjects(GameObject * iterator);
 	void DrawObject(Component * geometry);
 	void DebugDraw();

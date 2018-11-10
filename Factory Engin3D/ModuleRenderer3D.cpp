@@ -156,7 +156,7 @@ bool ModuleRenderer3D::Start()
 
 
 // PreUpdate: clear buffer
-update_status ModuleRenderer3D::PreUpdate(float dt)
+update_status ModuleRenderer3D::PreUpdate()
 {
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -175,7 +175,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 }
 
 // PostUpdate present buffer to screen
-update_status ModuleRenderer3D::PostUpdate(float dt)
+update_status ModuleRenderer3D::PostUpdate()
 {
 
 	// 1. Draw geometry Camera Culling

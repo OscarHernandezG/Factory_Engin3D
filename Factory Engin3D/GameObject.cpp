@@ -221,6 +221,14 @@ void GameObject::SetTransform(float4x4 trans)
 	}
 }
 
+void GameObject::ForceTransform(float4x4 trans)
+{
+	if (transform)
+	{
+		transform->SetTransform(trans);
+	}
+}
+
 void GameObject::SetPos(float3 pos)
 {
 	float3 movement = float3::zero;
