@@ -44,7 +44,7 @@ bool ModuleImGui::Start()
 	transformPos = float2(955.0f, 315.0f);
 	consolePos = float2(0.0f, 575.0f);
 	scenePos = float2(0.0f, 225.0f);
-	playPos = float2(450.0f, 25.0f);
+	playPos = float2(550.0f, 25.0f);
 	playCountPos = float2(-120.0f, 0.0f);
 	// Window sizes
 	aboutSize = float2(325.0f, 340.0f);
@@ -53,7 +53,7 @@ bool ModuleImGui::Start()
 	consoleSize = float2(355.0f, 287.0f);
 	sceneSize = float2(295.0f, 354.0f);
 	playSize = float2(185.0f, 40.0f);
-	playCountSize = float2(200.0f, 0.0f);
+	playCountSize = float2(205.0f, 0.0f);
 	//--------------------------
 
 	return ret;
@@ -621,12 +621,16 @@ void ModuleImGui::SetWindowDim(float2 &pos, float2 &size, float2 &scale, bool ga
 	float2 realPos = pos.Mul(scale);
 	float2 realSize = size.Mul(scale);
 
-	if (gameWindow && App->time->gameState != GameState_NONE)
+	if (gameWindow)
 	{
-		realSize += playCountSize.Mul(scale);
-		realPos += playCountPos.Mul(scale);
+		if (App->time->gameState != GameState_NONE)
+		{
+			realSize = size + playCountSize;
+			realPos += playCountPos.Mul(scale);
+		}
+		else 
+			realSize = size;
 	}
-
 	ImGui::SetWindowPos({ realPos.x, realPos.y });
 	ImGui::SetWindowSize({ realSize.x, realSize.y });
 }
