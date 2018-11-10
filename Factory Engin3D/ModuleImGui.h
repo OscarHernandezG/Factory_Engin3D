@@ -7,7 +7,6 @@
 #include "imgui-1.65/imgui.h"
 
 #include "parson/parson.h"
-#include "pcg-c-0.94/include/pcg_variants.h"
 
 using namespace std;
 
@@ -108,8 +107,6 @@ public:
 	float brightnessPos = 1.0f;
 	int widthPos = SCREEN_WIDTH;
 	int heightPos = SCREEN_HEIGHT;
-
-	pcg32_random_t rng;
 
 	bool show_demo_window = true;
 	bool show_another_window = false;

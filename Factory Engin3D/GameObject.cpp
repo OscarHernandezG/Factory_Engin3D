@@ -1,5 +1,5 @@
 #include "GameObject.h"
-#include "pcg-c-0.94/extras/entropy.h"
+#include "pcg-c-basic-0.9/pcg_basic.h"
 
 
 GameObject::GameObject(GameObject* father, const char * name)
@@ -132,9 +132,7 @@ void GameObject::RemoveComponent(Component* component)
 
 void GameObject::CreateGameObject(TransformInfo* info)
 {
-	pcg32_srandom_r(&rng, 42u, 54u);
-
-	UID = pcg32_boundedrand_r(&rng, 2147483647);
+	UID = pcg32_random();
 
 	this->transform = (Transform*)AddComponent(ComponentType_TRANSFORM, info);
 }
@@ -345,7 +343,6 @@ void GameObject::SetActive(bool active)
 
 int GameObject::CreateRandomUID()
 {
-	UID = pcg32_boundedrand_r(&rng, UINT_MAX);
-	return UID;
+	return 0;
 }
 

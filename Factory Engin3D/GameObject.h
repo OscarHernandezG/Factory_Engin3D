@@ -7,7 +7,6 @@
 #include <list>
 #include "Transform.h"
 #include "Camera.h"
-#include "pcg-c-0.94/include/pcg_variants.h"
 
 using namespace std;
 
@@ -63,10 +62,10 @@ public:
 
 	void SetActive(bool active);
 
-	inline bool GetActive() { return isActive; }
+	inline const bool GetActive() const { return isActive; }
 	inline bool* GetActiveReference() { return &isActive; }
 
-	inline int GetUID() { return UID; }
+	inline const unsigned int GetUID() const { return UID; }
 
 	int CreateRandomUID();
 
@@ -89,8 +88,6 @@ public:
 private:
 	bool isActive = true;
 	
-	int UID = 0;
-	pcg32_random_t rng;
-
+	uint UID = 0;
 };
 #endif // !__GameObject_H__
