@@ -182,17 +182,17 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	std::vector<GameObject*> drawerGO;
 	if (cameraCulling)//Only draw what camera see
 	{
-		App->sceneIntro->quadtree.GetIntersects(drawerGO, App->camera->GetCameraFrustrum());
+		App->sceneIntro->octree.GetIntersects(drawerGO, App->camera->GetCameraFrustrum());
 
 		for (auto iterator : drawerGO)
-			DrawQuadtreeObjects(iterator);
+			DrawOctreeObjects(iterator);
 
 	}
 	else
 	{//Draw all
-		App->sceneIntro->quadtree.GetGameObjects(drawerGO);
+		App->sceneIntro->octree.GetGameObjects(drawerGO);
 		for (auto iterator : drawerGO)
-			DrawQuadtreeObjects(iterator);
+			DrawOctreeObjects(iterator);
 
 	}
 
@@ -229,7 +229,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	return UPDATE_CONTINUE;
 }
-void ModuleRenderer3D::DrawQuadtreeObjects(GameObject * iterator)
+void ModuleRenderer3D::DrawOctreeObjects(GameObject * iterator)
 {
 	if (iterator->GetActive())
 	{
@@ -342,10 +342,10 @@ math::float4x4 ModuleRenderer3D::Perspective(float fovy, float aspect, float n, 
 
 void ModuleRenderer3D::DebugDraw()
 {
-	std::vector<const QuadtreeNode*> aabb;
-	App->sceneIntro->quadtree.GetBoxLimits(aabb);
-	//Quadtree draw
-	for (vector<const QuadtreeNode*>::const_iterator iterator = aabb.begin(); iterator != aabb.end(); ++iterator)
+	std::vector<const OctreeNode*> aabb;
+	App->sceneIntro->octree.GetBoxLimits(aabb);
+	//Octree draw
+	for (vector<const OctreeNode*>::const_iterator iterator = aabb.begin(); iterator != aabb.end(); ++iterator)
 	{
 		static float3 corners[8];
 		(*iterator)->limits.GetCornerPoints(corners);
@@ -354,8 +354,8 @@ void ModuleRenderer3D::DebugDraw()
 	}
 
 	std::vector<GameObject*> objects;
-	App->sceneIntro->quadtree.GetGameObjects(objects);
-	//Quadtree Objects
+	App->sceneIntro->octree.GetGameObjects(objects);
+	//Octree Objects
 	for (vector<GameObject*>::const_iterator iterator = objects.begin(); iterator != objects.end(); ++iterator)
 	{
 		static float3 corners[8];

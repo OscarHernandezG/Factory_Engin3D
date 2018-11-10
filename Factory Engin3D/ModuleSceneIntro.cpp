@@ -30,7 +30,7 @@ bool ModuleSceneIntro::Start()
 	bool ret = true;
 
 	App->camera->Move(float3(1.0f, 1.0f, 0.0f));
-	quadtree.Create(AABB(float3(-5, 0, -5), float3(5, 5, 5)));
+	octree.Create(AABB(float3(-5, 0, -5), float3(5, 5, 5)));
 
 	ImGuizmo::Enable(true);
 	return ret;
@@ -47,7 +47,7 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 
 	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)//Empty game object
 	{
-		float3 pos = math::float3((rand() % 100 )- 50, rand() % 15, (rand() % 100) - 50);
+		float3 pos = math::float3((rand() % 100 )- 50, (rand() % 100) - 50, (rand() % 100) - 50);
 
 		GameObject* random = App->gameObject->CreateGameObject(pos);
 
@@ -56,7 +56,7 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 
 		random->SetABB(AABB::FromCenterAndSize(center, size));
 
-		quadtree.Insert(random);
+		octree.Insert(random);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
@@ -141,7 +141,7 @@ void ModuleSceneIntro::GuizmoUpdate()
 			default:
 				break;
 			}
-			quadtree.ReDoQuadtree(AABB(), true);
+			octree.ReDoOctree(AABB(), true);
 			saveTransform = true;
 		}
 		else

@@ -12,17 +12,17 @@
 
 class GameObject;
 
-class QuadtreeNode
+class OctreeNode
 {
 public:
-	QuadtreeNode(const AABB& limits);
-	~QuadtreeNode();
+	OctreeNode(const AABB& limits);
+	~OctreeNode();
 
 	void Insert(GameObject* object);
 	bool HasChilds();
 	void Subdivide();
 	void RedistributeChilds();
-	void GetBoxLimits(std::vector<const QuadtreeNode*>& nodes) const;
+	void GetBoxLimits(std::vector<const OctreeNode*>& nodes) const;
 	void GetGameObjects(std::vector<GameObject*>& object) const;
 	template<typename TYPE>
 	void GetIntersects(std::vector<GameObject*>& objects, const TYPE & primitive) const;
@@ -30,21 +30,21 @@ public:
 public:
 	AABB limits;
 	std::list<GameObject*> objectsList;
-	QuadtreeNode* childs[8] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
+	OctreeNode* childs[8] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
 	int subdivisions = 0;
 };
 
-class Quadtree
+class Octree
 {
 public:
-	Quadtree() {};
-	~Quadtree() {};
+	Octree() {};
+	~Octree() {};
 	void Create(const AABB& limits);
 	void Clear();
 	void Insert(GameObject* gameObject);
-	void GetBoxLimits(std::vector<const QuadtreeNode*>& nodes) const;
+	void GetBoxLimits(std::vector<const OctreeNode*>& nodes) const;
 	void GetGameObjects(std::vector<GameObject*>& object) const;
-	void ReDoQuadtree(const AABB & limits = AABB(float3::zero,float3::zero), bool external = false);
+	void ReDoOctree(const AABB & limits = AABB(float3::zero,float3::zero), bool external = false);
 	void ReDoLimits(GameObject * newObject);
 	void UniqueObjects(std::vector<GameObject *> & objects) const;
 	template<typename TYPE>
@@ -52,12 +52,12 @@ public:
 
 public:
 
-	QuadtreeNode* root = nullptr;
+	OctreeNode* root = nullptr;
 
 };
 
 template<typename TYPE>
-inline void Quadtree::GetIntersects(std::vector<GameObject*>& objects, const TYPE & primitive) const
+inline void Octree::GetIntersects(std::vector<GameObject*>& objects, const TYPE & primitive) const
 {
 	if (root != nullptr)
 	{
@@ -67,7 +67,7 @@ inline void Quadtree::GetIntersects(std::vector<GameObject*>& objects, const TYP
 }
 
 template<typename TYPE>
-inline void QuadtreeNode::GetIntersects(std::vector<GameObject*>& objects, const TYPE & primitive) const
+inline void OctreeNode::GetIntersects(std::vector<GameObject*>& objects, const TYPE & primitive) const
 {
 	if (primitive.Intersects(limits))
 	{

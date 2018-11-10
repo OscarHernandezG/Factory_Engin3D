@@ -42,7 +42,7 @@ public:
 	PrimitiveCube* cube = nullptr;
 
 	char* droppedFileDir = nullptr;
-	Quadtree quadtree;
+	Octree octree;
 	
 	float4x4 lastMat;
 	stack<LastTransform> prevTransforms;

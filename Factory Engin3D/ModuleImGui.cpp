@@ -494,14 +494,14 @@ void ModuleImGui::CreateTransform(float2 scale)
 			if (ImGui::InputFloat3("Position", &position[0])) {
 				App->sceneIntro->SaveLastTransform(prevTransformMat);
 				App->geometry->currentGameObject->SetPos(position);
-				App->sceneIntro->quadtree.ReDoQuadtree(AABB(), true);
+				App->sceneIntro->octree.ReDoOctree(AABB(), true);
 			}
 
 			if (ImGui::InputFloat3("Scale", &scale[0]))
 			{
 				App->sceneIntro->SaveLastTransform(prevTransformMat);
 				App->geometry->currentGameObject->SetScale(scale);
-				App->sceneIntro->quadtree.ReDoQuadtree(AABB(), true);
+				App->sceneIntro->octree.ReDoOctree(AABB(), true);
 			}
 			angles = rotate.ToEulerXYZ();
 
@@ -516,7 +516,7 @@ void ModuleImGui::CreateTransform(float2 scale)
 				angles.z = math::DegToRad(angles.z);
 				App->geometry->currentGameObject->SetRotation(Quat::FromEulerXYZ(angles.x, angles.y, angles.z));
 
-				App->sceneIntro->quadtree.ReDoQuadtree(AABB(), true);
+				App->sceneIntro->octree.ReDoOctree(AABB(), true);
 				if (dragRotTransform)
 				{
 					App->sceneIntro->SaveLastTransform(prevTransformMat);
@@ -530,7 +530,7 @@ void ModuleImGui::CreateTransform(float2 scale)
 			{
 				App->sceneIntro->SaveLastTransform(prevTransformMat);
 				App->geometry->currentGameObject->SetIdentity();
-				App->sceneIntro->quadtree.ReDoQuadtree(AABB(), true);
+				App->sceneIntro->octree.ReDoOctree(AABB(), true);
 			}
 
 			if (ImGui::RadioButton("None", App->sceneIntro->GetGuizOperation() == ImGuizmo::BOUNDS))
