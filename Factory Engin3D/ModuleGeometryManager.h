@@ -53,6 +53,8 @@ public:
 
 	void UpdateMesh(char * path);
 
+	void SaveGameObjectJson(GameObject* object, JSON_Object* parent);
+
 	AABB LoadBoundingBox(Buffer<float> vertex);
 
 	float3 CalcBBPos(math::AABB* boundingBox) const;

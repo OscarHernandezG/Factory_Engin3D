@@ -148,8 +148,6 @@ MeshNode ModuleGeometry::LoadMeshNode(const aiScene* scene, aiNode* node, char* 
 {
 	MeshNode meshNode;
 
-	meshNode.name = node->mName.C_Str();
-
 	if (node->mNumMeshes > 0)
 	{
 		MeshNode currMeshBuff = LoadMeshBuffer(scene, node->mMeshes[0], path);
@@ -161,6 +159,7 @@ MeshNode ModuleGeometry::LoadMeshNode(const aiScene* scene, aiNode* node, char* 
 	}
 	
 	meshNode.transform = AiNatrixToFloatMat(node->mTransformation);
+	meshNode.name = node->mName.C_Str();
 
 	nodes.push_back(meshNode);
 
@@ -312,7 +311,6 @@ GameObject* ModuleGeometry::LoadGameObjectsFromMeshNode(MeshNode node, GameObjec
 	vector<MeshBuffer*>::iterator currentMeshBuffer;
 	for (currentMeshBuffer = loadedMeshes.begin(); currentMeshBuffer != loadedMeshes.end(); ++currentMeshBuffer)
 	{
-		LOG("%i", (*currentMeshBuffer)->id);
 		if ((*currentMeshBuffer)->id == node.id)
 		{
 			Mesh* currMesh = new Mesh(newGameObject);
@@ -357,7 +355,7 @@ GameObject* ModuleGeometry::LoadEmptyGameObjectsFromMeshNode(MeshNode node, Game
 
 	for (list<MeshNode>::iterator childs = node.childs.begin(); childs != node.childs.end(); ++childs)
 	{
-		LoadGameObjectsFromMeshNode(*childs, newGameObject);
+		LoadEmptyGameObjectsFromMeshNode(*childs, newGameObject);
 	}
 	return newGameObject;
 }
@@ -374,7 +372,17 @@ void ModuleGeometry::UpdateMesh(char* path)
 	// Save scene in json and use the info to load the new gameObject
 	// TODO: check the UUID from the gameobject, we have to save the uuid in the scene file (components too?)
 	//std::sort(loadedMeshes.begin(), loadedMeshes.end());
+	JSON_Value* rootValue = json_value_init_object();
+	JSON_Object* rootObject = json_value_get_object(rootValue);
 
+	SaveGameObjectJson(tempGO, rootObject);
+
+	int sizeBuf = json_serialization_size_pretty(rootValue);
+	char* buf = new char[sizeBuf];
+	json_serialize_to_buffer_pretty(rootValue, buf, sizeBuf);
+	App->importer->SaveFile("tempGO", sizeBuf, buf, LlibraryType::LlibraryType_MESH);
+	delete[] buf;
+	json_value_free(rootValue);
 
 	sort(nodes.begin(), nodes.end());
 	nodes.erase(unique(nodes.begin(), nodes.end()), nodes.end());
@@ -387,6 +395,64 @@ void ModuleGeometry::UpdateMesh(char* path)
 	currentGameObject = newGameObject;
 	bHouse = newGameObject;
 
+}
+
+void ModuleGeometry::SaveGameObjectJson(GameObject* object, JSON_Object* parent)
+{
+	JSON_Value* newValue = json_value_init_object();
+	JSON_Object* objGO = json_value_get_object(newValue);
+
+	json_object_set_value(parent, object->name.data() , newValue);
+
+	json_object_set_number(objGO, "UUID", object->GetUID());
+
+	// Position
+	//------------------------------------------------------------------------
+	JSON_Value* position = json_value_init_object();
+	JSON_Object* positionObj = json_value_get_object(position);
+
+	json_object_set_value(objGO, "Position", position);
+
+	float3 pos = object->GetPos();
+
+	json_object_set_number(positionObj, "X", pos.x);
+	json_object_set_number(positionObj, "Y", pos.y);
+	json_object_set_number(positionObj, "Z", pos.z);
+	
+	// Scale
+	//------------------------------------------------------------------------
+	JSON_Value* scale = json_value_init_object();
+	JSON_Object* scalenObj = json_value_get_object(scale);
+
+	json_object_set_value(objGO, "Scale", scale);
+
+	float3 size = object->GetScale();
+
+	json_object_set_number(scalenObj, "X", size.x);
+	json_object_set_number(scalenObj, "Y", size.y);
+	json_object_set_number(scalenObj, "Z", size.z);
+
+	// Rotation
+	//------------------------------------------------------------------------
+	JSON_Value* rotation = json_value_init_object();
+	JSON_Object* rotationObj = json_value_get_object(rotation);
+
+	json_object_set_value(objGO, "Rotation", rotation);
+
+	Quat rot = object->GetRotation();
+
+	json_object_set_number(rotationObj, "X", rot.x);
+	json_object_set_number(rotationObj, "Y", rot.y);
+	json_object_set_number(rotationObj, "Z", rot.z);
+	json_object_set_number(rotationObj, "W", rot.w);
+	//------------------------------------------------------------------------
+
+	json_object_set_number(objGO, "isActive", object->GetActive());
+
+	for (list<GameObject*>::iterator iterator = object->childs.begin(); iterator != object->childs.end(); ++iterator)
+	{
+		SaveGameObjectJson(*iterator, objGO);
+	}
 }
 
 AABB ModuleGeometry::LoadBoundingBox(Buffer<float> vertex)
