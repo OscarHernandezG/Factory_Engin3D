@@ -1,5 +1,7 @@
 #include "Application.h"
 #include "parson/parson.h"
+#include "pcg-c-basic-0.9/pcg_basic.h"
+#include <time.h>
 
 Application::Application()
 {
@@ -78,6 +80,8 @@ bool Application::Init()
 		item++;
 	}
 	
+	pcg32_srandom(::time(NULL) ^ (intptr_t)&printf, 54u);
+
 	ms_timer.Start();
 	return ret;
 }
