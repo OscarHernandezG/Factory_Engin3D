@@ -20,6 +20,7 @@ bool ModuleImporter::Init()
 	CreateDirectory("Llibrary",NULL);
 	CreateDirectory("Llibrary/Meshes", NULL);
 	CreateDirectory("Llibrary/Textures", NULL);
+	CreateDirectory("Llibrary/Scenes", NULL);
 
 	return true;
 }
@@ -73,6 +74,9 @@ string ModuleImporter::GetDirectionName(const char* path, LlibraryType type, int
 		break;
 	case LlibraryType_MATERIAL:
 		break;
+	case LlibraryType_SCENE:
+		SceneDirection(filePath, goodFile);
+		break;
 	default:
 		break;
 	}
@@ -100,4 +104,17 @@ void ModuleImporter::MeshDirection(std::string &filePath, std::string &goodFile,
 	goodFile += filePath.substr(initialPos, (finalPos - initialPos));
 	goodFile += to_string(number);
 	goodFile += ".fty";
+}
+
+void ModuleImporter::SceneDirection(std::string &filePath, std::string &goodFile)
+{
+	goodFile += "Scenes/";
+
+	uint initialPos = filePath.find_last_of("\\") + 1;
+	uint finalPos = filePath.find_last_of(".");
+
+	goodFile += filePath.substr(initialPos, (finalPos - initialPos));
+	goodFile += ".json";
+	// TODO .json to .scene
+	// Now in .json to improve 
 }
