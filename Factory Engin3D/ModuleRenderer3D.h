@@ -19,6 +19,8 @@ public:
 	update_status PreUpdate(float dt);
 	update_status PostUpdate(float dt);
 	void DrawOctreeObjects(GameObject * iterator);
+	update_status PreUpdate();
+	update_status PostUpdate();
 	void DrawObject(Component * geometry);
 	void DebugDraw();
 	bool CleanUp();

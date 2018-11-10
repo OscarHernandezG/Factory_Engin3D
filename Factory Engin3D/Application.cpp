@@ -78,48 +78,25 @@ bool Application::Init()
 		item++;
 	}
 	
-	ms_timer.Start();
 	return ret;
 }
 
 // ---------------------------------------------
 void Application::PrepareUpdate()
 {
-	dt = (float)ms_timer.Read() / 1000.0f;
-	ms_timer.Start();
-
-	fpsLog.push_back(1 / dt);
-
-	if(fpsLog.size() > 75)
-	{
-		fpsLog.erase(fpsLog.begin());
-	}
-
-	msLog.push_back(dt * 1000);
-
-	if (msLog.size() > 75)
-	{
-		msLog.erase(msLog.begin());
-	}
 }
 
 // ---------------------------------------------
 void Application::FinishUpdate()
 {
-	//if (!isMaximized)
-	//{
-	//	App->window->SetMaximize();
-	//	isMaximized = true;
-	//}
-
 	if (!renderer3D->vsync && toCap) {
-		float toVsync = dt;
+		float toVsync = App->time->Getdt();
 	
 		if (capFrames > 0)
 			toVsync = 1000 / capFrames;
 	
-		if (dt < toVsync)
-			SDL_Delay(toVsync - dt);
+		if (App->time->Getdt() < toVsync)
+			SDL_Delay(toVsync - App->time->Getdt());
 	}
 }
 
@@ -133,7 +110,7 @@ update_status Application::Update()
 
 	while (item != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
-		ret = (*item)->PreUpdate(dt);
+		ret = (*item)->PreUpdate();
 		item++;
 	}
 
@@ -141,7 +118,7 @@ update_status Application::Update()
 
 	while (item != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
-		ret = (*item)->Update(dt);
+		ret = (*item)->Update();
 		item++;
 	}
 
@@ -149,7 +126,7 @@ update_status Application::Update()
 
 	while (item != list_modules.end() && ret == UPDATE_CONTINUE)
 	{
-		ret = (*item)->PostUpdate(dt);
+		ret = (*item)->PostUpdate();
 		item++;
 	}
 

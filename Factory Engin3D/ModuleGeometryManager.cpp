@@ -49,14 +49,6 @@ bool ModuleGeometry::Start()
 	return ret;
 }
 
-
-update_status ModuleGeometry::PreUpdate(float dt)
-{
-	update_status status = UPDATE_CONTINUE;
-
-	return status;
-}
-
 // Load assets
 bool ModuleGeometry::CleanUp()
 {
@@ -506,14 +498,7 @@ void ModuleGeometry::UpdateTexture(char* path)
 	}
 }
 
-
-// Update
-update_status ModuleGeometry::Update(float dt)
-{
-	return UPDATE_CONTINUE;
-}
-
-update_status ModuleGeometry::PostUpdate(float dt)
+update_status ModuleGeometry::PostUpdate()
 {
 	//TEMP
 	//----------------------------------------------------------------------------------------------

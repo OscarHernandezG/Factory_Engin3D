@@ -12,7 +12,7 @@ public:
 
 	bool Start();
 	bool CleanUp();
-	update_status Update(float dt);
+	update_status Update();
 
 	bool CheckMeshTri(Geometry * geometry, LineSegment & rayTransformed, float & smallerDist);
 

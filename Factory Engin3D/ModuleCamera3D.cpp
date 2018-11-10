@@ -41,9 +41,9 @@ bool ModuleCamera3D::CleanUp()
 }
 
 // -----------------------------------------------------------------
-update_status ModuleCamera3D::Update(float dt)
+update_status ModuleCamera3D::Update()
 {
-	float speed = cameraSpeed * dt;
+	float speed = cameraSpeed * App->time->Getdt();
 
 	if (!App->gui->IsAnyWindowHovered())
 	{
@@ -115,7 +115,7 @@ update_status ModuleCamera3D::Update(float dt)
 				float motion = App->input->GetMouseXMotion() + App->input->GetMouseYMotion();
 				if (motion != 0)
 				{
-					cameraComponent->frustum.pos += cameraComponent->frustum.front * motion * dt;
+					cameraComponent->frustum.pos += cameraComponent->frustum.front * motion * App->time->Getdt();
 				}
 			}
 		}

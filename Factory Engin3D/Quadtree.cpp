@@ -169,7 +169,7 @@ void Octree::Clear()
 
 void Octree::Insert(GameObject * gameObject)
 {
-	if (root != nullptr)
+	if (root != nullptr && gameObject->transform->boundingBox.IsFinite())
 	{
 		if (root->limits.Contains(gameObject->transform->boundingBox))
 			root->Insert(gameObject);

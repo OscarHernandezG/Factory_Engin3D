@@ -44,18 +44,22 @@ bool ModuleImGui::Start()
 	transformPos = float2(955.0f, 315.0f);
 	consolePos = float2(0.0f, 575.0f);
 	scenePos = float2(0.0f, 225.0f);
+	playPos = float2(450.0f, 25.0f);
+	playCountPos = float2(-120.0f, 0.0f);
 	// Window sizes
 	aboutSize = float2(325.0f, 340.0f);
 	configurationSize = float2(600.0f, 287.0f);
 	transformSize = float2(325.0f, 206.0f);
 	consoleSize = float2(355.0f, 287.0f);
 	sceneSize = float2(295.0f, 354.0f);
+	playSize = float2(185.0f, 40.0f);
+	playCountSize = float2(200.0f, 0.0f);
 	//--------------------------
 
 	return ret;
 }
 
-update_status ModuleImGui::PreUpdate(float dt)
+update_status ModuleImGui::PreUpdate()
 {
 	update_status status = UPDATE_CONTINUE;
 
@@ -97,6 +101,8 @@ update_status ModuleImGui::PreUpdate(float dt)
 	if (hierarchyWindow)
 		CreateGameObjectHierarchy(scale);
 
+	CreateGameManager(scale);
+
 	status = CreateMainMenuBar();
 
 	created = true;
@@ -112,13 +118,7 @@ bool ModuleImGui::CleanUp()
 	return true;
 }
 
-// Update
-update_status ModuleImGui::Update(float dt)
-{
-	return UPDATE_CONTINUE;
-}
-
-update_status ModuleImGui::PostUpdate(float dt)
+update_status ModuleImGui::PostUpdate()
 {
 
 	PROCESS_MEMORY_COUNTERS counters;
@@ -294,13 +294,9 @@ void ModuleImGui::CreateRandomNumberWindow()
 
 void ModuleImGui::CreateAboutWindow(float2 scale)
 {
-	float2 realPos = aboutPos.Mul(scale);
-	float2 realSize = aboutSize.Mul(scale);
-
 	ImGui::Begin("About", &aboutWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
-
-	ImGui::SetWindowPos({ realPos.x, realPos.y });
-	ImGui::SetWindowSize({ realSize.x, realSize.y });
+	
+	SetWindowDim(aboutPos, aboutSize, scale);
 
 	ImGui::Text("Factory Engin3D");
 	ImGui::Separator();
@@ -383,13 +379,9 @@ void ModuleImGui::CreateAboutWindow(float2 scale)
 
 void ModuleImGui::CreateConfigWindow(float2 scale)
 {
-	float2 realPos = configurationPos.Mul(scale);
-	float2 realSize = configurationSize.Mul(scale);
-
 	ImGui::Begin("Configuration", &configurationWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 
-	ImGui::SetWindowPos({ realPos.x, realPos.y });
-	ImGui::SetWindowSize({ realSize.x, realSize.y });
+	SetWindowDim(configurationPos, configurationSize, scale);
 
 	if (ImGui::CollapsingHeader("Application"))
 	{
@@ -425,6 +417,7 @@ void ModuleImGui::CreateConfigWindow(float2 scale)
 	{
 		CreateHardwareHeader();
 	}
+
 	ImGui::End();
 
 	if (warningDialoge)
@@ -443,13 +436,9 @@ void ModuleImGui::CreateConfigWindow(float2 scale)
 
 void ModuleImGui::CreateConsole(float2 scale)
 {
-	float2 realPos = consolePos.Mul(scale);
-	float2 realSize = consoleSize.Mul(scale);
-
 	ImGui::Begin("Console", &consoleWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
-	
-	ImGui::SetWindowPos({ realPos.x, realPos.y });
-	ImGui::SetWindowSize({ realSize.x, realSize.y });
+
+	SetWindowDim(consolePos, consoleSize, scale);
 
 	if (ImGui::Button("Clear", ImVec2(400, 20)))
 		textBuff.clear();
@@ -465,13 +454,9 @@ void ModuleImGui::CreateConsole(float2 scale)
 
 void ModuleImGui::CreateTransform(float2 scale)
 {
-	float2 realPos = transformPos.Mul(scale);
-	float2 realSize = transformSize.Mul(scale);
-
 	ImGui::Begin("Transform", &transformWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 
-	ImGui::SetWindowPos({ realPos.x, realPos.y });
-	ImGui::SetWindowSize({ realSize.x, realSize.y });
+	SetWindowDim(transformPos, transformSize, scale);
 
 	if (App->geometry->currentGameObject != nullptr)
 	{
@@ -554,13 +539,10 @@ void ModuleImGui::CreateTransform(float2 scale)
 
 void ModuleImGui::CreateGameObjectHierarchy(float2 scale)
 {
-	float2 realPos = scenePos.Mul(scale);
-	float2 realSize = sceneSize.Mul(scale);
 
-	ImGui::Begin("Scene", &hierarchyWindow);
+	ImGui::Begin("Scene", &hierarchyWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 
-	ImGui::SetWindowPos({ realPos.x, realPos.y });
-	ImGui::SetWindowSize({ realSize.x, realSize.y });
+	SetWindowDim(scenePos, sceneSize, scale);
 
 	if (App->gameObject->root)
 	{
@@ -568,6 +550,68 @@ void ModuleImGui::CreateGameObjectHierarchy(float2 scale)
 	}
 	ImGui::End();
 
+}
+
+void ModuleImGui::CreateGameManager(float2 scale)
+{
+	ImGui::Begin("", &canScroll, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+
+	SetWindowDim(playPos, playSize, scale, true);
+
+	if (ImGui::Button("Play", { 50,25 }))
+	{
+		if (App->time->gameState == GameState_NONE)
+			App->time->gameState = GameState_PLAYING;
+		else
+			App->time->gameState = GameState_STOP;
+	}
+	ImGui::SameLine();
+
+	if (ImGui::Button("Pause", { 50,25 }))
+	{
+		if (App->time->gameState == GameState_PLAYING)
+			App->time->gameState = GameState_PAUSE;
+		else
+			App->time->gameState = GameState_PLAYING;
+	}
+	ImGui::SameLine();
+
+	if (ImGui::Button("Tick", { 50,25 }))
+		App->time->gameState = GameState_TICK;
+	
+
+	if (App->time->gameState != GameState_NONE)
+	{
+		float scale = App->time->GetGameScale();
+		ImGui::SameLine(); 
+		ImGui::PushItemWidth(50.0f);
+		ImGui::SetCursorPos({ ImGui::GetCursorPosX(), 10 });
+		if (ImGui::SliderFloat("Game Time: ", &scale,0.0f,2.0f,"%.2f"))
+		{
+			App->time->SetScaleGame(scale);
+		}
+		ImGui::SameLine();
+		string gameCount = to_string(App->time->GetGameTimer());
+		ImGui::Text(gameCount.data());
+	}
+
+	ImGui::End();
+
+}
+
+void ModuleImGui::SetWindowDim(float2 &pos, float2 &size, float2 &scale, bool gameWindow)
+{
+	float2 realPos = pos.Mul(scale);
+	float2 realSize = size.Mul(scale);
+
+	if (gameWindow && App->time->gameState != GameState_NONE)
+	{
+		realSize += playCountSize.Mul(scale);
+		realPos += playCountPos.Mul(scale);
+	}
+
+	ImGui::SetWindowPos({ realPos.x, realPos.y });
+	ImGui::SetWindowSize({ realSize.x, realSize.y });
 }
 
 void ModuleImGui::CreateGOTreeNode(GameObject* current)
@@ -601,14 +645,14 @@ void ModuleImGui::CreateGOTreeNode(GameObject* current)
 	}
 }
 
-
-
 update_status ModuleImGui::CreateMainMenuBar()
 {
 	update_status ret = UPDATE_CONTINUE;
 	if (ImGui::BeginMainMenuBar())
 	{
 		CreateMenu();
+
+		CreateDebugMenu();
 
 		CheckShortCuts();
 
@@ -716,6 +760,23 @@ void ModuleImGui::CheckShortCuts()
 			showDemoWindow = exampleWindow = mathGeoLibWindow = randomNumberWindow = aboutWindow = configurationWindow = consoleWindow = transformWindow = hierarchyWindow = false;
 	}
 }
+
+void ModuleImGui::CreateDebugMenu()
+{
+	if (ImGui::BeginMenu("Debug"))
+	{
+
+		if (ImGui::MenuItem("AABB & quadtree", "1", App->renderer3D->debugQuad))
+			App->renderer3D->debugQuad = !App->renderer3D->debugQuad;
+
+		ImGui::MenuItem("Create empty object", "2");
+
+		if (ImGui::MenuItem("Camera culling", "3", App->renderer3D->cameraCulling))
+			App->renderer3D->cameraCulling = !App->renderer3D->cameraCulling;
+
+		ImGui::EndMenu();
+	}
+}
 //Create Menu-------------------------------------------------------------
 
 
@@ -734,11 +795,11 @@ void ModuleImGui::CreateAppHeader()
 
 	char graphTitle[25];
 
-	sprintf_s(graphTitle, 25, "Framerate %.1f", App->fpsLog[App->fpsLog.size() - 1]);
-	ImGui::PlotHistogram("##Framerate", &App->fpsLog[0], App->fpsLog.size(), 0, graphTitle, 0.0f, 150.0f, ImVec2(310, 100));
+	sprintf_s(graphTitle, 25, "Framerate %.1f", App->time->fpsLog[App->time->fpsLog.size() - 1]);
+	ImGui::PlotHistogram("##Framerate", &App->time->fpsLog[0], App->time->fpsLog.size(), 0, graphTitle, 0.0f, 150.0f, ImVec2(310, 100));
 
-	sprintf_s(graphTitle, 25, "Milliseconds %.1f", App->msLog[App->msLog.size() - 1]);
-	ImGui::PlotHistogram("##Milliseconds", &App->msLog[0], App->msLog.size(), 0, graphTitle, 0.0f, 40.0f, ImVec2(310, 100));
+	sprintf_s(graphTitle, 25, "Milliseconds %.1f", App->time->msLog[App->time->msLog.size() - 1]);
+	ImGui::PlotHistogram("##Milliseconds", &App->time->msLog[0], App->time->msLog.size(), 0, graphTitle, 0.0f, 40.0f, ImVec2(310, 100));
 
 	sprintf_s(graphTitle, 25, "RAM Usage %.1f", ramLog[ramLog.size() - 1]);
 	ImGui::PlotHistogram("##RAM", &ramLog[0], ramLog.size(), 0, graphTitle, 0.0f, 125.0f, ImVec2(310, 100));
