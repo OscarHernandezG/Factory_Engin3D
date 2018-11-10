@@ -134,6 +134,8 @@ void GameObject::CreateGameObject(TransformInfo* info)
 {
 	pcg32_srandom_r(&rng, 42u, 54u);
 
+	UID = pcg32_boundedrand_r(&rng, 2147483647);
+
 	this->transform = (Transform*)AddComponent(ComponentType_TRANSFORM, info);
 }
 

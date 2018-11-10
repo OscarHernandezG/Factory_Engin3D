@@ -66,7 +66,7 @@ public:
 	inline bool GetActive() { return isActive; }
 	inline bool* GetActiveReference() { return &isActive; }
 
-
+	inline int GetUID() { return UID; }
 
 	int CreateRandomUID();
 
