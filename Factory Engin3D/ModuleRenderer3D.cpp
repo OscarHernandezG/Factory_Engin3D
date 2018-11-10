@@ -186,16 +186,17 @@ update_status ModuleRenderer3D::PostUpdate()
 
 		for (auto iterator : drawerGO)
 			DrawOctreeObjects(iterator);
-
 	}
 	else
 	{//Draw all
 		App->sceneIntro->octree.GetGameObjects(drawerGO);
 		for (auto iterator : drawerGO)
 			DrawOctreeObjects(iterator);
-
-		//TODO: Have to draw Dynamic objects
 	}
+
+	//Draw Dynamic objects
+	if(App->gameObject->root)
+		DrawDynamicObjects(App->gameObject->root, cameraCulling);
 
 	// 2. Debug geometry
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -234,18 +235,27 @@ void ModuleRenderer3D::DrawOctreeObjects(GameObject * iterator)
 {
 	if (iterator->GetActive())
 	{
-		for (list<GameObject*>::iterator it = iterator->childs.begin(); it != iterator->childs.end(); ++it)
-		{
-			if ((*it)->GetActive())
-			{
-				Geometry* currentGeometry = (Geometry*)(*it)->GetComponent(ComponentType_GEOMETRY);
-				if (currentGeometry)
-					DrawObject(currentGeometry);
-			}
-		}
 		Geometry* currentGeometry = (Geometry*)(iterator)->GetComponent(ComponentType_GEOMETRY);
 		if (currentGeometry)
 			DrawObject(currentGeometry);
+	}
+}
+void ModuleRenderer3D::DrawDynamicObjects(GameObject * iterator, bool cameraCulling)
+{
+	for (list<GameObject*>::iterator it = iterator->childs.begin(); it != iterator->childs.end(); ++it)
+	{
+		if ((*it)->GetActive())
+			DrawDynamicObjects(*it, cameraCulling);
+	}
+
+	if (iterator->GetActive() && !iterator->GetObjectStatic())
+	{
+		Geometry* currentGeometry = (Geometry*)(iterator)->GetComponent(ComponentType_GEOMETRY);
+		if (currentGeometry)
+		{
+			if(!cameraCulling || App->camera->GetCameraFrustrum().Intersects(*iterator->GetAABB()))
+				DrawObject(currentGeometry);
+		}
 	}
 }
 void ModuleRenderer3D::DrawObject(Component * geometry)
@@ -353,6 +363,11 @@ void ModuleRenderer3D::DebugDraw()
 
 		DrawQuad(corners, Orange);
 	}
+
+	//Frustum draw
+	/*static float3 corners[8];
+	App->camera->GetCameraFrustrum().GetCornerPoints(corners);
+	DrawQuad(corners, Blue);*/
 
 	std::vector<GameObject*> objects;
 	App->sceneIntro->octree.GetGameObjects(objects);
