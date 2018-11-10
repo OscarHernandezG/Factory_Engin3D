@@ -1,4 +1,5 @@
 #pragma once
+#include "parson/parson.h"
 
 class GameObject;
 
@@ -29,6 +30,8 @@ public:
 	virtual void Update(float dt) {}
 
 	inline void SetActive(bool isActive) { this->isActive = isActive; }
+
+	virtual void SaveComponent(JSON_Object* parent) {}
 
 public:
 	ComponentType type = ComponentType_NONE;
