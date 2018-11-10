@@ -85,6 +85,8 @@ update_status ModuleSceneIntro::PreUpdate()
 
 		isSnap = true;
 	}
+	else if(isSnap)
+		isSnap = false;
 
 	return status;
 }

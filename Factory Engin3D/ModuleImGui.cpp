@@ -44,7 +44,8 @@ bool ModuleImGui::Start()
 	transformPos = float2(955.0f, 315.0f);
 	consolePos = float2(0.0f, 575.0f);
 	scenePos = float2(0.0f, 225.0f);
-	playPos = float2(547.0f, 25.0f);
+	playPos = float2(450.0f, 25.0f);
+	playCountPos = float2(-120.0f, 0.0f);
 	// Window sizes
 	aboutSize = float2(325.0f, 340.0f);
 	configurationSize = float2(600.0f, 287.0f);
@@ -52,6 +53,7 @@ bool ModuleImGui::Start()
 	consoleSize = float2(355.0f, 287.0f);
 	sceneSize = float2(295.0f, 354.0f);
 	playSize = float2(185.0f, 40.0f);
+	playCountSize = float2(200.0f, 0.0f);
 	//--------------------------
 
 	return ret;
@@ -292,13 +294,9 @@ void ModuleImGui::CreateRandomNumberWindow()
 
 void ModuleImGui::CreateAboutWindow(float2 scale)
 {
-	float2 realPos = aboutPos.Mul(scale);
-	float2 realSize = aboutSize.Mul(scale);
-
 	ImGui::Begin("About", &aboutWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
-
-	ImGui::SetWindowPos({ realPos.x, realPos.y });
-	ImGui::SetWindowSize({ realSize.x, realSize.y });
+	
+	SetWindowDim(aboutPos, aboutSize, scale);
 
 	ImGui::Text("Factory Engin3D");
 	ImGui::Separator();
@@ -381,13 +379,9 @@ void ModuleImGui::CreateAboutWindow(float2 scale)
 
 void ModuleImGui::CreateConfigWindow(float2 scale)
 {
-	float2 realPos = configurationPos.Mul(scale);
-	float2 realSize = configurationSize.Mul(scale);
-
 	ImGui::Begin("Configuration", &configurationWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 
-	ImGui::SetWindowPos({ realPos.x, realPos.y });
-	ImGui::SetWindowSize({ realSize.x, realSize.y });
+	SetWindowDim(configurationPos, configurationSize, scale);
 
 	if (ImGui::CollapsingHeader("Application"))
 	{
@@ -442,13 +436,9 @@ void ModuleImGui::CreateConfigWindow(float2 scale)
 
 void ModuleImGui::CreateConsole(float2 scale)
 {
-	float2 realPos = consolePos.Mul(scale);
-	float2 realSize = consoleSize.Mul(scale);
-
 	ImGui::Begin("Console", &consoleWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
-	
-	ImGui::SetWindowPos({ realPos.x, realPos.y });
-	ImGui::SetWindowSize({ realSize.x, realSize.y });
+
+	SetWindowDim(consolePos, consoleSize, scale);
 
 	if (ImGui::Button("Clear", ImVec2(400, 20)))
 		textBuff.clear();
@@ -464,13 +454,9 @@ void ModuleImGui::CreateConsole(float2 scale)
 
 void ModuleImGui::CreateTransform(float2 scale)
 {
-	float2 realPos = transformPos.Mul(scale);
-	float2 realSize = transformSize.Mul(scale);
-
 	ImGui::Begin("Transform", &transformWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 
-	ImGui::SetWindowPos({ realPos.x, realPos.y });
-	ImGui::SetWindowSize({ realSize.x, realSize.y });
+	SetWindowDim(transformPos, transformSize, scale);
 
 	if (App->geometry->currentGameObject != nullptr)
 	{
@@ -553,13 +539,10 @@ void ModuleImGui::CreateTransform(float2 scale)
 
 void ModuleImGui::CreateGameObjectHierarchy(float2 scale)
 {
-	float2 realPos = scenePos.Mul(scale);
-	float2 realSize = sceneSize.Mul(scale);
 
-	ImGui::Begin("Scene", &hierarchyWindow);
+	ImGui::Begin("Scene", &hierarchyWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 
-	ImGui::SetWindowPos({ realPos.x, realPos.y });
-	ImGui::SetWindowSize({ realSize.x, realSize.y });
+	SetWindowDim(scenePos, sceneSize, scale);
 
 	if (App->gameObject->root)
 	{
@@ -571,13 +554,9 @@ void ModuleImGui::CreateGameObjectHierarchy(float2 scale)
 
 void ModuleImGui::CreateGameManager(float2 scale)
 {
-	float2 realPos = playPos.Mul(scale);
-	float2 realSize = playSize.Mul(scale);
-	bool canShow = true;
-	ImGui::Begin("", &canScroll, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar);
+	ImGui::Begin("", &canScroll, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 
-	ImGui::SetWindowPos({ playPos.x, playPos.y });
-	ImGui::SetWindowSize({ playSize.x, playSize.y });
+	SetWindowDim(playPos, playSize, scale, true);
 
 	if (ImGui::Button("Play", { 50,25 }))
 	{
@@ -589,16 +568,50 @@ void ModuleImGui::CreateGameManager(float2 scale)
 	ImGui::SameLine();
 
 	if (ImGui::Button("Pause", { 50,25 }))
+	{
 		if (App->time->gameState == GameState_PLAYING)
 			App->time->gameState = GameState_PAUSE;
-
+		else
+			App->time->gameState = GameState_PLAYING;
+	}
 	ImGui::SameLine();
 
 	if (ImGui::Button("Tick", { 50,25 }))
 		App->time->gameState = GameState_TICK;
 	
+
+	if (App->time->gameState != GameState_NONE)
+	{
+		float scale = App->time->GetGameScale();
+		ImGui::SameLine(); 
+		ImGui::PushItemWidth(50.0f);
+		ImGui::SetCursorPos({ ImGui::GetCursorPosX(), 10 });
+		if (ImGui::SliderFloat("Game Time: ", &scale,0.0f,2.0f,"%.2f"))
+		{
+			App->time->SetScaleGame(scale);
+		}
+		ImGui::SameLine();
+		string gameCount = to_string(App->time->GetGameTimer());
+		ImGui::Text(gameCount.data());
+	}
+
 	ImGui::End();
 
+}
+
+void ModuleImGui::SetWindowDim(float2 &pos, float2 &size, float2 &scale, bool gameWindow)
+{
+	float2 realPos = pos.Mul(scale);
+	float2 realSize = size.Mul(scale);
+
+	if (gameWindow && App->time->gameState != GameState_NONE)
+	{
+		realSize += playCountSize.Mul(scale);
+		realPos += playCountPos.Mul(scale);
+	}
+
+	ImGui::SetWindowPos({ realPos.x, realPos.y });
+	ImGui::SetWindowSize({ realSize.x, realSize.y });
 }
 
 void ModuleImGui::CreateGOTreeNode(GameObject* current)

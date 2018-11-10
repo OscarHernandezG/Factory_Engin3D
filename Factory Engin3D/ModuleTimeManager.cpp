@@ -72,6 +72,7 @@ update_status ModuleTimeManager::PreUpdate()
 			gameState = GameState_PAUSE;
 			oneFrame = false;
 		}
+		gameTimer += dtGame;
 		break;
 	default:
 		break;
@@ -127,7 +128,7 @@ float ModuleTimeManager::GetdtGame() const
 {
 	return dtGame;
 }
-float ModuleTimeManager::GetdtGameScale() const
+float ModuleTimeManager::GetGameScale() const
 {
 	return dtGameScale;
 }

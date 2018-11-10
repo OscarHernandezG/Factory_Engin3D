@@ -38,7 +38,7 @@ public:
 	float GetStartGame() const;
 
 	float GetdtGame() const;
-	float GetdtGameScale() const;
+	float GetGameScale() const;
 	float GetGameTimer() const;
 
 	update_status Save(JSON_Object * object);
