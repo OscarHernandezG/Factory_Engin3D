@@ -67,6 +67,8 @@ public:
 	const float4x4	GetMatrixOGL() const;
 	const float4x4	GetMatrix() const;
 
+	const float4x4 GetGlobalMatrix() const;
+
 public:
 
 	float3 position = float3::zero;

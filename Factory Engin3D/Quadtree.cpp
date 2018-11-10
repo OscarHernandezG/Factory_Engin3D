@@ -21,7 +21,7 @@ QuadtreeNode::~QuadtreeNode()
 void QuadtreeNode::Insert(GameObject* object)
 {
 
-	if (objectsList.size() < MAX_NODE_ELEMENTS && !HasChilds())
+	if (objectsList.size() < MAX_NODE_ELEMENTS && !HasChilds() || subdivisions >= 5)
 		objectsList.push_back(object);
 
 	else
@@ -90,6 +90,10 @@ void QuadtreeNode::Subdivide()
 	childBox.maxPoint = { limits.CenterPoint().x, limits.MaxY(), limits.CenterPoint().z };
 	childs[7] = new QuadtreeNode(childBox);
 
+	for (int i = 0; i < 8; ++i)
+	{
+		childs[i]->subdivisions = subdivisions + 1;
+	}
 }
 
 void QuadtreeNode::RedistributeChilds()
@@ -242,7 +246,10 @@ void Quadtree::ReDoLimits(GameObject* newObject)
 
 void Quadtree::UniqueObjects(std::vector<GameObject *> & objects) const
 {
-	std::sort(objects.begin(), objects.end()); //all equals objects together
-	objects.erase(std::unique(objects.begin(), objects.end()), objects.end()); 
-	//erase corrupt objects after unique(that returns the new last object position)
+	if (!objects.empty())
+	{
+		std::sort(objects.begin(), objects.end()); //all equals objects together
+		objects.erase(std::unique(objects.begin(), objects.end()), objects.end());
+		//erase corrupt objects after unique(that returns the new last object position)
+	}
 }

@@ -47,6 +47,8 @@ public:
 	float4x4 lastMat;
 	stack<LastTransform> prevTransforms;
 	bool saveTransform = false;
+	bool isSnap = false;
+	float3 snap = float3::two;
 private:
 	ImGuizmo::OPERATION guizOperation = ImGuizmo::OPERATION::TRANSLATE;
 	ImGuizmo::MODE guizMode = ImGuizmo::MODE::WORLD;

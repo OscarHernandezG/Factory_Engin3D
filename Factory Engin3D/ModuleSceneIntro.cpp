@@ -79,9 +79,12 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 		guizOperation = ImGuizmo::OPERATION::BOUNDS;
 
 	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RCTRL) == KEY_REPEAT)
+	{
 		if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
 			GetPreviousTransform();
-		
+
+		isSnap = true;
+	}
 
 	return status;
 }
@@ -96,8 +99,8 @@ update_status ModuleSceneIntro::Update(float dt)
 
 void ModuleSceneIntro::GuizmoUpdate()
 {
-	Transform* transform = App->geometry->currentGameObject->transform;
-	if (transform != nullptr)
+	GameObject* transformObject = App->geometry->currentGameObject;
+	if (transformObject != nullptr)
 	{
 
 		/*float pos[3];
@@ -113,15 +116,31 @@ void ModuleSceneIntro::GuizmoUpdate()
 		transform->SetPos(pos[0], pos[1], pos[2]);
 		transform->SetRotation({ math::DegToRad(rot[0]),  math::DegToRad(rot[1]),  math::DegToRad(rot[2]) });
 		transform->SetScale(scale[0], scale[1], scale[2]);*/
-		float4x4 globalMatrix = transform->GetMatrix();
+		float4x4 globalMatrix = transformObject->GetGlobalMatrix();
 		globalMatrix.Transpose();
 		ImGuiIO& io = ImGui::GetIO();
 		ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
-		ImGuizmo::Manipulate(App->camera->GetViewMatrix().ptr(), App->camera->GetProjectionMatrix().ptr(), guizOperation, guizMode, globalMatrix.ptr());
+		ImGuizmo::Manipulate(App->camera->GetViewMatrix().ptr(), App->camera->GetProjectionMatrix().ptr(), guizOperation, guizMode, globalMatrix.ptr(), nullptr, isSnap ? snap.ptr() : nullptr);
 
 		if (ImGuizmo::IsUsing())
 		{
-			transform->SetTransform(globalMatrix.Transposed());
+			float3 pos, scale;
+			Quat rot;
+			globalMatrix.Transposed().Decompose(pos, rot, scale);
+			switch (guizOperation)
+			{
+			case ImGuizmo::TRANSLATE:
+				transformObject->SetPos(pos);
+				break;
+			case ImGuizmo::ROTATE:
+				transformObject->SetRotation(rot);
+				break;
+			case ImGuizmo::SCALE:
+				transformObject->SetScale(scale);
+				break;
+			default:
+				break;
+			}
 			quadtree.ReDoQuadtree(AABB(), true);
 			saveTransform = true;
 		}
@@ -132,7 +151,7 @@ void ModuleSceneIntro::GuizmoUpdate()
 				SaveLastTransform(lastMat);
 				saveTransform = false;
 			}
-			lastMat = transform->GetMatrix();
+			lastMat = transformObject->GetGlobalMatrix();
 		}
 	}
 }
@@ -140,7 +159,7 @@ void ModuleSceneIntro::GuizmoUpdate()
 void ModuleSceneIntro::SaveLastTransform(float4x4 matrix)
 {
 	LastTransform prevTrans;
-	if (prevTransforms.empty() || App->geometry->currentGameObject->transform->GetMatrix().ptr() != prevTransforms.top().matrix.ptr())
+	if (prevTransforms.empty() || App->geometry->currentGameObject->GetGlobalMatrix().ptr() != prevTransforms.top().matrix.ptr())
 	{
 		prevTrans.matrix = matrix;
 		prevTrans.object = App->geometry->currentGameObject;
@@ -154,7 +173,7 @@ void ModuleSceneIntro::GetPreviousTransform()
 	{
 		LastTransform prevTrans = prevTransforms.top();
 		App->geometry->currentGameObject = prevTrans.object;
-		App->geometry->currentGameObject->transform->SetTransform(prevTrans.matrix);
+		App->geometry->currentGameObject->SetTransform(prevTrans.matrix);
 		prevTransforms.pop();
 	}
 }

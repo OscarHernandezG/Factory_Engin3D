@@ -310,7 +310,7 @@ void ModuleGeometry::LoadMeshImporter(const char* path, MeshNode* tempMesh)
 GameObject* ModuleGeometry::LoadGameObjectsFromMeshNode(MeshNode node, GameObject* father)
 {
 	GameObject* newGameObject = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, father, node.name.data());
-	newGameObject->SetTransform(node.transform);
+	newGameObject->ForceTransform(node.transform);
 	newGameObject->SetABB((node.buffer).boundingBox);
 
 	Mesh* currMesh = new Mesh(newGameObject);
