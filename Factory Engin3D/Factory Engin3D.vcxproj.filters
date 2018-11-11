@@ -381,6 +381,9 @@
     <ClInclude Include="ModuleTimeManager.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleResources.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -567,6 +570,9 @@
       <Filter>Sources\Containers\ImGui\Guizmo</Filter>
     </ClCompile>
     <ClCompile Include="ModuleTimeManager.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleResources.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>

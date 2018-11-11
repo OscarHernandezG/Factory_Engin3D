@@ -14,6 +14,7 @@ Application::Application()
 	importer = new ModuleImporter(this);
 	picking = new ModulePicking(this);
 	time = new ModuleTimeManager(this);
+	resources = new ModuleResources(this);
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -34,6 +35,7 @@ Application::Application()
 	AddModule(gui);
 	AddModule(picking);
 	AddModule(time);
+	AddModule(resources);
 
 	// Renderer last!
 	AddModule(renderer3D);
