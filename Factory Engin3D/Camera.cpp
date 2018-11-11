@@ -88,6 +88,8 @@ void Camera::SaveComponent(JSON_Object * parent)
 
 	json_object_set_number(parent, "UUID", GetUUID());
 
+	json_object_set_number(parent, "Time Created", GetTime());
+
 	SaveNumberArray(parent, "pos", frustum.pos.ptr(), 3);
 
 	SaveNumberArray(parent, "front", frustum.front.ptr(), 3);
