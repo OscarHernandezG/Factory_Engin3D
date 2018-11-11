@@ -78,7 +78,7 @@ public:
 	void ClearMesh();
 
 public:
-	MeshBuffer* buffer;
+	MeshBuffer* buffer = nullptr;
 
 	int meshId;
 };

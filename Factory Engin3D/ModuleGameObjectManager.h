@@ -8,6 +8,7 @@
 
 class ModuleGameObjectManager : public Module
 {
+	friend class GameObject;
 public:
 	ModuleGameObjectManager(Application* app, bool start_enabled = true);
 	~ModuleGameObjectManager();
@@ -16,6 +17,8 @@ public:
 
 	update_status Update();
 	update_status PostUpdate();
+
+	void RemoveObjectsFromList(GameObject * it);
 
 	bool CleanUp();
 
@@ -30,7 +33,7 @@ public:
 	GameObject* CreateGameObject(float3 position = float3::zero, Quat rotation = Quat::identity, float3 scale = float3::one, GameObject* father = nullptr, const char* name = nullptr);
 
 public:
-	GameObject* root;
+	GameObject* rootGameObject;
 
 	list<GameObject*> gameObjects;
 

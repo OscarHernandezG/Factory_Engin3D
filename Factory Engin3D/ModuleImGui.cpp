@@ -539,9 +539,9 @@ void ModuleImGui::CreateGameObjectHierarchy(float2 scale)
 
 	SetWindowDim(scenePos, sceneSize, scale);
 
-	if (App->gameObject->root)
+	if (App->gameObject->rootGameObject)
 	{
-		CreateGOTreeNode(App->gameObject->root);
+		CreateGOTreeNode(App->gameObject->rootGameObject);
 	}
 	ImGui::End();
 
