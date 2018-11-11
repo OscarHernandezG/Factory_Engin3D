@@ -21,6 +21,7 @@
 
 #include "GameObject.h"
 
+#include "pcg-c-basic-0.9/pcg_basic.h"
 
 
 ModuleGeometry::ModuleGeometry(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -90,10 +91,12 @@ MeshNode ModuleGeometry::LoadMeshBuffer(const aiScene* scene, uint index, char* 
 	}
 
 	tempBuffer.id = index;
+	tempBuffer.componentUUID = pcg32_random();
 
-	SaveMeshImporter(tempBuffer.buffer, path, index);
+	//SaveMeshImporter(tempBuffer.buffer, path, tempBuffer.componentUUID);
 
 	tempBuffer.buffer.boundingBox = LoadBoundingBox(tempBuffer.buffer.vertex);
+
 
 	return tempBuffer;
 }
@@ -190,7 +193,7 @@ MeshNode ModuleGeometry::LoadMesh(char* path)
 	return meshRoot;
 }
 
-void ModuleGeometry::SaveMeshImporter(MeshBuffer newCurrentBuffer, const char* path, int number)
+void ModuleGeometry::SaveMeshImporter(MeshBuffer newCurrentBuffer, const char* path, uint uuid)
 {
 	uint ranges[3] = { newCurrentBuffer.index.size, newCurrentBuffer.vertex.size, newCurrentBuffer.texture.size};
 
@@ -221,8 +224,7 @@ void ModuleGeometry::SaveMeshImporter(MeshBuffer newCurrentBuffer, const char* p
 		bytes = sizeof(float)* newCurrentBuffer.texture.size;
 		memcpy(cursor, newCurrentBuffer.texture.buffer, bytes);
 	}
-
-	App->importer->SaveFile(path,size,exporter, LlibraryType_MESH, number);
+	App->importer->SaveFile(path, size, exporter, LlibraryType_MESH, uuid);
 	
 	delete[] exporter;
 }
@@ -338,7 +340,8 @@ GameObject* ModuleGeometry::LoadEmptyGameObjectsFromMeshNode(MeshNode node, Game
 		if ((*currentMeshBuffer).id == node.id)
 		{
 			Mesh* currMesh = new Mesh(newGameObject);
-			
+			currMesh->SetUUID(node.componentUUID);
+
 			GeometryInfo info(currMesh);
 			newGameObject->AddComponent(ComponentType_GEOMETRY, &info);
 			break;
@@ -378,6 +381,12 @@ void ModuleGeometry::UpdateMesh(char* path)
 
 	sort(nodes.begin(), nodes.end());
 	nodes.erase(unique(nodes.begin(), nodes.end()), nodes.end());
+
+	for (vector<MeshNode>::const_iterator iterator = nodes.begin(); iterator != nodes.end(); ++iterator)
+	{
+		SaveMeshImporter((*iterator).buffer, path, (*iterator).componentUUID);
+	}
+
 
 	vector<MeshBuffer*> tempVec = LoadMeshImporter(path, nodes);
 	loadedMeshes.insert(loadedMeshes.end(), tempVec.begin(), tempVec.end());

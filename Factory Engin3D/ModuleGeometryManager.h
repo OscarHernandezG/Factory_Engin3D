@@ -41,7 +41,7 @@ public:
 
 	MeshNode LoadMesh(char* path);
 
-	void SaveMeshImporter(MeshBuffer newCurrentBuffer, const char * path, int number);
+	void SaveMeshImporter(MeshBuffer newCurrentBuffer, const char * path, uint uuid);
 
 	vector<MeshBuffer*> LoadMeshImporter(const char * path, const vector<MeshNode>& nodes);
 
