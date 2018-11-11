@@ -6,12 +6,12 @@
 #include "Transform.h"
 #include "GameObject.h"
 
-class ModuleGameObjectManager : public Module
+class ModuleGameObject : public Module
 {
 	friend class GameObject;
 public:
-	ModuleGameObjectManager(Application* app, bool start_enabled = true);
-	~ModuleGameObjectManager();
+	ModuleGameObject(Application* app, bool start_enabled = true);
+	~ModuleGameObject();
 
 	bool Start();
 

@@ -12,10 +12,10 @@ Application::Application()
 	camera = new ModuleCamera3D(this);
 	gui = new ModuleImGui(this);
 	geometry = new ModuleGeometry(this);
-	gameObject = new ModuleGameObjectManager(this);
+	gameObject = new ModuleGameObject(this);
 	importer = new ModuleImporter(this);
 	picking = new ModulePicking(this);
-	time = new ModuleTimeManager(this);
+	time = new ModuleTime(this);
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order

@@ -20,7 +20,7 @@ struct  ComponentInfo;
 
 class GameObject
 {
-	friend class ModuleGameObjectManager;
+	friend class ModuleGameObject;
 
 public:
 	GameObject(GameObject* father, const char* name = nullptr);

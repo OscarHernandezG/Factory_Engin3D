@@ -1,25 +1,25 @@
 #include "Application.h"
 
-#include "ModuleGameObjectManager.h"
+#include "ModuleGameObject.h"
 
 
-ModuleGameObjectManager::ModuleGameObjectManager(Application * app, bool start_enabled) : Module(app, start_enabled)
+ModuleGameObject::ModuleGameObject(Application * app, bool start_enabled) : Module(app, start_enabled)
 {
 }
 
-ModuleGameObjectManager::~ModuleGameObjectManager()
+ModuleGameObject::~ModuleGameObject()
 {
 
 }
 
-bool ModuleGameObjectManager::Start()
+bool ModuleGameObject::Start()
 {
 	rootGameObject = new GameObject(float3::zero, Quat::identity, float3::one, nullptr, "Scene");
 
 	return true;
 }
 
-update_status ModuleGameObjectManager::Update()
+update_status ModuleGameObject::Update()
 {
 	rootGameObject->Update(App->time->Getdt());
 
@@ -28,7 +28,7 @@ update_status ModuleGameObjectManager::Update()
 	return UPDATE_CONTINUE;
 }
 
-update_status ModuleGameObjectManager::PostUpdate()
+update_status ModuleGameObject::PostUpdate()
 {
 	list<GameObject*> toDelete;
 
@@ -55,7 +55,7 @@ update_status ModuleGameObjectManager::PostUpdate()
 	return UPDATE_CONTINUE;
 }
 
-void ModuleGameObjectManager::RemoveObjectsFromList(GameObject * it)
+void ModuleGameObject::RemoveObjectsFromList(GameObject * it)
 {
 	for (list<GameObject*>::iterator childIt = it->childs.begin(); childIt != it->childs.end(); ++childIt)
 	{
@@ -64,14 +64,14 @@ void ModuleGameObjectManager::RemoveObjectsFromList(GameObject * it)
 	}
 }
 
-bool ModuleGameObjectManager::CleanUp()
+bool ModuleGameObject::CleanUp()
 {
 	CleanAllGameObjects();
 
 	return true;
 }
 
-void ModuleGameObjectManager::CleanAllGameObjects()
+void ModuleGameObject::CleanAllGameObjects()
 {
 	// Deleting a GameObject will cause all his childs to be deleted
 	// If we delete the root GameObject, all the GameObjects will be deletet recursively
@@ -82,7 +82,7 @@ void ModuleGameObjectManager::CleanAllGameObjects()
 	}
 }
 
-void ModuleGameObjectManager::SaveScene()
+void ModuleGameObject::SaveScene()
 {
 	if (rootGameObject != nullptr)
 	{
@@ -100,7 +100,7 @@ void ModuleGameObjectManager::SaveScene()
 	}
 }
 
-void ModuleGameObjectManager::SaveGameObject(GameObject* object, JSON_Object* parent)
+void ModuleGameObject::SaveGameObject(GameObject* object, JSON_Object* parent)
 {
 	JSON_Value* newValue = json_value_init_object();
 	JSON_Object* objGO = json_value_get_object(newValue);
@@ -180,7 +180,7 @@ void ModuleGameObjectManager::SaveGameObject(GameObject* object, JSON_Object* pa
 	}
 }
 
-void ModuleGameObjectManager::SaveComponent(Component* object, JSON_Object* parent)
+void ModuleGameObject::SaveComponent(Component* object, JSON_Object* parent)
 {
 	switch (object->type)
 	{
@@ -205,7 +205,7 @@ void ModuleGameObjectManager::SaveComponent(Component* object, JSON_Object* pare
 }
 
 
-GameObject* ModuleGameObjectManager::CreateGameObject(float3 position, Quat rotation, float3 scale, GameObject* father, const char* name)
+GameObject* ModuleGameObject::CreateGameObject(float3 position, Quat rotation, float3 scale, GameObject* father, const char* name)
 {
 	GameObject* newGameObject = nullptr;
 
@@ -227,7 +227,7 @@ GameObject* ModuleGameObjectManager::CreateGameObject(float3 position, Quat rota
 	return newGameObject;
 }
 
-void ModuleGameObjectManager::AddNewDynamic(GameObject* object)
+void ModuleGameObject::AddNewDynamic(GameObject* object)
 {
 	for (list<GameObject*>::iterator iterator = object->childs.begin(); iterator != object->childs.end(); ++iterator)
 	{
@@ -238,7 +238,7 @@ void ModuleGameObjectManager::AddNewDynamic(GameObject* object)
 		dynamicObjects.push_back(object);
 }
 
-void ModuleGameObjectManager::RemoveDynamic(GameObject* object)
+void ModuleGameObject::RemoveDynamic(GameObject* object)
 {
 	for (list<GameObject*>::iterator iterator = object->childs.begin(); iterator != object->childs.end(); ++iterator)
 	{

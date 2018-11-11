@@ -14,14 +14,14 @@ enum GameState
 	GameState_STOP,
 	GameState_TICK
 };
-class ModuleTimeManager : public Module
+class ModuleTime : public Module
 {
 public:
 
-	ModuleTimeManager(Application* app, bool start_enabled = true);
+	ModuleTime(Application* app, bool start_enabled = true);
 
 	// Destructor
-	virtual ~ModuleTimeManager();
+	virtual ~ModuleTime();
 
 	bool Init();
 	bool Start();
