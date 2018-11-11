@@ -126,7 +126,8 @@ void ModuleSceneIntro::GuizmoUpdate()
 
 		if (ImGuizmo::IsUsing())
 		{
-			MoveGO(globalMatrix, transformObject);
+			if(App->input->GetKey(SDL_SCANCODE_LALT) != KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_RALT) != KEY_REPEAT)
+				MoveGO(globalMatrix, transformObject);
 		}
 		else
 		{
