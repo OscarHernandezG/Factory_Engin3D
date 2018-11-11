@@ -33,10 +33,18 @@ public:
 
 	virtual void SaveComponent(JSON_Object* parent) {}
 
+	inline uint GetUUID() const { return UUID; }
+	inline void SetUUID(uint newUUID) { UUID = newUUID; }	// This can only be used in load stage
+
+
 public:
 	ComponentType type = ComponentType_NONE;
 
 	bool isActive = true;
 
 	GameObject* gameObject = nullptr;
+
+private:
+
+	uint UUID = 0;
 };
