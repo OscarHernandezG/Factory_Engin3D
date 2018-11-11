@@ -156,6 +156,7 @@ void Transform::SaveComponent(JSON_Object * parent)
 
 	json_object_set_number(parent, "UUID", GetUUID());
 
+	json_object_set_number(parent, "Time Created", GetTime());
 
 	// Position
 	//------------------------------------------------------------------------
