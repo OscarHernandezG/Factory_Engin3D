@@ -33,8 +33,8 @@ public:
 
 	virtual void SaveComponent(JSON_Object* parent) {}
 
-	inline uint GetUUID() const { return UUID; }
-	inline void SetUUID(uint newUUID) { UUID = newUUID; }	// This can only be used in load stage
+	unsigned int GetUUID() const { return UUID; }
+	const void SetUUID(unsigned int newUUID) { UUID = newUUID; }	// This can only be used in load stage
 
 
 public:
@@ -46,5 +46,5 @@ public:
 
 private:
 
-	uint UUID = 0;
+	unsigned int UUID = 0;
 };
