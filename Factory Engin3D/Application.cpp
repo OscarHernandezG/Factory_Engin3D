@@ -81,7 +81,6 @@ bool Application::Init()
 	}
 	
 	pcg32_srandom(::time(NULL) ^ (intptr_t)&printf, 54u);
-
 	return ret;
 }
 
