@@ -20,11 +20,18 @@ struct  ComponentInfo;
 
 class GameObject
 {
+	friend class ModuleGameObjectManager;
+
 public:
 	GameObject(GameObject* father, const char* name = nullptr);
 	GameObject(float3 position, Quat rotation = Quat::identity, float3 scale = float3::one, GameObject* father = nullptr, const char* name = nullptr);
 	
 	~GameObject();
+
+	void RemoveChilds();
+
+	void RemoveComponents();
+
 
 	void Update(float dt);
 
@@ -74,6 +81,7 @@ public:
 private:
 	void CreateGameObject(TransformInfo* info);
 
+	void RealDelete();
 
 public:
 	Transform* transform = nullptr;

@@ -43,20 +43,43 @@ GameObject::~GameObject()
 {
 	transform = nullptr;
 
-	for (list<Component*>::iterator iterator = components.begin(); iterator != components.end(); ++iterator)
-	{
-		delete (*iterator);
-	}
+	RemoveComponents();
 
-	components.clear();
+	RemoveChilds();
+}
 
+void GameObject::RemoveChilds()
+{
 	for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
 	{
 		delete (*iterator);
 	}
-
 	childs.clear();
 }
+
+void GameObject::RemoveComponents()
+{
+	for (list<Component*>::iterator iterator = components.begin(); iterator != components.end(); ++iterator)
+	{
+		delete (*iterator);
+	}
+	components.clear();
+}
+
+
+
+void GameObject::RealDelete()
+{
+	transform = nullptr;
+
+	if (father)
+		father->childs.remove(this);
+
+	father = nullptr;
+	//delete this;
+}
+
+
 
 void GameObject::Update(float dt)
 {
