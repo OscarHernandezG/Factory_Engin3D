@@ -67,8 +67,8 @@ struct MeshNode
 class Mesh :public Geometry
 {
 public:
-	Mesh() { type = PrimitiveTypes::Primitive_Mesh; };
-	Mesh(GameObject* parent) : Geometry(parent) { type = PrimitiveTypes::Primitive_Mesh; };
+	Mesh() { geoType = PrimitiveTypes::Primitive_Mesh; };
+	Mesh(GameObject* parent) : Geometry(parent) { geoType = PrimitiveTypes::Primitive_Mesh; };
 	~Mesh() { ClearMesh(); };
 
 	void InnerRender() const;
