@@ -135,6 +135,8 @@ void GameObject::CreateGameObject(TransformInfo* info)
 	UID = pcg32_random();
 
 	this->transform = (Transform*)AddComponent(ComponentType_TRANSFORM, info);
+	if(transform)
+		transform->SetUUID(pcg32_random());
 }
 
 Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
