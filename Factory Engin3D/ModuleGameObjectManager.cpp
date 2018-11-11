@@ -14,28 +14,50 @@ ModuleGameObjectManager::~ModuleGameObjectManager()
 
 bool ModuleGameObjectManager::Start()
 {
-	root = new GameObject(float3::zero, Quat::identity, float3::one, nullptr, "Scene");
+	rootGameObject = new GameObject(float3::zero, Quat::identity, float3::one, nullptr, "Scene");
 
 	return true;
 }
 
 update_status ModuleGameObjectManager::Update()
 {
-	root->Update(App->time->Getdt());
+	rootGameObject->Update(App->time->Getdt());
+
+	//App->geometry->Draww(rootGameObject);
 
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleGameObjectManager::PostUpdate()
 {
+	list<GameObject*> toDelete;
 	for (list<GameObject*>::iterator iterator = gameObjects.begin(); iterator != gameObjects.end(); ++iterator)
 	{
 		if ((*iterator)->toDelete)
 		{
-			delete (*iterator);
+			toDelete.push_back(*iterator);
 		}
 	}
+	for (list<GameObject*>::iterator iterator = toDelete.begin(); iterator != toDelete.end(); ++iterator)
+	{
+		GameObject* it = *iterator;
+
+		RemoveObjectsFromList(it);
+
+		gameObjects.remove(it);
+		(*iterator)->RealDelete();
+		delete *iterator;
+	}
 	return UPDATE_CONTINUE;
+}
+
+void ModuleGameObjectManager::RemoveObjectsFromList(GameObject * it)
+{
+	for (list<GameObject*>::iterator childIt = it->childs.begin(); childIt != it->childs.end(); ++childIt)
+	{
+		RemoveObjectsFromList(*childIt);
+		gameObjects.remove(*childIt);
+	}
 }
 
 bool ModuleGameObjectManager::CleanUp()
@@ -49,21 +71,21 @@ void ModuleGameObjectManager::CleanAllGameObjects()
 {
 	// Deleting a GameObject will cause all his childs to be deleted
 	// If we delete the root GameObject, all the GameObjects will be deletet recursively
-	if (root != nullptr)
+	if (rootGameObject != nullptr)
 	{
-		delete root;
-		root = nullptr;
+		delete rootGameObject;
+		rootGameObject = nullptr;
 	}
 }
 
 void ModuleGameObjectManager::SaveScene()
 {
-	if (root != nullptr)
+	if (rootGameObject != nullptr)
 	{
 		JSON_Value* rootValue = json_value_init_object();
 		JSON_Object* rootObject = json_value_get_object(rootValue);
 
-		SaveGameObject(root, rootObject);
+		SaveGameObject(rootGameObject, rootObject);
 
 		int sizeBuf = json_serialization_size_pretty(rootValue);
 		char* buf = new char[sizeBuf];
@@ -184,11 +206,13 @@ GameObject* ModuleGameObjectManager::CreateGameObject(float3 position, Quat rota
 	GameObject* newGameObject = nullptr;
 
 	if (father == nullptr)
-		father = root;
+		father = rootGameObject;
 
 	newGameObject = new GameObject(position, rotation, scale, father, name);
 
 	father->childs.push_back(newGameObject);
+
+	gameObjects.push_back(newGameObject);
 
 	//newGameObject->transform->boundingBox.minPoint = float3(-5, -5, -5);
 	//newGameObject->transform->boundingBox.minPoint = float3(5, 5, 5);
