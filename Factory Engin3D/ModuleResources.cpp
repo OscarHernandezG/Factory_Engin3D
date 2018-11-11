@@ -1,7 +1,6 @@
-#include "ModuleRenderer3D.h"
+#include "Globals.h"
+#include "Application.h"
 #include "ModuleResources.h"
-
-
 
 
 ModuleResources::ModuleResources(Application * app, bool start_enabled): Module(app, start_enabled)
@@ -14,7 +13,7 @@ ModuleResources::~ModuleResources()
 
 bool ModuleResources::Start()
 {
-	return false;
+	return true;
 }
 
 update_status ModuleResources::Update()
@@ -25,5 +24,5 @@ update_status ModuleResources::Update()
 
 bool ModuleResources::CleanUp()
 {
-	return false;
+	return true;
 }
