@@ -238,11 +238,12 @@ vector<MeshBuffer*> ModuleGeometry::LoadMeshImporter(const char* path, const vec
 	{
 		int i = (*iterator).id;
 
-		buffer = App->importer->LoadFile(path, LlibraryType_MESH, i);
+		buffer = App->importer->LoadFile(path, LlibraryType_MESH, (*iterator).componentUUID);
 
 		if (buffer != nullptr)
 		{
 			MeshBuffer* bufferImporter = new MeshBuffer();
+			bufferImporter->id = i;
 			char* cursor = buffer;
 
 			uint ranges[3];
@@ -340,6 +341,7 @@ GameObject* ModuleGeometry::LoadEmptyGameObjectsFromMeshNode(MeshNode node, Game
 		if ((*currentMeshBuffer).id == node.id)
 		{
 			Mesh* currMesh = new Mesh(newGameObject);
+
 			currMesh->SetUUID(node.componentUUID);
 
 			GeometryInfo info(currMesh);
@@ -361,7 +363,7 @@ void ModuleGeometry::UpdateMesh(char* path)
 	MeshNode tempMesh = LoadMesh(path);
 	
 	// This GO is the one we have to save in the scene
-	GameObject* tempGO = LoadEmptyGameObjectsFromMeshNode(tempMesh, App->gameObject->root);
+	GameObject* tempGO = LoadEmptyGameObjectsFromMeshNode(tempMesh, App->gameObject->rootGameObject);
 
 
 	// Save scene in json and use the info to load the new gameObject
@@ -371,6 +373,8 @@ void ModuleGeometry::UpdateMesh(char* path)
 	JSON_Object* rootObject = json_value_get_object(rootValue);
 
 	SaveGameObjectJson(tempGO, rootObject);
+
+	tempGO->Delete();
 
 	int sizeBuf = json_serialization_size_pretty(rootValue);
 	char* buf = new char[sizeBuf];
@@ -391,7 +395,7 @@ void ModuleGeometry::UpdateMesh(char* path)
 	vector<MeshBuffer*> tempVec = LoadMeshImporter(path, nodes);
 	loadedMeshes.insert(loadedMeshes.end(), tempVec.begin(), tempVec.end());
 
-	GameObject* newGameObject = LoadGameObjectsFromMeshNode(tempMesh, App->gameObject->root);
+	GameObject* newGameObject = LoadGameObjectsFromMeshNode(tempMesh, App->gameObject->rootGameObject);
 
 	currentGameObject = newGameObject;
 	bHouse = newGameObject;
@@ -664,20 +668,35 @@ update_status ModuleGeometry::PostUpdate()
 
 
 
+
 		return UPDATE_CONTINUE;
+}
+
+void ModuleGeometry::Draww(GameObject* object)
+{
+	for (list<GameObject*>::iterator it = object->childs.begin(); it != object->childs.end(); ++it)
+	{
+		Draww(*it);
+	}
+
+	Mesh* mesh = (Mesh*)(*object).GetComponent(ComponentType_GEOMETRY);
+	if (mesh)
+	{
+		mesh->Render();
+	}
 }
 
 void ModuleGeometry::LoadDefaultScene()
 {
-	App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, "Empty");
+	App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->rootGameObject, "Empty");
 
-	App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, "Root Child ") , "Root child child");
+	App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->rootGameObject, "Root Child ") , "Root child child");
 
 	DistributeFile("assets\\models\\Street.fbx");
 	DistributeFile("assets\\textures\\Baker_house.png");
 
 
-	plane = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, "Ground");
+	plane = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->rootGameObject, "Ground");
 
 	GeometryInfo planeInfo(new PrimitivePlane());
 	plane->AddComponent(ComponentType_GEOMETRY, &planeInfo);

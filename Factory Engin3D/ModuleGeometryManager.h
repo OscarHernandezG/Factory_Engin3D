@@ -23,6 +23,8 @@ public:
 	void LoadDefaultScene();
 	update_status PostUpdate();
 
+	void Draww(GameObject * object);
+
 	bool CleanUp();
 
 	void DistributeFile(char * file);
