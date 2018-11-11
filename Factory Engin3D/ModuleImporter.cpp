@@ -25,9 +25,9 @@ bool ModuleImporter::Init()
 	return true;
 }
 
-void ModuleImporter::SaveFile(const char* path, uint size, char* outputFile, LlibraryType type, int number)
+void ModuleImporter::SaveFile(const char* path, uint size, char* outputFile, LlibraryType type, uint uuid)
 {
-	string direction = GetDirectionName(path, type, number);
+	string direction = GetDirectionName(path, type, uuid);
 
 	ofstream newFile (direction.c_str(), ios::out | ios::binary);
 	if (newFile.is_open())
@@ -57,7 +57,7 @@ char* ModuleImporter::LoadFile(const char* path, LlibraryType type, int number)
 	return text;
 }
 
-string ModuleImporter::GetDirectionName(const char* path, LlibraryType type, int number)
+string ModuleImporter::GetDirectionName(const char* path, LlibraryType type, uint uuid)
 {
 	string filePath(path);
 	string goodFile = "Llibrary/";
@@ -70,7 +70,7 @@ string ModuleImporter::GetDirectionName(const char* path, LlibraryType type, int
 		TextureDirection(goodFile, filePath);
 		break;
 	case LlibraryType_MESH:
-		MeshDirection(filePath, goodFile, number);
+		MeshDirection(filePath, goodFile, uuid);
 		break;
 	case LlibraryType_MATERIAL:
 		break;
@@ -94,15 +94,15 @@ void ModuleImporter::TextureDirection(std::string &goodFile, std::string &filePa
 	goodFile += filePath.substr(initialPos, (finalPos - initialPos)) + "dds";
 }
 
-void ModuleImporter::MeshDirection(std::string &filePath, std::string &goodFile, int number)
+void ModuleImporter::MeshDirection(std::string &filePath, std::string &goodFile, uint uuid)
 {
 	goodFile += "Meshes/";
 
-	uint initialPos = filePath.find_last_of("\\") + 1;
-	uint finalPos = filePath.find_last_of(".");
+	//uint initialPos = filePath.find_last_of("\\") + 1;
+	//uint finalPos = filePath.find_last_of(".");
 
-	goodFile += filePath.substr(initialPos, (finalPos - initialPos));
-	goodFile += to_string(number);
+	//goodFile += filePath.substr(initialPos, (finalPos - initialPos));
+	goodFile += to_string(uuid);
 	goodFile += ".fty";
 }
 
