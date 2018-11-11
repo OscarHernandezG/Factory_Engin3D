@@ -31,12 +31,15 @@ update_status ModuleGameObjectManager::Update()
 update_status ModuleGameObjectManager::PostUpdate()
 {
 	list<GameObject*> toDelete;
-	for (list<GameObject*>::iterator iterator = gameObjects.begin(); iterator != gameObjects.end(); ++iterator)
+
+	for (list<GameObject*>::iterator iterator = gameObjectsAll.begin(); iterator != gameObjectsAll.end(); ++iterator)
+
 	{
 		if ((*iterator)->toDelete)
 		{
 			toDelete.push_back(*iterator);
 		}
+
 	}
 	for (list<GameObject*>::iterator iterator = toDelete.begin(); iterator != toDelete.end(); ++iterator)
 	{
@@ -44,10 +47,11 @@ update_status ModuleGameObjectManager::PostUpdate()
 
 		RemoveObjectsFromList(it);
 
-		gameObjects.remove(it);
+		gameObjectsAll.remove(it);
 		(*iterator)->RealDelete();
 		delete *iterator;
 	}
+
 	return UPDATE_CONTINUE;
 }
 
@@ -56,7 +60,7 @@ void ModuleGameObjectManager::RemoveObjectsFromList(GameObject * it)
 	for (list<GameObject*>::iterator childIt = it->childs.begin(); childIt != it->childs.end(); ++childIt)
 	{
 		RemoveObjectsFromList(*childIt);
-		gameObjects.remove(*childIt);
+		gameObjectsAll.remove(*childIt);
 	}
 }
 
@@ -212,7 +216,7 @@ GameObject* ModuleGameObjectManager::CreateGameObject(float3 position, Quat rota
 
 	father->childs.push_back(newGameObject);
 
-	gameObjects.push_back(newGameObject);
+	gameObjectsAll.push_back(newGameObject);
 
 	//newGameObject->transform->boundingBox.minPoint = float3(-5, -5, -5);
 	//newGameObject->transform->boundingBox.minPoint = float3(5, 5, 5);
@@ -221,4 +225,29 @@ GameObject* ModuleGameObjectManager::CreateGameObject(float3 position, Quat rota
 	//	App->sceneIntro->quadtree.Insert(newGameObject);
 
 	return newGameObject;
+}
+
+void ModuleGameObjectManager::AddNewDynamic(GameObject* object)
+{
+	for (list<GameObject*>::iterator iterator = object->childs.begin(); iterator != object->childs.end(); ++iterator)
+	{
+		AddNewDynamic(*iterator);
+	}
+
+	if (find(dynamicObjects.begin(), dynamicObjects.end(), object) == dynamicObjects.end())
+		dynamicObjects.push_back(object);
+}
+
+void ModuleGameObjectManager::RemoveDynamic(GameObject* object)
+{
+	for (list<GameObject*>::iterator iterator = object->childs.begin(); iterator != object->childs.end(); ++iterator)
+	{
+		RemoveDynamic(*iterator);
+	}
+	auto it = find(dynamicObjects.begin(), dynamicObjects.end(), object);
+	if (it != dynamicObjects.end())
+	{
+		dynamicObjects.remove(*it);
+		App->sceneIntro->octree.Insert(object);
+	}
 }

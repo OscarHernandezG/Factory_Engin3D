@@ -453,35 +453,51 @@ void ModuleImGui::CreateTransform(float2 scale)
 
 	SetWindowDim(transformPos, transformSize, scale);
 
-	if (App->geometry->currentGameObject != nullptr)
+	GameObject* currObject = App->geometry->currentGameObject;
+	if (currObject != nullptr)
 	{
-		string goName = App->geometry->currentGameObject->name;
+		string goName = currObject->name;
 		ImGui::Text(goName.data());
 
-		ImGui::Checkbox("Active", App->geometry->currentGameObject->GetActiveReference());
-		App->geometry->currentGameObject->SetActive(App->geometry->currentGameObject->GetActive());
+		if (ImGui::Checkbox("Active", currObject->GetActiveReference()))
+		{
+			currObject->SetActive(currObject->GetActive());
+			if (currObject->GetActive())
+				App->sceneIntro->ReInsertOctree(currObject);
+			App->sceneIntro->octree.ReDoOctree(AABB(), true);
+		}
+		ImGui::SameLine();
+		if (ImGui::Checkbox("Static Object", currObject->GetStaticReference()))
+		{
+			currObject->SetObjectStatic(currObject->GetObjectStatic());
+			if (!currObject->GetObjectStatic())
+				App->gameObject->AddNewDynamic(currObject);
+			else
+				App->gameObject->RemoveDynamic(currObject);
 
+			App->sceneIntro->octree.ReDoOctree(AABB(), true);
+		}
 		float3 position, scale, angles;
 		Quat rotate;
 
-		if (App->geometry->currentGameObject->transform != nullptr)
+		if (currObject->transform != nullptr)
 		{
-			float4x4 prevTransformMat = App->geometry->currentGameObject->GetGlobalMatrix();
-			position = App->geometry->currentGameObject->transform->GetPos();
-			scale = App->geometry->currentGameObject->transform->scale;
-			rotate = App->geometry->currentGameObject->transform->GetRotation();
+			float4x4 prevTransformMat = currObject->GetGlobalMatrix();
+			position = currObject->transform->GetPos();
+			scale = currObject->transform->scale;
+			rotate = currObject->transform->GetRotation();
 
 			if (ImGui::InputFloat3("Position", &position[0])) {
 				App->sceneIntro->SaveLastTransform(prevTransformMat);
-				App->geometry->currentGameObject->SetPos(position);
-				App->sceneIntro->quadtree.ReDoQuadtree(AABB(), true);
+				currObject->SetPos(position);
+				App->sceneIntro->octree.ReDoOctree(AABB(), true);
 			}
 
 			if (ImGui::InputFloat3("Scale", &scale[0]))
 			{
 				App->sceneIntro->SaveLastTransform(prevTransformMat);
-				App->geometry->currentGameObject->SetScale(scale);
-				App->sceneIntro->quadtree.ReDoQuadtree(AABB(), true);
+				currObject->SetScale(scale);
+				App->sceneIntro->octree.ReDoOctree(AABB(), true);
 			}
 			angles = rotate.ToEulerXYZ();
 
@@ -494,12 +510,13 @@ void ModuleImGui::CreateTransform(float2 scale)
 				angles.x = math::DegToRad(angles.x);
 				angles.y = math::DegToRad(angles.y);
 				angles.z = math::DegToRad(angles.z);
-				App->geometry->currentGameObject->SetRotation(Quat::FromEulerXYZ(angles.x, angles.y, angles.z));
+				currObject->SetRotation(Quat::FromEulerXYZ(angles.x, angles.y, angles.z));
 
-				App->sceneIntro->quadtree.ReDoQuadtree(AABB(), true);
+				App->sceneIntro->octree.ReDoOctree(AABB(), true);
 				if (dragRotTransform)
 				{
 					App->sceneIntro->SaveLastTransform(prevTransformMat);
+
 					dragRotTransform = false;
 				}
 			}
@@ -509,8 +526,8 @@ void ModuleImGui::CreateTransform(float2 scale)
 			if (ImGui::Button("Reset", ImVec2(100, 20)))
 			{
 				App->sceneIntro->SaveLastTransform(prevTransformMat);
-				App->geometry->currentGameObject->SetIdentity();
-				App->sceneIntro->quadtree.ReDoQuadtree(AABB(), true);
+				currObject->SetIdentity();
+				App->sceneIntro->octree.ReDoOctree(AABB(), true);
 			}
 
 			if (ImGui::RadioButton("None", App->sceneIntro->GetGuizOperation() == ImGuizmo::BOUNDS))

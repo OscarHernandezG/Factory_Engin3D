@@ -313,7 +313,7 @@ GameObject* ModuleGeometry::LoadGameObjectsFromMeshNode(MeshNode node, GameObjec
 			currMesh->buffer = (*currentMeshBuffer);
 			GeometryInfo info(currMesh);
 			newGameObject->AddComponent(ComponentType_GEOMETRY, &info);
-			App->sceneIntro->quadtree.Insert(newGameObject);
+			App->sceneIntro->octree.Insert(newGameObject);
 			break;
 		}
 	}
@@ -335,6 +335,7 @@ GameObject* ModuleGeometry::LoadEmptyGameObjectsFromMeshNode(MeshNode node, Game
 	newGameObject->SetABB((node.buffer).boundingBox);
 
 
+
 	vector<MeshNode>::iterator currentMeshBuffer;
 	for (currentMeshBuffer = nodes.begin(); currentMeshBuffer != nodes.end(); ++currentMeshBuffer)
 	{
@@ -346,6 +347,8 @@ GameObject* ModuleGeometry::LoadEmptyGameObjectsFromMeshNode(MeshNode node, Game
 
 			GeometryInfo info(currMesh);
 			newGameObject->AddComponent(ComponentType_GEOMETRY, &info);
+
+			//App->sceneIntro->octree.Insert(newGameObject);
 			break;
 		}
 	}
@@ -688,23 +691,11 @@ void ModuleGeometry::Draww(GameObject* object)
 
 void ModuleGeometry::LoadDefaultScene()
 {
-	App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->rootGameObject, "Empty");
-
-	App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->rootGameObject, "Root Child ") , "Root child child");
-
 	DistributeFile("assets\\models\\Street.fbx");
 	DistributeFile("assets\\textures\\Baker_house.png");
-
 
 	plane = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->rootGameObject, "Ground");
 
 	GeometryInfo planeInfo(new PrimitivePlane());
 	plane->AddComponent(ComponentType_GEOMETRY, &planeInfo);
-
-
-	//GameObject* box = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, "Box at 0,0,0");
-
-	//GeometryInfo cubeInfo(new PrimitiveCube());
-	//box->AddComponent(ComponentType_GEOMETRY, &cubeInfo);
-
 }

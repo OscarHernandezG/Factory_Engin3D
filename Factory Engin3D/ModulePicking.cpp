@@ -37,7 +37,7 @@ update_status ModulePicking::Update()
 		LineSegment ray = App->camera->GetCameraFrustrum().UnProjectLineSegment(mouseX, mouseY);
 
 		std::vector<GameObject*> objects;
-		App->sceneIntro->quadtree.GetIntersects(objects, ray);
+		App->sceneIntro->octree.GetIntersects(objects, ray);
 
 		float smallerDist = 0.0f;
 		GameObject* nearObject = nullptr;

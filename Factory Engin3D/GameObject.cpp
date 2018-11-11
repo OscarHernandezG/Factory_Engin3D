@@ -259,10 +259,10 @@ void GameObject::SetPos(float3 pos)
 	float3 movement = float3::zero;
 	if (transform)
 	{
-		movement = pos - transform->GetPos();
+		movement = pos - transform->GetLocalPos();
 	}
-	Move(movement);
 
+	Move(movement);
 }
 
 void GameObject::Move(float3 movement)
@@ -372,6 +372,15 @@ void GameObject::SetActive(bool active)
 		(*iterator)->SetActive(active);
 	}
 	isActive = active;
+}
+
+void GameObject::SetObjectStatic(bool isStatic)
+{
+	for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
+	{
+		(*iterator)->SetObjectStatic(isStatic);
+	}
+	this->isStatic = isStatic;
 }
 
 int GameObject::CreateRandomUID()
