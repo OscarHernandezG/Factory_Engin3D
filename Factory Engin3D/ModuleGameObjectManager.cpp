@@ -138,16 +138,45 @@ void ModuleGameObjectManager::SaveGameObject(GameObject* object, JSON_Object* pa
 		SaveGameObject(*iterator, parent);
 	}
 
-
 	JSON_Value* components = json_value_init_object();
 	JSON_Object* componentsObj = json_value_get_object(components);
 
 	json_object_set_value(objGO, "Components", components);
-	if (object->transform)
-		object->transform->SaveComponent(componentsObj);
 
+	for (list<Component*>::iterator iterator = object->components.begin(); iterator != object->components.end(); ++iterator)
+	{
+		JSON_Value* component = json_value_init_object();
+		JSON_Object* componentObj = json_value_get_object(component);
+
+		json_object_set_value(componentsObj, to_string((*iterator)->GetUUID()).data() , component);
+
+		SaveComponent(*iterator, componentObj);
+	}
 }
 
+void ModuleGameObjectManager::SaveComponent(Component* object, JSON_Object* parent)
+{
+	switch (object->type)
+	{
+	case ComponentType_TRANSFORM: 
+		((Transform*)object)->SaveComponent(parent);
+		break;
+	case ComponentType_GEOMETRY: 
+		((Geometry*)object)->SaveComponent(parent);
+		break;
+	case ComponentType_CAMERA: 
+		((Camera*)object)->SaveComponent(parent);
+		break;
+	case ComponentType_TEXTURE:
+		//((Transform*)object)->SaveComponent(parent);
+		break;
+	case ComponentType_LIGHT:
+		//((Transform*)object)->SaveComponent(parent);
+		break;
+	default:
+		break;
+	}
+}
 
 
 GameObject* ModuleGameObjectManager::CreateGameObject(float3 position, Quat rotation, float3 scale, GameObject* father, const char* name)
