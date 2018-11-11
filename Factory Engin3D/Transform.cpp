@@ -154,6 +154,9 @@ void Transform::SaveComponent(JSON_Object * parent)
 
 	json_object_set_number(parent, "Type", this->type);
 
+	json_object_set_number(parent, "UUID", GetUUID());
+
+
 	// Position
 	//------------------------------------------------------------------------
 	SaveNumberArray(parent, "Position", GetPos().ptr(), 3);
