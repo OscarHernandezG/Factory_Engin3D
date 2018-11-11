@@ -45,9 +45,9 @@ public:
 	void CreateGameObjectHierarchy(float2 scale);
 	void SetWindowDim(float2 & pos, float2 & size, float2 & scale, bool gameWindow = false);
 	void CreateGameManager(float2 scale);
+	void CreateAssetsWindow(float2 scale);
 
 	void CreateGOTreeNode(GameObject * current);
-
 
 	update_status CreateMainMenuBar();
 

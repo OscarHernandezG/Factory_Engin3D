@@ -13,7 +13,7 @@ public:
 	update_status Update();
 	bool CleanUp();
 
-
+	bool ExistFile(const char* path);
 private:
 
 };

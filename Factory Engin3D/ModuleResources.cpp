@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleResources.h"
 
+#include <fstream>
 
 ModuleResources::ModuleResources(Application * app, bool start_enabled): Module(app, start_enabled)
 {
@@ -25,4 +26,15 @@ update_status ModuleResources::Update()
 bool ModuleResources::CleanUp()
 {
 	return true;
+}
+
+bool ModuleResources::ExistFile(const char * path)
+{
+	bool ret = false;
+
+	ifstream loadFile(path);
+	if (loadFile.is_open())
+		ret = true;
+
+	return ret;
 }

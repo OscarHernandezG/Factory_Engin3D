@@ -103,6 +103,8 @@ update_status ModuleImGui::PreUpdate()
 
 	CreateGameManager(scale);
 
+	CreateAssetsWindow(scale);
+
 	status = CreateMainMenuBar();
 
 	created = true;
@@ -616,21 +618,6 @@ void ModuleImGui::CreateGameManager(float2 scale)
 
 }
 
-void ModuleImGui::SetWindowDim(float2 &pos, float2 &size, float2 &scale, bool gameWindow)
-{
-	float2 realPos = pos.Mul(scale);
-	float2 realSize = size.Mul(scale);
-
-	if (gameWindow && App->time->gameState != GameState_NONE)
-	{
-		realSize += playCountSize.Mul(scale);
-		realPos += playCountPos.Mul(scale);
-	}
-
-	ImGui::SetWindowPos({ realPos.x, realPos.y });
-	ImGui::SetWindowSize({ realSize.x, realSize.y });
-}
-
 void ModuleImGui::CreateGOTreeNode(GameObject* current)
 {
 	uint flags = ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_OpenOnArrow;// ImGuiTreeNodeFlags_OpenOnArrow;
@@ -680,6 +667,47 @@ update_status ModuleImGui::CreateMainMenuBar()
 
 	return ret;
 }
+
+void ModuleImGui::CreateAssetsWindow(float2 scale)
+{
+	ImGui::Begin("Assets", &canScroll, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+	SetWindowDim(configurationPos, configurationSize, scale);
+
+	list<string> files;
+	if (GetFileAttributesA("Assets"))
+	{
+		WIN32_FIND_DATA data;
+		HANDLE file;
+		if (file = FindFirstFile("Assets/models", &data))
+		{
+			files.push_back(data.cFileName);
+			if ((FindNextFile(file, &data) != 0))
+				//Recursiva
+			{}
+		}
+		
+	}
+
+
+	ImGui::End();
+
+}
+
+void ModuleImGui::SetWindowDim(float2 &pos, float2 &size, float2 &scale, bool gameWindow)
+{
+	float2 realPos = pos.Mul(scale);
+	float2 realSize = size.Mul(scale);
+
+	if (gameWindow && App->time->gameState != GameState_NONE)
+	{
+		realSize += playCountSize.Mul(scale);
+		realPos += playCountPos.Mul(scale);
+	}
+
+	ImGui::SetWindowPos({ realPos.x, realPos.y });
+	ImGui::SetWindowSize({ realSize.x, realSize.y });
+}
+
 //Create Windows----------------------------------------------------------
 
 
