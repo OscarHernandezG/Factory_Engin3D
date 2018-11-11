@@ -26,7 +26,7 @@ public:
 
 	void SaveFile(const char * path, uint size, char* outputFile, LlibraryType type, uint uuid = 0);
 
-	char* LoadFile(const char * path, LlibraryType type, int number = 0);
+	char* LoadFile(const char * path, LlibraryType type, uint number = 0);
 
 	string GetDirectionName(const char* path, LlibraryType type, uint number = 0);
 	void TextureDirection(std::string &goodFile, std::string &filePath);
