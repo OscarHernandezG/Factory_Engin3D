@@ -41,6 +41,8 @@ struct MeshNode
 	string name;
 	
 	int id = -1;
+
+	uint componentUUID = 0;
 	
 	MeshBuffer buffer;
 	list<MeshNode> childs;
