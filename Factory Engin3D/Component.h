@@ -1,5 +1,6 @@
 #pragma once
-
+#include "parson/parson.h"
+#include <time.h>
 class GameObject;
 
 enum ComponentType
@@ -21,14 +22,22 @@ struct ComponentInfo
 class Component
 {
 public:
-	Component(GameObject* gameObject) : gameObject(gameObject), type(ComponentType_NONE){};
-	Component(GameObject* gameObject, ComponentType type) : gameObject(gameObject), type(ComponentType_NONE) {};
+	Component(GameObject* gameObject) : gameObject(gameObject), type(ComponentType_NONE) { timeCreated = time(NULL); }
+	Component(GameObject* gameObject, ComponentType type) : gameObject(gameObject), type(ComponentType_NONE) {}
 
-	~Component() {};
+	~Component() {}
 
 	virtual void Update(float dt) {}
 
 	inline void SetActive(bool isActive) { this->isActive = isActive; }
+
+	virtual void SaveComponent(JSON_Object* parent) {}
+
+	unsigned int GetUUID() const { return UUID; }
+	const void SetUUID(unsigned int newUUID) { UUID = newUUID; }	// This can only be used in load stage
+
+	__int64 GetTime() const { return timeCreated; }
+	const void SetTime(__int64 newTime) { timeCreated = newTime; }	// This can only be used in load stage
 
 public:
 	ComponentType type = ComponentType_NONE;
@@ -36,4 +45,10 @@ public:
 	bool isActive = true;
 
 	GameObject* gameObject = nullptr;
+
+private:
+
+	unsigned int UUID = 0;
+
+	__int64 timeCreated = 0;
 };

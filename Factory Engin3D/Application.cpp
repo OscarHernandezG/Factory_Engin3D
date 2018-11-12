@@ -1,5 +1,7 @@
 #include "Application.h"
 #include "parson/parson.h"
+#include "pcg-c-basic-0.9/pcg_basic.h"
+#include <time.h>
 
 Application::Application()
 {
@@ -10,10 +12,11 @@ Application::Application()
 	camera = new ModuleCamera3D(this);
 	gui = new ModuleImGui(this);
 	geometry = new ModuleGeometry(this);
-	gameObject = new ModuleGameObjectManager(this);
+	gameObject = new ModuleGameObject(this);
 	importer = new ModuleImporter(this);
 	picking = new ModulePicking(this);
-	time = new ModuleTimeManager(this);
+	time = new ModuleTime(this);
+	resources = new ModuleResources(this);
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -34,6 +37,7 @@ Application::Application()
 	AddModule(gui);
 	AddModule(picking);
 	AddModule(time);
+	AddModule(resources);
 
 	// Renderer last!
 	AddModule(renderer3D);
@@ -78,6 +82,7 @@ bool Application::Init()
 		item++;
 	}
 	
+	pcg32_srandom(::time(NULL) ^ (intptr_t)&printf, 54u);
 	return ret;
 }
 
@@ -165,9 +170,17 @@ update_status Application::Update()
 			ret = (*item)->Save(dataObj);
 			item++;
 		}
+		//This saves de json more readable
+		//int sizeBuf = json_serialization_size_pretty(user_data);
+		//char* buf = new char[sizeBuf];
+		//json_serialize_to_buffer_pretty(user_data, buf, sizeBuf);
+		//App->importer->SaveFile("test", sizeBuf, buf, LlibraryType::LlibraryType_MESH);
+		//delete[] buf;
+
 		json_serialize_to_file(user_data, "user_data.json");
 		json_value_free(user_data);
 		canSave = false;
+
 	}
 	
 	FinishUpdate();

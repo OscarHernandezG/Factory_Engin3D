@@ -2,14 +2,13 @@
 #include "Application.h"
 #include "ModuleImGui.h"
 #include "ModuleWindow.h"
+#include "ModuleResources.h"
 
 #include "ImGuizmo/ImGuizmo.h"
 #include "imgui-1.65/imgui_impl_sdl.h"
 #include "imgui-1.65/imgui_impl_opengl2.h"
 #include "imgui-1.65/imgui_internal.h"
 #include "SDL/include/SDL_opengl.h"
-
-#include "pcg-c-0.94/extras/entropy.h"
 
 #include "MathGeoLib/Geometry/GeometryAll.h"
 
@@ -33,9 +32,6 @@ bool ModuleImGui::Start()
 	LOG("Loading Intro assets");
 
 	bool ret = true;
-
-	pcg32_srandom_r(&rng, 42u, 54u);
-
 
 	//--------------------------
 	// Window position
@@ -102,6 +98,8 @@ update_status ModuleImGui::PreUpdate()
 		CreateGameObjectHierarchy(scale);
 
 	CreateGameManager(scale);
+
+	CreateAssetsWindow(scale);
 
 	status = CreateMainMenuBar();
 
@@ -249,8 +247,8 @@ void ModuleImGui::CreateRandomNumberWindow()
 
 	if (ImGui::Button("Get a random number (0.0-1.0)", ImVec2(300, 50)))
 	{
-		randomDoubleNum = ldexp(pcg32_random_r(&rng), -32);
-		randNumTextDouble = to_string(randomDoubleNum);
+		//randomDoubleNum = ldexp(pcg32_random_r(&rng), -32);
+		//randNumTextDouble = to_string(randomDoubleNum);
 	}
 
 	if (randomDoubleNum > -1)
@@ -279,7 +277,7 @@ void ModuleImGui::CreateRandomNumberWindow()
 	if (ImGui::Button(buttonText.data(), ImVec2(400, 50)))
 	{
 		int range = randNum2 - randNum1 + 1;
-		randomIntNum = pcg32_boundedrand_r(&rng, range);
+		//randomIntNum = pcg32_boundedrand_r(&rng, range);
 		randomIntNum += randNum1;
 		randNumTextInt = to_string(randomIntNum);
 
@@ -492,13 +490,13 @@ void ModuleImGui::CreateTransform(float2 scale)
 			scale = currObject->transform->scale;
 			rotate = currObject->transform->GetRotation();
 
-			if (ImGui::InputFloat3("Position", &position[0])) {
+			if (ImGui::InputFloat3("Position", &position[0]) && App->gameObject->CanTransform(currObject)) {
 				App->sceneIntro->SaveLastTransform(prevTransformMat);
 				currObject->SetPos(position);
 				App->sceneIntro->octree.ReDoOctree(AABB(), true);
 			}
 
-			if (ImGui::InputFloat3("Scale", &scale[0]))
+			if (ImGui::InputFloat3("Scale", &scale[0]) && App->gameObject->CanTransform(currObject))
 			{
 				App->sceneIntro->SaveLastTransform(prevTransformMat);
 				currObject->SetScale(scale);
@@ -510,7 +508,7 @@ void ModuleImGui::CreateTransform(float2 scale)
 			angles[1] = math::RadToDeg(angles.y);
 			angles[2] = math::RadToDeg(angles.z);
 
-			if (ImGui::DragFloat3("Rotation", &angles[0]))
+			if (ImGui::DragFloat3("Rotation", &angles[0]) && App->gameObject->CanTransform(currObject))
 			{
 				angles.x = math::DegToRad(angles.x);
 				angles.y = math::DegToRad(angles.y);
@@ -561,9 +559,9 @@ void ModuleImGui::CreateGameObjectHierarchy(float2 scale)
 
 	SetWindowDim(scenePos, sceneSize, scale);
 
-	if (App->gameObject->root)
+	if (App->gameObject->rootGameObject)
 	{
-		CreateGOTreeNode(App->gameObject->root);
+		CreateGOTreeNode(App->gameObject->rootGameObject);
 	}
 	ImGui::End();
 
@@ -615,6 +613,7 @@ void ModuleImGui::CreateGameManager(float2 scale)
 	ImGui::End();
 
 }
+
 
 void ModuleImGui::SetWindowDim(float2 &pos, float2 &size, float2 &scale, bool gameWindow)
 {
@@ -684,6 +683,49 @@ update_status ModuleImGui::CreateMainMenuBar()
 
 	return ret;
 }
+
+void ModuleImGui::CreateAssetsWindow(float2 scale)
+{
+	ImGui::Begin("Assets", &canScroll, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+	SetWindowDim(configurationPos, configurationSize, scale);
+
+	TreeAssets(".\\Assets\\");
+
+		ImGui::End();
+}
+
+void ModuleImGui::TreeAssets(const char* path)
+{
+	vector<string> filesStr = App->resources->ReadFolder(path);
+
+	for (vector<string>::iterator iter = filesStr.begin(); iter != filesStr.end(); ++iter)
+	{
+		if (ImGui::TreeNodeEx((*iter).c_str()))
+		{
+			std::string newPath = path;
+			newPath.append((*iter));
+			newPath += "\\";
+			TreeAssets(newPath.data());
+			ImGui::TreePop();
+		}
+	}
+}
+
+void ModuleImGui::SetWindowDim(float2 &pos, float2 &size, float2 &scale, bool gameWindow)
+{
+	float2 realPos = pos.Mul(scale);
+	float2 realSize = size.Mul(scale);
+
+	if (gameWindow && App->time->gameState != GameState_NONE)
+	{
+		realSize += playCountSize.Mul(scale);
+		realPos += playCountPos.Mul(scale);
+	}
+
+	ImGui::SetWindowPos({ realPos.x, realPos.y });
+	ImGui::SetWindowSize({ realSize.x, realSize.y });
+}
+
 //Create Windows----------------------------------------------------------
 
 
@@ -714,6 +756,9 @@ void ModuleImGui::CreateMenu()
 		else if (ImGui::MenuItem("Transform window", "Ctrl+T", transformWindow))
 			transformWindow = !transformWindow;
 
+		else if (ImGui::MenuItem("Hierarchy", "Ctrl+H", hierarchyWindow))
+			hierarchyWindow = !hierarchyWindow;
+
 		else if (ImGui::MenuItem("Console", "Ctrl+GRAVE", consoleWindow))
 			consoleWindow = !consoleWindow;
 
@@ -728,6 +773,8 @@ bool ModuleImGui::CreateOptions()
 {
 	if (ImGui::BeginMenu("Options"))
 	{
+		if (ImGui::MenuItem("Save Scene", "Ctrl+S"))
+			App->gameObject->SaveScene();
 
 		if (ImGui::MenuItem("Save", "Ctrl+S"))
 			App->canSave = true;
@@ -773,6 +820,9 @@ void ModuleImGui::CheckShortCuts()
 
 		else if (App->input->GetKey(SDL_SCANCODE_T) == KEY_DOWN)
 			transformWindow = !transformWindow;
+
+		else if (App->input->GetKey(SDL_SCANCODE_H) == KEY_DOWN)
+			hierarchyWindow = !hierarchyWindow;
 
 		else if (App->input->GetKey(SDL_SCANCODE_GRAVE) == KEY_DOWN)
 			consoleWindow = !consoleWindow;
@@ -883,7 +933,7 @@ void ModuleImGui::CreateMeshesHeader()
 
 				Mesh* mesh = (Mesh*)goGeometry;
 
-				ImGui::Text("Total vertex: %i", mesh->buffer.vertex.size);
+				ImGui::Text("Total vertex: %i", mesh->buffer->vertex.size);
 				ImGui::Text("Total faces: %i", App->geometry->numFaces);
 				if (ImGui::Button("Remove Mesh", { 125,25 }))
 				{

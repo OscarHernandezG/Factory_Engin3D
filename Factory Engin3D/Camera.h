@@ -26,11 +26,10 @@ public:
 	void		SetPos(float3 pos);
 	float3		GetPos();
 
+	void SaveComponent(JSON_Object * parent);
+
 public:
 	Frustum frustum;
-
-
-	AABB boundingBox;
 };
 
 #endif // !__Camera_H__

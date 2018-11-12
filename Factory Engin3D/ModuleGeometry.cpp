@@ -1,5 +1,5 @@
 #include "Application.h"
-#include "ModuleGeometryManager.h"
+#include "ModuleGeometry.h"
 #include "ModuleImporter.h"
 
 #include "glew-2.1.0/include/GL/glew.h"
@@ -21,6 +21,7 @@
 
 #include "GameObject.h"
 
+#include "pcg-c-basic-0.9/pcg_basic.h"
 
 
 ModuleGeometry::ModuleGeometry(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -55,45 +56,35 @@ bool ModuleGeometry::CleanUp()
 	return true;
 }
 
-void ModuleGeometry::DistributeFile(char* file)
+MeshNode ModuleGeometry::LoadMeshBuffer(const aiScene* scene, uint index, char* path)
 {
-	string filePath(file);
-	string extension = filePath.substr(filePath.find_last_of(".") + 1);
+	MeshNode tempBuffer;
 
-
-	if (!extension.compare("fbx") || !extension.compare("obj"))
-	{
-		UpdateMesh(file);
-	}
-	else if (!extension.compare("png") || !extension.compare("dds") || !extension.compare("jpg") || !extension.compare("jpeg"))
-		UpdateTexture(file);
-}
-
-MeshBuffer ModuleGeometry::LoadMeshBuffer(const aiScene* scene, uint index, char* path)
-{
-	MeshBuffer buffer;
+	LOG("Mesh index = %u", index);
 
 	aiMesh* newMesh = scene->mMeshes[index];
 
-	LoadMeshVertex(buffer, newMesh);
+	LoadMeshVertex(tempBuffer.buffer, newMesh);
 
 	if (newMesh->HasFaces())
 	{
-		LoadMeshIndex(newMesh, buffer);
+		LoadMeshIndex(newMesh, tempBuffer.buffer);
 	}
 
 	if (newMesh->HasTextureCoords(0))
 	{
-		LoadMeshTextureCoords(buffer, newMesh);
+		LoadMeshTextureCoords(tempBuffer.buffer, newMesh);
 	}
 
-	buffer.id = index;
+	tempBuffer.id = index;
+	tempBuffer.componentUUID = pcg32_random();
 
-	SaveMeshImporter(buffer, path, index);
+	//SaveMeshImporter(tempBuffer.buffer, path, tempBuffer.componentUUID);
 
-	buffer.boundingBox = LoadBoundingBox(buffer.vertex);
+	tempBuffer.buffer.boundingBox = LoadBoundingBox(tempBuffer.buffer.vertex);
 
-	return buffer;
+
+	return tempBuffer;
 }
 
 void ModuleGeometry::LoadMeshTextureCoords(MeshBuffer &buffer, aiMesh * newMesh)
@@ -138,12 +129,10 @@ MeshNode ModuleGeometry::LoadMeshNode(const aiScene* scene, aiNode* node, char* 
 {
 	MeshNode meshNode;
 
-	meshNode.name = node->mName.C_Str();
-
 	if (node->mNumMeshes > 0)
 	{
-		MeshBuffer currMeshBuff = LoadMeshBuffer(scene, node->mMeshes[0], path);
-		meshNode.buffer = currMeshBuff;
+		MeshNode currMeshBuff = LoadMeshBuffer(scene, node->mMeshes[0], path);
+		meshNode = currMeshBuff;
 	}
 	for (int child = 0; child < node->mNumChildren; ++child)
 	{
@@ -151,6 +140,9 @@ MeshNode ModuleGeometry::LoadMeshNode(const aiScene* scene, aiNode* node, char* 
 	}
 	
 	meshNode.transform = AiNatrixToFloatMat(node->mTransformation);
+	meshNode.name = node->mName.C_Str();
+
+	nodes.push_back(meshNode);
 
 	return meshNode;
 }
@@ -174,8 +166,6 @@ MeshNode ModuleGeometry::LoadMesh(char* path)
 
 		if (scene != nullptr)
 		{
-			// Todo: GameObject name here
-			// Todo: Save names in fty
 			if (scene->HasMeshes())
 				meshRoot = LoadMeshNode(scene, scene->mRootNode, path);
 
@@ -189,7 +179,7 @@ MeshNode ModuleGeometry::LoadMesh(char* path)
 	return meshRoot;
 }
 
-void ModuleGeometry::SaveMeshImporter(MeshBuffer newCurrentBuffer, const char* path, int number)
+void ModuleGeometry::SaveMeshImporter(MeshBuffer newCurrentBuffer, const char* path, uint uuid)
 {
 	uint ranges[3] = { newCurrentBuffer.index.size, newCurrentBuffer.vertex.size, newCurrentBuffer.texture.size};
 
@@ -220,97 +210,100 @@ void ModuleGeometry::SaveMeshImporter(MeshBuffer newCurrentBuffer, const char* p
 		bytes = sizeof(float)* newCurrentBuffer.texture.size;
 		memcpy(cursor, newCurrentBuffer.texture.buffer, bytes);
 	}
-
-	App->importer->SaveFile(path,size,exporter, LlibraryType_MESH, number);
+	App->importer->SaveFile(path, size, exporter, LlibraryType_MESH, uuid);
 	
 	delete[] exporter;
 }
 
-void ModuleGeometry::LoadMeshImporter(const char* path, MeshNode* tempMesh)
+vector<MeshBuffer*> ModuleGeometry::LoadMeshImporter(const char* path, const vector<MeshNode>& nodes)
 {
-	int i = 0;
-	i = tempMesh->buffer.id;
-	char* buffer = App->importer->LoadFile(path, LlibraryType_MESH, i);
+	char* buffer = nullptr;
+	vector<MeshBuffer*> buffers;
 
-	// UUID
-	if (buffer != nullptr)
+	for (vector<MeshNode>::const_iterator iterator = nodes.begin(); iterator != nodes.end(); ++iterator)
 	{
-		MeshBuffer bufferImporter;
-		char* cursor = buffer;
+		int i = (*iterator).id;
 
-		uint ranges[3];
+		buffer = App->importer->LoadFile(path, LlibraryType_MESH, (*iterator).componentUUID);
 
-		uint bytes = sizeof(ranges);
-		memcpy(ranges, cursor, bytes);
+		if (buffer != nullptr)
+		{
+			MeshBuffer* bufferImporter = new MeshBuffer();
+			bufferImporter->id = i;
+			char* cursor = buffer;
 
-		bufferImporter.index.size = ranges[0];
-		bufferImporter.vertex.size = ranges[1];
-		bufferImporter.texture.size = ranges[2];
+			uint ranges[3];
 
-		cursor += bytes;
-		bytes = sizeof(uint)* bufferImporter.index.size;
-		bufferImporter.index.buffer = new uint[bufferImporter.index.size];
-		memcpy(bufferImporter.index.buffer, cursor, bytes);
+			uint bytes = sizeof(ranges);
+			memcpy(ranges, cursor, bytes);
 
-		glGenBuffers(1, (GLuint*)&(bufferImporter.index.id));
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferImporter.index.id);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * bufferImporter.index.size, bufferImporter.index.buffer, GL_STATIC_DRAW);
+			bufferImporter->index.size = ranges[0];
+			bufferImporter->vertex.size = ranges[1];
+			bufferImporter->texture.size = ranges[2];
 
-		cursor += bytes;
-		bytes = sizeof(float)* bufferImporter.vertex.size;
-		bufferImporter.vertex.buffer = new float[bufferImporter.vertex.size];
-		memcpy(bufferImporter.vertex.buffer, cursor, bytes);
+			cursor += bytes;
+			bytes = sizeof(uint)* bufferImporter->index.size;
+			bufferImporter->index.buffer = new uint[bufferImporter->index.size];
+			memcpy(bufferImporter->index.buffer, cursor, bytes);
 
-		glGenBuffers(1, (GLuint*)&(bufferImporter.vertex.id));
-		glBindBuffer(GL_ARRAY_BUFFER, bufferImporter.vertex.id);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * bufferImporter.vertex.size, bufferImporter.vertex.buffer, GL_STATIC_DRAW);
+			glGenBuffers(1, (GLuint*)&(bufferImporter->index.id));
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferImporter->index.id);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * bufferImporter->index.size, bufferImporter->index.buffer, GL_STATIC_DRAW);
 
-		cursor += bytes;
-		bytes = sizeof(float)* bufferImporter.texture.size;
-		bufferImporter.texture.buffer = new float[bufferImporter.texture.size];
-		memcpy(bufferImporter.texture.buffer, cursor, bytes);
+			cursor += bytes;
+			bytes = sizeof(float)* bufferImporter->vertex.size;
+			bufferImporter->vertex.buffer = new float[bufferImporter->vertex.size];
+			memcpy(bufferImporter->vertex.buffer, cursor, bytes);
 
-		glGenBuffers(1, &bufferImporter.texture.id);
-		glBindBuffer(GL_ARRAY_BUFFER, bufferImporter.texture.id);
-		glBufferData(GL_ARRAY_BUFFER, bufferImporter.texture.size * sizeof(float), bufferImporter.texture.buffer, GL_STATIC_DRAW);
+			glGenBuffers(1, (GLuint*)&(bufferImporter->vertex.id));
+			glBindBuffer(GL_ARRAY_BUFFER, bufferImporter->vertex.id);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * bufferImporter->vertex.size, bufferImporter->vertex.buffer, GL_STATIC_DRAW);
 
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+			cursor += bytes;
+			bytes = sizeof(float)* bufferImporter->texture.size;
+			bufferImporter->texture.buffer = new float[bufferImporter->texture.size];
+			memcpy(bufferImporter->texture.buffer, cursor, bytes);
 
-	//	i++;
-		//buffer = App->importer->LoadFile(path, LlibraryType_MESH, i);
+			glGenBuffers(1, &bufferImporter->texture.id);
+			glBindBuffer(GL_ARRAY_BUFFER, bufferImporter->texture.id);
+			glBufferData(GL_ARRAY_BUFFER, bufferImporter->texture.size * sizeof(float), bufferImporter->texture.buffer, GL_STATIC_DRAW);
 
-		bufferImporter.boundingBox = LoadBoundingBox(bufferImporter.vertex);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-		tempMesh->buffer = bufferImporter;
+			bufferImporter->boundingBox = LoadBoundingBox(bufferImporter->vertex);
+
+			buffers.push_back(bufferImporter);
+
+			delete buffer;
+		}
 	}
-	else
-	{
-		;
-
-		tempMesh->buffer.boundingBox = AABB(float3::zero, float3::zero);
-	}
-
-	for (list<MeshNode>::iterator childs = tempMesh->childs.begin(); childs != tempMesh->childs.end(); ++childs)
-	{
-		LoadMeshImporter(path, &*childs);
-	}
-
-	delete[] buffer;
+	return buffers;
 }
 
 GameObject* ModuleGeometry::LoadGameObjectsFromMeshNode(MeshNode node, GameObject* father)
 {
 	GameObject* newGameObject = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, father, node.name.data());
-	newGameObject->ForceTransform(node.transform);
+	newGameObject->SetTransform(node.transform);
 	newGameObject->SetABB((node.buffer).boundingBox);
 
-	Mesh* currMesh = new Mesh(newGameObject);
-	currMesh->buffer = node.buffer;
-	GeometryInfo info(currMesh);
-	newGameObject->AddComponent(ComponentType_GEOMETRY, &info);
-	App->sceneIntro->octree.Insert(newGameObject);
+	// TODO remove and use the vector
 
+	vector<MeshBuffer*>::iterator currentMeshBuffer;
+	for (currentMeshBuffer = loadedMeshes.begin(); currentMeshBuffer != loadedMeshes.end(); ++currentMeshBuffer)
+	{
+		if (node.id > 0)
+			if ((*currentMeshBuffer)->id == node.id)
+			{
+				Mesh* currMesh = new Mesh(newGameObject);
+
+				currMesh->buffer = (*currentMeshBuffer);
+				GeometryInfo info(currMesh);
+				newGameObject->AddComponent(ComponentType_GEOMETRY, &info);
+				App->sceneIntro->octree.Insert(newGameObject);
+				break;
+			}
+	}
 
 	for (list<MeshNode>::iterator childs = node.childs.begin(); childs != node.childs.end(); ++childs)
 	{
@@ -319,23 +312,141 @@ GameObject* ModuleGeometry::LoadGameObjectsFromMeshNode(MeshNode node, GameObjec
 	return newGameObject;
 }
 
+// Create a new gameObject wich only stores the name, the component geometry asociated and the hierarchy
+// This is used to create a temporal gameObject when we load a new geometry to the engine
+// This way we create a shell that will serve as a guide to save the geometry in .fty and load the real GameObject afterwards
+GameObject* ModuleGeometry::LoadEmptyGameObjectsFromMeshNode(MeshNode node, GameObject* father)
+{
+	GameObject* newGameObject = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, father, node.name.data());
+	newGameObject->ForceTransform(node.transform);
+	newGameObject->SetABB((node.buffer).boundingBox);
+
+
+
+	vector<MeshNode>::iterator currentMeshBuffer;
+	for (currentMeshBuffer = nodes.begin(); currentMeshBuffer != nodes.end(); ++currentMeshBuffer)
+	{
+		if ((*currentMeshBuffer).id == node.id)
+		{
+			Mesh* currMesh = new Mesh(newGameObject);
+
+			currMesh->SetUUID(node.componentUUID);
+
+			GeometryInfo info(currMesh);
+			newGameObject->AddComponent(ComponentType_GEOMETRY, &info);
+
+			//App->sceneIntro->octree.Insert(newGameObject);
+			break;
+		}
+	}
+
+	for (list<MeshNode>::iterator childs = node.childs.begin(); childs != node.childs.end(); ++childs)
+	{
+		LoadEmptyGameObjectsFromMeshNode(*childs, newGameObject);
+	}
+	return newGameObject;
+}
+
 
 void ModuleGeometry::UpdateMesh(char* path)
 {
 	MeshNode tempMesh = LoadMesh(path);
+	
+	// This GO is the one we have to save in the scene
+	GameObject* tempGO = LoadEmptyGameObjectsFromMeshNode(tempMesh, App->gameObject->rootGameObject);
 
-	//if (!tempMesh.buffer.empty() || !tempMesh.childs.empty())
+
+	// Save scene in json and use the info to load the new gameObject
+	// TODO: check the UUID from the gameobject, we have to save the uuid in the scene file (components too?)
+	//std::sort(loadedMeshes.begin(), loadedMeshes.end());
+	JSON_Value* rootValue = json_value_init_object();
+	JSON_Object* rootObject = json_value_get_object(rootValue);
+
+	SaveGameObjectJson(tempGO, rootObject);
+
+	tempGO->Delete();
+
+	int sizeBuf = json_serialization_size_pretty(rootValue);
+	char* buf = new char[sizeBuf];
+	json_serialize_to_buffer_pretty(rootValue, buf, sizeBuf);
+	App->importer->SaveFile("tempGO", sizeBuf, buf, LlibraryType::LlibraryType_MESH);
+	delete[] buf;
+	json_value_free(rootValue);
+
+	sort(nodes.begin(), nodes.end());
+	nodes.erase(unique(nodes.begin(), nodes.end()), nodes.end());
+
+	for (vector<MeshNode>::const_iterator iterator = nodes.begin(); iterator != nodes.end(); ++iterator)
 	{
-		//Geometry* mesh = (Geometry*)currentMesh->GetComponent(ComponentType::ComponentType_GEOMETRY);
-		//currentMesh->RemoveComponent(mesh);
+		SaveMeshImporter((*iterator).buffer, path, (*iterator).componentUUID);
+	}
 
-		LoadMeshImporter(path, &tempMesh);
 
-		GameObject* newGameObject = LoadGameObjectsFromMeshNode(tempMesh, App->gameObject->root);
+	vector<MeshBuffer*> tempVec = LoadMeshImporter(path, nodes);
+	loadedMeshes.insert(loadedMeshes.end(), tempVec.begin(), tempVec.end());
 
-		currentGameObject = newGameObject;
-		bHouse = newGameObject;
-		//App->sceneIntro->quadtree.Insert(bHouse);
+	GameObject* newGameObject = LoadGameObjectsFromMeshNode(tempMesh, App->gameObject->rootGameObject);
+
+	currentGameObject = newGameObject;
+	bHouse = newGameObject;
+
+}
+
+void ModuleGeometry::SaveGameObjectJson(GameObject* object, JSON_Object* parent)
+{
+	JSON_Value* newValue = json_value_init_object();
+	JSON_Object* objGO = json_value_get_object(newValue);
+
+	json_object_set_value(parent, object->name.data() , newValue);
+
+	json_object_set_number(objGO, "UUID", object->GetUID());
+
+	// Position
+	//------------------------------------------------------------------------
+	JSON_Value* position = json_value_init_object();
+	JSON_Object* positionObj = json_value_get_object(position);
+
+	json_object_set_value(objGO, "Position", position);
+
+	float3 pos = object->GetPos();
+
+	json_object_set_number(positionObj, "X", pos.x);
+	json_object_set_number(positionObj, "Y", pos.y);
+	json_object_set_number(positionObj, "Z", pos.z);
+	
+	// Scale
+	//------------------------------------------------------------------------
+	JSON_Value* scale = json_value_init_object();
+	JSON_Object* scalenObj = json_value_get_object(scale);
+
+	json_object_set_value(objGO, "Scale", scale);
+
+	float3 size = object->GetScale();
+
+	json_object_set_number(scalenObj, "X", size.x);
+	json_object_set_number(scalenObj, "Y", size.y);
+	json_object_set_number(scalenObj, "Z", size.z);
+
+	// Rotation
+	//------------------------------------------------------------------------
+	JSON_Value* rotation = json_value_init_object();
+	JSON_Object* rotationObj = json_value_get_object(rotation);
+
+	json_object_set_value(objGO, "Rotation", rotation);
+
+	Quat rot = object->GetRotation();
+
+	json_object_set_number(rotationObj, "X", rot.x);
+	json_object_set_number(rotationObj, "Y", rot.y);
+	json_object_set_number(rotationObj, "Z", rot.z);
+	json_object_set_number(rotationObj, "W", rot.w);
+	//------------------------------------------------------------------------
+
+	json_object_set_number(objGO, "isActive", object->GetActive());
+
+	for (list<GameObject*>::iterator iterator = object->childs.begin(); iterator != object->childs.end(); ++iterator)
+	{
+		SaveGameObjectJson(*iterator, objGO);
 	}
 }
 
@@ -547,23 +658,33 @@ update_status ModuleGeometry::PostUpdate()
 
 
 
+
 		return UPDATE_CONTINUE;
+}
+
+void ModuleGeometry::Draww(GameObject* object)
+{
+	assert(object);
+
+	for (list<GameObject*>::iterator it = object->childs.begin(); it != object->childs.end(); ++it)
+	{
+		Draww(*it);
+	}
+
+	Mesh* mesh = (Mesh*)(*object).GetComponent(ComponentType_GEOMETRY);
+	if (mesh)
+	{
+		mesh->Render();
+	}
 }
 
 void ModuleGeometry::LoadDefaultScene()
 {
-	DistributeFile("assets\\models\\Street.fbx");
-	DistributeFile("assets\\textures\\Baker_house.png");
+	App->importer->DistributeFile("assets\\models\\Street.fbx");
+	App->importer->DistributeFile("assets\\textures\\Baker_house.png");
 
-	plane = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, "Ground");
+	plane = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->rootGameObject, "Ground");
 
 	GeometryInfo planeInfo(new PrimitivePlane());
 	plane->AddComponent(ComponentType_GEOMETRY, &planeInfo);
-
-
-	//GameObject* box = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->root, "Box at 0,0,0");
-
-	//GeometryInfo cubeInfo(new PrimitiveCube());
-	//box->AddComponent(ComponentType_GEOMETRY, &cubeInfo);
-
 }

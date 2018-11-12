@@ -4,6 +4,7 @@
 
 #include "MathGeoLib/MathGeoLib.h"
 
+
 class GameObject;
 
 enum UsingInfo
@@ -55,19 +56,21 @@ public:
 	void		SetScale(float3 scale);
 	void		SetIdentity();
 
-	const float3	GetPos() const;
-	const float3	GetLocalPos() const;
+	 float3	GetPos() const;
+	 float3	GetLocalPos() const;
 
-	const float3	GetScale() const;
+	 float3	GetScale() const;
 
-	const Quat		GetRotation() const;
-	const Quat		GetLocalRotation() const;
+	 Quat		GetRotation() const;
+	 Quat		GetLocalRotation() const;
 
 
 	const float4x4	GetMatrixOGL() const;
 	const float4x4	GetMatrix() const;
 
 	const float4x4 GetGlobalMatrix() const;
+
+	void SaveComponent(JSON_Object* parent);
 
 public:
 

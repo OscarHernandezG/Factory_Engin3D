@@ -1,5 +1,5 @@
 #include "GameObject.h"
-#include "pcg-c-0.94/extras/entropy.h"
+#include "pcg-c-basic-0.9/pcg_basic.h"
 
 
 GameObject::GameObject(GameObject* father, const char * name)
@@ -43,20 +43,43 @@ GameObject::~GameObject()
 {
 	transform = nullptr;
 
-	for (list<Component*>::iterator iterator = components.begin(); iterator != components.end(); ++iterator)
-	{
-		delete (*iterator);
-	}
+	RemoveComponents();
 
-	components.clear();
+	RemoveChilds();
+}
 
+void GameObject::RemoveChilds()
+{
 	for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
 	{
 		delete (*iterator);
 	}
-
 	childs.clear();
 }
+
+void GameObject::RemoveComponents()
+{
+	for (list<Component*>::iterator iterator = components.begin(); iterator != components.end(); ++iterator)
+	{
+		delete (*iterator);
+	}
+	components.clear();
+}
+
+
+
+void GameObject::RealDelete()
+{
+	transform = nullptr;
+
+	if (father)
+		father->childs.remove(this);
+
+	father = nullptr;
+	//delete this;
+}
+
+
 
 void GameObject::Update(float dt)
 {
@@ -132,9 +155,11 @@ void GameObject::RemoveComponent(Component* component)
 
 void GameObject::CreateGameObject(TransformInfo* info)
 {
-	pcg32_srandom_r(&rng, 42u, 54u);
+	UID = pcg32_random();
 
 	this->transform = (Transform*)AddComponent(ComponentType_TRANSFORM, info);
+	if(transform)
+		transform->SetUUID(pcg32_random());
 }
 
 Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
@@ -234,10 +259,21 @@ void GameObject::SetPos(float3 pos)
 	float3 movement = float3::zero;
 	if (transform)
 	{
+		movement = pos - transform->GetLocalPos();
+	}
+
+	Move(movement);
+}
+
+void GameObject::SetGlobalPos(float3 pos)
+{
+	float3 movement = float3::zero;
+	if (transform)
+	{
 		movement = pos - transform->GetPos();
 	}
-	Move(movement);
 
+	Move(movement);
 }
 
 void GameObject::Move(float3 movement)
@@ -260,7 +296,8 @@ void GameObject::SetScale(float3 scale)
 	scaleVariation.y = scale.y / scaleGO.y;
 	scaleVariation.z = scale.z / scaleGO.z;
 
-	Scale(scaleVariation);
+	if(!scaleVariation.IsFinite())
+		Scale(scaleVariation);
 }
 
 void GameObject::Scale(float3 scale)
@@ -270,8 +307,8 @@ void GameObject::Scale(float3 scale)
 
 	for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
 	{
+		(*iterator)->SetGlobalPos(((*iterator)->transform->scale.Mul(scale)).Mul((*iterator)->transform->GetPos()));
 		(*iterator)->Scale(scale);
-		(*iterator)->SetPos(scale.Mul((*iterator)->transform->GetLocalPos()));
 	}
 }
 
@@ -286,11 +323,15 @@ void GameObject::Rotate(Quat rotation)
 {
 	for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
 	{
-		float3 originalPosition = (*iterator)->GetPos() - GetPos();
+		float3 pos = transform->GetLocalPos();
+
+
+		float3 originalPosition = (*iterator)->transform->GetLocalPos() - pos;
 		float3 newPosition = originalPosition;
+
 		newPosition = rotation.Transform(newPosition);
 
-		(*iterator)->SetPos(newPosition);
+		(*iterator)->SetPos((newPosition + pos));
 		(*iterator)->Rotate(rotation);
 	}
 
@@ -360,7 +401,6 @@ void GameObject::SetObjectStatic(bool isStatic)
 
 int GameObject::CreateRandomUID()
 {
-	UID = pcg32_boundedrand_r(&rng, UINT_MAX);
-	return UID;
+	return 0;
 }
 

@@ -20,13 +20,29 @@ bool ModuleImporter::Init()
 	CreateDirectory("Llibrary",NULL);
 	CreateDirectory("Llibrary/Meshes", NULL);
 	CreateDirectory("Llibrary/Textures", NULL);
+	CreateDirectory("Llibrary/Scenes", NULL);
 
 	return true;
 }
 
-void ModuleImporter::SaveFile(const char* path, uint size, char* outputFile, LlibraryType type, int number)
+void ModuleImporter::DistributeFile(char* file)
 {
-	string direction = GetDirectionName(path, type, number);
+	string filePath(file);
+	string extension = filePath.substr(filePath.find_last_of(".") + 1);
+
+
+	if (!extension.compare("fbx") || !extension.compare("obj"))
+	{
+		App->geometry->UpdateMesh(file);
+	}
+	else if (!extension.compare("png") || !extension.compare("dds") || !extension.compare("jpg") || !extension.compare("jpeg"))
+		App->geometry->UpdateTexture(file);
+}
+
+
+void ModuleImporter::SaveFile(const char* path, uint size, char* outputFile, LlibraryType type, uint uuid)
+{
+	string direction = GetDirectionName(path, type, uuid);
 
 	ofstream newFile (direction.c_str(), ios::out | ios::binary);
 	if (newFile.is_open())
@@ -36,7 +52,7 @@ void ModuleImporter::SaveFile(const char* path, uint size, char* outputFile, Lli
 	}
 }
 
-char* ModuleImporter::LoadFile(const char* path, LlibraryType type, int number)
+char* ModuleImporter::LoadFile(const char* path, LlibraryType type, uint number)
 {
 	string direction = GetDirectionName(path, type, number);
 	char *text = nullptr;
@@ -56,7 +72,7 @@ char* ModuleImporter::LoadFile(const char* path, LlibraryType type, int number)
 	return text;
 }
 
-string ModuleImporter::GetDirectionName(const char* path, LlibraryType type, int number)
+string ModuleImporter::GetDirectionName(const char* path, LlibraryType type, uint uuid)
 {
 	string filePath(path);
 	string goodFile = "Llibrary/";
@@ -69,9 +85,12 @@ string ModuleImporter::GetDirectionName(const char* path, LlibraryType type, int
 		TextureDirection(goodFile, filePath);
 		break;
 	case LlibraryType_MESH:
-		MeshDirection(filePath, goodFile, number);
+		MeshDirection(filePath, goodFile, uuid);
 		break;
 	case LlibraryType_MATERIAL:
+		break;
+	case LlibraryType_SCENE:
+		SceneDirection(filePath, goodFile);
 		break;
 	default:
 		break;
@@ -90,14 +109,27 @@ void ModuleImporter::TextureDirection(std::string &goodFile, std::string &filePa
 	goodFile += filePath.substr(initialPos, (finalPos - initialPos)) + "dds";
 }
 
-void ModuleImporter::MeshDirection(std::string &filePath, std::string &goodFile, int number)
+void ModuleImporter::MeshDirection(std::string &filePath, std::string &goodFile, uint uuid)
 {
 	goodFile += "Meshes/";
+
+	//uint initialPos = filePath.find_last_of("\\") + 1;
+	//uint finalPos = filePath.find_last_of(".");
+
+	//goodFile += filePath.substr(initialPos, (finalPos - initialPos));
+	goodFile += to_string(uuid);
+	goodFile += ".fty";
+}
+
+void ModuleImporter::SceneDirection(std::string &filePath, std::string &goodFile)
+{
+	goodFile += "Scenes/";
 
 	uint initialPos = filePath.find_last_of("\\") + 1;
 	uint finalPos = filePath.find_last_of(".");
 
 	goodFile += filePath.substr(initialPos, (finalPos - initialPos));
-	goodFile += to_string(number);
-	goodFile += ".fty";
+	goodFile += ".json";
+	// TODO .json to .scene
+	// Now in .json to improve 
 }
