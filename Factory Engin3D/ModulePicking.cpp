@@ -61,7 +61,7 @@ update_status ModulePicking::Update()
 			App->geometry->currentGameObject = nearObject;
 
 		rayDraw = RayLine(ray.a, ray.b);
-		rayDraw.gameObject = App->gameObject->root;
+		rayDraw.gameObject = App->gameObject->rootGameObject;
 	}
 	rayDraw.Render();
 	return UPDATE_CONTINUE;
@@ -71,12 +71,12 @@ bool ModulePicking::CheckMeshTri(Geometry * geometry, LineSegment &ray, float &s
 {
 	bool ret = false;
 	Triangle triangle;
-	Buffer<uint> index = ((Mesh*)geometry)->buffer.index;
+	Buffer<uint> index = ((Mesh*)geometry)->buffer->index;
 	for (int i = 0; i < index.size / 3; ++i)
 	{
-		triangle.a = SetTrianglePoint(((Mesh*)geometry)->buffer.vertex, index, (i * 3));
-		triangle.b = SetTrianglePoint(((Mesh*)geometry)->buffer.vertex, index, (i * 3) + 1);
-		triangle.c = SetTrianglePoint(((Mesh*)geometry)->buffer.vertex, index, (i * 3) + 2);
+		triangle.a = SetTrianglePoint(((Mesh*)geometry)->buffer->vertex, index, (i * 3));
+		triangle.b = SetTrianglePoint(((Mesh*)geometry)->buffer->vertex, index, (i * 3) + 1);
+		triangle.c = SetTrianglePoint(((Mesh*)geometry)->buffer->vertex, index, (i * 3) + 2);
 
 		float distance;
 		float3 pos;

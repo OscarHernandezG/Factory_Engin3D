@@ -7,7 +7,6 @@
 #include <list>
 #include "Transform.h"
 #include "Camera.h"
-#include "pcg-c-0.94/include/pcg_variants.h"
 
 using namespace std;
 
@@ -21,11 +20,18 @@ struct  ComponentInfo;
 
 class GameObject
 {
+	friend class ModuleGameObject;
+
 public:
 	GameObject(GameObject* father, const char* name = nullptr);
 	GameObject(float3 position, Quat rotation = Quat::identity, float3 scale = float3::one, GameObject* father = nullptr, const char* name = nullptr);
 	
 	~GameObject();
+
+	void RemoveChilds();
+
+	void RemoveComponents();
+
 
 	void Update(float dt);
 
@@ -48,6 +54,7 @@ public:
 	void ForceTransform(float4x4 trans);
 
 	void SetPos(float3 pos);
+	void SetGlobalPos(float3 pos);
 	void Move(float3 movement);
 	void SetScale(float3 scale);
 	void Scale(float3 scale);
@@ -72,13 +79,14 @@ public:
 	inline bool* GetActiveReference() { return &isActive; }
 	inline bool* GetStaticReference() { return &isStatic; }
 
-
+	inline const unsigned int GetUID() const { return UID; }
 
 	int CreateRandomUID();
 
 private:
 	void CreateGameObject(TransformInfo* info);
 
+	void RealDelete();
 
 public:
 	Transform* transform = nullptr;
@@ -94,10 +102,9 @@ public:
 
 private:
 	bool isActive = true;
+
+	uint UID = 0;
+
 	bool isStatic = true;
-
-	int UID = 0;
-	pcg32_random_t rng;
-
 };
 #endif // !__GameObject_H__

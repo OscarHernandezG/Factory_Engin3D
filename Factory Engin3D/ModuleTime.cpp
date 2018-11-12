@@ -1,40 +1,40 @@
 #include "Globals.h"
 #include "Application.h"
-#include "ModuleTimeManager.h"
+#include "ModuleTime.h"
 
 #include "SDL/include/SDL_opengl.h"
 #include <gl/GL.h>
 
-ModuleTimeManager::ModuleTimeManager(Application* app, bool start_enabled) : Module(app, start_enabled)
+ModuleTime::ModuleTime(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 }
 
 // Destructor
-ModuleTimeManager::~ModuleTimeManager()
+ModuleTime::~ModuleTime()
 {
 }
 
 // Called before render is available
-bool ModuleTimeManager::Init()
+bool ModuleTime::Init()
 {
 	bool ret = true;
 
 	return ret;
 }
 
-bool ModuleTimeManager::Start()
+bool ModuleTime::Start()
 {
 	dtTimer.Start();
 	return true;
 }
 
 // Called before quitting
-bool ModuleTimeManager::CleanUp()
+bool ModuleTime::CleanUp()
 {
 	return true;
 }
 
-update_status ModuleTimeManager::PreUpdate()
+update_status ModuleTime::PreUpdate()
 {
 	//Calculate dtReal
 	dtReal = (float)dtTimer.Read() / 1000.0f;
@@ -88,12 +88,12 @@ update_status ModuleTimeManager::PreUpdate()
 	return UPDATE_CONTINUE;
 }
 
-update_status ModuleTimeManager::Update()
+update_status ModuleTime::Update()
 {
 	return UPDATE_CONTINUE;
 }
 
-update_status ModuleTimeManager::PostUpdate()
+update_status ModuleTime::PostUpdate()
 {
 
 	msLog.push_back(dtReal * 1000);
@@ -106,44 +106,44 @@ update_status ModuleTimeManager::PostUpdate()
 	return UPDATE_CONTINUE;
 }
 
-void ModuleTimeManager::SetScaleGame(float scale)
+void ModuleTime::SetScaleGame(float scale)
 {
 	dtGameScale = scale;
 }
 
-uint ModuleTimeManager::GetFrameCount() const
+uint ModuleTime::GetFrameCount() const
 {
 	return frameCount;
 }
-float ModuleTimeManager::Getdt() const
+float ModuleTime::Getdt() const
 {
 	return dtReal;
 }
-float ModuleTimeManager::GetStartGame() const
+float ModuleTime::GetStartGame() const
 {
 	return startsTime;
 }
-float ModuleTimeManager::GetdtGame() const
+float ModuleTime::GetdtGame() const
 {
 	return dtGame;
 }
-float ModuleTimeManager::GetGameScale() const
+float ModuleTime::GetGameScale() const
 {
 	return dtGameScale;
 }
-float ModuleTimeManager::GetGameTimer() const
+float ModuleTime::GetGameTimer() const
 {
 	return gameTimer;
 }
 
 
-update_status ModuleTimeManager::Save(JSON_Object* object)
+update_status ModuleTime::Save(JSON_Object* object)
 {
 
 	return UPDATE_CONTINUE;
 }
 
-update_status ModuleTimeManager::Load(JSON_Object * object)
+update_status ModuleTime::Load(JSON_Object * object)
 {
 
 	return UPDATE_CONTINUE;

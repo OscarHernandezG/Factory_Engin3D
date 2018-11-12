@@ -40,4 +40,9 @@ enum update_status
 #define VSYNC false
 #define TITLE "Factory Engin3D"
 
+//class JSON_Object;
+#include "parson/parson.h"
+
+void SaveNumberArray(JSON_Object* parent, char* name, float* numbers, int size);
+
 #endif // ! __Globals_H__

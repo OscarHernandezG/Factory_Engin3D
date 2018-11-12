@@ -1,4 +1,4 @@
-#include "Quadtree.h"
+#include "Octree.h"
 #include "GameObject.h"
 
 OctreeNode::OctreeNode(const AABB & quad) : limits(quad) {}

@@ -10,17 +10,17 @@
 #include "Transform.h"
 
 // ------------------------------------------------------------
-Geometry::Geometry() : Component(nullptr), color(White), wire(false), axis(false), fill(true), type(PrimitiveTypes::Primitive_Point)
+Geometry::Geometry() : Component(nullptr), color(White), wire(false), axis(false), fill(true), geoType(PrimitiveTypes::Primitive_Point)
 {}
 
-Geometry::Geometry(GameObject* parent) : Component(parent), color(White), wire(false), axis(false), fill(true), type(PrimitiveTypes::Primitive_Point)
+Geometry::Geometry(GameObject* parent) : Component(parent), color(White), wire(false), axis(false), fill(true), geoType(PrimitiveTypes::Primitive_Point)
 {
 }
 
 // ------------------------------------------------------------
 PrimitiveTypes Geometry::GetType() const
 {
-	return type;
+	return geoType;
 }
 
 // ------------------------------------------------------------
@@ -105,6 +105,18 @@ void Geometry::WireframeRender() const
 	glColor3f(1, 1, 1);
 }
 
+void Geometry::SaveComponent(JSON_Object * parent)
+{
+
+	json_object_set_number(parent, "Type", type);
+	json_object_set_number(parent, "Geometry type", geoType);
+
+	json_object_set_number(parent, "UUID", GetUUID());
+
+	json_object_set_number(parent, "Time Created", GetTime());
+
+}
+
 // ------------------------------------------------------------
 
 
@@ -128,13 +140,13 @@ void Geometry::WireframeRender() const
 // CUBE ============================================
 PrimitiveCube::PrimitiveCube() : Geometry(), size(1.0f, 1.0f, 1.0f)
 {
-	type = PrimitiveTypes::Primitive_Cube;
+	geoType = PrimitiveTypes::Primitive_Cube;
 	LoadCubeBuffers({ 0,0,0 },size);
 }
 
 PrimitiveCube::PrimitiveCube(float3 position, float sizeX, float sizeY, float sizeZ) : Geometry(), size(sizeX, sizeY, sizeZ)
 {
-	type = PrimitiveTypes::Primitive_Cube;
+	geoType = PrimitiveTypes::Primitive_Cube;
 
 	LoadCubeBuffers(position, sizeX, sizeY, sizeZ);
 }
@@ -219,12 +231,12 @@ void PrimitiveCube::InnerRender() const
 // SPHERE ============================================
 PrimitiveSphere::PrimitiveSphere() : Geometry(), radius(1.0f), faces(10)
 {
-	type = PrimitiveTypes::Primitive_Sphere;
+	geoType = PrimitiveTypes::Primitive_Sphere;
 }
 
 PrimitiveSphere::PrimitiveSphere(float radius, int faces) : Geometry(), radius(radius), faces(faces)
 {
-	type = PrimitiveTypes::Primitive_Sphere;
+	geoType = PrimitiveTypes::Primitive_Sphere;
 }
 
 void PrimitiveSphere::InnerRender() const
@@ -297,12 +309,12 @@ void PrimitiveSphere::InnerRender() const
 // CYLINDER ============================================
 PrimitiveCylinder::PrimitiveCylinder() : Geometry(), radius(1.0f), height(1.0f), faces(40)
 {
-	type = PrimitiveTypes::Primitive_Cylinder;
+	geoType = PrimitiveTypes::Primitive_Cylinder;
 }
 
 PrimitiveCylinder::PrimitiveCylinder(float radius, float height, int faces) : Geometry(), radius(radius), height(height), faces(faces)
 {
-	type = PrimitiveTypes::Primitive_Cylinder;
+	geoType = PrimitiveTypes::Primitive_Cylinder;
 }
 
 void PrimitiveCylinder::InnerRender() const
@@ -356,12 +368,12 @@ void PrimitiveCylinder::InnerRender() const
 RayLine::RayLine() : Geometry(), origin(0, 0, 0), destination(1, 1, 1)
 {
 	
-	type = PrimitiveTypes::Primitive_Ray;
+	geoType = PrimitiveTypes::Primitive_Ray;
 }
 
 RayLine::RayLine(float3 origin, float3 destination) : Geometry(), origin(origin), destination(destination)
 {
-	type = PrimitiveTypes::Primitive_Ray;
+	geoType = PrimitiveTypes::Primitive_Ray;
 }
 
 void RayLine::InnerRender() const
@@ -383,12 +395,12 @@ void RayLine::InnerRender() const
 // PLANE ==================================================
 PrimitivePlane::PrimitivePlane() : Geometry(), normal(0.0f, 1.0f, 0.0f), constant(1.0f)
 {
-	type = PrimitiveTypes::Primitive_Plane;
+	geoType = PrimitiveTypes::Primitive_Plane;
 }
 
 PrimitivePlane::PrimitivePlane(float3 normal, float d) : Geometry(), normal(normal), constant(d)
 {
-	type = PrimitiveTypes::Primitive_Plane;
+	geoType = PrimitiveTypes::Primitive_Plane;
 }
 
 void PrimitivePlane::InnerRender() const
@@ -412,13 +424,13 @@ void PrimitivePlane::InnerRender() const
 // Frustum ================================================
 PrimitiveFrustum::PrimitiveFrustum() : Geometry()
 {
-	type = PrimitiveTypes::Primitive_Plane;
+	geoType = PrimitiveTypes::Primitive_Plane;
 	LoadFrustumBuffers();
 }
 
 PrimitiveFrustum::PrimitiveFrustum(float highSizes, float lowSize, float3 position, float sizeX, float sizeY, float sizeZ)
 {
-	type = PrimitiveTypes::Primitive_Frustum;
+	geoType = PrimitiveTypes::Primitive_Frustum;
 	LoadFrustumBuffers(highSizes, lowSize, position, sizeX, sizeY, sizeZ);
 
 }

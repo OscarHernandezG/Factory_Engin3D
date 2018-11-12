@@ -1,7 +1,7 @@
 #include "Application.h"
 #include "ModuleSceneIntro.h"
 #include "ModuleImGui.h"
-//#include "ModuleGeometryManager.h"
+//#include "ModuleGeometry.h"
 
 #include "Geometries.h"
 
@@ -104,20 +104,6 @@ void ModuleSceneIntro::GuizmoUpdate()
 	GameObject* transformObject = App->geometry->currentGameObject;
 	if (transformObject != nullptr)
 	{
-
-		/*float pos[3];
-		float rot[3];
-		float scale[3];
-
-		ImGuizmo::DecomposeMatrixToComponents(transform->GetMatrix().ptr(), pos, rot, scale);
-		ImGui::InputFloat3("Tr", pos, 3);
-		ImGui::InputFloat3("Rt", rot, 3);
-		ImGui::InputFloat3("Sc", scale, 3);
-		ImGuizmo::RecomposeMatrixFromComponents(pos, rot, scale, (float*)transform->GetMatrix().ptr());
-
-		transform->SetPos(pos[0], pos[1], pos[2]);
-		transform->SetRotation({ math::DegToRad(rot[0]),  math::DegToRad(rot[1]),  math::DegToRad(rot[2]) });
-		transform->SetScale(scale[0], scale[1], scale[2]);*/
 		float4x4 globalMatrix = transformObject->GetGlobalMatrix();
 		globalMatrix.Transpose();
 		ImGuiIO& io = ImGui::GetIO();
@@ -125,8 +111,11 @@ void ModuleSceneIntro::GuizmoUpdate()
 		ImGuizmo::Manipulate(App->camera->GetViewMatrix().ptr(), App->camera->GetProjectionMatrix().ptr(), guizOperation, guizMode, globalMatrix.ptr(), nullptr, isSnap ? snap.ptr() : nullptr);
 
 		if (ImGuizmo::IsUsing())
-			MoveGO(globalMatrix, transformObject);
-		
+		{
+			if(App->input->GetKey(SDL_SCANCODE_LALT) != KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_RALT) != KEY_REPEAT)
+				MoveGO(globalMatrix, transformObject);
+		}
+
 		else
 		{
 			if (saveTransform)
@@ -139,11 +128,12 @@ void ModuleSceneIntro::GuizmoUpdate()
 	}
 }
 
-void ModuleSceneIntro::MoveGO(math::float4x4 &globalMatrix, GameObject * transformObject)
+void ModuleSceneIntro::MoveGO(math::float4x4 &globalMatrix, GameObject* transformObject)
 {
 	float3 pos, scale;
 	Quat rot;
-	globalMatrix.Transposed().Decompose(pos, rot, scale);
+	globalMatrix.Transpose();
+	globalMatrix.Decompose(pos, rot, scale);
 	switch (guizOperation)
 	{
 	case ImGuizmo::TRANSLATE:

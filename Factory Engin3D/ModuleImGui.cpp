@@ -10,8 +10,6 @@
 #include "imgui-1.65/imgui_internal.h"
 #include "SDL/include/SDL_opengl.h"
 
-#include "pcg-c-0.94/extras/entropy.h"
-
 #include "MathGeoLib/Geometry/GeometryAll.h"
 
 #include "GameObject.h"
@@ -34,9 +32,6 @@ bool ModuleImGui::Start()
 	LOG("Loading Intro assets");
 
 	bool ret = true;
-
-	pcg32_srandom_r(&rng, 42u, 54u);
-
 
 	//--------------------------
 	// Window position
@@ -252,8 +247,8 @@ void ModuleImGui::CreateRandomNumberWindow()
 
 	if (ImGui::Button("Get a random number (0.0-1.0)", ImVec2(300, 50)))
 	{
-		randomDoubleNum = ldexp(pcg32_random_r(&rng), -32);
-		randNumTextDouble = to_string(randomDoubleNum);
+		//randomDoubleNum = ldexp(pcg32_random_r(&rng), -32);
+		//randNumTextDouble = to_string(randomDoubleNum);
 	}
 
 	if (randomDoubleNum > -1)
@@ -282,7 +277,7 @@ void ModuleImGui::CreateRandomNumberWindow()
 	if (ImGui::Button(buttonText.data(), ImVec2(400, 50)))
 	{
 		int range = randNum2 - randNum1 + 1;
-		randomIntNum = pcg32_boundedrand_r(&rng, range);
+		//randomIntNum = pcg32_boundedrand_r(&rng, range);
 		randomIntNum += randNum1;
 		randNumTextInt = to_string(randomIntNum);
 
@@ -564,9 +559,9 @@ void ModuleImGui::CreateGameObjectHierarchy(float2 scale)
 
 	SetWindowDim(scenePos, sceneSize, scale);
 
-	if (App->gameObject->root)
+	if (App->gameObject->rootGameObject)
 	{
-		CreateGOTreeNode(App->gameObject->root);
+		CreateGOTreeNode(App->gameObject->rootGameObject);
 	}
 	ImGui::End();
 
@@ -741,6 +736,9 @@ void ModuleImGui::CreateMenu()
 		else if (ImGui::MenuItem("Transform window", "Ctrl+T", transformWindow))
 			transformWindow = !transformWindow;
 
+		else if (ImGui::MenuItem("Hierarchy", "Ctrl+H", hierarchyWindow))
+			hierarchyWindow = !hierarchyWindow;
+
 		else if (ImGui::MenuItem("Console", "Ctrl+GRAVE", consoleWindow))
 			consoleWindow = !consoleWindow;
 
@@ -755,6 +753,8 @@ bool ModuleImGui::CreateOptions()
 {
 	if (ImGui::BeginMenu("Options"))
 	{
+		if (ImGui::MenuItem("Save Scene", "Ctrl+S"))
+			App->gameObject->SaveScene();
 
 		if (ImGui::MenuItem("Save", "Ctrl+S"))
 			App->canSave = true;
@@ -800,6 +800,9 @@ void ModuleImGui::CheckShortCuts()
 
 		else if (App->input->GetKey(SDL_SCANCODE_T) == KEY_DOWN)
 			transformWindow = !transformWindow;
+
+		else if (App->input->GetKey(SDL_SCANCODE_H) == KEY_DOWN)
+			hierarchyWindow = !hierarchyWindow;
 
 		else if (App->input->GetKey(SDL_SCANCODE_GRAVE) == KEY_DOWN)
 			consoleWindow = !consoleWindow;
@@ -910,7 +913,7 @@ void ModuleImGui::CreateMeshesHeader()
 
 				Mesh* mesh = (Mesh*)goGeometry;
 
-				ImGui::Text("Total vertex: %i", mesh->buffer.vertex.size);
+				ImGui::Text("Total vertex: %i", mesh->buffer->vertex.size);
 				ImGui::Text("Total faces: %i", App->geometry->numFaces);
 				if (ImGui::Button("Remove Mesh", { 125,25 }))
 				{

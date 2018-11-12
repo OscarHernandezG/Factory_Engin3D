@@ -99,7 +99,7 @@ void Transform::SetIdentity()
 	scale = float3::one;
 }
 
-const float3 Transform::GetPos() const
+float3 Transform::GetPos() const
 {
 	if (gameObject->father != nullptr)
 		return position + gameObject->father->GetPos();
@@ -107,7 +107,7 @@ const float3 Transform::GetPos() const
 	else return position;
 }
 
-const float3 Transform::GetScale() const
+float3 Transform::GetScale() const
 {
 	if (gameObject->father != nullptr)
 		return scale.Mul(gameObject->father->GetScale());
@@ -115,7 +115,7 @@ const float3 Transform::GetScale() const
 	else return scale;
 }
 
-const Quat Transform::GetRotation() const
+Quat Transform::GetRotation() const
 {
 	if (gameObject->father != nullptr)
 		return rotation.Mul(gameObject->father->GetRotation());
@@ -123,12 +123,12 @@ const Quat Transform::GetRotation() const
 	else return rotation;
 }
 
-const float3 Transform::GetLocalPos() const
+float3 Transform::GetLocalPos() const
 {
 	return position;
 }
 
-const Quat Transform::GetLocalRotation() const
+Quat Transform::GetLocalRotation() const
 {
 	return rotation;
 }
@@ -147,5 +147,54 @@ const float4x4 Transform::GetMatrix() const
 const float4x4 Transform::GetGlobalMatrix() const
 {
 	return float4x4::FromTRS(GetPos(), GetRotation(), GetScale());
+}
+
+void Transform::SaveComponent(JSON_Object * parent)
+{
+
+	json_object_set_number(parent, "Type", this->type);
+
+	json_object_set_number(parent, "UUID", GetUUID());
+
+	json_object_set_number(parent, "Time Created", GetTime());
+
+	// Position
+	//------------------------------------------------------------------------
+	SaveNumberArray(parent, "Position", GetPos().ptr(), 3);
+
+	// Scale
+	//------------------------------------------------------------------------
+	SaveNumberArray(parent, "Scale", GetScale().ptr(), 3);
+
+	// Rotation
+	//------------------------------------------------------------------------
+	SaveNumberArray(parent, "Rotation", GetRotation().ptr(), 4);
+
+	// Bounding box
+	//------------------------------------------------------------------------
+	JSON_Value* boundingBoxV = json_value_init_object();
+	JSON_Object* boundingBoxObj = json_value_get_object(boundingBoxV);
+
+	json_object_set_value(parent, "Bounding Box", boundingBoxV);
+	{
+		// Min point
+		SaveNumberArray(boundingBoxObj, "Min", boundingBox.minPoint.ptr(), 3);
+
+		// Max point
+		SaveNumberArray(boundingBoxObj, "Max", boundingBox.maxPoint.ptr(), 3);
+	}
+	// Original Bounding box
+	//------------------------------------------------------------------------
+	JSON_Value* originalBB = json_value_init_object();
+	JSON_Object* originalBBObj = json_value_get_object(originalBB);
+
+	json_object_set_value(parent, "Original Bounding Box", originalBB);
+	{
+		// Min point
+		SaveNumberArray(originalBBObj, "Min", originalBoundingBox.minPoint.ptr(), 3);
+
+		// Max point
+		SaveNumberArray(originalBBObj, "Max", originalBoundingBox.maxPoint.ptr(), 3);
+	}
 }
 

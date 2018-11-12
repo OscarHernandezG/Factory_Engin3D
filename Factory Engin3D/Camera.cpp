@@ -81,3 +81,22 @@ float3 Camera::GetPos()
 {
 	return frustum.pos;
 }
+
+void Camera::SaveComponent(JSON_Object * parent)
+{
+	json_object_set_number(parent, "Type", this->type);
+
+	json_object_set_number(parent, "UUID", GetUUID());
+
+	json_object_set_number(parent, "Time Created", GetTime());
+
+	SaveNumberArray(parent, "pos", frustum.pos.ptr(), 3);
+
+	SaveNumberArray(parent, "front", frustum.front.ptr(), 3);
+	SaveNumberArray(parent, "up", frustum.up.ptr(), 3);
+
+	json_object_set_number(parent, "nearPlaneDistance", frustum.nearPlaneDistance);
+	json_object_set_number(parent, "farPlaneDistance", frustum.farPlaneDistance);
+	json_object_set_number(parent, "verticalFov", frustum.verticalFov);
+	json_object_set_number(parent, "horizontalFov", frustum.horizontalFov);
+}
