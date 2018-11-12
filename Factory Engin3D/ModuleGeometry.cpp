@@ -306,16 +306,17 @@ GameObject* ModuleGeometry::LoadGameObjectsFromMeshNode(MeshNode node, GameObjec
 	vector<MeshBuffer*>::iterator currentMeshBuffer;
 	for (currentMeshBuffer = loadedMeshes.begin(); currentMeshBuffer != loadedMeshes.end(); ++currentMeshBuffer)
 	{
-		if ((*currentMeshBuffer)->id == node.id)
-		{
-			Mesh* currMesh = new Mesh(newGameObject);
-			
-			currMesh->buffer = (*currentMeshBuffer);
-			GeometryInfo info(currMesh);
-			newGameObject->AddComponent(ComponentType_GEOMETRY, &info);
-			App->sceneIntro->octree.Insert(newGameObject);
-			break;
-		}
+		if (node.id > 0)
+			if ((*currentMeshBuffer)->id == node.id)
+			{
+				Mesh* currMesh = new Mesh(newGameObject);
+
+				currMesh->buffer = (*currentMeshBuffer);
+				GeometryInfo info(currMesh);
+				newGameObject->AddComponent(ComponentType_GEOMETRY, &info);
+				App->sceneIntro->octree.Insert(newGameObject);
+				break;
+			}
 	}
 
 	for (list<MeshNode>::iterator childs = node.childs.begin(); childs != node.childs.end(); ++childs)
