@@ -38,3 +38,40 @@ bool ModuleResources::ExistFile(const char * path)
 
 	return ret;
 }
+
+vector<string> ModuleResources::ReadFolder(const char * path)
+{
+	string currPath(path);
+	vector<string> filesStr;
+
+	if (GetFileAttributes(currPath.data()) != INVALID_FILE_ATTRIBUTES)
+	{
+		currPath += "*";
+		WIN32_FIND_DATA data;
+		HANDLE file;
+		if ((file = FindFirstFile(currPath.data(), &data)) != INVALID_HANDLE_VALUE)
+		{
+			do {
+				if (strcmp(data.cFileName, "..") && strcmp(data.cFileName, "."))
+					filesStr.push_back(data.cFileName);
+			} while (FindNextFile(file, &data) != 0);
+		}
+		FindClose(file);
+
+
+
+		/*for (vector<string>::iterator it = filesStr.begin(); it != filesStr.end(); ++it)
+		{
+			string newPath(path);
+			newPath.append(*it);
+			newPath += "\\";
+			ReadFolder(newPath.data());
+		}*/
+	}
+
+	return filesStr;
+	/*else if (ExistFile(path))
+	{
+		bool hi = true;
+	}*/
+}

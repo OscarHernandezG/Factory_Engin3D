@@ -47,6 +47,8 @@ public:
 	void CreateGameManager(float2 scale);
 	void CreateAssetsWindow(float2 scale);
 
+	void TreeAssets(const char * path);
+
 	void CreateGOTreeNode(GameObject * current);
 
 	update_status CreateMainMenuBar();

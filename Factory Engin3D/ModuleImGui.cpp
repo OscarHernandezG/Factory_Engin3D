@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleImGui.h"
 #include "ModuleWindow.h"
+#include "ModuleResources.h"
 
 #include "ImGuizmo/ImGuizmo.h"
 #include "imgui-1.65/imgui_impl_sdl.h"
@@ -673,24 +674,26 @@ void ModuleImGui::CreateAssetsWindow(float2 scale)
 	ImGui::Begin("Assets", &canScroll, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 	SetWindowDim(configurationPos, configurationSize, scale);
 
-	list<string> files;
-	if (GetFileAttributesA("Assets"))
+	TreeAssets(".\\Assets\\");
+
+		ImGui::End();
+}
+
+void ModuleImGui::TreeAssets(const char* path)
+{
+	vector<string> filesStr = App->resources->ReadFolder(path);
+
+	for (vector<string>::iterator iter = filesStr.begin(); iter != filesStr.end(); ++iter)
 	{
-		WIN32_FIND_DATA data;
-		HANDLE file;
-		if (file = FindFirstFile("Assets/models", &data))
+		if (ImGui::TreeNodeEx((*iter).c_str()))
 		{
-			files.push_back(data.cFileName);
-			if ((FindNextFile(file, &data) != 0))
-				//Recursiva
-			{}
+			std::string newPath = path;
+			newPath.append((*iter));
+			newPath += "\\";
+			TreeAssets(newPath.data());
+			ImGui::TreePop();
 		}
-		
 	}
-
-
-	ImGui::End();
-
 }
 
 void ModuleImGui::SetWindowDim(float2 &pos, float2 &size, float2 &scale, bool gameWindow)
