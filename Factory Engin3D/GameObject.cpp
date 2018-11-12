@@ -265,6 +265,17 @@ void GameObject::SetPos(float3 pos)
 	Move(movement);
 }
 
+void GameObject::SetGlobalPos(float3 pos)
+{
+	float3 movement = float3::zero;
+	if (transform)
+	{
+		movement = pos - transform->GetPos();
+	}
+
+	Move(movement);
+}
+
 void GameObject::Move(float3 movement)
 {
 	if (transform)
@@ -295,8 +306,8 @@ void GameObject::Scale(float3 scale)
 
 	for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
 	{
+		(*iterator)->SetGlobalPos(((*iterator)->transform->scale.Mul(scale)).Mul((*iterator)->transform->GetPos()));
 		(*iterator)->Scale(scale);
-		(*iterator)->SetPos(scale.Mul((*iterator)->transform->GetLocalPos()));
 	}
 }
 
@@ -311,11 +322,15 @@ void GameObject::Rotate(Quat rotation)
 {
 	for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
 	{
-		float3 originalPosition = (*iterator)->GetPos() - GetPos();
+		float3 pos = transform->GetLocalPos();
+
+
+		float3 originalPosition = (*iterator)->transform->GetLocalPos() - pos;
 		float3 newPosition = originalPosition;
+
 		newPosition = rotation.Transform(newPosition);
 
-		(*iterator)->SetPos(newPosition);
+		(*iterator)->SetPos((newPosition + pos));
 		(*iterator)->Rotate(rotation);
 	}
 
