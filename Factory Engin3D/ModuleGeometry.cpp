@@ -56,20 +56,6 @@ bool ModuleGeometry::CleanUp()
 	return true;
 }
 
-void ModuleGeometry::DistributeFile(char* file)
-{
-	string filePath(file);
-	string extension = filePath.substr(filePath.find_last_of(".") + 1);
-
-
-	if (!extension.compare("fbx") || !extension.compare("obj"))
-	{
-		UpdateMesh(file);
-	}
-	else if (!extension.compare("png") || !extension.compare("dds") || !extension.compare("jpg") || !extension.compare("jpeg"))
-		UpdateTexture(file);
-}
-
 MeshNode ModuleGeometry::LoadMeshBuffer(const aiScene* scene, uint index, char* path)
 {
 	MeshNode tempBuffer;
@@ -678,6 +664,8 @@ update_status ModuleGeometry::PostUpdate()
 
 void ModuleGeometry::Draww(GameObject* object)
 {
+	assert(object);
+
 	for (list<GameObject*>::iterator it = object->childs.begin(); it != object->childs.end(); ++it)
 	{
 		Draww(*it);
@@ -692,8 +680,8 @@ void ModuleGeometry::Draww(GameObject* object)
 
 void ModuleGeometry::LoadDefaultScene()
 {
-	DistributeFile("assets\\models\\Street.fbx");
-	DistributeFile("assets\\textures\\Baker_house.png");
+	App->importer->DistributeFile("assets\\models\\Street.fbx");
+	App->importer->DistributeFile("assets\\textures\\Baker_house.png");
 
 	plane = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->rootGameObject, "Ground");
 

@@ -25,6 +25,21 @@ bool ModuleImporter::Init()
 	return true;
 }
 
+void ModuleImporter::DistributeFile(char* file)
+{
+	string filePath(file);
+	string extension = filePath.substr(filePath.find_last_of(".") + 1);
+
+
+	if (!extension.compare("fbx") || !extension.compare("obj"))
+	{
+		App->geometry->UpdateMesh(file);
+	}
+	else if (!extension.compare("png") || !extension.compare("dds") || !extension.compare("jpg") || !extension.compare("jpeg"))
+		App->geometry->UpdateTexture(file);
+}
+
+
 void ModuleImporter::SaveFile(const char* path, uint size, char* outputFile, LlibraryType type, uint uuid)
 {
 	string direction = GetDirectionName(path, type, uuid);

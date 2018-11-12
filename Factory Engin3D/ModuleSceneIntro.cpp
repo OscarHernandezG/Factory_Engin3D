@@ -122,6 +122,7 @@ void ModuleSceneIntro::GuizmoUpdate()
 			{
 				SaveLastTransform(lastMat);
 				saveTransform = false;
+				octree.ReDoOctree(AABB(), true);
 			}
 			lastMat = transformObject->GetGlobalMatrix();
 		}
@@ -148,7 +149,6 @@ void ModuleSceneIntro::MoveGO(math::float4x4 &globalMatrix, GameObject* transfor
 	default:
 		break;
 	}
-	octree.ReDoOctree(AABB(), true);
 	saveTransform = true;
 }
 
