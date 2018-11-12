@@ -705,6 +705,9 @@ void ModuleImGui::CreateMenu()
 		else if (ImGui::MenuItem("Transform window", "Ctrl+T", transformWindow))
 			transformWindow = !transformWindow;
 
+		else if (ImGui::MenuItem("Hierarchy", "Ctrl+H", hierarchyWindow))
+			hierarchyWindow = !hierarchyWindow;
+
 		else if (ImGui::MenuItem("Console", "Ctrl+GRAVE", consoleWindow))
 			consoleWindow = !consoleWindow;
 
@@ -766,6 +769,9 @@ void ModuleImGui::CheckShortCuts()
 
 		else if (App->input->GetKey(SDL_SCANCODE_T) == KEY_DOWN)
 			transformWindow = !transformWindow;
+
+		else if (App->input->GetKey(SDL_SCANCODE_H) == KEY_DOWN)
+			hierarchyWindow = !hierarchyWindow;
 
 		else if (App->input->GetKey(SDL_SCANCODE_GRAVE) == KEY_DOWN)
 			consoleWindow = !consoleWindow;

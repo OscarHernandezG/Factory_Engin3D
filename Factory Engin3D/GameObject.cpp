@@ -296,7 +296,8 @@ void GameObject::SetScale(float3 scale)
 	scaleVariation.y = scale.y / scaleGO.y;
 	scaleVariation.z = scale.z / scaleGO.z;
 
-	Scale(scaleVariation);
+	if(!scaleVariation.IsFinite())
+		Scale(scaleVariation);
 }
 
 void GameObject::Scale(float3 scale)
