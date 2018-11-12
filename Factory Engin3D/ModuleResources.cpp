@@ -46,7 +46,7 @@ vector<string> ModuleResources::ReadFolder(const char * path)
 
 	if (GetFileAttributes(currPath.data()) != INVALID_FILE_ATTRIBUTES)
 	{
-		currPath += "*";
+		currPath.append("*");
 		WIN32_FIND_DATA data;
 		HANDLE file;
 		if ((file = FindFirstFile(currPath.data(), &data)) != INVALID_HANDLE_VALUE)

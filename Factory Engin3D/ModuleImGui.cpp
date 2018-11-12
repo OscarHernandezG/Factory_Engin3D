@@ -700,32 +700,18 @@ void ModuleImGui::TreeAssets(const char* path)
 
 	for (vector<string>::iterator iter = filesStr.begin(); iter != filesStr.end(); ++iter)
 	{
-		if (ImGui::TreeNodeEx((*iter).c_str()))
-		{
+		ImGuiTreeNodeFlags_ flag = ImGuiTreeNodeFlags_None;
 			std::string newPath = path;
-			newPath.append((*iter));
+		if (App->resources->ExistFile(newPath.append(*iter).data()))
+			flag = ImGuiTreeNodeFlags_Leaf;
+		if (ImGui::TreeNodeEx((*iter).c_str(), flag))
+		{
 			newPath += "\\";
 			TreeAssets(newPath.data());
 			ImGui::TreePop();
 		}
 	}
 }
-
-void ModuleImGui::SetWindowDim(float2 &pos, float2 &size, float2 &scale, bool gameWindow)
-{
-	float2 realPos = pos.Mul(scale);
-	float2 realSize = size.Mul(scale);
-
-	if (gameWindow && App->time->gameState != GameState_NONE)
-	{
-		realSize += playCountSize.Mul(scale);
-		realPos += playCountPos.Mul(scale);
-	}
-
-	ImGui::SetWindowPos({ realPos.x, realPos.y });
-	ImGui::SetWindowSize({ realSize.x, realSize.y });
-}
-
 //Create Windows----------------------------------------------------------
 
 
