@@ -2,7 +2,7 @@
 #include "Application.h"
 #include "ModuleInput.h"
 
-#include "ModuleGeometryManager.h"
+#include "ModuleGeometry.h"
 
 #include "imgui-1.65/imgui.h"
 #include "imgui-1.65/imgui_impl_sdl.h"

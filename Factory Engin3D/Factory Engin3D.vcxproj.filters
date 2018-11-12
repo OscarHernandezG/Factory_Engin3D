@@ -288,9 +288,6 @@
     <ClInclude Include="ModuleImGui.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleGeometryManager.h">
-      <Filter>Sources\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="DevIL\includex86\IL\devil_cpp_wrapper.hpp">
       <Filter>Sources\Containers\DeviL</Filter>
     </ClInclude>
@@ -351,17 +348,11 @@
     <ClInclude Include="ModuleImporter.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Quadtree.h">
-      <Filter>Sources\Tools</Filter>
-    </ClInclude>
     <ClInclude Include="Light.h">
       <Filter>Sources\GameObject\Component</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Sources\GameObject\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleGameObjectManager.h">
-      <Filter>Sources\Modules</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
       <Filter>Sources\GameObject</Filter>
@@ -381,11 +372,20 @@
     <ClInclude Include="ImGuizmo\ImGuizmo.h">
       <Filter>Sources\Containers\ImGui\Guizmo</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleTimeManager.h">
-      <Filter>Sources\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="pcg-c-basic-0.9\pcg_basic.h">
       <Filter>Sources\Containers\PCG</Filter>
+    </ClInclude>
+    <ClInclude Include="Octree.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleGeometry.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleGameObject.h">
+      <Filter>Sources\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleTime.h">
+      <Filter>Sources\Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -515,9 +515,6 @@
     <ClCompile Include="ModuleImGui.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleGeometryManager.cpp">
-      <Filter>Sources\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="Geometry.cpp">
       <Filter>Sources\GameObject\Geometries</Filter>
     </ClCompile>
@@ -545,17 +542,11 @@
     <ClCompile Include="ModuleImporter.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Quadtree.cpp">
-      <Filter>Sources\Tools</Filter>
-    </ClCompile>
     <ClCompile Include="Light.cpp">
       <Filter>Sources\GameObject\Component</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Sources\GameObject\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleGameObjectManager.cpp">
-      <Filter>Sources\Modules</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
       <Filter>Sources\GameObject</Filter>
@@ -572,14 +563,23 @@
     <ClCompile Include="ImGuizmo\ImGuizmo.cpp">
       <Filter>Sources\Containers\ImGui\Guizmo</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleTimeManager.cpp">
-      <Filter>Sources\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="pcg-c-basic-0.9\pcg_basic.c">
       <Filter>Sources\Containers\PCG</Filter>
     </ClCompile>
     <ClCompile Include="Globals.cpp">
       <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Octree.cpp">
+      <Filter>Sources\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleGeometry.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleGameObject.cpp">
+      <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleTime.cpp">
+      <Filter>Sources\Modules</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

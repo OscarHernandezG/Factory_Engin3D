@@ -1,7 +1,7 @@
 #include "Mesh.h"
 #include "glew-2.1.0/include/GL/glew.h"
 #include "Application.h"
-#include "ModuleGeometryManager.h"
+#include "ModuleGeometry.h"
 
 #include "GameObject.h"
 
