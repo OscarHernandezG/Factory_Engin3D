@@ -202,7 +202,7 @@ void Octree::ReDoOctree(const AABB& limits, bool external)
 		if (external)
 		{
 			Clear();
-			Create(AABB(-float3::one, float3::one));
+			Create((*objects.begin())->transform->boundingBox);
 		}
 		else
 		{

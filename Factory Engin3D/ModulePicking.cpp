@@ -41,21 +41,15 @@ update_status ModulePicking::Update()
 
 		float smallerDist = 0.0f;
 		GameObject* nearObject = nullptr;
-		for (std::vector<GameObject*>::const_iterator iterator = objects.begin(); iterator != objects.end(); ++iterator)
-		{
-			if ((*iterator)->HasComponent(ComponentType_GEOMETRY) && (*iterator)->GetActive())
-			{
-				LineSegment rayTransformed(ray);
-				rayTransformed.Transform((*iterator)->transform->GetMatrix().Inverted());
 
-				Geometry* geometry = (Geometry*)(*iterator)->GetComponent(ComponentType_GEOMETRY);
-				if (geometry->GetType() == Primitive_Mesh)
-				{
-					if (CheckMeshTri(geometry, rayTransformed, smallerDist))
-						nearObject = (*iterator);
-				}
-			}
-		}
+		//Iterate Octree Objects
+		for (std::vector<GameObject*>::const_iterator iterator = objects.begin(); iterator != objects.end(); ++iterator)
+			CheckObjectPicking(*iterator, ray, smallerDist, nearObject);
+
+		//Iterate Dynamic Objects
+		std::list<GameObject*>::const_iterator iterator = App->gameObject->dynamicObjects.begin();
+		for (iterator; iterator != App->gameObject->dynamicObjects.end(); ++iterator)
+			CheckObjectPicking(*iterator, ray, smallerDist, nearObject);
 
 		if (nearObject != nullptr)
 			App->geometry->currentGameObject = nearObject;
@@ -65,6 +59,22 @@ update_status ModulePicking::Update()
 	}
 	rayDraw.Render();
 	return UPDATE_CONTINUE;
+}
+
+void ModulePicking::CheckObjectPicking(GameObject* iterator, const LineSegment &ray, float &smallerDist, GameObject *nearObject)
+{
+	if (iterator->HasComponent(ComponentType_GEOMETRY) && iterator->GetActive())
+	{
+		LineSegment rayTransformed(ray);
+		rayTransformed.Transform(iterator->transform->GetMatrix().Inverted());
+
+		Geometry* geometry = (Geometry*)iterator->GetComponent(ComponentType_GEOMETRY);
+		if (geometry->GetType() == Primitive_Mesh)
+		{
+			if (CheckMeshTri(geometry, rayTransformed, smallerDist))
+				nearObject = iterator;
+		}
+	}
 }
 
 bool ModulePicking::CheckMeshTri(Geometry * geometry, LineSegment &ray, float &smallerDist)
