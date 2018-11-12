@@ -61,7 +61,7 @@ update_status ModulePicking::Update()
 	return UPDATE_CONTINUE;
 }
 
-void ModulePicking::CheckObjectPicking(GameObject* iterator, const LineSegment &ray, float &smallerDist, GameObject *nearObject)
+void ModulePicking::CheckObjectPicking(GameObject* iterator, const LineSegment &ray, float &smallerDist, GameObject* &nearObject)
 {
 	if (iterator->HasComponent(ComponentType_GEOMETRY) && iterator->GetActive())
 	{

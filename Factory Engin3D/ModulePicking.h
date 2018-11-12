@@ -14,7 +14,7 @@ public:
 	bool CleanUp();
 	update_status Update();
 
-	void CheckObjectPicking(GameObject * iterator, const LineSegment & ray, float & smallerDist, GameObject * nearObject);
+	void CheckObjectPicking(GameObject * iterator, const LineSegment & ray, float & smallerDist, GameObject *& nearObject);
 
 	bool CheckMeshTri(Geometry * geometry, LineSegment & rayTransformed, float & smallerDist);
 
