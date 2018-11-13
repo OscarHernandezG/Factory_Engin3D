@@ -2,14 +2,13 @@
 #include "Application.h"
 #include "ModuleImGui.h"
 #include "ModuleWindow.h"
+#include "ModuleResources.h"
 
 #include "ImGuizmo/ImGuizmo.h"
 #include "imgui-1.65/imgui_impl_sdl.h"
 #include "imgui-1.65/imgui_impl_opengl2.h"
 #include "imgui-1.65/imgui_internal.h"
 #include "SDL/include/SDL_opengl.h"
-
-#include "pcg-c-0.94/extras/entropy.h"
 
 #include "MathGeoLib/Geometry/GeometryAll.h"
 
@@ -34,9 +33,6 @@ bool ModuleImGui::Start()
 
 	bool ret = true;
 
-	pcg32_srandom_r(&rng, 42u, 54u);
-
-
 	//--------------------------
 	// Window position
 	aboutPos = float2(955.0f, 520.0f);
@@ -44,18 +40,22 @@ bool ModuleImGui::Start()
 	transformPos = float2(955.0f, 315.0f);
 	consolePos = float2(0.0f, 575.0f);
 	scenePos = float2(0.0f, 225.0f);
+	playPos = float2(550.0f, 25.0f);
+	playCountPos = float2(-120.0f, 0.0f);
 	// Window sizes
 	aboutSize = float2(325.0f, 340.0f);
 	configurationSize = float2(600.0f, 287.0f);
 	transformSize = float2(325.0f, 206.0f);
 	consoleSize = float2(355.0f, 287.0f);
 	sceneSize = float2(295.0f, 354.0f);
+	playSize = float2(185.0f, 40.0f);
+	playCountSize = float2(205.0f, 0.0f);
 	//--------------------------
 
 	return ret;
 }
 
-update_status ModuleImGui::PreUpdate(float dt)
+update_status ModuleImGui::PreUpdate()
 {
 	update_status status = UPDATE_CONTINUE;
 
@@ -97,6 +97,10 @@ update_status ModuleImGui::PreUpdate(float dt)
 	if (hierarchyWindow)
 		CreateGameObjectHierarchy(scale);
 
+	CreateGameManager(scale);
+
+	CreateAssetsWindow(scale);
+
 	status = CreateMainMenuBar();
 
 	created = true;
@@ -112,13 +116,7 @@ bool ModuleImGui::CleanUp()
 	return true;
 }
 
-// Update
-update_status ModuleImGui::Update(float dt)
-{
-	return UPDATE_CONTINUE;
-}
-
-update_status ModuleImGui::PostUpdate(float dt)
+update_status ModuleImGui::PostUpdate()
 {
 
 	PROCESS_MEMORY_COUNTERS counters;
@@ -249,8 +247,8 @@ void ModuleImGui::CreateRandomNumberWindow()
 
 	if (ImGui::Button("Get a random number (0.0-1.0)", ImVec2(300, 50)))
 	{
-		randomDoubleNum = ldexp(pcg32_random_r(&rng), -32);
-		randNumTextDouble = to_string(randomDoubleNum);
+		//randomDoubleNum = ldexp(pcg32_random_r(&rng), -32);
+		//randNumTextDouble = to_string(randomDoubleNum);
 	}
 
 	if (randomDoubleNum > -1)
@@ -279,7 +277,7 @@ void ModuleImGui::CreateRandomNumberWindow()
 	if (ImGui::Button(buttonText.data(), ImVec2(400, 50)))
 	{
 		int range = randNum2 - randNum1 + 1;
-		randomIntNum = pcg32_boundedrand_r(&rng, range);
+		//randomIntNum = pcg32_boundedrand_r(&rng, range);
 		randomIntNum += randNum1;
 		randNumTextInt = to_string(randomIntNum);
 
@@ -294,13 +292,9 @@ void ModuleImGui::CreateRandomNumberWindow()
 
 void ModuleImGui::CreateAboutWindow(float2 scale)
 {
-	float2 realPos = aboutPos.Mul(scale);
-	float2 realSize = aboutSize.Mul(scale);
-
 	ImGui::Begin("About", &aboutWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
-
-	ImGui::SetWindowPos({ realPos.x, realPos.y });
-	ImGui::SetWindowSize({ realSize.x, realSize.y });
+	
+	SetWindowDim(aboutPos, aboutSize, scale);
 
 	ImGui::Text("Factory Engin3D");
 	ImGui::Separator();
@@ -383,13 +377,9 @@ void ModuleImGui::CreateAboutWindow(float2 scale)
 
 void ModuleImGui::CreateConfigWindow(float2 scale)
 {
-	float2 realPos = configurationPos.Mul(scale);
-	float2 realSize = configurationSize.Mul(scale);
-
 	ImGui::Begin("Configuration", &configurationWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 
-	ImGui::SetWindowPos({ realPos.x, realPos.y });
-	ImGui::SetWindowSize({ realSize.x, realSize.y });
+	SetWindowDim(configurationPos, configurationSize, scale);
 
 	if (ImGui::CollapsingHeader("Application"))
 	{
@@ -425,6 +415,7 @@ void ModuleImGui::CreateConfigWindow(float2 scale)
 	{
 		CreateHardwareHeader();
 	}
+
 	ImGui::End();
 
 	if (warningDialoge)
@@ -443,13 +434,9 @@ void ModuleImGui::CreateConfigWindow(float2 scale)
 
 void ModuleImGui::CreateConsole(float2 scale)
 {
-	float2 realPos = consolePos.Mul(scale);
-	float2 realSize = consoleSize.Mul(scale);
-
 	ImGui::Begin("Console", &consoleWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
-	
-	ImGui::SetWindowPos({ realPos.x, realPos.y });
-	ImGui::SetWindowSize({ realSize.x, realSize.y });
+
+	SetWindowDim(consolePos, consoleSize, scale);
 
 	if (ImGui::Button("Clear", ImVec2(400, 20)))
 		textBuff.clear();
@@ -465,40 +452,55 @@ void ModuleImGui::CreateConsole(float2 scale)
 
 void ModuleImGui::CreateTransform(float2 scale)
 {
-	float2 realPos = transformPos.Mul(scale);
-	float2 realSize = transformSize.Mul(scale);
-
 	ImGui::Begin("Transform", &transformWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 
-	ImGui::SetWindowPos({ realPos.x, realPos.y });
-	ImGui::SetWindowSize({ realSize.x, realSize.y });
+	SetWindowDim(transformPos, transformSize, scale);
 
-	if (App->geometry->currentGameObject != nullptr)
+	GameObject* currObject = App->geometry->currentGameObject;
+	if (currObject != nullptr)
 	{
-		string goName = App->geometry->currentGameObject->name;
+		string goName = currObject->name;
 		ImGui::Text(goName.data());
 
-		ImGui::Checkbox("Active", App->geometry->currentGameObject->GetActiveReference());
-		App->geometry->currentGameObject->SetActive(App->geometry->currentGameObject->GetActive());
+		if (ImGui::Checkbox("Active", currObject->GetActiveReference()))
+		{
+			currObject->SetActive(currObject->GetActive());
+			if (currObject->GetActive())
+				App->sceneIntro->ReInsertOctree(currObject);
+			App->sceneIntro->octree.ReDoOctree(AABB(), true);
+		}
+		ImGui::SameLine();
+		if (ImGui::Checkbox("Static Object", currObject->GetStaticReference()))
+		{
+			currObject->SetObjectStatic(currObject->GetObjectStatic());
+			if (!currObject->GetObjectStatic())
+				App->gameObject->AddNewDynamic(currObject);
+			else
+				App->gameObject->RemoveDynamic(currObject);
 
+			App->sceneIntro->octree.ReDoOctree(AABB(), true);
+		}
 		float3 position, scale, angles;
 		Quat rotate;
 
-		if (App->geometry->currentGameObject->transform != nullptr)
+		if (currObject->transform != nullptr)
 		{
-			position = App->geometry->currentGameObject->transform->GetPos();
-			scale = App->geometry->currentGameObject->transform->scale;
-			rotate = App->geometry->currentGameObject->transform->GetRotation();
+			float4x4 prevTransformMat = currObject->GetGlobalMatrix();
+			position = currObject->transform->GetPos();
+			scale = currObject->transform->scale;
+			rotate = currObject->transform->GetRotation();
 
-			if (ImGui::InputFloat3("Position", &position[0])) {
-				App->geometry->currentGameObject->SetPos(position);
-				App->sceneIntro->quadtree.ReDoQuadtree(AABB(), true);
+			if (ImGui::InputFloat3("Position", &position[0]) && App->gameObject->CanTransform(currObject)) {
+				App->sceneIntro->SaveLastTransform(prevTransformMat);
+				currObject->SetPos(position);
+				App->sceneIntro->octree.ReDoOctree(AABB(), true);
 			}
 
-			if (ImGui::InputFloat3("Scale", &scale[0]))
+			if (ImGui::InputFloat3("Scale", &scale[0]) && App->gameObject->CanTransform(currObject))
 			{
-				App->geometry->currentGameObject->SetScale(scale);
-				App->sceneIntro->quadtree.ReDoQuadtree(AABB(), true);
+				App->sceneIntro->SaveLastTransform(prevTransformMat);
+				currObject->SetScale(scale);
+				App->sceneIntro->octree.ReDoOctree(AABB(), true);
 			}
 			angles = rotate.ToEulerXYZ();
 
@@ -506,20 +508,29 @@ void ModuleImGui::CreateTransform(float2 scale)
 			angles[1] = math::RadToDeg(angles.y);
 			angles[2] = math::RadToDeg(angles.z);
 
-			if (ImGui::DragFloat3("Rotation", &angles[0]))
+			if (ImGui::DragFloat3("Rotation", &angles[0]) && App->gameObject->CanTransform(currObject))
 			{
 				angles.x = math::DegToRad(angles.x);
 				angles.y = math::DegToRad(angles.y);
 				angles.z = math::DegToRad(angles.z);
-				App->geometry->currentGameObject->SetRotation(Quat::FromEulerXYZ(angles.x, angles.y, angles.z));
+				currObject->SetRotation(Quat::FromEulerXYZ(angles.x, angles.y, angles.z));
 
-				App->sceneIntro->quadtree.ReDoQuadtree(AABB(), true);
+				App->sceneIntro->octree.ReDoOctree(AABB(), true);
+				if (dragRotTransform)
+				{
+					App->sceneIntro->SaveLastTransform(prevTransformMat);
+
+					dragRotTransform = false;
+				}
 			}
+			else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP)
+				dragRotTransform = true;
 
 			if (ImGui::Button("Reset", ImVec2(100, 20)))
 			{
-				App->geometry->currentGameObject->transform->SetIdentity();
-				App->sceneIntro->quadtree.ReDoQuadtree(AABB(), true);
+				App->sceneIntro->SaveLastTransform(prevTransformMat);
+				currObject->SetIdentity();
+				App->sceneIntro->octree.ReDoOctree(AABB(), true);
 			}
 
 			if (ImGui::RadioButton("None", App->sceneIntro->GetGuizOperation() == ImGuizmo::BOUNDS))
@@ -543,20 +554,84 @@ void ModuleImGui::CreateTransform(float2 scale)
 
 void ModuleImGui::CreateGameObjectHierarchy(float2 scale)
 {
-	float2 realPos = scenePos.Mul(scale);
-	float2 realSize = sceneSize.Mul(scale);
 
-	ImGui::Begin("Scene", &hierarchyWindow);
+	ImGui::Begin("Scene", &hierarchyWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 
-	ImGui::SetWindowPos({ realPos.x, realPos.y });
-	ImGui::SetWindowSize({ realSize.x, realSize.y });
+	SetWindowDim(scenePos, sceneSize, scale);
 
-	if (App->gameObject->root)
+	if (App->gameObject->rootGameObject)
 	{
-		CreateGOTreeNode(App->gameObject->root);
+		CreateGOTreeNode(App->gameObject->rootGameObject);
 	}
 	ImGui::End();
 
+}
+
+void ModuleImGui::CreateGameManager(float2 scale)
+{
+	ImGui::Begin("", &canScroll, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+
+	SetWindowDim(playPos, playSize, scale, true);
+
+	if (ImGui::Button("Play", { 50,25 }))
+	{
+		if (App->time->gameState == GameState_NONE)
+			App->time->gameState = GameState_PLAYING;
+		else
+			App->time->gameState = GameState_STOP;
+	}
+	ImGui::SameLine();
+
+	if (ImGui::Button("Pause", { 50,25 }))
+	{
+		if (App->time->gameState == GameState_PLAYING)
+			App->time->gameState = GameState_PAUSE;
+		else
+			App->time->gameState = GameState_PLAYING;
+	}
+	ImGui::SameLine();
+
+	if (ImGui::Button("Tick", { 50,25 }))
+		App->time->gameState = GameState_TICK;
+	
+
+	if (App->time->gameState != GameState_NONE)
+	{
+		float scale = App->time->GetGameScale();
+		ImGui::SameLine(); 
+		ImGui::PushItemWidth(50.0f);
+		ImGui::SetCursorPos({ ImGui::GetCursorPosX(), 10 });
+		if (ImGui::SliderFloat("Game Time: ", &scale,0.0f,2.0f,"%.2f"))
+		{
+			App->time->SetScaleGame(scale);
+		}
+		ImGui::SameLine();
+		string gameCount = to_string(App->time->GetGameTimer());
+		ImGui::Text(gameCount.data());
+	}
+
+	ImGui::End();
+
+}
+
+
+void ModuleImGui::SetWindowDim(float2 &pos, float2 &size, float2 &scale, bool gameWindow)
+{
+	float2 realPos = pos.Mul(scale);
+	float2 realSize = size.Mul(scale);
+
+	if (gameWindow)
+	{
+		if (App->time->gameState != GameState_NONE)
+		{
+			realSize = size + playCountSize;
+			realPos += playCountPos.Mul(scale);
+		}
+		else 
+			realSize = size;
+	}
+	ImGui::SetWindowPos({ realPos.x, realPos.y });
+	ImGui::SetWindowSize({ realSize.x, realSize.y });
 }
 
 void ModuleImGui::CreateGOTreeNode(GameObject* current)
@@ -590,14 +665,14 @@ void ModuleImGui::CreateGOTreeNode(GameObject* current)
 	}
 }
 
-
-
 update_status ModuleImGui::CreateMainMenuBar()
 {
 	update_status ret = UPDATE_CONTINUE;
 	if (ImGui::BeginMainMenuBar())
 	{
 		CreateMenu();
+
+		CreateDebugMenu();
 
 		CheckShortCuts();
 
@@ -607,6 +682,35 @@ update_status ModuleImGui::CreateMainMenuBar()
 	ImGui::EndMainMenuBar();
 
 	return ret;
+}
+
+void ModuleImGui::CreateAssetsWindow(float2 scale)
+{
+	ImGui::Begin("Assets", &canScroll, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+	SetWindowDim(configurationPos, configurationSize, scale);
+
+	TreeAssets(".\\Assets\\");
+
+		ImGui::End();
+}
+
+void ModuleImGui::TreeAssets(const char* path)
+{
+	vector<string> filesStr = App->resources->ReadFolder(path);
+
+	for (vector<string>::iterator iter = filesStr.begin(); iter != filesStr.end(); ++iter)
+	{
+		ImGuiTreeNodeFlags_ flag = ImGuiTreeNodeFlags_None;
+			std::string newPath = path;
+		if (App->resources->ExistFile(newPath.append(*iter).data()))
+			flag = ImGuiTreeNodeFlags_Leaf;
+		if (ImGui::TreeNodeEx((*iter).c_str(), flag))
+		{
+			newPath += "\\";
+			TreeAssets(newPath.data());
+			ImGui::TreePop();
+		}
+	}
 }
 //Create Windows----------------------------------------------------------
 
@@ -638,11 +742,14 @@ void ModuleImGui::CreateMenu()
 		else if (ImGui::MenuItem("Transform window", "Ctrl+T", transformWindow))
 			transformWindow = !transformWindow;
 
+		else if (ImGui::MenuItem("Hierarchy", "Ctrl+H", hierarchyWindow))
+			hierarchyWindow = !hierarchyWindow;
+
 		else if (ImGui::MenuItem("Console", "Ctrl+GRAVE", consoleWindow))
 			consoleWindow = !consoleWindow;
 
 		else if (ImGui::MenuItem("Close All", "Ctrl+X"))
-			showDemoWindow = exampleWindow = mathGeoLibWindow = randomNumberWindow = aboutWindow = configurationWindow = consoleWindow = transformWindow = false;
+			showDemoWindow = exampleWindow = mathGeoLibWindow = randomNumberWindow = aboutWindow = configurationWindow = consoleWindow = transformWindow = hierarchyWindow = false;
 
 		ImGui::EndMenu();
 	}
@@ -652,6 +759,8 @@ bool ModuleImGui::CreateOptions()
 {
 	if (ImGui::BeginMenu("Options"))
 	{
+		if (ImGui::MenuItem("Save Scene", "Ctrl+S"))
+			App->gameObject->SaveScene();
 
 		if (ImGui::MenuItem("Save", "Ctrl+S"))
 			App->canSave = true;
@@ -698,11 +807,31 @@ void ModuleImGui::CheckShortCuts()
 		else if (App->input->GetKey(SDL_SCANCODE_T) == KEY_DOWN)
 			transformWindow = !transformWindow;
 
+		else if (App->input->GetKey(SDL_SCANCODE_H) == KEY_DOWN)
+			hierarchyWindow = !hierarchyWindow;
+
 		else if (App->input->GetKey(SDL_SCANCODE_GRAVE) == KEY_DOWN)
 			consoleWindow = !consoleWindow;
 
 		else if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN)
-			showDemoWindow = exampleWindow = mathGeoLibWindow = randomNumberWindow = aboutWindow = configurationWindow = consoleWindow = transformWindow = false;
+			showDemoWindow = exampleWindow = mathGeoLibWindow = randomNumberWindow = aboutWindow = configurationWindow = consoleWindow = transformWindow = hierarchyWindow = false;
+	}
+}
+
+void ModuleImGui::CreateDebugMenu()
+{
+	if (ImGui::BeginMenu("Debug"))
+	{
+
+		if (ImGui::MenuItem("AABB & quadtree", "1", App->renderer3D->debugQuad))
+			App->renderer3D->debugQuad = !App->renderer3D->debugQuad;
+
+		ImGui::MenuItem("Create empty object", "2");
+
+		if (ImGui::MenuItem("Camera culling", "3", App->renderer3D->cameraCulling))
+			App->renderer3D->cameraCulling = !App->renderer3D->cameraCulling;
+
+		ImGui::EndMenu();
 	}
 }
 //Create Menu-------------------------------------------------------------
@@ -723,11 +852,11 @@ void ModuleImGui::CreateAppHeader()
 
 	char graphTitle[25];
 
-	sprintf_s(graphTitle, 25, "Framerate %.1f", App->fpsLog[App->fpsLog.size() - 1]);
-	ImGui::PlotHistogram("##Framerate", &App->fpsLog[0], App->fpsLog.size(), 0, graphTitle, 0.0f, 150.0f, ImVec2(310, 100));
+	sprintf_s(graphTitle, 25, "Framerate %.1f", App->time->fpsLog[App->time->fpsLog.size() - 1]);
+	ImGui::PlotHistogram("##Framerate", &App->time->fpsLog[0], App->time->fpsLog.size(), 0, graphTitle, 0.0f, 150.0f, ImVec2(310, 100));
 
-	sprintf_s(graphTitle, 25, "Milliseconds %.1f", App->msLog[App->msLog.size() - 1]);
-	ImGui::PlotHistogram("##Milliseconds", &App->msLog[0], App->msLog.size(), 0, graphTitle, 0.0f, 40.0f, ImVec2(310, 100));
+	sprintf_s(graphTitle, 25, "Milliseconds %.1f", App->time->msLog[App->time->msLog.size() - 1]);
+	ImGui::PlotHistogram("##Milliseconds", &App->time->msLog[0], App->time->msLog.size(), 0, graphTitle, 0.0f, 40.0f, ImVec2(310, 100));
 
 	sprintf_s(graphTitle, 25, "RAM Usage %.1f", ramLog[ramLog.size() - 1]);
 	ImGui::PlotHistogram("##RAM", &ramLog[0], ramLog.size(), 0, graphTitle, 0.0f, 125.0f, ImVec2(310, 100));
@@ -790,7 +919,7 @@ void ModuleImGui::CreateMeshesHeader()
 
 				Mesh* mesh = (Mesh*)goGeometry;
 
-				ImGui::Text("Total vertex: %i", mesh->buffer.vertex.size);
+				ImGui::Text("Total vertex: %i", mesh->buffer->vertex.size);
 				ImGui::Text("Total faces: %i", App->geometry->numFaces);
 				if (ImGui::Button("Remove Mesh", { 125,25 }))
 				{

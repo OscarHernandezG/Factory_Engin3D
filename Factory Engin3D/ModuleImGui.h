@@ -7,7 +7,6 @@
 #include "imgui-1.65/imgui.h"
 
 #include "parson/parson.h"
-#include "pcg-c-0.94/include/pcg_variants.h"
 
 using namespace std;
 
@@ -23,9 +22,8 @@ public:
 	~ModuleImGui();
 
 	bool Start();
-	update_status PreUpdate(float dt);
-	update_status Update(float dt);
-	update_status PostUpdate(float dt);
+	update_status PreUpdate();
+	update_status PostUpdate();
 	update_status Save(JSON_Object* object);
 	update_status Load(JSON_Object* object);
 
@@ -43,17 +41,21 @@ public:
 	void CreateConfigWindow(float2 scale);
 	void CreateConsole(float2 scale);
 	void CreateTransform(float2 scale);
-
 	void CreateGameObjectHierarchy(float2 scale);
+	void SetWindowDim(float2 & pos, float2 & size, float2 & scale, bool gameWindow = false);
+	void CreateGameManager(float2 scale);
+	void CreateAssetsWindow(float2 scale);
+
+	void TreeAssets(const char * path);
 
 	void CreateGOTreeNode(GameObject * current);
-
 
 	update_status CreateMainMenuBar();
 
 	void CreateMenu();
 	bool CreateOptions();
 	void CheckShortCuts();
+	void CreateDebugMenu();
 
 	void CreateAppHeader();
 	void CreateWindowHeader();
@@ -109,8 +111,6 @@ public:
 	int widthPos = SCREEN_WIDTH;
 	int heightPos = SCREEN_HEIGHT;
 
-	pcg32_random_t rng;
-
 	bool show_demo_window = true;
 	bool show_another_window = false;
 	ImVec4 clear_color;
@@ -128,6 +128,8 @@ public:
 
 	bool warningDialoge = false;
 
+	bool dragRotTransform = false;
+
 	//--------------------------
 	// Window position
 	float2 aboutPos = float2::zero;
@@ -135,12 +137,16 @@ public:
 	float2 transformPos = float2::zero;
 	float2 consolePos = float2::zero;
 	float2 scenePos = float2::zero;
+	float2 playPos = float2::zero;
+	float2 playCountPos = float2::zero;
 	// Window sizes
 	float2 aboutSize = float2::zero;
 	float2 configurationSize = float2::zero;
 	float2 transformSize = float2::zero;
 	float2 consoleSize = float2::zero;
 	float2 sceneSize = float2::zero;
+	float2 playSize = float2::zero;
+	float2 playCountSize = float2::zero;
 	//--------------------------
 };
 #endif // !__ModuleImGui_H__

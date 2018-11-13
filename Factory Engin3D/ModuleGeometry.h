@@ -7,6 +7,8 @@
 
 #include "Assimp/include/matrix4x4.h"
 
+#include <vector>
+
 struct aiMesh;
 struct aiScene;
 struct aiNode;
@@ -19,15 +21,13 @@ public:
 
 	bool Start();
 	void LoadDefaultScene();
-	update_status PreUpdate(float dt);
-	update_status Update(float dt);
-	update_status PostUpdate(float dt);
+	update_status PostUpdate();
+
+	void Draww(GameObject * object);
 
 	bool CleanUp();
 
-	void DistributeFile(char * file);
-
-	MeshBuffer LoadMeshBuffer(const aiScene * scene, uint index, char* path);
+	MeshNode LoadMeshBuffer(const aiScene * scene, uint index, char* path);
 
 	void LoadMeshTextureCoords(MeshBuffer &buffer, aiMesh* newMesh);
 
@@ -41,13 +41,17 @@ public:
 
 	MeshNode LoadMesh(char* path);
 
-	void SaveMeshImporter(MeshBuffer newCurrentBuffer, const char * path, int number);
+	void SaveMeshImporter(MeshBuffer newCurrentBuffer, const char * path, uint uuid);
 
-	void LoadMeshImporter(const char * path, MeshNode* tempMesh);
+	vector<MeshBuffer*> LoadMeshImporter(const char * path, const vector<MeshNode>& nodes);
 
 	GameObject* LoadGameObjectsFromMeshNode(MeshNode node, GameObject * father);
 
+	GameObject * LoadEmptyGameObjectsFromMeshNode(MeshNode node, GameObject * father);
+
 	void UpdateMesh(char * path);
+
+	void SaveGameObjectJson(GameObject* object, JSON_Object* parent);
 
 	AABB LoadBoundingBox(Buffer<float> vertex);
 
@@ -57,9 +61,9 @@ public:
 
 	float3 GetCurrentMeshPivot() const;
 
-	void Higher(float& val1, float val2);
+	inline void Higher(float& val1, float val2);
 
-	void Lower(float& val1, float val2);
+	inline void Lower(float& val1, float val2);
 
 	//Geometry* LoadPrimitive(PrimitiveTypes type);
 
@@ -71,9 +75,11 @@ public:
 	GameObject* currentGameObject = nullptr;
 	GameObject* bHouse = nullptr;
 
+	vector<MeshNode> nodes;
+	vector<MeshBuffer*> loadedMeshes;
 
-	uint textureID = 0;
-	uint numFaces = 0;
+	uint textureID = 0u;
+	uint numFaces = 0u;
 
 	char* droppedFileDir = nullptr;
 

@@ -2,16 +2,15 @@
 #include "Application.h"
 #include "ModuleInput.h"
 
-#include "ModuleGeometryManager.h"
-
 #include "imgui-1.65/imgui.h"
 #include "imgui-1.65/imgui_impl_sdl.h"
 
 #include <fstream>
 
-#include	"SDL/include/SDL_syswm.h"
+#include "SDL/include/SDL_syswm.h"
 
 #define MAX_KEYS 300
+
 
 ModuleInput::ModuleInput(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -43,7 +42,7 @@ bool ModuleInput::Init()
 }
 
 // Called every draw update
-update_status ModuleInput::PreUpdate(float dt)
+update_status ModuleInput::PreUpdate()
 {
 	SDL_PumpEvents();
 
@@ -130,7 +129,7 @@ update_status ModuleInput::PreUpdate(float dt)
 			}
 			break;
 			case SDL_DROPFILE:
-				App->geometry->DistributeFile(e.drop.file);
+				App->importer->DistributeFile(e.drop.file);
 
 				break;
 			default:

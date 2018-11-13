@@ -7,7 +7,6 @@
 #include <list>
 #include "Transform.h"
 #include "Camera.h"
-#include "pcg-c-0.94/include/pcg_variants.h"
 
 using namespace std;
 
@@ -21,11 +20,18 @@ struct  ComponentInfo;
 
 class GameObject
 {
+	friend class ModuleGameObject;
+
 public:
 	GameObject(GameObject* father, const char* name = nullptr);
 	GameObject(float3 position, Quat rotation = Quat::identity, float3 scale = float3::one, GameObject* father = nullptr, const char* name = nullptr);
 	
 	~GameObject();
+
+	void RemoveChilds();
+
+	void RemoveComponents();
+
 
 	void Update(float dt);
 
@@ -40,17 +46,23 @@ public:
 
 	float3 GetPos() const;
 	float3 GetScale() const;
-	Quat GetRotation();
+	Quat GetRotation() const;
+	float4x4 GetGlobalMatrix() const;
 
 	void SetTransform(float4x4 transform);
 
+	void ForceTransform(float4x4 trans);
+
 	void SetPos(float3 pos);
+	void SetGlobalPos(float3 pos);
 	void Move(float3 movement);
 	void SetScale(float3 scale);
 	void Scale(float3 scale);
 	void SetRotation(Quat rotation);
 
 	void Rotate(Quat rotation);
+
+	void SetIdentity();
 
 	const AABB* GetAABB() const;
 
@@ -59,17 +71,22 @@ public:
 	void SetABB(AABB aabb);
 
 	void SetActive(bool active);
+	void SetObjectStatic(bool isStatic);
 
 	inline bool GetActive() { return isActive; }
+	inline bool GetObjectStatic() { return isStatic; }
+
 	inline bool* GetActiveReference() { return &isActive; }
+	inline bool* GetStaticReference() { return &isStatic; }
 
-
+	inline const unsigned int GetUID() const { return UID; }
 
 	int CreateRandomUID();
 
 private:
 	void CreateGameObject(TransformInfo* info);
 
+	void RealDelete();
 
 public:
 	Transform* transform = nullptr;
@@ -85,9 +102,9 @@ public:
 
 private:
 	bool isActive = true;
-	
-	int UID = 0;
-	pcg32_random_t rng;
 
+	uint UID = 0;
+
+	bool isStatic = true;
 };
 #endif // !__GameObject_H__

@@ -42,6 +42,7 @@ public:
 	//virtual void	Update(float dt) { Render(); }
 
 	void			WireframeRender() const;
+	void SaveComponent(JSON_Object * parent);
 	PrimitiveTypes	GetType() const;
 
 public:
@@ -50,7 +51,7 @@ public:
 	bool axis = false, wire = false, fill = true;
 
 protected:
-	PrimitiveTypes type;
+	PrimitiveTypes geoType;
 };
 
 // ============================================

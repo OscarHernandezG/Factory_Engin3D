@@ -156,7 +156,7 @@ bool ModuleRenderer3D::Start()
 
 
 // PreUpdate: clear buffer
-update_status ModuleRenderer3D::PreUpdate(float dt)
+update_status ModuleRenderer3D::PreUpdate()
 {
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -175,26 +175,28 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 }
 
 // PostUpdate present buffer to screen
-update_status ModuleRenderer3D::PostUpdate(float dt)
+update_status ModuleRenderer3D::PostUpdate()
 {
 
 	// 1. Draw geometry Camera Culling
 	std::vector<GameObject*> drawerGO;
-	if (cameraCulling)//Only draw what camera see
+	if (cameraCulling)//Only draw camera View
 	{
-		App->sceneIntro->quadtree.GetIntersects(drawerGO, App->camera->GetCameraFrustrum());
+		App->sceneIntro->octree.GetIntersects(drawerGO, App->camera->GetCameraFrustrum());
 
 		for (auto iterator : drawerGO)
-			DrawQuadtreeObjects(iterator);
-
+			DrawOctreeObjects(iterator);
 	}
 	else
 	{//Draw all
-		App->sceneIntro->quadtree.GetGameObjects(drawerGO);
+		App->sceneIntro->octree.GetGameObjects(drawerGO);
 		for (auto iterator : drawerGO)
-			DrawQuadtreeObjects(iterator);
-
+			DrawOctreeObjects(iterator);
 	}
+
+	//Draw Dynamic objects (there aren't in octree)
+	if(!App->gameObject->dynamicObjects.empty())
+		DrawDynamicObjects(cameraCulling);
 
 	// 2. Debug geometry
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -229,22 +231,25 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	return UPDATE_CONTINUE;
 }
-void ModuleRenderer3D::DrawQuadtreeObjects(GameObject * iterator)
+void ModuleRenderer3D::DrawOctreeObjects(GameObject * iterator)
 {
 	if (iterator->GetActive())
 	{
-		for (list<GameObject*>::iterator it = iterator->childs.begin(); it != iterator->childs.end(); ++it)
-		{
-			if ((*it)->GetActive())
-			{
-				Geometry* currentGeometry = (Geometry*)(*it)->GetComponent(ComponentType_GEOMETRY);
-				if (currentGeometry)
-					DrawObject(currentGeometry);
-			}
-		}
 		Geometry* currentGeometry = (Geometry*)(iterator)->GetComponent(ComponentType_GEOMETRY);
 		if (currentGeometry)
 			DrawObject(currentGeometry);
+	}
+}
+void ModuleRenderer3D::DrawDynamicObjects(bool cameraCulling)
+{
+	for (list<GameObject*>::iterator it = App->gameObject->dynamicObjects.begin(); it != App->gameObject->dynamicObjects.end(); ++it)
+	{
+		Geometry* currentGeometry = (Geometry*)(*it)->GetComponent(ComponentType_GEOMETRY);
+		if (currentGeometry && (*it)->GetActive())
+		{
+			if (!cameraCulling || App->camera->GetCameraFrustrum().Intersects(*(*it)->GetAABB()))
+				DrawObject(currentGeometry);
+		}
 	}
 }
 void ModuleRenderer3D::DrawObject(Component * geometry)
@@ -342,10 +347,10 @@ math::float4x4 ModuleRenderer3D::Perspective(float fovy, float aspect, float n, 
 
 void ModuleRenderer3D::DebugDraw()
 {
-	std::vector<const QuadtreeNode*> aabb;
-	App->sceneIntro->quadtree.GetBoxLimits(aabb);
-	//Quadtree draw
-	for (vector<const QuadtreeNode*>::const_iterator iterator = aabb.begin(); iterator != aabb.end(); ++iterator)
+	std::vector<const OctreeNode*> aabb;
+	App->sceneIntro->octree.GetBoxLimits(aabb);
+	//Octree draw
+	for (vector<const OctreeNode*>::const_iterator iterator = aabb.begin(); iterator != aabb.end(); ++iterator)
 	{
 		static float3 corners[8];
 		(*iterator)->limits.GetCornerPoints(corners);
@@ -353,9 +358,14 @@ void ModuleRenderer3D::DebugDraw()
 		DrawQuad(corners, Orange);
 	}
 
+	//Frustum draw
+	/*static float3 corners[8];
+	App->camera->GetCameraFrustrum().GetCornerPoints(corners);
+	DrawQuad(corners, Blue);*/
+
 	std::vector<GameObject*> objects;
-	App->sceneIntro->quadtree.GetGameObjects(objects);
-	//Quadtree Objects
+	App->sceneIntro->octree.GetGameObjects(objects);
+	//Octree Objects
 	for (vector<GameObject*>::const_iterator iterator = objects.begin(); iterator != objects.end(); ++iterator)
 	{
 		static float3 corners[8];
@@ -365,6 +375,13 @@ void ModuleRenderer3D::DebugDraw()
 			DrawQuad(corners, Green);
 		else
 			DrawQuad(corners, Red);
+	}
+
+	if (!App->geometry->currentGameObject->GetObjectStatic())
+	{
+		static float3 corners[8];
+		App->geometry->currentGameObject->transform->boundingBox.GetCornerPoints(corners);
+		DrawQuad(corners, Blue);
 	}
 }
 

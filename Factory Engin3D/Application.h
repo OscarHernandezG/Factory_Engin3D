@@ -11,11 +11,14 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "ModuleImGui.h"
-#include "ModuleGeometryManager.h"
+#include "ModuleGeometry.h"
 #include "ModuleImporter.h"
-#include "ModuleGameObjectManager.h"
+#include "ModuleGameObject.h"
 #include "ModulePicking.h"
-#include "ModuleTimeManager.h"
+#include "ModuleTime.h"
+#include "ModuleResources.h"
+
+
 
 using namespace std;
 
@@ -29,15 +32,13 @@ public:
 	ModuleCamera3D* camera;
 	ModuleImGui* gui;
 	ModuleGeometry* geometry;
-	ModuleGameObjectManager* gameObject;
+	ModuleGameObject* gameObject;
 	ModuleImporter* importer;
 	ModulePicking* picking;
-	ModuleTimeManager* time;
+	ModuleTime* time;
+	ModuleResources* resources;
 
 private:
-
-	Timer	ms_timer;
-	float	dt;
 	list<Module*> list_modules;
 
 public:
@@ -64,9 +65,6 @@ private:
 	void FinishUpdate();
 
 public:
-
-	vector<float> fpsLog;
-	vector<float> msLog;
 
 	bool toCap = true;
 	bool canSave = false;

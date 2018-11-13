@@ -1,7 +1,7 @@
 #include "Application.h"
 #include "ModuleSceneIntro.h"
 #include "ModuleImGui.h"
-//#include "ModuleGeometryManager.h"
+//#include "ModuleGeometry.h"
 
 #include "Geometries.h"
 
@@ -30,13 +30,13 @@ bool ModuleSceneIntro::Start()
 	bool ret = true;
 
 	App->camera->Move(float3(1.0f, 1.0f, 0.0f));
-	quadtree.Create(AABB(float3(-5, 0, -5), float3(5, 5, 5)));
+	octree.Create(AABB(float3(-5, 0, -5), float3(5, 5, 5)));
 
 	ImGuizmo::Enable(true);
 	return ret;
 }
 
-update_status ModuleSceneIntro::PreUpdate(float dt)
+update_status ModuleSceneIntro::PreUpdate()
 {
 	update_status status = UPDATE_CONTINUE;
 
@@ -47,7 +47,7 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 
 	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)//Empty game object
 	{
-		float3 pos = math::float3((rand() % 100 )- 50, rand() % 15, (rand() % 100) - 50);
+		float3 pos = math::float3((rand() % 100 )- 50, (rand() % 100) - 50, (rand() % 100) - 50);
 
 		GameObject* random = App->gameObject->CreateGameObject(pos);
 
@@ -56,7 +56,7 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 
 		random->SetABB(AABB::FromCenterAndSize(center, size));
 
-		quadtree.Insert(random);
+		octree.Insert(random);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN)
@@ -79,15 +79,20 @@ update_status ModuleSceneIntro::PreUpdate(float dt)
 		guizOperation = ImGuizmo::OPERATION::BOUNDS;
 
 	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RCTRL) == KEY_REPEAT)
+	{
 		if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
 			GetPreviousTransform();
-		
+
+		isSnap = true;
+	}
+	else if(isSnap)
+		isSnap = false;
 
 	return status;
 }
 
 // Update
-update_status ModuleSceneIntro::Update(float dt)
+update_status ModuleSceneIntro::Update()
 {
 
 	GuizmoUpdate();
@@ -96,55 +101,63 @@ update_status ModuleSceneIntro::Update(float dt)
 
 void ModuleSceneIntro::GuizmoUpdate()
 {
-	Transform* transform = App->geometry->currentGameObject->transform;
-	if (transform != nullptr)
+	GameObject* transformObject = App->geometry->currentGameObject;
+	if (transformObject != nullptr)
 	{
-
-		/*float pos[3];
-		float rot[3];
-		float scale[3];
-
-		ImGuizmo::DecomposeMatrixToComponents(transform->GetMatrix().ptr(), pos, rot, scale);
-		ImGui::InputFloat3("Tr", pos, 3);
-		ImGui::InputFloat3("Rt", rot, 3);
-		ImGui::InputFloat3("Sc", scale, 3);
-		ImGuizmo::RecomposeMatrixFromComponents(pos, rot, scale, (float*)transform->GetMatrix().ptr());
-
-		transform->SetPos(pos[0], pos[1], pos[2]);
-		transform->SetRotation({ math::DegToRad(rot[0]),  math::DegToRad(rot[1]),  math::DegToRad(rot[2]) });
-		transform->SetScale(scale[0], scale[1], scale[2]);*/
-		float4x4 globalMatrix = transform->GetMatrix();
+		float4x4 globalMatrix = transformObject->GetGlobalMatrix();
 		globalMatrix.Transpose();
 		ImGuiIO& io = ImGui::GetIO();
 		ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
-		ImGuizmo::Manipulate(App->camera->GetViewMatrix().ptr(), App->camera->GetProjectionMatrix().ptr(), guizOperation, guizMode, globalMatrix.ptr());
-		if (ImGuizmo::IsOver())
+		ImGuizmo::Manipulate(App->camera->GetViewMatrix().ptr(), App->camera->GetProjectionMatrix().ptr(), guizOperation, guizMode, globalMatrix.ptr(), nullptr, isSnap ? snap.ptr() : nullptr);
+
+		if (ImGuizmo::IsUsing() && App->gameObject->CanTransform(transformObject))
 		{
-			saveTransform = false;
-			LOG("Over");
+			if(App->input->GetKey(SDL_SCANCODE_LALT) != KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_RALT) != KEY_REPEAT)
+				MoveGO(globalMatrix, transformObject);
 		}
-		
-		else if (ImGuizmo::IsUsing())
+
+		else
 		{
-			transform->SetTransform(globalMatrix.Transposed());
-			quadtree.ReDoQuadtree(AABB(), true);
-			saveTransform = true;
-		}
-		else 
 			if (saveTransform)
 			{
-				//SaveLastTransform();
+				SaveLastTransform(lastMat);
 				saveTransform = false;
+				octree.ReDoOctree(AABB(), true);
 			}
+			lastMat = transformObject->GetGlobalMatrix();
+		}
 	}
+}
+
+void ModuleSceneIntro::MoveGO(math::float4x4 &globalMatrix, GameObject* transformObject)
+{
+	float3 pos, scale;
+	Quat rot;
+	globalMatrix.Transpose();
+	globalMatrix.Decompose(pos, rot, scale);
+	switch (guizOperation)
+	{
+	case ImGuizmo::TRANSLATE:
+		transformObject->SetPos(pos);
+		break;
+	case ImGuizmo::ROTATE:
+		transformObject->SetRotation(rot);
+		break;
+	case ImGuizmo::SCALE:
+		transformObject->SetScale(scale);
+		break;
+	default:
+		break;
+	}
+	saveTransform = true;
 }
 
 void ModuleSceneIntro::SaveLastTransform(float4x4 matrix)
 {
 	LastTransform prevTrans;
-	if (prevTransforms.empty() || App->geometry->currentGameObject->transform->GetMatrix().ptr() != prevTransforms.top().matrix.ptr())
+	if (prevTransforms.empty() || App->geometry->currentGameObject->GetGlobalMatrix().ptr() != prevTransforms.top().matrix.ptr())
 	{
-		prevTrans.matrix = App->geometry->currentGameObject->transform->GetMatrix();
+		prevTrans.matrix = matrix;
 		prevTrans.object = App->geometry->currentGameObject;
 		prevTransforms.push(prevTrans);
 	}
@@ -156,15 +169,19 @@ void ModuleSceneIntro::GetPreviousTransform()
 	{
 		LastTransform prevTrans = prevTransforms.top();
 		App->geometry->currentGameObject = prevTrans.object;
-		App->geometry->currentGameObject->transform->SetTransform(prevTrans.matrix);
+		App->geometry->currentGameObject->SetTransform(prevTrans.matrix);
 		prevTransforms.pop();
+		octree.ReDoOctree(AABB(), true);
 	}
 }
 
-
-update_status ModuleSceneIntro::PostUpdate(float dt)
+void ModuleSceneIntro::ReInsertOctree(GameObject* object)
 {
-	return UPDATE_CONTINUE;
+	for (list<GameObject*>::iterator iterator = object->childs.begin(); iterator != object->childs.end(); ++iterator)
+	{
+		ReInsertOctree(*iterator);
+	}
+	octree.Insert(object);
 }
 
 void ModuleSceneIntro::SetGuizOperation(ImGuizmo::OPERATION operation)

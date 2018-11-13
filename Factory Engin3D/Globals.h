@@ -30,8 +30,8 @@ enum update_status
 };
 
 // Configuration -----------
-#define SCREEN_WIDTH 1280
-#define SCREEN_HEIGHT 861
+#define SCREEN_WIDTH 1280.0f
+#define SCREEN_HEIGHT 861.0f
 #define SCREEN_SIZE 1
 #define WIN_FULLSCREEN false
 #define WIN_RESIZABLE true
@@ -39,5 +39,10 @@ enum update_status
 #define WIN_FULLSCREEN_DESKTOP false
 #define VSYNC false
 #define TITLE "Factory Engin3D"
+
+//class JSON_Object;
+#include "parson/parson.h"
+
+void SaveNumberArray(JSON_Object* parent, char* name, float* numbers, int size);
 
 #endif // ! __Globals_H__

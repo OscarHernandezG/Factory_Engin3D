@@ -25,7 +25,7 @@ bool ModulePicking::CleanUp()
 	return true;
 }
 
-update_status ModulePicking::Update(float dt)
+update_status ModulePicking::Update()
 {
 
 	if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_DOWN && !App->gui->IsAnyWindowHovered()
@@ -37,46 +37,56 @@ update_status ModulePicking::Update(float dt)
 		LineSegment ray = App->camera->GetCameraFrustrum().UnProjectLineSegment(mouseX, mouseY);
 
 		std::vector<GameObject*> objects;
-		App->sceneIntro->quadtree.GetIntersects(objects, ray);
+		App->sceneIntro->octree.GetIntersects(objects, ray);
 
 		float smallerDist = 0.0f;
 		GameObject* nearObject = nullptr;
-		for (std::vector<GameObject*>::const_iterator iterator = objects.begin(); iterator != objects.end(); ++iterator)
-		{
-			if ((*iterator)->HasComponent(ComponentType_GEOMETRY) && (*iterator)->GetActive())
-			{
-				LineSegment rayTransformed(ray);
-				rayTransformed.Transform((*iterator)->transform->GetMatrix().Inverted());
 
-				Geometry* geometry = (Geometry*)(*iterator)->GetComponent(ComponentType_GEOMETRY);
-				if (geometry->GetType() == Primitive_Mesh)
-				{
-					if (CheckMeshTri(geometry, rayTransformed, smallerDist))
-						nearObject = (*iterator);
-				}
-			}
-		}
+		//Iterate Octree Objects
+		for (std::vector<GameObject*>::const_iterator iterator = objects.begin(); iterator != objects.end(); ++iterator)
+			CheckObjectPicking(*iterator, ray, smallerDist, nearObject);
+
+		//Iterate Dynamic Objects
+		std::list<GameObject*>::const_iterator iterator = App->gameObject->dynamicObjects.begin();
+		for (iterator; iterator != App->gameObject->dynamicObjects.end(); ++iterator)
+			CheckObjectPicking(*iterator, ray, smallerDist, nearObject);
 
 		if (nearObject != nullptr)
 			App->geometry->currentGameObject = nearObject;
 
 		rayDraw = RayLine(ray.a, ray.b);
-		rayDraw.gameObject = App->gameObject->root;
+		rayDraw.gameObject = App->gameObject->rootGameObject;
 	}
 	rayDraw.Render();
 	return UPDATE_CONTINUE;
+}
+
+void ModulePicking::CheckObjectPicking(GameObject* iterator, const LineSegment &ray, float &smallerDist, GameObject* &nearObject)
+{
+	if (iterator->HasComponent(ComponentType_GEOMETRY) && iterator->GetActive())
+	{
+		LineSegment rayTransformed(ray);
+		rayTransformed.Transform(iterator->transform->GetMatrix().Inverted());
+
+		Geometry* geometry = (Geometry*)iterator->GetComponent(ComponentType_GEOMETRY);
+		if (geometry->GetType() == Primitive_Mesh)
+		{
+			if (CheckMeshTri(geometry, rayTransformed, smallerDist))
+				nearObject = iterator;
+		}
+	}
 }
 
 bool ModulePicking::CheckMeshTri(Geometry * geometry, LineSegment &ray, float &smallerDist)
 {
 	bool ret = false;
 	Triangle triangle;
-	Buffer<uint> index = ((Mesh*)geometry)->buffer.index;
+	Buffer<uint> index = ((Mesh*)geometry)->buffer->index;
 	for (int i = 0; i < index.size / 3; ++i)
 	{
-		triangle.a = SetTrianglePoint(((Mesh*)geometry)->buffer.vertex, index, (i * 3));
-		triangle.b = SetTrianglePoint(((Mesh*)geometry)->buffer.vertex, index, (i * 3) + 1);
-		triangle.c = SetTrianglePoint(((Mesh*)geometry)->buffer.vertex, index, (i * 3) + 2);
+		triangle.a = SetTrianglePoint(((Mesh*)geometry)->buffer->vertex, index, (i * 3));
+		triangle.b = SetTrianglePoint(((Mesh*)geometry)->buffer->vertex, index, (i * 3) + 1);
+		triangle.c = SetTrianglePoint(((Mesh*)geometry)->buffer->vertex, index, (i * 3) + 2);
 
 		float distance;
 		float3 pos;

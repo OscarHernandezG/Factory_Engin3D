@@ -22,7 +22,7 @@ Camera::Camera(GameObject* gameObject) : Component(gameObject)
 	frustum.nearPlaneDistance = 0.1f;
 	frustum.farPlaneDistance = 1000.0f;
 	frustum.verticalFov = 60.0f * DEGTORAD;
-	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) * (SCREEN_WIDTH / SCREEN_HEIGHT));
+	frustum.horizontalFov = 2.f * atan(tan(frustum.verticalFov * 0.5f) * (SCREEN_WIDTH / SCREEN_HEIGHT));
 }
 
 
@@ -80,4 +80,23 @@ void Camera::SetPos(float3 pos)
 float3 Camera::GetPos()
 {
 	return frustum.pos;
+}
+
+void Camera::SaveComponent(JSON_Object * parent)
+{
+	json_object_set_number(parent, "Type", this->type);
+
+	json_object_set_number(parent, "UUID", GetUUID());
+
+	json_object_set_number(parent, "Time Created", GetTime());
+
+	SaveNumberArray(parent, "pos", frustum.pos.ptr(), 3);
+
+	SaveNumberArray(parent, "front", frustum.front.ptr(), 3);
+	SaveNumberArray(parent, "up", frustum.up.ptr(), 3);
+
+	json_object_set_number(parent, "nearPlaneDistance", frustum.nearPlaneDistance);
+	json_object_set_number(parent, "farPlaneDistance", frustum.farPlaneDistance);
+	json_object_set_number(parent, "verticalFov", frustum.verticalFov);
+	json_object_set_number(parent, "horizontalFov", frustum.horizontalFov);
 }
