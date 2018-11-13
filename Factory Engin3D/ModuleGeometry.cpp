@@ -298,6 +298,7 @@ GameObject* ModuleGeometry::LoadGameObjectsFromMeshNode(MeshNode node, GameObjec
 				Mesh* currMesh = new Mesh(newGameObject);
 
 				currMesh->buffer = (*currentMeshBuffer);
+				currMesh->SetUUID(node.componentUUID);
 				GeometryInfo info(currMesh);
 				newGameObject->AddComponent(ComponentType_GEOMETRY, &info);
 				App->sceneIntro->octree.Insert(newGameObject);
