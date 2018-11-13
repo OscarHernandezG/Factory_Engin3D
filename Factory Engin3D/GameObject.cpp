@@ -66,8 +66,6 @@ void GameObject::RemoveComponents()
 	components.clear();
 }
 
-
-
 void GameObject::RealDelete()
 {
 	transform = nullptr;
@@ -78,8 +76,6 @@ void GameObject::RealDelete()
 	father = nullptr;
 	//delete this;
 }
-
-
 
 void GameObject::Update(float dt)
 {
@@ -97,62 +93,6 @@ void GameObject::Update(float dt)
 	}
 }
 
-Component* GameObject::GetComponent(ComponentType type)
-{
-	Component* component = nullptr;
-
-	for (list<Component*>::iterator iterator = components.begin(); iterator != components.end(); ++iterator)
-	{
-		if ((*iterator)->type == type)
-		{
-			component = (*iterator);
-			break;
-		}
-	}
-
-	return component;
-}
-
-list<Component*> GameObject::GetAllComponent(ComponentType type)
-{
-	list<Component*> component;
-
-	for (list<Component*>::iterator iterator = components.begin(); iterator != components.end(); ++iterator)
-	{
-		if ((*iterator)->type == type)
-		{
-			components.push_back(*iterator);
-		}
-	}
-
-	return component;
-}
-
-bool GameObject::HasComponent(ComponentType type)
-{
-	bool ret = false;
-	for (list<Component*>::iterator iterator = components.begin(); iterator != components.end(); ++iterator)
-	{
-		if ((*iterator)->type == type)
-		{
-			ret = true;
-			break;
-		}
-	}
-	return ret;
-}
-
-void GameObject::RemoveComponent(Component* component)
-{
-	if (component != nullptr)
-	{
-		components.remove(component);
-		delete component;
-		component = nullptr;
-	}
-}
-
-
 void GameObject::CreateGameObject(TransformInfo* info)
 {
 	UID = pcg32_random();
@@ -162,6 +102,9 @@ void GameObject::CreateGameObject(TransformInfo* info)
 		transform->SetUUID(pcg32_random());
 }
 
+//Components
+//-------------------------------------------------------------------------
+	// Add
 Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
 {
 	Component* newComponent = nullptr;
@@ -199,7 +142,82 @@ Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
 	}
 	return newComponent;
 }
+	// Remove
+void GameObject::RemoveComponent(Component* component)
+{
+	if (component != nullptr)
+	{
+		components.remove(component);
+		delete component;
+		component = nullptr;
+	}
+}
+	// Get
+Component* GameObject::GetComponent(ComponentType type)
+{
+	Component* component = nullptr;
 
+	for (list<Component*>::iterator iterator = components.begin(); iterator != components.end(); ++iterator)
+	{
+		if ((*iterator)->type == type)
+		{
+			component = (*iterator);
+			break;
+		}
+	}
+
+	return component;
+}
+
+list<Component*> GameObject::GetAllComponent(ComponentType type)
+{
+	list<Component*> component;
+
+	for (list<Component*>::iterator iterator = components.begin(); iterator != components.end(); ++iterator)
+	{
+		if ((*iterator)->type == type)
+		{
+			components.push_back(*iterator);
+		}
+	}
+
+	return component;
+}
+
+
+bool GameObject::HasComponent(ComponentType type)
+{
+	bool ret = false;
+	for (list<Component*>::iterator iterator = components.begin(); iterator != components.end(); ++iterator)
+	{
+		if ((*iterator)->type == type)
+		{
+			ret = true;
+			break;
+		}
+	}
+	return ret;
+}
+//-------------------------------------------------------------------------
+
+
+//Position
+//-------------------------------------------------------------------------
+	// Set
+void GameObject::SetPos(float3 pos)
+{
+	if (transform)
+	{
+		transform->SetPos(pos);
+	}
+}
+
+void GameObject::Move(float3 movement)
+{
+	if (transform)
+		transform->Move(movement);
+}
+	// Get
 float3 GameObject::GetPos() const
 {
 	if (transform)
@@ -215,6 +233,7 @@ float3 GameObject::GetGlobalPos() const
 
 	return float3::zero;
 }
+//-------------------------------------------------------------------------
 
 float3 GameObject::GetScale() const
 {
@@ -263,20 +282,7 @@ void GameObject::SetTransform(float4x4 trans)
 	}
 }
 
-void GameObject::SetPos(float3 pos)
-{
-	if (transform)
-	{
-		transform->SetPos(pos);
-	}
-}
 
-
-void GameObject::Move(float3 movement)
-{
-	if (transform)
-		transform->Move(movement);
-}
 
 void GameObject::SetScale(float3 scale)
 {

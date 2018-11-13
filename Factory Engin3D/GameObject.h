@@ -29,19 +29,24 @@ public:
 	~GameObject();
 
 	void RemoveChilds();
-
 	void RemoveComponents();
-
 
 	void Update(float dt);
 
 	inline void Delete() { toDelete = true;	}
 
+//Components
+//----------------------------------------------------------------
+	// Add
+	Component* AddComponent(ComponentType type, ComponentInfo* info);
+	// Remove
+	void RemoveComponent(Component* component);
+	// Get
 	Component* GetComponent(ComponentType type);
 	list<Component*> GetAllComponent(ComponentType type);
+
 	bool HasComponent(ComponentType type);
-	void RemoveComponent(Component* component);
-	Component* AddComponent(ComponentType type, ComponentInfo* info);
+//----------------------------------------------------------------
 
 //Position
 //----------------------------------------------------------------
