@@ -44,46 +44,47 @@ public:
 //Position
 //----------------------------------------------------------------
 //	Set
-	inline void SetPos(float x, float y, float z);
-	inline void SetPos(float3 position);
+	
+	void SetPos(float x, float y, float z);
+	void SetPos(float3 position);
 
 	void Move(float3 position);
 //	Get
 	float3 GetPos() const;
-	float3 GetLocalPos() const;
+	float3 GetGlobalPos() const;
 //----------------------------------------------------------------
 
 
 // Scale
 //----------------------------------------------------------------
 //	Set
-	inline void SetScale(float x, float y, float z);
-	inline void SetScale(float3 scale);
+	void SetScale(float x, float y, float z);
+	void SetScale(float3 scale);
 
 	void Scale(float3 scale);
 // Get
 	float3 GetScale() const;
-	float3 GetLocalScale() const;
+	float3 GetGlobalScale() const;
 //----------------------------------------------------------------
 	
 	
 // Rotation
 //----------------------------------------------------------------
 //	Set
-	inline void SetRotation(Quat rotation);
-	inline void SetRotation(float3 rotation);
+	void SetRotation(Quat rotation);
+	void SetRotation(float3 rotation);
 
 	void Rotate(Quat rotation);
 // Get
 	Quat GetRotation() const;
-	Quat GetLocalRotation() const;
+	Quat GetGlobalRotation() const;
 //----------------------------------------------------------------
 	
 
 // Transform
 //----------------------------------------------------------------
 	void SetTransform(float4x4 trans);
-	inline void SetIdentity();
+	void SetIdentity();
 //----------------------------------------------------------------
 
 
@@ -92,7 +93,7 @@ public:
 	float4x4	GetMatrixOGL() const;
 	float4x4	GetMatrix() const;
 
-	float4x4 GetLocalMatrix() const;
+	float4x4	GetLocalMatrix() const;
 //----------------------------------------------------------------
 
 

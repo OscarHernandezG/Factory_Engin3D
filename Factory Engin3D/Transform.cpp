@@ -56,16 +56,16 @@ void Transform::Move(float3 position)
 //	Get
 float3 Transform::GetPos() const
 {
-	if (gameObject)
-		if (gameObject->father)
-			return position + gameObject->father->GetPos();
-
-		else return position;
+	return position;
 }
 
-float3 Transform::GetLocalPos() const
+float3 Transform::GetGlobalPos() const
 {
-	return position;
+	if (gameObject)
+		if (gameObject->father)
+			return position + gameObject->father->GetGlobalPos();
+
+		else return position;
 }
 //-------------------------------------------------------------------------
 
@@ -92,15 +92,15 @@ void Transform::Scale(float3 scale)
 //	Get
 float3 Transform::GetScale() const
 {
-	if (gameObject->father != nullptr)
-		return scale.Mul(gameObject->father->GetScale());
-
-	else return scale;
+	return scale;
 }
 
-float3 Transform::GetLocalScale() const
+float3 Transform::GetGlobalScale() const
 {
-	return scale;
+	if (gameObject->father != nullptr)
+		return scale.Mul(gameObject->father->GetGlobalScale());
+
+	else return scale;
 }
 //-------------------------------------------------------------------------
 
@@ -126,15 +126,15 @@ void Transform::Rotate(Quat rotation)
 //	Get
 Quat Transform::GetRotation() const
 {
-	if (gameObject->father != nullptr)
-		return rotation.Mul(gameObject->father->GetRotation());
-
-	else return rotation;
+	return rotation;
 }
 
-Quat Transform::GetLocalRotation() const
+Quat Transform::GetGlobalRotation() const
 {
-	return rotation;
+	if (gameObject->father != nullptr)
+		return rotation.Mul(gameObject->father->GetGlobalRotation());
+
+	else return rotation;
 }
 //-------------------------------------------------------------------------
 
@@ -166,7 +166,11 @@ float4x4 Transform::GetMatrixOGL() const
 
 float4x4 Transform::GetMatrix() const
 {
-	return float4x4::FromTRS(GetPos(), GetRotation(), GetScale());
+	float4x4 local = GetLocalMatrix();
+	if (gameObject->father != nullptr)
+		return gameObject->father->GetGlobalMatrix().Mul(local);
+
+	else return local;
 }
 
 float4x4 Transform::GetLocalMatrix() const
