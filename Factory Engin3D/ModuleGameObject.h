@@ -35,6 +35,8 @@ public:
 	void AddNewDynamic(GameObject * object);
 	void RemoveDynamic(GameObject * object);
 
+	bool CanTransform(GameObject * object);
+
 public:
 	GameObject* rootGameObject;
 

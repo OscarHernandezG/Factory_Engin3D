@@ -251,3 +251,8 @@ void ModuleGameObject::RemoveDynamic(GameObject* object)
 		App->sceneIntro->octree.Insert(object);
 	}
 }
+
+bool ModuleGameObject::CanTransform(GameObject* object)
+{
+	return (object->GetObjectStatic() || App->time->gameState == GameState_NONE);
+}

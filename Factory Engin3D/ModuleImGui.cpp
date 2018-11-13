@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleImGui.h"
 #include "ModuleWindow.h"
+#include "ModuleResources.h"
 
 #include "ImGuizmo/ImGuizmo.h"
 #include "imgui-1.65/imgui_impl_sdl.h"
@@ -39,7 +40,7 @@ bool ModuleImGui::Start()
 	transformPos = float2(955.0f, 315.0f);
 	consolePos = float2(0.0f, 575.0f);
 	scenePos = float2(0.0f, 225.0f);
-	playPos = float2(450.0f, 25.0f);
+	playPos = float2(550.0f, 25.0f);
 	playCountPos = float2(-120.0f, 0.0f);
 	// Window sizes
 	aboutSize = float2(325.0f, 340.0f);
@@ -48,7 +49,7 @@ bool ModuleImGui::Start()
 	consoleSize = float2(355.0f, 287.0f);
 	sceneSize = float2(295.0f, 354.0f);
 	playSize = float2(185.0f, 40.0f);
-	playCountSize = float2(200.0f, 0.0f);
+	playCountSize = float2(205.0f, 0.0f);
 	//--------------------------
 
 	return ret;
@@ -97,6 +98,8 @@ update_status ModuleImGui::PreUpdate()
 		CreateGameObjectHierarchy(scale);
 
 	CreateGameManager(scale);
+
+	CreateAssetsWindow(scale);
 
 	status = CreateMainMenuBar();
 
@@ -483,17 +486,18 @@ void ModuleImGui::CreateTransform(float2 scale)
 		if (currObject->transform != nullptr)
 		{
 			float4x4 prevTransformMat = currObject->GetGlobalMatrix();
+			// Use go, not trans!
 			position = currObject->transform->GetPos();
-			scale = currObject->transform->scale;
+			scale = currObject->transform->GetScale();
 			rotate = currObject->transform->GetRotation();
 
-			if (ImGui::InputFloat3("Position", &position[0])) {
+			if (ImGui::InputFloat3("Position", &position[0]) && App->gameObject->CanTransform(currObject)) {
 				App->sceneIntro->SaveLastTransform(prevTransformMat);
 				currObject->SetPos(position);
 				App->sceneIntro->octree.ReDoOctree(AABB(), true);
 			}
 
-			if (ImGui::InputFloat3("Scale", &scale[0]))
+			if (ImGui::InputFloat3("Scale", &scale[0]) && App->gameObject->CanTransform(currObject))
 			{
 				App->sceneIntro->SaveLastTransform(prevTransformMat);
 				currObject->SetScale(scale);
@@ -505,7 +509,7 @@ void ModuleImGui::CreateTransform(float2 scale)
 			angles[1] = math::RadToDeg(angles.y);
 			angles[2] = math::RadToDeg(angles.z);
 
-			if (ImGui::DragFloat3("Rotation", &angles[0]))
+			if (ImGui::DragFloat3("Rotation", &angles[0]) && App->gameObject->CanTransform(currObject))
 			{
 				angles.x = math::DegToRad(angles.x);
 				angles.y = math::DegToRad(angles.y);
@@ -611,17 +615,22 @@ void ModuleImGui::CreateGameManager(float2 scale)
 
 }
 
+
 void ModuleImGui::SetWindowDim(float2 &pos, float2 &size, float2 &scale, bool gameWindow)
 {
 	float2 realPos = pos.Mul(scale);
 	float2 realSize = size.Mul(scale);
 
-	if (gameWindow && App->time->gameState != GameState_NONE)
+	if (gameWindow)
 	{
-		realSize += playCountSize.Mul(scale);
-		realPos += playCountPos.Mul(scale);
+		if (App->time->gameState != GameState_NONE)
+		{
+			realSize = size + playCountSize;
+			realPos += playCountPos.Mul(scale);
+		}
+		else 
+			realSize = size;
 	}
-
 	ImGui::SetWindowPos({ realPos.x, realPos.y });
 	ImGui::SetWindowSize({ realSize.x, realSize.y });
 }
@@ -674,6 +683,35 @@ update_status ModuleImGui::CreateMainMenuBar()
 	ImGui::EndMainMenuBar();
 
 	return ret;
+}
+
+void ModuleImGui::CreateAssetsWindow(float2 scale)
+{
+	ImGui::Begin("Assets", &canScroll, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+	SetWindowDim(configurationPos, configurationSize, scale);
+
+	TreeAssets(".\\Assets\\");
+
+		ImGui::End();
+}
+
+void ModuleImGui::TreeAssets(const char* path)
+{
+	vector<string> filesStr = App->resources->ReadFolder(path);
+
+	for (vector<string>::iterator iter = filesStr.begin(); iter != filesStr.end(); ++iter)
+	{
+		ImGuiTreeNodeFlags_ flag = ImGuiTreeNodeFlags_None;
+			std::string newPath = path;
+		if (App->resources->ExistFile(newPath.append(*iter).data()))
+			flag = ImGuiTreeNodeFlags_Leaf;
+		if (ImGui::TreeNodeEx((*iter).c_str(), flag))
+		{
+			newPath += "\\";
+			TreeAssets(newPath.data());
+			ImGui::TreePop();
+		}
+	}
 }
 //Create Windows----------------------------------------------------------
 

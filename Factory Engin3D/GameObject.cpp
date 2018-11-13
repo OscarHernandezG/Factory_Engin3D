@@ -66,8 +66,6 @@ void GameObject::RemoveComponents()
 	components.clear();
 }
 
-
-
 void GameObject::RealDelete()
 {
 	transform = nullptr;
@@ -78,8 +76,6 @@ void GameObject::RealDelete()
 	father = nullptr;
 	//delete this;
 }
-
-
 
 void GameObject::Update(float dt)
 {
@@ -97,6 +93,66 @@ void GameObject::Update(float dt)
 	}
 }
 
+void GameObject::CreateGameObject(TransformInfo* info)
+{
+	UID = pcg32_random();
+
+	this->transform = (Transform*)AddComponent(ComponentType_TRANSFORM, info);
+	if(transform)
+		transform->SetUUID(pcg32_random());
+}
+
+//Components
+//-------------------------------------------------------------------------
+	// Add
+Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
+{
+	Component* newComponent = nullptr;
+
+	if (info)
+		info->gameObject = this;
+
+	switch (type)
+	{
+	case ComponentType_TRANSFORM:
+		if (info)
+			newComponent = (Component*)new Transform((TransformInfo*)info);
+		break;
+	case ComponentType_GEOMETRY:
+		if (info)
+			newComponent = (Component*)(((GeometryInfo*)info)->geometry);
+		break;
+	case ComponentType_CAMERA:
+		newComponent = (Component*)new Camera(this);
+		break;
+	case ComponentType_TEXTURE:
+		break;
+	case ComponentType_LIGHT:
+		break;
+	default:
+		break;
+	}
+
+	if (newComponent)
+	{
+		newComponent->type = type;
+		newComponent->isActive = true;
+		newComponent->gameObject = this;
+		components.push_back(newComponent);
+	}
+	return newComponent;
+}
+	// Remove
+void GameObject::RemoveComponent(Component* component)
+{
+	if (component != nullptr)
+	{
+		components.remove(component);
+		delete component;
+		component = nullptr;
+	}
+}
+	// Get
 Component* GameObject::GetComponent(ComponentType type)
 {
 	Component* component = nullptr;
@@ -128,6 +184,7 @@ list<Component*> GameObject::GetAllComponent(ComponentType type)
 	return component;
 }
 
+
 bool GameObject::HasComponent(ComponentType type)
 {
 	bool ret = false;
@@ -141,77 +198,55 @@ bool GameObject::HasComponent(ComponentType type)
 	}
 	return ret;
 }
+//-------------------------------------------------------------------------
 
-void GameObject::RemoveComponent(Component* component)
+
+//Position
+//-------------------------------------------------------------------------
+	// Set
+void GameObject::SetPos(float3 pos)
 {
-	if (component != nullptr)
+	if (transform)
 	{
-		components.remove(component);
-		delete component;
-		component = nullptr;
+		transform->SetPos(pos);
 	}
 }
 
-
-void GameObject::CreateGameObject(TransformInfo* info)
+void GameObject::Move(float3 movement)
 {
-	UID = pcg32_random();
-
-	this->transform = (Transform*)AddComponent(ComponentType_TRANSFORM, info);
-	if(transform)
-		transform->SetUUID(pcg32_random());
+	if (transform)
+		transform->Move(movement);
 }
-
-Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
-{
-	Component* newComponent = nullptr;
-
-	if (info)
-		info->gameObject = this;
-
-	switch (type)
-	{
-	case ComponentType_TRANSFORM:
-		if (info)
-			newComponent = (Component*)new Transform((TransformInfo*)info);
-		break;
-	case ComponentType_GEOMETRY:
-		if (info)
-			newComponent = (Component*)(((GeometryInfo*)info)->geometry);
-		break;
-	case ComponentType_CAMERA:
-		newComponent = (Component*)new Camera(this);
-		break;
-	case ComponentType_TEXTURE:
-		break;
-	case ComponentType_LIGHT:
-		break;
-	default:
-		break;
-	}
-
-	if (newComponent != nullptr)
-	{
-		newComponent->type = type;
-		newComponent->isActive = true;
-		newComponent->gameObject = this;
-		components.push_back(newComponent);
-	}
-	return newComponent;
-}
-
+	// Get
 float3 GameObject::GetPos() const
 {
-	if (transform != nullptr)
+	if (transform)
 		return transform->GetPos();
 
 	return float3::zero;
 }
 
+float3 GameObject::GetGlobalPos() const
+{
+	if (transform)
+		return transform->GetGlobalPos();
+
+	return float3::zero;
+}
+//-------------------------------------------------------------------------
+
 float3 GameObject::GetScale() const
 {
-	if (transform != nullptr)
+	if (transform)
 		return transform->GetScale();
+
+	return float3::one;
+}
+
+float3 GameObject::GetGlobalScale() const
+{
+	if (transform)
+		return transform->GetGlobalScale();
 
 	return float3::one;
 }
@@ -221,7 +256,7 @@ float4x4 GameObject::GetGlobalMatrix() const
 	float4x4 mat = float4x4::identity;
 	if (transform)
 	{
-		mat = transform->GetGlobalMatrix();
+		mat = transform->GetMatrix();
 	}
 
 	return mat;
@@ -229,24 +264,17 @@ float4x4 GameObject::GetGlobalMatrix() const
 
 Quat GameObject::GetRotation() const
 {
-	return transform->GetRotation().Normalized();
+	if (transform)
+		return transform->GetRotation().Normalized();
+}
+
+Quat GameObject::GetGlobalRotation() const
+{
+	if (transform)
+		return transform->GetGlobalRotation().Normalized();
 }
 
 void GameObject::SetTransform(float4x4 trans)
-{
-	if (transform)
-	{
-		float3 pos, scale;
-		Quat rot;
-		trans.Decompose(pos, rot, scale);
-
-		SetPos(pos);
-		SetScale(scale);
-		SetRotation(rot);
-	}
-}
-
-void GameObject::ForceTransform(float4x4 trans)
 {
 	if (transform)
 	{
@@ -254,87 +282,28 @@ void GameObject::ForceTransform(float4x4 trans)
 	}
 }
 
-void GameObject::SetPos(float3 pos)
-{
-	float3 movement = float3::zero;
-	if (transform)
-	{
-		movement = pos - transform->GetLocalPos();
-	}
 
-	Move(movement);
-}
-
-void GameObject::SetGlobalPos(float3 pos)
-{
-	float3 movement = float3::zero;
-	if (transform)
-	{
-		movement = pos - transform->GetPos();
-	}
-
-	Move(movement);
-}
-
-void GameObject::Move(float3 movement)
-{
-	if (transform)
-		transform->Move(movement);
-
-	for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
-	{
-		(*iterator)->Move(movement);
-	}
-}
 
 void GameObject::SetScale(float3 scale)
 {
-	float3 scaleVariation;
-	float3 scaleGO = GetScale();
-
-	scaleVariation.x = scale.x / scaleGO.x;
-	scaleVariation.y = scale.y / scaleGO.y;
-	scaleVariation.z = scale.z / scaleGO.z;
-
-	if(!scaleVariation.IsFinite())
-		Scale(scaleVariation);
+	if (transform)
+		transform->SetScale(scale);
 }
 
 void GameObject::Scale(float3 scale)
 {
 	if (transform)
 		transform->Scale(scale);
-
-	for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
-	{
-		(*iterator)->SetGlobalPos(((*iterator)->transform->scale.Mul(scale)).Mul((*iterator)->transform->GetPos()));
-		(*iterator)->Scale(scale);
-	}
 }
 
 void GameObject::SetRotation(Quat rotation)
 {
-	Quat rotate = rotation.Mul(GetRotation().Inverted()).Normalized();
-
-	Rotate(rotate);
+	if (transform)
+		transform->SetRotation(rotation);
 }
 
 void GameObject::Rotate(Quat rotation)
 {
-	for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
-	{
-		float3 pos = transform->GetLocalPos();
-
-
-		float3 originalPosition = (*iterator)->transform->GetLocalPos() - pos;
-		float3 newPosition = originalPosition;
-
-		newPosition = rotation.Transform(newPosition);
-
-		(*iterator)->SetPos((newPosition + pos));
-		(*iterator)->Rotate(rotation);
-	}
-
 	if (transform)
 		transform->Rotate(rotation);
 }
@@ -343,10 +312,7 @@ void GameObject::SetIdentity()
 {
 	if (transform)
 	{
-		SetPos(float3::zero);
-		SetRotation(Quat::identity);
-		SetScale(float3::one);
-
+		transform->SetIdentity();
 		transform->UpdateBoundingBox();
 	}
 }

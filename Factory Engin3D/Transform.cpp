@@ -35,6 +35,9 @@ void Transform::UpdateBoundingBox()
 	boundingBox = obb.MinimalEnclosingAABB();
 }
 
+//Position
+//-------------------------------------------------------------------------
+//	Set
 void Transform::SetPos(float x, float y, float z)
 {
 	SetPos(float3(x, y, z));
@@ -42,46 +45,35 @@ void Transform::SetPos(float x, float y, float z)
 
 void Transform::SetPos(float3 position)
 {
-	float3 pos = position;
-
-	if (gameObject->father != nullptr)
-		pos = pos - gameObject->father->GetPos();
-
-	this->position = pos;
+	this->position = position;
 }
+
 
 void Transform::Move(float3 position)
 {
 	this->position = this->position.Add(position);
 }
-
-void Transform::SetTransform(float4x4 trans)
+//	Get
+float3 Transform::GetPos() const
 {
-	trans.Decompose(position, rotation, scale);
+	return position;
 }
 
-void Transform::Scale(float3 scale)
+float3 Transform::GetGlobalPos() const
 {
-	this->scale = this->scale.Mul(scale);
-}
+	if (gameObject)
+		if (gameObject->father)
+			return position + gameObject->father->GetGlobalPos();
 
-void Transform::SetRotation(Quat rotation)
-{
-	this->rotation = rotation;
+		else return position;
 }
+//-------------------------------------------------------------------------
 
-void Transform::SetRotation(float3 rotation)
-{
-	this->rotation = Quat::FromEulerXYZ(rotation.x, rotation.y, rotation.z);
-}
-// ------------------------------------------------------------
-void Transform::Rotate(Quat rotation)
-{
-	float3 angles = this->rotation.ToEulerXYZ();
-	this->rotation = rotation.Mul(this->rotation).Normalized();
-}
 
-// ------------------------------------------------------------
+
+// Scale
+//-------------------------------------------------------------------------
+//	Set
 void Transform::SetScale(float x, float y, float z)
 {
 	scale = float3(x, y, z);
@@ -92,62 +84,102 @@ void Transform::SetScale(float3 scale)
 	this->scale = scale;
 }
 
+
+void Transform::Scale(float3 scale)
+{
+	this->scale = this->scale.Mul(scale);
+}
+//	Get
+float3 Transform::GetScale() const
+{
+	return scale;
+}
+
+float3 Transform::GetGlobalScale() const
+{
+	if (gameObject->father != nullptr)
+		return scale.Mul(gameObject->father->GetGlobalScale());
+
+	else return scale;
+}
+//-------------------------------------------------------------------------
+
+
+
+// Rotation
+//-------------------------------------------------------------------------
+//	Set
+void Transform::SetRotation(Quat rotation)
+{
+	this->rotation = rotation;
+}
+
+void Transform::SetRotation(float3 rotation)
+{
+	this->rotation = Quat::FromEulerXYZ(rotation.x, rotation.y, rotation.z);
+}
+
+void Transform::Rotate(Quat rotation)
+{
+	this->rotation = rotation.Mul(this->rotation).Normalized();
+}
+//	Get
+Quat Transform::GetRotation() const
+{
+	return rotation;
+}
+
+Quat Transform::GetGlobalRotation() const
+{
+	if (gameObject->father != nullptr)
+		return rotation.Mul(gameObject->father->GetGlobalRotation());
+
+	else return rotation;
+}
+//-------------------------------------------------------------------------
+
+
+
+// Transform
+//-------------------------------------------------------------------------
+void Transform::SetTransform(float4x4 trans)
+{
+	trans.Decompose(position, rotation, scale);
+}
+
 void Transform::SetIdentity()
 {
 	position = float3::zero;
 	rotation = Quat::identity;
 	scale = float3::one;
 }
+//-------------------------------------------------------------------------
 
-float3 Transform::GetPos() const
+
+
+// Matrix
+//-------------------------------------------------------------------------
+float4x4 Transform::GetMatrixOGL() const
 {
+	return GetMatrix().Transposed();
+}
+
+float4x4 Transform::GetMatrix() const
+{
+	float4x4 local = GetLocalMatrix();
 	if (gameObject->father != nullptr)
-		return position + gameObject->father->GetPos();
+		return gameObject->father->GetGlobalMatrix().Mul(local);
 
-	else return position;
+	else return local;
 }
 
-float3 Transform::GetScale() const
-{
-	if (gameObject->father != nullptr)
-		return scale.Mul(gameObject->father->GetScale());
-
-	else return scale;
-}
-
-Quat Transform::GetRotation() const
-{
-	if (gameObject->father != nullptr)
-		return rotation.Mul(gameObject->father->GetRotation());
-
-	else return rotation;
-}
-
-float3 Transform::GetLocalPos() const
-{
-	return position;
-}
-
-Quat Transform::GetLocalRotation() const
-{
-	return rotation;
-}
-
-
-const float4x4 Transform::GetMatrixOGL() const
-{
-	return float4x4::FromTRS(position, rotation, scale).Transposed();
-}
-
-const float4x4 Transform::GetMatrix() const
+float4x4 Transform::GetLocalMatrix() const
 {
 	return float4x4::FromTRS(position, rotation, scale);
 }
+//-------------------------------------------------------------------------
 
-const float4x4 Transform::GetGlobalMatrix() const
-{
-	return float4x4::FromTRS(GetPos(), GetRotation(), GetScale());
-}
+
 
 void Transform::SaveComponent(JSON_Object * parent)
 {

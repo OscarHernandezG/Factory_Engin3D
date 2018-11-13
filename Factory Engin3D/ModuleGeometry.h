@@ -27,8 +27,6 @@ public:
 
 	bool CleanUp();
 
-	void DistributeFile(char * file);
-
 	MeshNode LoadMeshBuffer(const aiScene * scene, uint index, char* path);
 
 	void LoadMeshTextureCoords(MeshBuffer &buffer, aiMesh* newMesh);
@@ -80,8 +78,8 @@ public:
 	vector<MeshNode> nodes;
 	vector<MeshBuffer*> loadedMeshes;
 
-	uint textureID = 0;
-	uint numFaces = 0;
+	uint textureID = 0u;
+	uint numFaces = 0u;
 
 	char* droppedFileDir = nullptr;
 

@@ -24,6 +24,8 @@ public:
 
 	bool Init();
 
+	void DistributeFile(char * file);
+
 	void SaveFile(const char * path, uint size, char* outputFile, LlibraryType type, uint uuid = 0);
 
 	char* LoadFile(const char * path, LlibraryType type, uint number = 0);

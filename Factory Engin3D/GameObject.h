@@ -29,59 +29,112 @@ public:
 	~GameObject();
 
 	void RemoveChilds();
-
 	void RemoveComponents();
-
 
 	void Update(float dt);
 
 	inline void Delete() { toDelete = true;	}
 
+//Components
+//----------------------------------------------------------------
+	// Add
+	Component* AddComponent(ComponentType type, ComponentInfo* info);
+	// Remove
+	void RemoveComponent(Component* component);
+	// Get
 	Component* GetComponent(ComponentType type);
 	list<Component*> GetAllComponent(ComponentType type);
+
 	bool HasComponent(ComponentType type);
-	void RemoveComponent(Component* component);
-	Component* AddComponent(ComponentType type, ComponentInfo* info);
+//----------------------------------------------------------------
 
-
-	float3 GetPos() const;
-	float3 GetScale() const;
-	Quat GetRotation() const;
-	float4x4 GetGlobalMatrix() const;
-
-	void SetTransform(float4x4 transform);
-
-	void ForceTransform(float4x4 trans);
-
+//Position
+//----------------------------------------------------------------
+	// Set
 	void SetPos(float3 pos);
-	void SetGlobalPos(float3 pos);
+
 	void Move(float3 movement);
+	// Get
+	float3 GetPos() const;
+	float3 GetGlobalPos() const;
+//----------------------------------------------------------------
+
+
+// Scale
+//----------------------------------------------------------------
+	// Set
 	void SetScale(float3 scale);
+
 	void Scale(float3 scale);
+	// Get
+	float3 GetScale() const;
+	float3 GetGlobalScale() const;
+//----------------------------------------------------------------
+
+
+// Rotation
+//----------------------------------------------------------------
+	// Set
 	void SetRotation(Quat rotation);
 
 	void Rotate(Quat rotation);
+	// Get
+	Quat GetRotation() const;
+	Quat GetGlobalRotation() const;
+//----------------------------------------------------------------
 
+
+// Transform
+//----------------------------------------------------------------
+	void SetTransform(float4x4 transform);
 	void SetIdentity();
+//----------------------------------------------------------------
 
-	const AABB* GetAABB() const;
 
-	float3 GetBBPos() const;
-
+// AABB
+//----------------------------------------------------------------
+	// Set
 	void SetABB(AABB aabb);
-
+	// Get
+	const AABB* GetAABB() const;
+	
+	float3 GetBBPos() const;
+//----------------------------------------------------------------
+	
+	
+// Matrix
+//----------------------------------------------------------------
+	float4x4 GetGlobalMatrix() const;
+//----------------------------------------------------------------
+	
+	
+// Active
+//----------------------------------------------------------------
+	// Set
 	void SetActive(bool active);
-	void SetObjectStatic(bool isStatic);
-
+	// Get
 	inline bool GetActive() { return isActive; }
-	inline bool GetObjectStatic() { return isStatic; }
-
 	inline bool* GetActiveReference() { return &isActive; }
+//----------------------------------------------------------------
+
+
+// Static
+//----------------------------------------------------------------
+	// Set
+	void SetObjectStatic(bool isStatic);
+	// Get
+	inline bool GetObjectStatic() { return isStatic; }
 	inline bool* GetStaticReference() { return &isStatic; }
+//----------------------------------------------------------------
 
-	inline const unsigned int GetUID() const { return UID; }
 
+// UUID
+//----------------------------------------------------------------
+	// Set
 	int CreateRandomUID();
+	// Get
+	inline const unsigned int GetUID() const { return UID; }
+//----------------------------------------------------------------
 
 private:
 	void CreateGameObject(TransformInfo* info);

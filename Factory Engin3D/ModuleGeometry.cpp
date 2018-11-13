@@ -56,20 +56,6 @@ bool ModuleGeometry::CleanUp()
 	return true;
 }
 
-void ModuleGeometry::DistributeFile(char* file)
-{
-	string filePath(file);
-	string extension = filePath.substr(filePath.find_last_of(".") + 1);
-
-
-	if (!extension.compare("fbx") || !extension.compare("obj"))
-	{
-		UpdateMesh(file);
-	}
-	else if (!extension.compare("png") || !extension.compare("dds") || !extension.compare("jpg") || !extension.compare("jpeg"))
-		UpdateTexture(file);
-}
-
 MeshNode ModuleGeometry::LoadMeshBuffer(const aiScene* scene, uint index, char* path)
 {
 	MeshNode tempBuffer;
@@ -306,16 +292,17 @@ GameObject* ModuleGeometry::LoadGameObjectsFromMeshNode(MeshNode node, GameObjec
 	vector<MeshBuffer*>::iterator currentMeshBuffer;
 	for (currentMeshBuffer = loadedMeshes.begin(); currentMeshBuffer != loadedMeshes.end(); ++currentMeshBuffer)
 	{
-		if ((*currentMeshBuffer)->id == node.id)
-		{
-			Mesh* currMesh = new Mesh(newGameObject);
-			
-			currMesh->buffer = (*currentMeshBuffer);
-			GeometryInfo info(currMesh);
-			newGameObject->AddComponent(ComponentType_GEOMETRY, &info);
-			App->sceneIntro->octree.Insert(newGameObject);
-			break;
-		}
+		if (node.id > 0)
+			if ((*currentMeshBuffer)->id == node.id)
+			{
+				Mesh* currMesh = new Mesh(newGameObject);
+
+				currMesh->buffer = (*currentMeshBuffer);
+				GeometryInfo info(currMesh);
+				newGameObject->AddComponent(ComponentType_GEOMETRY, &info);
+				App->sceneIntro->octree.Insert(newGameObject);
+				break;
+			}
 	}
 
 	for (list<MeshNode>::iterator childs = node.childs.begin(); childs != node.childs.end(); ++childs)
@@ -331,7 +318,7 @@ GameObject* ModuleGeometry::LoadGameObjectsFromMeshNode(MeshNode node, GameObjec
 GameObject* ModuleGeometry::LoadEmptyGameObjectsFromMeshNode(MeshNode node, GameObject* father)
 {
 	GameObject* newGameObject = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, father, node.name.data());
-	newGameObject->ForceTransform(node.transform);
+	newGameObject->SetTransform(node.transform);
 	newGameObject->SetABB((node.buffer).boundingBox);
 
 
@@ -677,6 +664,8 @@ update_status ModuleGeometry::PostUpdate()
 
 void ModuleGeometry::Draww(GameObject* object)
 {
+	assert(object);
+
 	for (list<GameObject*>::iterator it = object->childs.begin(); it != object->childs.end(); ++it)
 	{
 		Draww(*it);
@@ -691,8 +680,8 @@ void ModuleGeometry::Draww(GameObject* object)
 
 void ModuleGeometry::LoadDefaultScene()
 {
-	DistributeFile("assets\\models\\Street.fbx");
-	DistributeFile("assets\\textures\\Baker_house.png");
+	App->importer->DistributeFile("assets\\models\\Street.fbx");
+	App->importer->DistributeFile("assets\\textures\\Baker_house.png");
 
 	plane = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->rootGameObject, "Ground");
 
