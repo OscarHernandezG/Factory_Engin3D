@@ -318,7 +318,7 @@ GameObject* ModuleGeometry::LoadGameObjectsFromMeshNode(MeshNode node, GameObjec
 GameObject* ModuleGeometry::LoadEmptyGameObjectsFromMeshNode(MeshNode node, GameObject* father)
 {
 	GameObject* newGameObject = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, father, node.name.data());
-	newGameObject->ForceTransform(node.transform);
+	newGameObject->SetTransform(node.transform);
 	newGameObject->SetABB((node.buffer).boundingBox);
 
 
