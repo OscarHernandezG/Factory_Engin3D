@@ -93,6 +93,134 @@ void GameObject::Update(float dt)
 	}
 }
 
+void GameObject::CreateFromJson(JSON_Object* info)
+{
+	UID = json_object_get_number(info, "UUID");
+
+	JSON_Array* components = json_object_get_array(info, "Components");
+
+	for (int i = 0; i < json_array_get_count(components); i++) {
+		JSON_Object* comp = json_array_get_object(components, i);
+		Component* newComponent = AddComponent((ComponentType)(int)json_object_get_number(comp, "Type"), LoadComponentInfo(comp));
+	}
+}
+
+ComponentInfo* GameObject::LoadComponentInfo(JSON_Object* info)
+{
+	ComponentInfo* ret = nullptr;
+
+	switch ((ComponentType)(int)json_object_get_number(info, "Type"))
+	{
+	case ComponentType_TRANSFORM:
+	{
+		TransformInfo* compInfo = new TransformInfo();
+
+//// Position
+////------------------------------------------------------------------------
+		JSON_Object* position = json_object_get_object(info, "Position");
+
+		float3 pos;
+		pos.x = json_object_get_number(position, "X");
+		pos.y = json_object_get_number(position, "Y");
+		pos.z = json_object_get_number(position, "Z");
+
+//// Scale
+////------------------------------------------------------------------------
+		JSON_Object* scale = json_object_get_object(info, "Scale");
+
+		float3 size;
+		size.x = json_object_get_number(scale, "X");
+		size.y = json_object_get_number(scale, "Y");
+		size.z = json_object_get_number(scale, "Z");
+
+//// Rotation
+////------------------------------------------------------------------------
+		JSON_Object* rotation = json_object_get_object(info, "Rotation");
+
+		Quat rot;
+		rot.x = json_object_get_number(scale, "X");
+		rot.y = json_object_get_number(scale, "Y");
+		rot.z = json_object_get_number(scale, "Z");
+		rot.w = json_object_get_number(scale, "W");
+
+// Bounding box
+//------------------------------------------------------------------------
+		JSON_Object* boundingBox = json_object_get_object(info, "Bounding Box");
+
+		float3 minBB, maxBB;
+
+		// Min point
+		JSON_Object* minBoundingBox = json_object_get_object(boundingBox, "Min");
+		minBB.x = json_object_get_number(minBoundingBox, "X");
+		minBB.y = json_object_get_number(minBoundingBox, "Y");
+		minBB.z = json_object_get_number(minBoundingBox, "Z");
+
+		// Max point
+		JSON_Object* maxBoundingBox = json_object_get_object(boundingBox, "Max");
+		maxBB.x = json_object_get_number(maxBoundingBox, "X");
+		maxBB.y = json_object_get_number(maxBoundingBox, "Y");
+		maxBB.z = json_object_get_number(maxBoundingBox, "Z");
+
+// Original Bounding box
+//------------------------------------------------------------------------
+		JSON_Object* oBoundingBox = json_object_get_object(info, "Original Bounding Box");
+
+		float3 minOBB, maxOBB;
+
+		// Min point
+		JSON_Object* minOBoundingBox = json_object_get_object(boundingBox, "Min");
+		minOBB.x = json_object_get_number(minOBoundingBox, "X");
+		minOBB.y = json_object_get_number(minOBoundingBox, "Y");
+		minOBB.z = json_object_get_number(minOBoundingBox, "Z");
+
+		// Max point
+		JSON_Object* maxOBoundingBox = json_object_get_object(boundingBox, "Max");
+		maxOBB.x = json_object_get_number(maxOBoundingBox, "X");
+		maxOBB.y = json_object_get_number(maxOBoundingBox, "Y");
+		maxOBB.z = json_object_get_number(maxOBoundingBox, "Z");
+
+//------------------------------------------------------------------------
+
+		compInfo->UUID = json_object_get_number(info, "UUID");
+		
+		compInfo->position = pos;
+		compInfo->rotation = rot;
+		compInfo->scale = size;
+
+		compInfo->minBB = minBB;
+		compInfo->maxBB = maxBB;
+				
+		compInfo->minOBB = minOBB;
+		compInfo->maxOBB = maxOBB;
+
+		ret = (ComponentInfo*)compInfo;
+	}
+		break;
+	case ComponentType_GEOMETRY:
+	{
+		GeometryInfo* compInfo = new GeometryInfo();
+
+		compInfo->UUID = json_object_get_number(info, "UUID");
+
+		ret = (ComponentInfo*)compInfo;
+	}
+		break;
+	case ComponentType_CAMERA:
+		// TODO
+		break;
+	case ComponentType_TEXTURE:
+		// TODO
+		break;
+	case ComponentType_LIGHT:
+		// TODO
+		break;
+	default:
+		break;
+	}
+
+	return ret;
+}
+
 void GameObject::CreateGameObject(TransformInfo* info)
 {
 	UID = pcg32_random();
