@@ -43,15 +43,16 @@ update_status ModuleGameObject::PostUpdate()
 	}
 	for (list<GameObject*>::iterator iterator = toDelete.begin(); iterator != toDelete.end(); ++iterator)
 	{
-		GameObject* it = *iterator;
+		if (*iterator != nullptr)
+		{
+			GameObject* it = *iterator;
+			RemoveObjectsFromList(it);
 
-		RemoveObjectsFromList(it);
-
-		gameObjectsAll.remove(it);
-		(*iterator)->RealDelete();
-		delete *iterator;
+			gameObjectsAll.remove(it);
+			(*iterator)->RealDelete();
+			delete *iterator;
+		}
 	}
-
 	return UPDATE_CONTINUE;
 }
 
@@ -255,4 +256,28 @@ void ModuleGameObject::RemoveDynamic(GameObject* object)
 bool ModuleGameObject::CanTransform(GameObject* object)
 {
 	return (object->GetObjectStatic() || App->time->gameState == GameState_NONE);
+}
+
+void ModuleGameObject::SaveBeforePlay()
+{
+	for (list<GameObject*>::iterator iterator = gameObjectsAll.begin(); iterator != gameObjectsAll.end(); ++iterator)
+	{
+		playingObjects[(*iterator)->UID] = (*iterator)->GetGlobalMatrix();
+	}
+}
+
+
+void ModuleGameObject::LoadAfterPlay()
+{
+	for (list<GameObject*>::iterator listiterator = gameObjectsAll.begin(); listiterator != gameObjectsAll.end(); ++listiterator)
+	{
+		map<uint, float4x4>::iterator iterator = playingObjects.find((*listiterator)->UID);
+		if (iterator != playingObjects.end())//Set transform before playing
+		{
+			(*listiterator)->SetTransform(iterator->second);//SET
+			playingObjects.erase((*listiterator)->UID);
+		}
+		else//Remove objects that are created while playing
+			(*listiterator)->toDelete = true;
+	}
 }

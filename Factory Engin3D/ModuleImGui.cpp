@@ -576,9 +576,15 @@ void ModuleImGui::CreateGameManager(float2 scale)
 	if (ImGui::Button("Play", { 50,25 }))
 	{
 		if (App->time->gameState == GameState_NONE)
+		{
 			App->time->gameState = GameState_PLAYING;
+			App->gameObject->SaveBeforePlay();
+		}
 		else
+		{
 			App->time->gameState = GameState_STOP;
+			App->gameObject->LoadAfterPlay();
+		}
 	}
 	ImGui::SameLine();
 

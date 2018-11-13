@@ -6,6 +6,8 @@
 #include "Transform.h"
 #include "GameObject.h"
 
+#include <map>
+
 class ModuleGameObject : public Module
 {
 	friend class GameObject;
@@ -37,6 +39,10 @@ public:
 
 	bool CanTransform(GameObject * object);
 
+	void SaveBeforePlay();
+	void LoadAfterPlay();
+
+
 public:
 	GameObject* rootGameObject;
 
@@ -44,5 +50,6 @@ public:
 
 	list<GameObject*> dynamicObjects;
 
+	map<uint, float4x4> playingObjects;
 };
 #endif // !__ModuleGameObjectManager_H__
