@@ -24,6 +24,7 @@ enum PrimitiveTypes
 
 struct GeometryInfo : ComponentInfo
 {
+	GeometryInfo() {}
 	GeometryInfo(Geometry* prim) : geometry(prim) {}
 
 	Geometry* geometry = nullptr;
