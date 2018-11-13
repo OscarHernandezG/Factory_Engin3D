@@ -221,7 +221,7 @@ float4x4 GameObject::GetGlobalMatrix() const
 	float4x4 mat = float4x4::identity;
 	if (transform)
 	{
-		mat = transform->GetGlobalMatrix();
+		mat = transform->GetMatrix();
 	}
 
 	return mat;
@@ -307,7 +307,7 @@ void GameObject::Scale(float3 scale)
 
 	for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
 	{
-		(*iterator)->SetGlobalPos(((*iterator)->transform->scale.Mul(scale)).Mul((*iterator)->transform->GetPos()));
+		(*iterator)->SetGlobalPos(((*iterator)->transform->GetScale().Mul(scale)).Mul((*iterator)->transform->GetPos()));
 		(*iterator)->Scale(scale);
 	}
 }

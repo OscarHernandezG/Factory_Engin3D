@@ -37,47 +37,74 @@ public:
 
 	~Transform() {}
 
-	void		Update(float dt);
+	void Update(float dt);
 
-	void		UpdateBoundingBox();
+	void UpdateBoundingBox();
 
-	void		SetPos(float x, float y, float z);
-	void		SetPos(float3 position);
+//Position
+//----------------------------------------------------------------
+//	Set
+	inline void SetPos(float x, float y, float z);
+	inline void SetPos(float3 position);
 
-	void		Move(float3 position);
-	void		SetTransform(float4x4 trans);
-	void		Scale(float3 scale);
-
-	void		SetRotation(Quat rotation);
-	void		SetRotation(float3 rotation);
-	void		Rotate(Quat rotation);
-
-	void		SetScale(float x, float y, float z);
-	void		SetScale(float3 scale);
-	void		SetIdentity();
-
-	 float3	GetPos() const;
-	 float3	GetLocalPos() const;
-
-	 float3	GetScale() const;
-
-	 Quat		GetRotation() const;
-	 Quat		GetLocalRotation() const;
+	void Move(float3 position);
+//	Get
+	float3 GetPos() const;
+	float3 GetLocalPos() const;
+//----------------------------------------------------------------
 
 
-	const float4x4	GetMatrixOGL() const;
-	const float4x4	GetMatrix() const;
+// Scale
+//----------------------------------------------------------------
+//	Set
+	inline void SetScale(float x, float y, float z);
+	inline void SetScale(float3 scale);
 
-	const float4x4 GetGlobalMatrix() const;
+	void Scale(float3 scale);
+// Get
+	float3 GetScale() const;
+	float3 GetLocalScale() const;
+//----------------------------------------------------------------
+	
+	
+// Rotation
+//----------------------------------------------------------------
+//	Set
+	inline void SetRotation(Quat rotation);
+	inline void SetRotation(float3 rotation);
+
+	void Rotate(Quat rotation);
+// Get
+	Quat GetRotation() const;
+	Quat GetLocalRotation() const;
+//----------------------------------------------------------------
+	
+
+// Transform
+//----------------------------------------------------------------
+	void SetTransform(float4x4 trans);
+	inline void SetIdentity();
+//----------------------------------------------------------------
+
+
+// Matrix
+//----------------------------------------------------------------
+	float4x4	GetMatrixOGL() const;
+	float4x4	GetMatrix() const;
+
+	float4x4 GetLocalMatrix() const;
+//----------------------------------------------------------------
+
 
 	void SaveComponent(JSON_Object* parent);
 
 public:
+	AABB boundingBox;
+	AABB originalBoundingBox;
 
+private:
 	float3 position = float3::zero;
 	Quat rotation = Quat::identity;
 	float3 scale = float3::one;
 
-	AABB boundingBox;
-	AABB originalBoundingBox;
 };

@@ -486,9 +486,10 @@ void ModuleImGui::CreateTransform(float2 scale)
 		if (currObject->transform != nullptr)
 		{
 			float4x4 prevTransformMat = currObject->GetGlobalMatrix();
-			position = currObject->transform->GetPos();
-			scale = currObject->transform->scale;
-			rotate = currObject->transform->GetRotation();
+			// Use go, not trans!
+			position = currObject->transform->GetLocalPos();
+			scale = currObject->transform->GetLocalScale();
+			rotate = currObject->transform->GetLocalRotation();
 
 			if (ImGui::InputFloat3("Position", &position[0]) && App->gameObject->CanTransform(currObject)) {
 				App->sceneIntro->SaveLastTransform(prevTransformMat);
