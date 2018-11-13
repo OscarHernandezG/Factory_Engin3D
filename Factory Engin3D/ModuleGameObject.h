@@ -26,7 +26,7 @@ public:
 
 	void SaveScene();
 
-	void SaveGameObject(GameObject * object, JSON_Object * parent);
+	void SaveGameObject(GameObject * object, JSON_Array*& parent);
 
 	void SaveComponent(Component * object, JSON_Object * parent);
 
