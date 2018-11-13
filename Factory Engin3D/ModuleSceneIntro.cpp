@@ -101,6 +101,7 @@ update_status ModuleSceneIntro::Update()
 
 void ModuleSceneIntro::GuizmoUpdate()
 {
+	// Todo move on local
 	GameObject* transformObject = App->geometry->currentGameObject;
 	if (transformObject != nullptr)
 	{

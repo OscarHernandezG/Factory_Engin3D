@@ -760,8 +760,11 @@ bool ModuleImGui::CreateOptions()
 {
 	if (ImGui::BeginMenu("Options"))
 	{
-		if (ImGui::MenuItem("Save Scene", "Ctrl+S"))
+		if (ImGui::MenuItem("Save Scene"))
 			App->gameObject->SaveScene();
+
+		if (ImGui::MenuItem("Load Scene"))
+			App->gameObject->LoadScene();
 
 		if (ImGui::MenuItem("Save", "Ctrl+S"))
 			App->canSave = true;
