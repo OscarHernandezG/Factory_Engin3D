@@ -190,7 +190,7 @@ Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
 		break;
 	}
 
-	if (newComponent != nullptr)
+	if (newComponent)
 	{
 		newComponent->type = type;
 		newComponent->isActive = true;
@@ -202,16 +202,32 @@ Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
 
 float3 GameObject::GetPos() const
 {
-	if (transform != nullptr)
+	if (transform)
 		return transform->GetPos();
+
+	return float3::zero;
+}
+
+float3 GameObject::GetGlobalPos() const
+{
+	if (transform)
+		return transform->GetGlobalPos();
 
 	return float3::zero;
 }
 
 float3 GameObject::GetScale() const
 {
-	if (transform != nullptr)
+	if (transform)
 		return transform->GetScale();
+
+	return float3::one;
+}
+
+float3 GameObject::GetGlobalScale() const
+{
+	if (transform)
+		return transform->GetGlobalScale();
 
 	return float3::one;
 }
@@ -229,24 +245,17 @@ float4x4 GameObject::GetGlobalMatrix() const
 
 Quat GameObject::GetRotation() const
 {
-	return transform->GetRotation().Normalized();
+	if (transform)
+		return transform->GetRotation().Normalized();
+}
+
+Quat GameObject::GetGlobalRotation() const
+{
+	if (transform)
+		return transform->GetGlobalRotation().Normalized();
 }
 
 void GameObject::SetTransform(float4x4 trans)
-{
-	if (transform)
-	{
-		float3 pos, scale;
-		Quat rot;
-		trans.Decompose(pos, rot, scale);
-
-		SetPos(pos);
-		SetScale(scale);
-		SetRotation(rot);
-	}
-}
-
-void GameObject::ForceTransform(float4x4 trans)
 {
 	if (transform)
 	{
@@ -256,85 +265,39 @@ void GameObject::ForceTransform(float4x4 trans)
 
 void GameObject::SetPos(float3 pos)
 {
-	float3 movement = float3::zero;
 	if (transform)
 	{
-		movement = pos - transform->GetLocalPos();
+		transform->SetPos(pos);
 	}
-
-	Move(movement);
 }
 
-void GameObject::SetGlobalPos(float3 pos)
-{
-	float3 movement = float3::zero;
-	if (transform)
-	{
-		movement = pos - transform->GetPos();
-	}
-
-	Move(movement);
-}
 
 void GameObject::Move(float3 movement)
 {
 	if (transform)
 		transform->Move(movement);
-
-	for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
-	{
-		(*iterator)->Move(movement);
-	}
 }
 
 void GameObject::SetScale(float3 scale)
 {
-	float3 scaleVariation;
-	float3 scaleGO = GetScale();
-
-	scaleVariation.x = scale.x / scaleGO.x;
-	scaleVariation.y = scale.y / scaleGO.y;
-	scaleVariation.z = scale.z / scaleGO.z;
-
-	if(!scaleVariation.IsFinite())
-		Scale(scaleVariation);
+	if (transform)
+		transform->SetScale(scale);
 }
 
 void GameObject::Scale(float3 scale)
 {
 	if (transform)
 		transform->Scale(scale);
-
-	for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
-	{
-		(*iterator)->SetGlobalPos(((*iterator)->transform->GetScale().Mul(scale)).Mul((*iterator)->transform->GetPos()));
-		(*iterator)->Scale(scale);
-	}
 }
 
 void GameObject::SetRotation(Quat rotation)
 {
-	Quat rotate = rotation.Mul(GetRotation().Inverted()).Normalized();
-
-	Rotate(rotate);
+	if (transform)
+		transform->SetRotation(rotation);
 }
 
 void GameObject::Rotate(Quat rotation)
 {
-	for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
-	{
-		float3 pos = transform->GetLocalPos();
-
-
-		float3 originalPosition = (*iterator)->transform->GetLocalPos() - pos;
-		float3 newPosition = originalPosition;
-
-		newPosition = rotation.Transform(newPosition);
-
-		(*iterator)->SetPos((newPosition + pos));
-		(*iterator)->Rotate(rotation);
-	}
-
 	if (transform)
 		transform->Rotate(rotation);
 }
@@ -343,10 +306,7 @@ void GameObject::SetIdentity()
 {
 	if (transform)
 	{
-		SetPos(float3::zero);
-		SetRotation(Quat::identity);
-		SetScale(float3::one);
-
+		transform->SetIdentity();
 		transform->UpdateBoundingBox();
 	}
 }
