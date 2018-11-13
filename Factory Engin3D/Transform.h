@@ -26,6 +26,9 @@ struct TransformInfo : ComponentInfo
 	UsingInfo whichInfo = UsingInfo_TRS;
 
 	GameObject* gameObject = nullptr;
+
+	float3 minBB = float3::zero, maxBB = float3::zero;
+	float3 minOBB = float3::zero, maxOBB = float3::zero;
 };
 
 class Transform : public Component
