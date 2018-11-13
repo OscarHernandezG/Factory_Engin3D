@@ -92,16 +92,50 @@ void ModuleGameObject::SaveScene()
 		SaveGameObject(rootGameObject, rootObject);
 
 
-
-
-
 		int sizeBuf = json_serialization_size_pretty(rootValue);
 		char* buf = new char[sizeBuf];
 		json_serialize_to_buffer_pretty(rootValue, buf, sizeBuf);
 		App->importer->SaveFile("scene", sizeBuf, buf, LlibraryType::LlibraryType_SCENE);
 		delete[] buf;
+
+
 		json_value_free(rootValue);
 	}
+}
+
+void ModuleGameObject::LoadScene()
+{
+	rootGameObject->RealDelete();
+	delete rootGameObject;
+
+	gameObjectsAll.clear();
+	App->geometry->currentGameObject = nullptr;
+	App->geometry->plane = nullptr;
+	App->sceneIntro->octree.Clear();
+
+	rootGameObject = new GameObject(float3::zero, Quat::identity, float3::one, nullptr, "Scene");
+
+
+	JSON_Value* scene = json_parse_file("Llibrary/Scenes/scene.json");
+
+	if (json_value_get_type(scene) == JSONArray)
+	{
+		JSON_Array* objArray = json_value_get_array(scene);
+
+		int numObjects = json_array_get_count(objArray);
+		list<GameObject*> sceneGameObjects(numObjects);
+
+		for (int i = 0; i < numObjects; ++i)
+		{
+			JSON_Object* currGO = json_array_get_object(objArray, i);
+
+			GameObject* temp = CreateGameObject(float3::zero, Quat::identity, float3::one, rootGameObject, json_object_get_string(currGO, "name"));
+			temp->CreateFromJson(currGO);
+		}
+	}
+
+//todo load geometry 
+//todo redo hierarchy
 }
 
 void ModuleGameObject::SaveGameObject(GameObject* object, JSON_Array*& parent)
@@ -113,10 +147,10 @@ void ModuleGameObject::SaveGameObject(GameObject* object, JSON_Array*& parent)
 
 	// Name and UUIDs
 	//------------------------------------------------------------------------
+	json_object_set_string(objGO, "name", object->name.data());
 	json_object_set_number(objGO, "UUID", object->GetUID());
-	json_object_set_string(objGO, "Name", object->name.data());
 	if (object->father)
-	json_object_set_number(objGO, "Parent UUID", object->father->GetUID());
+		json_object_set_number(objGO, "Parent UUID", object->father->GetUID());
 
 
 	json_object_set_number(objGO, "isActive", object->GetActive());
