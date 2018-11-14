@@ -105,12 +105,23 @@ void GameObject::CreateFromJson(JSON_Object* info)
 		JSON_Object* comp = json_array_get_object(components, i);
 
 		ComponentType type = (ComponentType)(int)json_object_get_number(comp, "Type");
-		Component* newComponent = AddComponent(type, LoadComponentInfo(comp, type));
+		if (type != ComponentType_GEOMETRY)
+			Component* newComponent = AddComponent(type, LoadComponentInfo(comp, type));
 
-		if (type == ComponentType_GEOMETRY)
+		else if (type == ComponentType_GEOMETRY)
 		{
-			MeshBuffer* buffwer = App->geometry->LoadMeshBuffer(newComponent->GetUUID());
-		//	((Mesh*)newComponent)->buffer = 
+			MeshBuffer* buffer = App->geometry->LoadMeshBuffer(json_object_get_number(comp, "UUID"));
+			if (buffer)
+			{
+				Mesh* mesh = new Mesh(this);
+				mesh->buffer = buffer;
+
+				GeometryInfo inf;
+				inf.geometry = mesh;
+				Component* newComponent = AddComponent(type, &inf);
+
+				SetABB(mesh->buffer->boundingBox);
+			}
 		}
 	}
 }
@@ -255,7 +266,14 @@ Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
 	case ComponentType_TRANSFORM:
 		if (info)
 			newComponent = (Component*)new Transform((TransformInfo*)info);
-		break;
+		if (newComponent)
+		{
+			components.remove(transform);
+			delete transform;
+
+			transform = (Transform*)newComponent;
+		}
+			break;
 	case ComponentType_GEOMETRY:
 		if (info)
 			newComponent = (Component*)(((GeometryInfo*)info)->geometry);
@@ -278,6 +296,7 @@ Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
 		newComponent->gameObject = this;
 		components.push_back(newComponent);
 	}
+
 	return newComponent;
 }
 	// Remove

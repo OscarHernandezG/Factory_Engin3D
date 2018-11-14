@@ -113,6 +113,8 @@ void ModuleGameObject::LoadScene()
 	App->geometry->plane = nullptr;
 	App->sceneIntro->octree.Clear();
 
+	App->sceneIntro->octree.Create(AABB(float3::zero, float3::zero));
+
 	rootGameObject = new GameObject(float3::zero, Quat::identity, float3::one, nullptr, "Scene");
 
 
@@ -132,10 +134,12 @@ void ModuleGameObject::LoadScene()
 			GameObject* temp = CreateGameObject(float3::zero, Quat::identity, float3::one, rootGameObject, json_object_get_string(currGO, "name"));
 			temp->CreateFromJson(currGO);
 
+			if (temp->HasComponent(ComponentType_GEOMETRY))
+			App->sceneIntro->octree.Insert(temp);
 		}
 
 
-
+		App->sceneIntro->octree.ReDoOctree();
 
 	}
 
