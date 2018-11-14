@@ -390,6 +390,17 @@ float4x4 GameObject::GetGlobalMatrix() const
 	return mat;
 }
 
+float4x4 GameObject::GetLocalMatrix() const
+{
+	float4x4 mat = float4x4::identity;
+	if (transform)
+	{
+		mat = transform->GetLocalMatrix();
+	}
+
+	return mat;
+}
+
 Quat GameObject::GetRotation() const
 {
 	if (transform)
