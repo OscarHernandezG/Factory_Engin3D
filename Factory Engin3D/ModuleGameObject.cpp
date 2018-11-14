@@ -131,10 +131,18 @@ void ModuleGameObject::LoadScene()
 
 			GameObject* temp = CreateGameObject(float3::zero, Quat::identity, float3::one, rootGameObject, json_object_get_string(currGO, "name"));
 			temp->CreateFromJson(currGO);
+
 		}
+
+
+
+
 	}
 
 //todo load geometry 
+
+
+
 //todo redo hierarchy
 }
 

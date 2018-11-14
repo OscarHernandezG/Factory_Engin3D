@@ -1,3 +1,5 @@
+#include "Application.h"
+
 #include "GameObject.h"
 #include "pcg-c-basic-0.9/pcg_basic.h"
 
@@ -101,15 +103,23 @@ void GameObject::CreateFromJson(JSON_Object* info)
 
 	for (int i = 0; i < json_array_get_count(components); i++) {
 		JSON_Object* comp = json_array_get_object(components, i);
-		Component* newComponent = AddComponent((ComponentType)(int)json_object_get_number(comp, "Type"), LoadComponentInfo(comp));
+
+		ComponentType type = (ComponentType)(int)json_object_get_number(comp, "Type");
+		Component* newComponent = AddComponent(type, LoadComponentInfo(comp, type));
+
+		if (type == ComponentType_GEOMETRY)
+		{
+			MeshBuffer* buffwer = App->geometry->LoadMeshBuffer(newComponent->GetUUID());
+		//	((Mesh*)newComponent)->buffer = 
+		}
 	}
 }
 
-ComponentInfo* GameObject::LoadComponentInfo(JSON_Object* info)
+ComponentInfo* GameObject::LoadComponentInfo(JSON_Object* info, ComponentType type)
 {
 	ComponentInfo* ret = nullptr;
 
-	switch ((ComponentType)(int)json_object_get_number(info, "Type"))
+	switch (type)
 	{
 	case ComponentType_TRANSFORM:
 	{
@@ -508,4 +518,3 @@ int GameObject::CreateRandomUID()
 {
 	return 0;
 }
-

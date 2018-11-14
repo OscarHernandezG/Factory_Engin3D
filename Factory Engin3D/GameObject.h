@@ -38,7 +38,7 @@ public:
 //Create from json
 //----------------------------------------------------------------
 	void CreateFromJson(JSON_Object* info);
-	ComponentInfo* LoadComponentInfo(JSON_Object * info);
+	ComponentInfo* LoadComponentInfo(JSON_Object * info, ComponentType type);
 //----------------------------------------------------------------
 
 
