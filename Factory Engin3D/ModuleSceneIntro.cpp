@@ -109,7 +109,7 @@ void ModuleSceneIntro::GuizmoUpdate()
 		globalMatrix.Transpose();
 		ImGuiIO& io = ImGui::GetIO();
 		ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
-		ImGuizmo::Manipulate(App->camera->GetViewMatrix().ptr(), App->camera->GetProjectionMatrix().ptr(), guizOperation, ImGuizmo::MODE::WORLD, globalMatrix.ptr(), nullptr, isSnap ? snap.ptr() : nullptr);
+		ImGuizmo::Manipulate(App->camera->GetViewMatrix().ptr(), App->camera->GetProjectionMatrix().ptr(), guizOperation, guizMode, globalMatrix.ptr(), nullptr, isSnap ? snap.ptr() : nullptr);
 
 		if (ImGuizmo::IsUsing() && App->gameObject->CanTransform(transformObject))
 		{
@@ -125,7 +125,7 @@ void ModuleSceneIntro::GuizmoUpdate()
 				saveTransform = false;
 				octree.ReDoOctree(AABB(), true);
 			}
-			lastMat = transformObject->GetLocalMatrix();
+			lastMat = transformObject->GetGlobalMatrix();
 		}
 	}
 }
@@ -135,10 +135,10 @@ void ModuleSceneIntro::MoveGO(math::float4x4 &globalMatrix, GameObject* transfor
 	float3 pos, scale;
 	Quat rot;
 	globalMatrix.Transpose();
-		float4x4 temp = transformObject->father->GetGlobalMatrix();
-		temp.Inverse();
+	float4x4 temp = transformObject->father->GetGlobalMatrix();
+	temp.Inverse();
 
-		globalMatrix = temp.Mul(globalMatrix);
+	globalMatrix = temp.Mul(globalMatrix);
 
 	globalMatrix.Decompose(pos, rot, scale);
 	switch (guizOperation)
