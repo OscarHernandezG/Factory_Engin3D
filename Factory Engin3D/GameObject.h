@@ -35,6 +35,8 @@ public:
 
 	inline void Delete() { toDelete = true;	}
 
+	void SetParent(GameObject* parent);
+
 //Create from json
 //----------------------------------------------------------------
 	void CreateFromJson(JSON_Object* info);
@@ -156,6 +158,7 @@ public:
 
 	list<GameObject*> childs;
 	GameObject* father = nullptr;
+	uint parentUUID = 0;
 
 	string name;
 

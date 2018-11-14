@@ -6,15 +6,6 @@
 
 GameObject::GameObject(GameObject* father, const char * name)
 {
-	TransformInfo* info = new TransformInfo();
-	info->position = float3::zero;
-	info->rotation = Quat::identity;
-	info->scale = float3::one;
-	info->whichInfo = UsingInfo_TRS;
-
-	CreateGameObject(info);
-	delete info;
-
 	this->father = father;
 
 	if (name != nullptr)
@@ -95,9 +86,17 @@ void GameObject::Update(float dt)
 	}
 }
 
+void GameObject::SetParent(GameObject * parent)
+{
+	this->father = parent;
+
+	parent->childs.push_back(this);
+}
+
 void GameObject::CreateFromJson(JSON_Object* info)
 {
 	UID = json_object_get_number(info, "UUID");
+	parentUUID = json_object_get_number(info, "Parent UUID");
 
 	JSON_Array* components = json_object_get_array(info, "Components");
 
@@ -164,55 +163,14 @@ ComponentInfo* GameObject::LoadComponentInfo(JSON_Object* info, ComponentType ty
 		rot.z = json_object_get_number(scale, "Z");
 		rot.w = json_object_get_number(scale, "W");
 
-// Bounding box
-//------------------------------------------------------------------------
-		JSON_Object* boundingBox = json_object_get_object(info, "Bounding Box");
-
-		float3 minBB, maxBB;
-
-		// Min point
-		JSON_Object* minBoundingBox = json_object_get_object(boundingBox, "Min");
-		minBB.x = json_object_get_number(minBoundingBox, "X");
-		minBB.y = json_object_get_number(minBoundingBox, "Y");
-		minBB.z = json_object_get_number(minBoundingBox, "Z");
-
-		// Max point
-		JSON_Object* maxBoundingBox = json_object_get_object(boundingBox, "Max");
-		maxBB.x = json_object_get_number(maxBoundingBox, "X");
-		maxBB.y = json_object_get_number(maxBoundingBox, "Y");
-		maxBB.z = json_object_get_number(maxBoundingBox, "Z");
-
-// Original Bounding box
-//------------------------------------------------------------------------
-		JSON_Object* oBoundingBox = json_object_get_object(info, "Original Bounding Box");
-
-		float3 minOBB, maxOBB;
-
-		// Min point
-		JSON_Object* minOBoundingBox = json_object_get_object(boundingBox, "Min");
-		minOBB.x = json_object_get_number(minOBoundingBox, "X");
-		minOBB.y = json_object_get_number(minOBoundingBox, "Y");
-		minOBB.z = json_object_get_number(minOBoundingBox, "Z");
-
-		// Max point
-		JSON_Object* maxOBoundingBox = json_object_get_object(boundingBox, "Max");
-		maxOBB.x = json_object_get_number(maxOBoundingBox, "X");
-		maxOBB.y = json_object_get_number(maxOBoundingBox, "Y");
-		maxOBB.z = json_object_get_number(maxOBoundingBox, "Z");
-
-//------------------------------------------------------------------------
-
+////------------------------------------------------------------------------
 		compInfo->UUID = json_object_get_number(info, "UUID");
+
 		
 		compInfo->position = pos;
-		compInfo->rotation = rot;
+		compInfo->rotation = rot.Normalized();
 		compInfo->scale = size;
 
-		compInfo->minBB = minBB;
-		compInfo->maxBB = maxBB;
-				
-		compInfo->minOBB = minOBB;
-		compInfo->maxOBB = maxOBB;
 
 		ret = (ComponentInfo*)compInfo;
 	}
