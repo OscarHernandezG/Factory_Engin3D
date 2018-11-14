@@ -18,6 +18,8 @@ enum ComponentType
 struct ComponentInfo
 {
 	GameObject* gameObject = nullptr;
+	
+	unsigned int UUID = 0;
 };
 
 class Component

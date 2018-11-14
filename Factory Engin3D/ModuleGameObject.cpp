@@ -88,97 +88,166 @@ void ModuleGameObject::SaveScene()
 {
 	if (rootGameObject != nullptr)
 	{
-		JSON_Value* rootValue = json_value_init_object();
-		JSON_Object* rootObject = json_value_get_object(rootValue);
+		JSON_Value* rootValue = json_value_init_array();
+		JSON_Array* rootObject = json_value_get_array(rootValue);
 
 		SaveGameObject(rootGameObject, rootObject);
+
 
 		int sizeBuf = json_serialization_size_pretty(rootValue);
 		char* buf = new char[sizeBuf];
 		json_serialize_to_buffer_pretty(rootValue, buf, sizeBuf);
 		App->importer->SaveFile("scene", sizeBuf, buf, LlibraryType::LlibraryType_SCENE);
 		delete[] buf;
+
+
 		json_value_free(rootValue);
 	}
 }
 
-void ModuleGameObject::SaveGameObject(GameObject* object, JSON_Object* parent)
+void ModuleGameObject::LoadScene()
+{
+//Clear previous
+	DeletePreviousScene();
+
+//Prepare new
+	App->sceneIntro->octree.Create(AABB(float3::zero, float3::zero));
+
+	//Load new
+	JSON_Value* scene = json_parse_file("Llibrary/Scenes/scene.json");
+
+	if (json_value_get_type(scene) == JSONArray)
+	{
+		JSON_Array* objArray = json_value_get_array(scene);
+
+		int numObjects = json_array_get_count(objArray);
+		list<GameObject*> sceneGameObjects;
+
+		vector<uint> meshesToLoad;
+
+		LoadNewSceneGO(numObjects, objArray, meshesToLoad, sceneGameObjects);
+
+		LoadNewSceneMeshes(meshesToLoad);
+
+		for (list<GameObject*>::iterator it = sceneGameObjects.begin(); it != sceneGameObjects.end(); ++it)
+		{
+			Mesh* itMesh = (Mesh*)(*it)->GetComponent(ComponentType_GEOMETRY);
+			if (itMesh)
+			{
+				SetGOMeshNewScene(itMesh, it);
+			}
+			if (!(*it)->SetParent(FindByID((*it)->parentUUID)))
+			{
+				rootGameObject = *it;
+			}
+		}
+	}
+}
+
+void ModuleGameObject::SetGOMeshNewScene(Mesh * itMesh, std::list<GameObject *>::iterator &it)
+{
+	bool found = false;
+	for (vector<MeshBuffer*>::iterator currentMeshBuffer = App->geometry->loadedMeshes.begin(); currentMeshBuffer != App->geometry->loadedMeshes.end(); ++currentMeshBuffer)
+	{
+		if (itMesh->GetUUID() == (*currentMeshBuffer)->uuid)
+		{
+			itMesh->buffer = *currentMeshBuffer;
+			(*it)->SetABB(itMesh->buffer->boundingBox);
+			found = true;
+			break;
+		}
+	}
+	if (found)
+		App->sceneIntro->octree.Insert(*it);
+}
+
+void ModuleGameObject::LoadNewSceneMeshes(std::vector<uint> &meshesToLoad)
+{
+	sort(meshesToLoad.begin(), meshesToLoad.end());
+	meshesToLoad.erase(unique(meshesToLoad.begin(), meshesToLoad.end()), meshesToLoad.end());
+
+	vector<MeshBuffer*> tempVec = App->geometry->LoadMeshImporterUUID(meshesToLoad);
+	App->geometry->loadedMeshes.insert(App->geometry->loadedMeshes.end(), tempVec.begin(), tempVec.end());
+}
+
+void ModuleGameObject::LoadNewSceneGO(int numObjects, JSON_Array * objArray, std::vector<uint> &meshesToLoad, std::list<GameObject *> &sceneGameObjects)
+{
+	for (int i = 0; i < numObjects; ++i)
+	{
+		JSON_Object* currGO = json_array_get_object(objArray, i);
+
+		GameObject* temp = CreateEmptyGameObject(nullptr, json_object_get_string(currGO, "name"));
+		temp->CreateFromJson(currGO, meshesToLoad);
+
+		sceneGameObjects.push_back(temp);
+	}
+}
+
+void ModuleGameObject::DeletePreviousScene()
+{
+	rootGameObject->RealDelete();
+	delete rootGameObject;
+
+	gameObjectsAll.clear();
+	App->geometry->currentGameObject = nullptr;
+	App->geometry->plane = nullptr;
+	App->sceneIntro->octree.Clear();
+
+	App->geometry->ClearLoadedMeshes();
+}
+
+GameObject* ModuleGameObject::FindByID(uint UUID)
+{
+
+	for (list<GameObject*>::iterator it = gameObjectsAll.begin(); it != gameObjectsAll.end(); ++it)
+	{
+		if ((*it)->UID == UUID)
+			return *it;
+	}
+
+	return nullptr;
+}
+
+void ModuleGameObject::SaveGameObject(GameObject* object, JSON_Array*& parent)
 {
 	JSON_Value* newValue = json_value_init_object();
 	JSON_Object* objGO = json_value_get_object(newValue);
 
-	string objectIdentifier(std::to_string(object->GetUID()));
-
-	json_object_set_value(parent, objectIdentifier.data(), newValue);
+	//json_object_set_value(parent, objectIdentifier.data(), newValue);
 
 	// Name and UUIDs
 	//------------------------------------------------------------------------
+	json_object_set_string(objGO, "name", object->name.data());
 	json_object_set_number(objGO, "UUID", object->GetUID());
-	json_object_set_string(objGO, "Name", object->name.data());
 	if (object->father)
-	json_object_set_number(objGO, "Parent UUID", object->father->GetUID());
+		json_object_set_number(objGO, "Parent UUID", object->father->GetUID());
 
-	//// Position
-	////------------------------------------------------------------------------
-	//JSON_Value* position = json_value_init_object();
-	//JSON_Object* positionObj = json_value_get_object(position);
-
-	//json_object_set_value(objGO, "Position", position);
-
-	//float3 pos = object->GetPos();
-
-	//json_object_set_number(positionObj, "X", pos.x);
-	//json_object_set_number(positionObj, "Y", pos.y);
-	//json_object_set_number(positionObj, "Z", pos.z);
-
-	//// Scale
-	////------------------------------------------------------------------------
-	//JSON_Value* scale = json_value_init_object();
-	//JSON_Object* scalenObj = json_value_get_object(scale);
-
-	//json_object_set_value(objGO, "Scale", scale);
-
-	//float3 size = object->GetScale();
-
-	//json_object_set_number(scalenObj, "X", size.x);
-	//json_object_set_number(scalenObj, "Y", size.y);
-	//json_object_set_number(scalenObj, "Z", size.z);
-
-	//// Rotation
-	////------------------------------------------------------------------------
-	//JSON_Value* rotation = json_value_init_object();
-	//JSON_Object* rotationObj = json_value_get_object(rotation);
-
-	//json_object_set_value(objGO, "Rotation", rotation);
-
-	//Quat rot = object->GetRotation();
-
-	//json_object_set_number(rotationObj, "X", rot.x);
-	//json_object_set_number(rotationObj, "Y", rot.y);
-	//json_object_set_number(rotationObj, "Z", rot.z);
-	//json_object_set_number(rotationObj, "W", rot.w);
-	//------------------------------------------------------------------------
 
 	json_object_set_number(objGO, "isActive", object->GetActive());
 
-	for (list<GameObject*>::iterator iterator = object->childs.begin(); iterator != object->childs.end(); ++iterator)
-	{
-		SaveGameObject(*iterator, parent);
-	}
 
-	JSON_Value* components = json_value_init_object();
-	JSON_Object* componentsObj = json_value_get_object(components);
+	JSON_Value* components = json_value_init_array();
+	JSON_Array* componentsObj = json_value_get_array(components);
 
 	json_object_set_value(objGO, "Components", components);
+
 
 	for (list<Component*>::iterator iterator = object->components.begin(); iterator != object->components.end(); ++iterator)
 	{
 		JSON_Value* component = json_value_init_object();
 		JSON_Object* componentObj = json_value_get_object(component);
 
-		json_object_set_value(componentsObj, to_string((*iterator)->GetUUID()).data() , component);
-
 		SaveComponent(*iterator, componentObj);
+
+		json_array_append_value(componentsObj, component);
+	}
+
+	json_array_append_value(parent, newValue);
+	
+	
+	for (list<GameObject*>::iterator iterator = object->childs.begin(); iterator != object->childs.end(); ++iterator)
+	{
+		SaveGameObject(*iterator, parent);
 	}
 }
 
@@ -220,11 +289,19 @@ GameObject* ModuleGameObject::CreateGameObject(float3 position, Quat rotation, f
 
 	gameObjectsAll.push_back(newGameObject);
 
-	//newGameObject->transform->boundingBox.minPoint = float3(-5, -5, -5);
-	//newGameObject->transform->boundingBox.minPoint = float3(5, 5, 5);
+	return newGameObject;
+}
 
-	//if (newGameObject)
-	//	App->sceneIntro->quadtree.Insert(newGameObject);
+GameObject* ModuleGameObject::CreateEmptyGameObject(GameObject* father, const char* name)
+{
+	GameObject* newGameObject = nullptr;
+
+	newGameObject = new GameObject(father, name);
+
+	if (father)
+		father->childs.push_back(newGameObject);
+
+	gameObjectsAll.push_back(newGameObject);
 
 	return newGameObject;
 }

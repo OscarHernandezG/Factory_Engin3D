@@ -27,6 +27,8 @@ struct MeshBuffer
 
 	int id = -1;
 
+	uint uuid = 0;
+
 	bool operator ==(MeshBuffer* mesh2)
 	{
 		return (this->id == mesh2->id);

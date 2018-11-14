@@ -1,5 +1,5 @@
-#ifndef __ModuleGeometryManager_H__
-#define __ModuleGeometryManager_H__
+#ifndef __ModuleGeometry_H__
+#define __ModuleGeometry_H__
 #include "Module.h"
 
 #include "Transform.h"
@@ -13,6 +13,7 @@
 struct aiMesh;
 struct aiScene;
 struct aiNode;
+struct MeshBuffer;
 
 class ModuleGeometry : public Module
 {
@@ -23,6 +24,8 @@ public:
 	bool Start();
 	void LoadDefaultScene();
 	update_status PostUpdate();
+
+	void ClearLoadedMeshes();
 
 	void Draww(GameObject * object);
 
@@ -45,6 +48,10 @@ public:
 	void SaveMeshImporter(MeshBuffer newCurrentBuffer, const char * path, uint uuid);
 
 	std::vector<MeshBuffer*> LoadMeshImporter(const char * path, const std::vector<MeshNode>& nodes);
+
+	std::vector<MeshBuffer*> LoadMeshImporterUUID(const std::vector<uint>& nodes);
+
+	MeshBuffer* LoadBufferGPU(char * buffer, int id = 0);
 
 	GameObject* LoadGameObjectsFromMeshNode(MeshNode node, GameObject * father);
 

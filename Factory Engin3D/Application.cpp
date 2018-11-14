@@ -83,7 +83,8 @@ bool Application::Init()
 		item++;
 	}
 	
-	pcg32_srandom(::time(NULL) ^ (intptr_t)&printf, 54u);
+	pcg32_random_t rng1;
+	pcg32_srandom(::time(NULL), (intptr_t)&rng1);
 	return ret;
 }
 

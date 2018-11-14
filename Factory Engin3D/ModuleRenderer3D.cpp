@@ -389,18 +389,19 @@ void ModuleRenderer3D::DebugDraw()
 		static float3 corners[8];
 		(*iterator)->transform->boundingBox.GetCornerPoints(corners);
 
-		if(App->geometry->currentGameObject && (*iterator) == App->geometry->currentGameObject)
+		if (App->geometry->currentGameObject && (*iterator) == App->geometry->currentGameObject)
 			DrawQuad(corners, Green);
 		else
 			DrawQuad(corners, Red);
 	}
 
-	if (App->geometry->currentGameObject && !App->geometry->currentGameObject->GetObjectStatic())
-	{
-		static float3 corners[8];
-		App->geometry->currentGameObject->transform->boundingBox.GetCornerPoints(corners);
-		DrawQuad(corners, Blue);
-	}
+	if (App->geometry->currentGameObject)
+		if (!App->geometry->currentGameObject->GetObjectStatic())
+		{
+			static float3 corners[8];
+			App->geometry->currentGameObject->transform->boundingBox.GetCornerPoints(corners);
+			DrawQuad(corners, Blue);
+		}
 }
 
 

@@ -2,6 +2,7 @@
 #include "glew-2.1.0/include/GL/glew.h"
 #include "Application.h"
 #include "ModuleGeometry.h"
+#include "Texture.h"
 
 #include "GameObject.h"
 
@@ -9,21 +10,27 @@ void Mesh::InnerRender() const
 {
 	if (buffer != nullptr)
 	{
+		bool hasTexture = gameObject->HasComponent(ComponentType_TEXTURE);
+
 		//Load vertex and index
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glBindBuffer(GL_ARRAY_BUFFER, buffer->vertex.id);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer->index.id);
 		glVertexPointer(3, GL_FLOAT, 0, NULL);
 
-		//Load Texture UV
-		if (buffer->texture.buffer != nullptr && buffer->texture.size > 0)
+		if (hasTexture)
 		{
-			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-			glBindBuffer(GL_ARRAY_BUFFER, buffer->texture.id);
-			glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+			if (buffer->texture.buffer != nullptr && buffer->texture.size > 0)
+			{
+				Texture* texture = (Texture*)gameObject->GetComponent(ComponentType_TEXTURE);
+				//Load Texture UV
+				glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+				glBindBuffer(GL_ARRAY_BUFFER, buffer->texture.id);
+				glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
-			//Load texture
-			glBindTexture(GL_TEXTURE_2D, App->geometry->textureID);
+				//Load texture
+				glBindTexture(GL_TEXTURE_2D, texture->GetID());
+			}
 		}
 
 		//Draw mesh
@@ -32,12 +39,14 @@ void Mesh::InnerRender() const
 		//Free buffers
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		glDisableClientState(GL_VERTEX_ARRAY);
 	}
 }
+
 float3 Mesh::GetPos()
 {
 	if (gameObject != nullptr)

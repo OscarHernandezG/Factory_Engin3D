@@ -35,6 +35,9 @@ void Transform::UpdateBoundingBox()
 	boundingBox = obb.MinimalEnclosingAABB();
 }
 
+//Position
+//-------------------------------------------------------------------------
+//	Set
 void Transform::SetPos(float x, float y, float z)
 {
 	SetPos(float3(x, y, z));
@@ -42,46 +45,35 @@ void Transform::SetPos(float x, float y, float z)
 
 void Transform::SetPos(float3 position)
 {
-	float3 pos = position;
-
-	if (gameObject->father != nullptr)
-		pos = pos - gameObject->father->GetPos();
-
-	this->position = pos;
+	this->position = position;
 }
+
 
 void Transform::Move(float3 position)
 {
 	this->position = this->position.Add(position);
 }
-
-void Transform::SetTransform(float4x4 trans)
+//	Get
+float3 Transform::GetPos() const
 {
-	trans.Decompose(position, rotation, scale);
+	return position;
 }
 
-void Transform::Scale(float3 scale)
+float3 Transform::GetGlobalPos() const
 {
-	this->scale = this->scale.Mul(scale);
-}
+	if (gameObject)
+		if (gameObject->father)
+			return position + gameObject->father->GetGlobalPos();
 
-void Transform::SetRotation(Quat rotation)
-{
-	this->rotation = rotation;
+		else return position;
 }
+//-------------------------------------------------------------------------
 
-void Transform::SetRotation(float3 rotation)
-{
-	this->rotation = Quat::FromEulerXYZ(rotation.x, rotation.y, rotation.z);
-}
-// ------------------------------------------------------------
-void Transform::Rotate(Quat rotation)
-{
-	float3 angles = this->rotation.ToEulerXYZ();
-	this->rotation = rotation.Mul(this->rotation).Normalized();
-}
 
-// ------------------------------------------------------------
+
+// Scale
+//-------------------------------------------------------------------------
+//	Set
 void Transform::SetScale(float x, float y, float z)
 {
 	scale = float3(x, y, z);
@@ -92,109 +84,146 @@ void Transform::SetScale(float3 scale)
 	this->scale = scale;
 }
 
+
+void Transform::Scale(float3 scale)
+{
+	this->scale = this->scale.Mul(scale);
+}
+//	Get
+float3 Transform::GetScale() const
+{
+	return scale;
+}
+
+float3 Transform::GetGlobalScale() const
+{
+	if (gameObject->father != nullptr)
+		return scale.Mul(gameObject->father->GetGlobalScale());
+
+	else return scale;
+}
+//-------------------------------------------------------------------------
+
+
+
+// Rotation
+//-------------------------------------------------------------------------
+//	Set
+void Transform::SetRotation(Quat rotation)
+{
+	this->rotation = rotation;
+}
+
+void Transform::SetRotation(float3 rotation)
+{
+	this->rotation = Quat::FromEulerXYZ(rotation.x, rotation.y, rotation.z);
+}
+
+void Transform::Rotate(Quat rotation)
+{
+	this->rotation = rotation.Mul(this->rotation).Normalized();
+}
+//	Get
+Quat Transform::GetRotation() const
+{
+	return rotation;
+}
+
+Quat Transform::GetGlobalRotation() const
+{
+	if (gameObject->father != nullptr)
+		return rotation.Mul(gameObject->father->GetGlobalRotation());
+
+	else return rotation;
+}
+//-------------------------------------------------------------------------
+
+
+
+// Transform
+//-------------------------------------------------------------------------
+void Transform::SetTransform(float4x4 trans)
+{
+	trans.Decompose(position, rotation, scale);
+}
+
 void Transform::SetIdentity()
 {
 	position = float3::zero;
 	rotation = Quat::identity;
 	scale = float3::one;
 }
+//-------------------------------------------------------------------------
 
-float3 Transform::GetPos() const
+
+
+// Matrix
+//-------------------------------------------------------------------------
+float4x4 Transform::GetMatrixOGL() const
 {
+	return GetMatrix().Transposed();
+}
+
+float4x4 Transform::GetMatrix() const
+{
+	float4x4 local = GetLocalMatrix();
 	if (gameObject->father != nullptr)
-		return position + gameObject->father->GetPos();
+		return gameObject->father->GetGlobalMatrix().Mul(local);
 
-	else return position;
+	else return local;
 }
 
-float3 Transform::GetScale() const
-{
-	if (gameObject->father != nullptr)
-		return scale.Mul(gameObject->father->GetScale());
-
-	else return scale;
-}
-
-Quat Transform::GetRotation() const
-{
-	if (gameObject->father != nullptr)
-		return rotation.Mul(gameObject->father->GetRotation());
-
-	else return rotation;
-}
-
-float3 Transform::GetLocalPos() const
-{
-	return position;
-}
-
-Quat Transform::GetLocalRotation() const
-{
-	return rotation;
-}
-
-
-const float4x4 Transform::GetMatrixOGL() const
-{
-	return float4x4::FromTRS(position, rotation, scale).Transposed();
-}
-
-const float4x4 Transform::GetMatrix() const
+float4x4 Transform::GetLocalMatrix() const
 {
 	return float4x4::FromTRS(position, rotation, scale);
 }
+//-------------------------------------------------------------------------
 
-const float4x4 Transform::GetGlobalMatrix() const
-{
-	return float4x4::FromTRS(GetPos(), GetRotation(), GetScale());
-}
+
 
 void Transform::SaveComponent(JSON_Object * parent)
 {
-
-	json_object_set_number(parent, "Type", this->type);
-
-	json_object_set_number(parent, "UUID", GetUUID());
-
-	json_object_set_number(parent, "Time Created", GetTime());
-
-	// Position
+																			  
+	json_object_set_number(parent, "Type", this->type);						  
+																			  
+	json_object_set_number(parent, "UUID", GetUUID());						  
+																			  
+	json_object_set_number(parent, "Time Created", GetTime());				  
+																			  
+	//// Position															  
+	////----------------------------------------------------------------------
+	JSON_Value* position = json_value_init_object();						  
+	JSON_Object* positionObj = json_value_get_object(position);				  
+																			  
+	json_object_set_value(parent, "Position", position);					  
+																			  
+	json_object_set_number(positionObj, "X", this->position.x);				  
+	json_object_set_number(positionObj, "Y", this->position.y);				  
+	json_object_set_number(positionObj, "Z", this->position.z);				  
+																			  
+	//// Scale																  
+	////----------------------------------------------------------------------
+	JSON_Value* scale = json_value_init_object();							  
+	JSON_Object* scalenObj = json_value_get_object(scale);					  
+																			  
+	json_object_set_value(parent, "Scale", scale);							  
+																			  
+	json_object_set_number(scalenObj, "X", this->scale.x);					  
+	json_object_set_number(scalenObj, "Y", this->scale.y);					  
+	json_object_set_number(scalenObj, "Z", this->scale.z);					  
+																			  
+	//// Rotation															  
+	////----------------------------------------------------------------------
+	JSON_Value* rotation = json_value_init_object();						  
+	JSON_Object* rotationObj = json_value_get_object(rotation);				  
+																			  
+	json_object_set_value(parent, "Rotation", rotation);					  
+																			  
+																			  
+	json_object_set_number(rotationObj, "X", this->rotation.x);				  
+	json_object_set_number(rotationObj, "Y", this->rotation.y);				  
+	json_object_set_number(rotationObj, "Z", this->rotation.z);				  
+	json_object_set_number(rotationObj, "W", this->rotation.w);				  
 	//------------------------------------------------------------------------
-	SaveNumberArray(parent, "Position", GetPos().ptr(), 3);
-
-	// Scale
-	//------------------------------------------------------------------------
-	SaveNumberArray(parent, "Scale", GetScale().ptr(), 3);
-
-	// Rotation
-	//------------------------------------------------------------------------
-	SaveNumberArray(parent, "Rotation", GetRotation().ptr(), 4);
-
-	// Bounding box
-	//------------------------------------------------------------------------
-	JSON_Value* boundingBoxV = json_value_init_object();
-	JSON_Object* boundingBoxObj = json_value_get_object(boundingBoxV);
-
-	json_object_set_value(parent, "Bounding Box", boundingBoxV);
-	{
-		// Min point
-		SaveNumberArray(boundingBoxObj, "Min", boundingBox.minPoint.ptr(), 3);
-
-		// Max point
-		SaveNumberArray(boundingBoxObj, "Max", boundingBox.maxPoint.ptr(), 3);
-	}
-	// Original Bounding box
-	//------------------------------------------------------------------------
-	JSON_Value* originalBB = json_value_init_object();
-	JSON_Object* originalBBObj = json_value_get_object(originalBB);
-
-	json_object_set_value(parent, "Original Bounding Box", originalBB);
-	{
-		// Min point
-		SaveNumberArray(originalBBObj, "Min", originalBoundingBox.minPoint.ptr(), 3);
-
-		// Max point
-		SaveNumberArray(originalBBObj, "Max", originalBoundingBox.maxPoint.ptr(), 3);
-	}
 }
 

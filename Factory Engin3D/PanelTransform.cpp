@@ -39,8 +39,9 @@ void ModuleImGui::CreateTransform(float2 scale)
 		if (currObject->transform != nullptr)
 		{
 			float4x4 prevTransformMat = currObject->GetGlobalMatrix();
+			// Use go, not trans!
 			position = currObject->transform->GetPos();
-			scale = currObject->transform->scale;
+			scale = currObject->transform->GetScale();
 			rotate = currObject->transform->GetRotation();
 
 			if (ImGui::DragFloat3("Position", &position[0]) && App->gameObject->CanTransform(currObject)) {
@@ -63,7 +64,6 @@ void ModuleImGui::CreateTransform(float2 scale)
 				currObject->SetScale(scale);
 				App->sceneIntro->octree.ReDoOctree(AABB(), true);
 			}
-
 			angles = rotate.ToEulerXYZ();
 
 			angles[0] = math::RadToDeg(angles.x);
@@ -84,7 +84,7 @@ void ModuleImGui::CreateTransform(float2 scale)
 
 				App->sceneIntro->octree.ReDoOctree(AABB(), true);
 			}
-			if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP)
+			else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP)
 				dragTransform = true;
 
 			if (ImGui::Button("Reset", ImVec2(100, 20)))
@@ -112,4 +112,3 @@ void ModuleImGui::CreateTransform(float2 scale)
 	}
 	ImGui::End();
 }
-

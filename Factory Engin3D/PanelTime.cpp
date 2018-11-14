@@ -1,8 +1,6 @@
-#include "Globals.h"
 #include "Application.h"
 #include "ModuleImGui.h"
-#include "ModuleWindow.h"
-#include "ModuleResources.h"
+
 void ModuleImGui::CreateGameManager(float2 scale)
 {
 	ImGui::Begin("", &canScroll, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);

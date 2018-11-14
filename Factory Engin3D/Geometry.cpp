@@ -32,6 +32,8 @@ void Geometry::Render() const
 		glPushMatrix();
 		float4x4 mat = transform->GetMatrixOGL();
 
+
+
 		glMultMatrixf(mat.ptr());
 
 		if (axis)

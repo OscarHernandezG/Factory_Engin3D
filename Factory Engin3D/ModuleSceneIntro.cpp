@@ -101,6 +101,7 @@ update_status ModuleSceneIntro::Update()
 
 void ModuleSceneIntro::GuizmoUpdate()
 {
+	// Todo move on local
 	GameObject* transformObject = App->geometry->currentGameObject;
 	if (transformObject != nullptr)
 	{
@@ -131,25 +132,40 @@ void ModuleSceneIntro::GuizmoUpdate()
 
 void ModuleSceneIntro::MoveGO(math::float4x4 &globalMatrix, GameObject* transformObject)
 {
-	float3 pos, scale;
-	Quat rot;
-	globalMatrix.Transpose();
-	globalMatrix.Decompose(pos, rot, scale);
-	switch (guizOperation)
+	if (transformObject)
 	{
-	case ImGuizmo::TRANSLATE:
-		transformObject->SetPos(pos);
-		break;
-	case ImGuizmo::ROTATE:
-		transformObject->SetRotation(rot);
-		break;
-	case ImGuizmo::SCALE:
-		transformObject->SetScale(scale);
-		break;
-	default:
-		break;
+		float3 pos, scale;
+		Quat rot;
+
+		globalMatrix.Transpose();
+
+		if (transformObject->father)
+		{
+			float4x4 temp = transformObject->father->GetGlobalMatrix();
+
+			temp.Inverse();
+
+			globalMatrix = temp.Mul(globalMatrix);
+		}
+
+		globalMatrix.Decompose(pos, rot, scale);
+
+		switch (guizOperation)
+		{
+		case ImGuizmo::TRANSLATE:
+			transformObject->SetPos(pos);
+			break;
+		case ImGuizmo::ROTATE:
+			transformObject->SetRotation(rot);
+			break;
+		case ImGuizmo::SCALE:
+			transformObject->SetScale(scale);
+			break;
+		default:
+			break;
+		}
+		saveTransform = true;
 	}
-	saveTransform = true;
 }
 
 void ModuleSceneIntro::SaveLastTransform(float4x4 matrix)

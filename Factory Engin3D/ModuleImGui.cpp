@@ -290,7 +290,6 @@ void ModuleImGui::CreateRandomNumberWindow()
 	ImGui::End();
 }
 
-
 void ModuleImGui::SetWindowDim(float2 &pos, float2 &size, float2 &scale, bool gameWindow)
 {
 	float2 realPos = pos.Mul(scale);
@@ -376,8 +375,11 @@ bool ModuleImGui::CreateOptions()
 {
 	if (ImGui::BeginMenu("Options"))
 	{
-		if (ImGui::MenuItem("Save Scene", "Ctrl+S"))
+		if (ImGui::MenuItem("Save Scene"))
 			App->gameObject->SaveScene();
+
+		if (ImGui::MenuItem("Load Scene"))
+			App->gameObject->LoadScene();
 
 		if (ImGui::MenuItem("Save", "Ctrl+S"))
 			App->canSave = true;
@@ -443,7 +445,7 @@ void ModuleImGui::CreateDebugMenu()
 		if (ImGui::MenuItem("AABB & quadtree", "1", App->renderer3D->debugQuad))
 			App->renderer3D->debugQuad = !App->renderer3D->debugQuad;
 
-		ImGui::MenuItem("Create empty object", "2");
+		ImGui::MenuItem("Create random empty object", "2");
 
 		if (ImGui::MenuItem("Camera culling", "3", App->renderer3D->cameraCulling))
 			App->renderer3D->cameraCulling = !App->renderer3D->cameraCulling;
