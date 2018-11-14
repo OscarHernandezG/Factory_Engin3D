@@ -41,6 +41,8 @@ public:
 	float4x4 GetProjectionMatrix() const;
 	Frustum GetCameraFrustrum() const;
 
+	Camera * SetEditorCamera() const;
+
 
 public:
 	GameObject* camera = nullptr;

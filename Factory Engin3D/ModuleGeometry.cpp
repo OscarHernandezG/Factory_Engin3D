@@ -609,6 +609,11 @@ void ModuleGeometry::UpdateTexture(char* path)
 	}
 }
 
+Camera * ModuleGeometry::GetPlayingCamera() const
+{
+	return playingCamera;
+}
+
 update_status ModuleGeometry::PostUpdate()
 {
 	//TEMP
@@ -682,6 +687,10 @@ void ModuleGeometry::LoadDefaultScene()
 {
 	App->importer->DistributeFile("assets\\models\\Street.fbx");
 	App->importer->DistributeFile("assets\\textures\\Baker_house.png");
+
+	GameObject* cameraObject = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->rootGameObject, "Camera");
+	playingCamera = (Camera*)cameraObject->AddComponent(ComponentType_CAMERA, nullptr);
+	
 
 	plane = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->rootGameObject, "Ground");
 

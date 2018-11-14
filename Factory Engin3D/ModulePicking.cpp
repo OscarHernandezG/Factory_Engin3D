@@ -34,7 +34,7 @@ update_status ModulePicking::Update()
 		float mouseX = -(1.0f - ((float(App->input->GetMouseX()) * 2.0f) / (float)App->window->width));
 		float mouseY = 1.0f - ((float(App->input->GetMouseY()) * 2.0f) / (float)App->window->height);
 
-		LineSegment ray = App->camera->GetCameraFrustrum().UnProjectLineSegment(mouseX, mouseY);
+		LineSegment ray = App->renderer3D->GetCameraFrustrum().UnProjectLineSegment(mouseX, mouseY);
 
 		std::vector<GameObject*> objects;
 		App->sceneIntro->octree.GetIntersects(objects, ray);

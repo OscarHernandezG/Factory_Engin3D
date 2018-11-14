@@ -162,8 +162,15 @@ update_status ModuleRenderer3D::PreUpdate()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	//glLoadIdentity();
 
+	if (App->time->gameState == GameState_NONE)
+		currentCam = App->camera->SetEditorCamera();
+	else if (App->time->gameState != GameState_TICK)
+	{
+		currentCam = App->geometry->GetPlayingCamera();
+		currentCam->UpdateFrustum();
+	}
 	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(App->camera->GetViewMatrix().ptr());
+	glLoadMatrixf(currentCam->GetViewMatrix().ptr());
 
 	// Light 0 on cam pos
 	lights[0].SetPos(App->camera->GetPos());
@@ -182,7 +189,7 @@ update_status ModuleRenderer3D::PostUpdate()
 	std::vector<GameObject*> drawerGO;
 	if (cameraCulling)//Only draw camera View
 	{
-		App->sceneIntro->octree.GetIntersects(drawerGO, App->camera->GetCameraFrustrum());
+		App->sceneIntro->octree.GetIntersects(drawerGO, currentCam->frustum);
 
 		for (auto iterator : drawerGO)
 			DrawOctreeObjects(iterator);
@@ -212,6 +219,16 @@ update_status ModuleRenderer3D::PostUpdate()
 			App->geometry->currentGameObject->transform->boundingBox.GetCornerPoints(corners);
 
 			DrawQuad(corners, Green);
+
+			Camera* cam = App->geometry->GetPlayingCamera();
+			if((Camera*)App->geometry->currentGameObject->GetComponent(ComponentType_CAMERA) == cam)
+			{
+				static float3 corners[8];
+				cam->frustum.GetCornerPoints(corners);
+
+				DrawQuad(corners, Green);
+			}
+
 		}
 	}
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -247,7 +264,7 @@ void ModuleRenderer3D::DrawDynamicObjects(bool cameraCulling)
 		Geometry* currentGeometry = (Geometry*)(*it)->GetComponent(ComponentType_GEOMETRY);
 		if (currentGeometry && (*it)->GetActive())
 		{
-			if (!cameraCulling || App->camera->GetCameraFrustrum().Intersects(*(*it)->GetAABB()))
+			if (!cameraCulling || currentCam->frustum.Intersects(*(*it)->GetAABB()))
 				DrawObject(currentGeometry);
 		}
 	}
@@ -371,13 +388,13 @@ void ModuleRenderer3D::DebugDraw()
 		static float3 corners[8];
 		(*iterator)->transform->boundingBox.GetCornerPoints(corners);
 
-		if((*iterator) == App->geometry->currentGameObject)
+		if(App->geometry->currentGameObject && (*iterator) == App->geometry->currentGameObject)
 			DrawQuad(corners, Green);
 		else
 			DrawQuad(corners, Red);
 	}
 
-	if (!App->geometry->currentGameObject->GetObjectStatic())
+	if (App->geometry->currentGameObject && !App->geometry->currentGameObject->GetObjectStatic())
 	{
 		static float3 corners[8];
 		App->geometry->currentGameObject->transform->boundingBox.GetCornerPoints(corners);
@@ -424,6 +441,20 @@ void ModuleRenderer3D::DrawQuad(static float3* corners, Color color)
 
 	glEnd();
 
+}
+
+float4x4 ModuleRenderer3D::GetViewMatrix() const
+{
+	return currentCam->GetViewMatrix();
+}
+
+float4x4 ModuleRenderer3D::GetProjectionMatrix() const
+{
+	return currentCam->GetProjectionMatrix();
+}
+Frustum ModuleRenderer3D::GetCameraFrustrum() const
+{
+	return currentCam->frustum;
 }
 
 

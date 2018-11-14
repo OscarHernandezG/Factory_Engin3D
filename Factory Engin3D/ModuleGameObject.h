@@ -20,7 +20,7 @@ public:
 	update_status Update();
 	update_status PostUpdate();
 
-	void RemoveObjectsFromList(GameObject * it);
+	void RemoveObjectsFromList(GameObject * it, list<GameObject*> &toDelete);
 
 	bool CleanUp();
 

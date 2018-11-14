@@ -108,7 +108,7 @@ void ModuleSceneIntro::GuizmoUpdate()
 		globalMatrix.Transpose();
 		ImGuiIO& io = ImGui::GetIO();
 		ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
-		ImGuizmo::Manipulate(App->camera->GetViewMatrix().ptr(), App->camera->GetProjectionMatrix().ptr(), guizOperation, guizMode, globalMatrix.ptr(), nullptr, isSnap ? snap.ptr() : nullptr);
+		ImGuizmo::Manipulate(App->renderer3D->GetViewMatrix().ptr(), App->renderer3D->GetProjectionMatrix().ptr(), guizOperation, guizMode, globalMatrix.ptr(), nullptr, isSnap ? snap.ptr() : nullptr);
 
 		if (ImGuizmo::IsUsing() && App->gameObject->CanTransform(transformObject))
 		{

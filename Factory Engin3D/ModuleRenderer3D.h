@@ -5,6 +5,7 @@
 #include "MathGeoLib/Math/float3x3.h"
 #include "MathGeoLib/Math/float4x4.h"
 #include "Light.h"
+#include "Camera.h"
 
 #define MAX_LIGHTS 8
 
@@ -34,7 +35,11 @@ public:
 	math::float4x4 Perspective(float fovy, float aspect, float n, float f) const;
 
 	void DrawQuad(float3 * corners, Color color = White);
-	
+
+	float4x4 GetViewMatrix() const;
+	float4x4 GetProjectionMatrix() const;
+	Frustum GetCameraFrustrum() const;
+
 	update_status Save(JSON_Object * object);
 	update_status Load(JSON_Object * object);
 
@@ -61,5 +66,6 @@ public:
 	bool debugQuad = false;
 	bool cameraCulling = false;
 
+	Camera* currentCam = nullptr;
 };
 #endif // !__ModuleRender_H__

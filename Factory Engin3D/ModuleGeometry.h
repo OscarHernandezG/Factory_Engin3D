@@ -4,6 +4,7 @@
 
 #include "Transform.h"
 #include "Geometries.h"
+#include "Camera.h"
 
 #include "Assimp/include/matrix4x4.h"
 
@@ -71,6 +72,7 @@ public:
 
 	void UpdateTexture(char* path);
 
+	Camera* GetPlayingCamera() const;
 public:
 	GameObject* currentGameObject = nullptr;
 	GameObject* bHouse = nullptr;
@@ -88,5 +90,8 @@ public:
 	string destination;
 
 	GameObject* plane = nullptr;
+
+private:
+	Camera * playingCamera = nullptr;
 };
 #endif // !__ModuleGeometryManager_H__
