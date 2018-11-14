@@ -106,8 +106,9 @@ public:
 	void SetABB(AABB aabb);
 	// Get
 	const AABB* GetAABB() const;
+	AABB GetGlobalAABB(AABB localAABB);
 	
-	float3 GetBBPos() const;
+	float3 GetBBPos();
 //----------------------------------------------------------------
 	
 	
@@ -126,7 +127,6 @@ public:
 	inline bool GetActive() { return isActive; }
 	inline bool* GetActiveReference() { return &isActive; }
 //----------------------------------------------------------------
-
 
 // Static
 //----------------------------------------------------------------

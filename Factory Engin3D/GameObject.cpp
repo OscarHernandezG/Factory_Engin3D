@@ -452,12 +452,17 @@ const AABB* GameObject::GetAABB() const
 	return &transform->boundingBox;
 }
 
-float3 GameObject::GetBBPos() const
+float3 GameObject::GetBBPos()
 {
 	float3 distance{ 0,0,0 };
 	if (transform)
 	{
 		float3 size = transform->boundingBox.Size();
+
+		if (!childs.empty())
+		{
+			size = GetGlobalAABB(AABB(float3::zero,float3::zero)).Size();
+		}
 
 		float3 reScale = GetScale();
 		distance.x = (size.x / 2) / math::Tan((0.3333333 * reScale.x));
@@ -465,6 +470,36 @@ float3 GameObject::GetBBPos() const
 		distance.z = (size.z / 2) / math::Tan((0.3333333 * reScale.z));
 	}
 	return distance + GetPos();
+}
+
+AABB GameObject::GetGlobalAABB(AABB localAABB)
+{
+	AABB globalAABB = localAABB;
+	if (!childs.empty())
+		for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
+		{
+			globalAABB = (*iterator)->GetGlobalAABB(globalAABB);
+		}
+	else
+	{
+		float3 objectMin = GetAABB()->minPoint;
+		float3 objectMax = GetAABB()->maxPoint;
+
+		if (globalAABB.MinX() > objectMin.x)
+			globalAABB.minPoint.x = objectMin.x;
+		if (globalAABB.MinY() > objectMin.y)
+			globalAABB.minPoint.y = objectMin.y;
+		if (globalAABB.MinZ() > objectMin.z)
+			globalAABB.minPoint.z = objectMin.z;
+
+		if (globalAABB.MaxX() < objectMax.x)
+			globalAABB.maxPoint.x = objectMax.x;
+		if (globalAABB.MaxY() < objectMax.y)
+			globalAABB.maxPoint.y = objectMax.y;
+		if (globalAABB.MaxZ() < objectMax.z)
+			globalAABB.maxPoint.z = objectMax.z;
+	}
+	return globalAABB;
 }
 
 void GameObject::SetABB(AABB aabb)

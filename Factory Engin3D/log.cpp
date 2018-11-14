@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __Log_H__
+#define __Log_H__
+
 #include "Globals.h"
 #include "Application.h"
 #include <stdio.h>
@@ -21,3 +23,4 @@ void log(const char file[], int line, const char* format, ...)
 		App->LogString(tmp_string2);
 	}
 }
+#endif

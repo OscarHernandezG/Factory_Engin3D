@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __Transform_H__
+#define __Transform_H__
 
 #include "Component.h"
 
@@ -110,5 +111,6 @@ private:
 	float3 position = float3::zero;
 	Quat rotation = Quat::identity;
 	float3 scale = float3::one;
-
 };
+#endif
+
