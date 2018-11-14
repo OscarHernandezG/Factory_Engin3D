@@ -284,13 +284,13 @@ vector<MeshBuffer*> ModuleGeometry::LoadMeshImporter(const char* path, const vec
 MeshBuffer* ModuleGeometry::LoadMeshBuffer(uint UUID)
 {
 	char* buffer = nullptr;
-	MeshBuffer* buffers;
+	MeshBuffer* buffers = nullptr;
 
-	buffer = App->importer->LoadFile(nullptr, LlibraryType_MESH, UUID);
+	buffer = App->importer->LoadFile("", LlibraryType_MESH, UUID);
 
 	if (buffer != nullptr)
 	{
-		MeshBuffer* bufferImporter = new MeshBuffer();
+		buffers = new MeshBuffer();
 
 		char* cursor = buffer;
 
@@ -299,41 +299,41 @@ MeshBuffer* ModuleGeometry::LoadMeshBuffer(uint UUID)
 		uint bytes = sizeof(ranges);
 		memcpy(ranges, cursor, bytes);
 
-		bufferImporter->index.size = ranges[0];
-		bufferImporter->vertex.size = ranges[1];
-		bufferImporter->texture.size = ranges[2];
+		buffers->index.size = ranges[0];
+		buffers->vertex.size = ranges[1];
+		buffers->texture.size = ranges[2];
 
 		cursor += bytes;
-		bytes = sizeof(uint)* bufferImporter->index.size;
-		bufferImporter->index.buffer = new uint[bufferImporter->index.size];
-		memcpy(bufferImporter->index.buffer, cursor, bytes);
+		bytes = sizeof(uint)* buffers->index.size;
+		buffers->index.buffer = new uint[buffers->index.size];
+		memcpy(buffers->index.buffer, cursor, bytes);
 
-		glGenBuffers(1, (GLuint*)&(bufferImporter->index.id));
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferImporter->index.id);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * bufferImporter->index.size, bufferImporter->index.buffer, GL_STATIC_DRAW);
-
-		cursor += bytes;
-		bytes = sizeof(float)* bufferImporter->vertex.size;
-		bufferImporter->vertex.buffer = new float[bufferImporter->vertex.size];
-		memcpy(bufferImporter->vertex.buffer, cursor, bytes);
-
-		glGenBuffers(1, (GLuint*)&(bufferImporter->vertex.id));
-		glBindBuffer(GL_ARRAY_BUFFER, bufferImporter->vertex.id);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * bufferImporter->vertex.size, bufferImporter->vertex.buffer, GL_STATIC_DRAW);
+		glGenBuffers(1, (GLuint*)&(buffers->index.id));
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers->index.id);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * buffers->index.size, buffers->index.buffer, GL_STATIC_DRAW);
 
 		cursor += bytes;
-		bytes = sizeof(float)* bufferImporter->texture.size;
-		bufferImporter->texture.buffer = new float[bufferImporter->texture.size];
-		memcpy(bufferImporter->texture.buffer, cursor, bytes);
+		bytes = sizeof(float)* buffers->vertex.size;
+		buffers->vertex.buffer = new float[buffers->vertex.size];
+		memcpy(buffers->vertex.buffer, cursor, bytes);
 
-		glGenBuffers(1, &bufferImporter->texture.id);
-		glBindBuffer(GL_ARRAY_BUFFER, bufferImporter->texture.id);
-		glBufferData(GL_ARRAY_BUFFER, bufferImporter->texture.size * sizeof(float), bufferImporter->texture.buffer, GL_STATIC_DRAW);
+		glGenBuffers(1, (GLuint*)&(buffers->vertex.id));
+		glBindBuffer(GL_ARRAY_BUFFER, buffers->vertex.id);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * buffers->vertex.size, buffers->vertex.buffer, GL_STATIC_DRAW);
+
+		cursor += bytes;
+		bytes = sizeof(float)* buffers->texture.size;
+		buffers->texture.buffer = new float[buffers->texture.size];
+		memcpy(buffers->texture.buffer, cursor, bytes);
+
+		glGenBuffers(1, &buffers->texture.id);
+		glBindBuffer(GL_ARRAY_BUFFER, buffers->texture.id);
+		glBufferData(GL_ARRAY_BUFFER, buffers->texture.size * sizeof(float), buffers->texture.buffer, GL_STATIC_DRAW);
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-		bufferImporter->boundingBox = LoadBoundingBox(bufferImporter->vertex);
+		buffers->boundingBox = LoadBoundingBox(buffers->vertex);
 
 		delete buffer;
 	}
