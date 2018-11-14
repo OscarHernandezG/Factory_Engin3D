@@ -64,6 +64,9 @@
     <Filter Include="Sources\Containers\PCG">
       <UniqueIdentifier>{078b7319-de84-4e9b-a8cb-9702de797d35}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Modules\ImGui">
+      <UniqueIdentifier>{14150202-2910-4bea-aead-295769e1a46c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -586,6 +589,27 @@
     </ClCompile>
     <ClCompile Include="ModuleResources.cpp">
       <Filter>Sources\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="PanelAbout.cpp">
+      <Filter>Sources\Modules\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="PanelConfiguration.cpp">
+      <Filter>Sources\Modules\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="PanelConsole.cpp">
+      <Filter>Sources\Modules\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="PanelHierarchy.cpp">
+      <Filter>Sources\Modules\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="PanelResources.cpp">
+      <Filter>Sources\Modules\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="PanelTransform.cpp">
+      <Filter>Sources\Modules\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="PanelTime.cpp">
+      <Filter>Sources\Modules\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

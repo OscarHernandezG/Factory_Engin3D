@@ -33,31 +33,17 @@ public:
 
 	void DrawUI();
 
-
 	bool CleanUp();
 
 	void CreateExampleWindow();
 	void CreateMGLWindow();
 	void CreateRandomNumberWindow();
+
+	//Panel About
 	void CreateAboutWindow(float2 scale);
+
+	//Panel Configuration
 	void CreateConfigWindow(float2 scale);
-	void CreateConsole(float2 scale);
-	void CreateTransform(float2 scale);
-	void CreateGameObjectHierarchy(float2 scale);
-	void SetWindowDim(float2 & pos, float2 & size, float2 & scale, bool gameWindow = false);
-	void CreateGameManager(float2 scale);
-	void CreateAssetsWindow(float2 scale);
-
-	void TreeAssets(const char * path);
-
-	void CreateGOTreeNode(GameObject * current);
-
-	update_status CreateMainMenuBar();
-
-	void CreateMenu();
-	bool CreateOptions();
-	void CheckShortCuts();
-	void CreateDebugMenu();
 
 	void CreateAppHeader();
 	void CreateWindowHeader();
@@ -72,7 +58,32 @@ public:
 
 	void CheckCaps(std::string* caps);
 
+	//Panel Console
+	void CreateConsole(float2 scale);
 	void LogConsole(const char* consoleText);
+
+	//Panel Transform
+	void CreateTransform(float2 scale);
+
+	//Panel Hierarchy
+	void CreateGameObjectHierarchy(float2 scale);
+	void CreateGOTreeNode(GameObject * current);
+
+	//PanelTime
+	void CreateGameManager(float2 scale);
+
+	//Panel Resources
+	void CreateAssetsWindow(float2 scale);
+	void TreeAssets(const char * path);
+
+	void SetWindowDim(float2 & pos, float2 & size, float2 & scale, bool gameWindow = false);
+
+	update_status CreateMainMenuBar();
+
+	void CreateMenu();
+	bool CreateOptions();
+	void CheckShortCuts();
+	void CreateDebugMenu();
 
 	void ResizeImGui(float2 scale);
 

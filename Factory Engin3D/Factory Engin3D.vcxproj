@@ -242,6 +242,13 @@
     <ClCompile Include="ModuleTime.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
     <ClCompile Include="ModuleResources.cpp" />
+    <ClCompile Include="PanelAbout.cpp" />
+    <ClCompile Include="PanelConfiguration.cpp" />
+    <ClCompile Include="PanelConsole.cpp" />
+    <ClCompile Include="PanelHierarchy.cpp" />
+    <ClCompile Include="PanelTransform.cpp" />
+    <ClCompile Include="PanelTime.cpp" />
+    <ClCompile Include="PanelResources.cpp" />
     <ClCompile Include="parson\parson.c" />
     <ClCompile Include="Geometry.cpp" />
     <ClCompile Include="pcg-c-basic-0.9\pcg_basic.c" />
