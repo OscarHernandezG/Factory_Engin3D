@@ -45,6 +45,8 @@ public:
 
 	vector<MeshBuffer*> LoadMeshImporter(const char * path, const vector<MeshNode>& nodes);
 
+	MeshBuffer * LoadMeshBuffer(uint UUID);
+
 	GameObject* LoadGameObjectsFromMeshNode(MeshNode node, GameObject * father);
 
 	GameObject * LoadEmptyGameObjectsFromMeshNode(MeshNode node, GameObject * father);

@@ -281,6 +281,66 @@ vector<MeshBuffer*> ModuleGeometry::LoadMeshImporter(const char* path, const vec
 	return buffers;
 }
 
+MeshBuffer* ModuleGeometry::LoadMeshBuffer(uint UUID)
+{
+	char* buffer = nullptr;
+	MeshBuffer* buffers;
+
+	buffer = App->importer->LoadFile(nullptr, LlibraryType_MESH, UUID);
+
+	if (buffer != nullptr)
+	{
+		MeshBuffer* bufferImporter = new MeshBuffer();
+
+		char* cursor = buffer;
+
+		uint ranges[3];
+
+		uint bytes = sizeof(ranges);
+		memcpy(ranges, cursor, bytes);
+
+		bufferImporter->index.size = ranges[0];
+		bufferImporter->vertex.size = ranges[1];
+		bufferImporter->texture.size = ranges[2];
+
+		cursor += bytes;
+		bytes = sizeof(uint)* bufferImporter->index.size;
+		bufferImporter->index.buffer = new uint[bufferImporter->index.size];
+		memcpy(bufferImporter->index.buffer, cursor, bytes);
+
+		glGenBuffers(1, (GLuint*)&(bufferImporter->index.id));
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferImporter->index.id);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * bufferImporter->index.size, bufferImporter->index.buffer, GL_STATIC_DRAW);
+
+		cursor += bytes;
+		bytes = sizeof(float)* bufferImporter->vertex.size;
+		bufferImporter->vertex.buffer = new float[bufferImporter->vertex.size];
+		memcpy(bufferImporter->vertex.buffer, cursor, bytes);
+
+		glGenBuffers(1, (GLuint*)&(bufferImporter->vertex.id));
+		glBindBuffer(GL_ARRAY_BUFFER, bufferImporter->vertex.id);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * bufferImporter->vertex.size, bufferImporter->vertex.buffer, GL_STATIC_DRAW);
+
+		cursor += bytes;
+		bytes = sizeof(float)* bufferImporter->texture.size;
+		bufferImporter->texture.buffer = new float[bufferImporter->texture.size];
+		memcpy(bufferImporter->texture.buffer, cursor, bytes);
+
+		glGenBuffers(1, &bufferImporter->texture.id);
+		glBindBuffer(GL_ARRAY_BUFFER, bufferImporter->texture.id);
+		glBufferData(GL_ARRAY_BUFFER, bufferImporter->texture.size * sizeof(float), bufferImporter->texture.buffer, GL_STATIC_DRAW);
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+		bufferImporter->boundingBox = LoadBoundingBox(bufferImporter->vertex);
+
+		delete buffer;
+	}
+
+	return buffers;
+}
+
 GameObject* ModuleGeometry::LoadGameObjectsFromMeshNode(MeshNode node, GameObject* father)
 {
 	GameObject* newGameObject = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, father, node.name.data());
