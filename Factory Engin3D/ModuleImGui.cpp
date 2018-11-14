@@ -49,6 +49,9 @@ bool ModuleImGui::Start()
 	playCountSize = float2(205.0f, 0.0f);
 	//--------------------------
 
+	contRefresh.Start();
+	RefreshAssets(".\\Assets\\");
+
 	return ret;
 }
 

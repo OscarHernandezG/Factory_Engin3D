@@ -16,7 +16,13 @@ struct ImVec3;
 struct ImVec4;
 struct ExampleAppConsole;
 class GameObject;
+class Timer;
 
+struct AssetsHierarchy
+{
+	std::string file;
+	std::vector<AssetsHierarchy> childFiles;
+};
 class ModuleImGui : public Module
 {
 public:
@@ -38,6 +44,17 @@ public:
 	void CreateExampleWindow();
 	void CreateMGLWindow();
 	void CreateRandomNumberWindow();
+
+	void SetWindowDim(float2 & pos, float2 & size, float2 & scale, bool gameWindow = false);
+
+	update_status CreateMainMenuBar();
+
+	void CreateMenu();
+	bool CreateOptions();
+	void CheckShortCuts();
+	void CreateDebugMenu();
+
+	void ResizeImGui(float2 scale);
 
 	//Panel About
 	void CreateAboutWindow(float2 scale);
@@ -74,19 +91,9 @@ public:
 
 	//Panel Resources
 	void CreateAssetsWindow(float2 scale);
-	void TreeAssets(const char * path);
-
-	void SetWindowDim(float2 & pos, float2 & size, float2 & scale, bool gameWindow = false);
-
-	update_status CreateMainMenuBar();
-
-	void CreateMenu();
-	bool CreateOptions();
-	void CheckShortCuts();
-	void CreateDebugMenu();
-
-	void ResizeImGui(float2 scale);
-
+	void DrawAssets(AssetsHierarchy& assets);
+	void RefreshAssets(const char * path);
+	
 public:
 	bool created = false;
 
@@ -142,6 +149,10 @@ public:
 	bool warningDialoge = false;
 
 	bool dragTransform = false;
+
+	//Resource Panel
+	AssetsHierarchy assetsHierarchy;
+	Timer contRefresh;
 
 	//--------------------------
 	// Window position

@@ -6,26 +6,32 @@ void ModuleImGui::CreateAssetsWindow(float2 scale)
 	ImGui::Begin("Assets", &canScroll, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 	SetWindowDim(configurationPos, configurationSize, scale);
 
-	TreeAssets(".\\Assets\\");
+	if (contRefresh.ReadSec() >= 1)
+	{
+		RefreshAssets(".\\Assets\\");
+		contRefresh.Start();
+	}
+	DrawAssets(assetsHierarchy);
 
 	ImGui::End();
 }
 
-void ModuleImGui::TreeAssets(const char* path)
+void ModuleImGui::DrawAssets(AssetsHierarchy& assets)
 {
-	std::vector<std::string> filesStr = App->resources->ReadFolder(path);
-
-	for (std::vector<std::string>::iterator iter = filesStr.begin(); iter != filesStr.end(); ++iter)
+	for (std::vector<AssetsHierarchy>::iterator iter = assets.childFiles.begin(); iter != assets.childFiles.end(); ++iter)
 	{
 		ImGuiTreeNodeFlags_ flag = ImGuiTreeNodeFlags_None;
-		std::string newPath = path;
-		if (App->resources->ExistFile(newPath.append(*iter).data()))
+		if ((*iter).childFiles.empty())
 			flag = ImGuiTreeNodeFlags_Leaf;
-		if (ImGui::TreeNodeEx((*iter).c_str(), flag))
+		if (ImGui::TreeNodeEx((*iter).file.data(),flag))
 		{
-			newPath += "\\";
-			TreeAssets(newPath.data());
+			DrawAssets(*iter);
 			ImGui::TreePop();
 		}
 	}
+}
+
+void ModuleImGui::RefreshAssets(const char* path)
+{
+	App->resources->ReadFolder(path, assetsHierarchy.childFiles);
 }
