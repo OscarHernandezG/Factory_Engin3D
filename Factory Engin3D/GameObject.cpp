@@ -1,6 +1,7 @@
 #include "Application.h"
 
 #include "GameObject.h"
+#include "Texture.h"
 #include "pcg-c-basic-0.9/pcg_basic.h"
 
 
@@ -244,6 +245,7 @@ Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
 		newComponent = (Component*)new Camera(this);
 		break;
 	case ComponentType_TEXTURE:
+		newComponent = (Component*)new Texture(this, (TextureyInfo*)info);
 		break;
 	case ComponentType_LIGHT:
 		break;
@@ -480,7 +482,8 @@ AABB GameObject::GetGlobalAABB(AABB localAABB)
 		{
 			globalAABB = (*iterator)->GetGlobalAABB(globalAABB);
 		}
-	else
+		
+	else if(HasComponent(ComponentType_GEOMETRY))
 	{
 		float3 objectMin = GetAABB()->minPoint;
 		float3 objectMax = GetAABB()->maxPoint;
