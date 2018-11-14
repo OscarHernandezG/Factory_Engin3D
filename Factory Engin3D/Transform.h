@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __Transform_H__
+#define __Transform_H__
 
 #include "Component.h"
 
@@ -81,3 +82,4 @@ public:
 	AABB boundingBox;
 	AABB originalBoundingBox;
 };
+#endif
