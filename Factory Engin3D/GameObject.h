@@ -66,8 +66,9 @@ public:
 
 	const AABB* GetAABB() const;
 
-	float3 GetBBPos() const;
+	float3 GetBBPos();
 
+	AABB GetGlobalAABB(AABB localAABB);
 	void SetABB(AABB aabb);
 
 	void SetActive(bool active);

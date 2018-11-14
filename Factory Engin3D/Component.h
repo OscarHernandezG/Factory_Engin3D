@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __Component_H__
+#define __Component_H__
 #include "parson/parson.h"
 #include <time.h>
 class GameObject;
@@ -52,3 +53,4 @@ private:
 
 	__int64 timeCreated = 0;
 };
+#endif
