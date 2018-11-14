@@ -28,6 +28,14 @@ public:
 
 	void LoadScene();
 
+	void SetGOMeshNewScene(Mesh * itMesh, std::list<GameObject *>::iterator &it);
+
+	void LoadNewSceneMeshes(std::vector<uint> &meshesToLoad);
+
+	void LoadNewSceneGO(int numObjects, JSON_Array * objArray, std::vector<uint> &meshesToLoad, std::list<GameObject *> &sceneGameObjects);
+
+	void DeletePreviousScene();
+
 	GameObject * FindByID(uint UUID);
 
 	void SaveGameObject(GameObject * object, JSON_Array*& parent);

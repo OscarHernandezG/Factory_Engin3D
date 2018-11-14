@@ -105,19 +105,13 @@ void ModuleGameObject::SaveScene()
 
 void ModuleGameObject::LoadScene()
 {
-	rootGameObject->RealDelete();
-	delete rootGameObject;
+//Clear previous
+	DeletePreviousScene();
 
-	gameObjectsAll.clear();
-	App->geometry->currentGameObject = nullptr;
-	App->geometry->plane = nullptr;
-	App->sceneIntro->octree.Clear();
-
+//Prepare new
 	App->sceneIntro->octree.Create(AABB(float3::zero, float3::zero));
 
-	rootGameObject = new GameObject(float3::zero, Quat::identity, float3::one, nullptr, "Scene");
-
-
+	//Load new
 	JSON_Value* scene = json_parse_file("Llibrary/Scenes/scene.json");
 
 	if (json_value_get_type(scene) == JSONArray)
@@ -127,35 +121,89 @@ void ModuleGameObject::LoadScene()
 		int numObjects = json_array_get_count(objArray);
 		list<GameObject*> sceneGameObjects;
 
-		for (int i = 0; i < numObjects; ++i)
-		{
-			JSON_Object* currGO = json_array_get_object(objArray, i);
+		vector<uint> meshesToLoad;
 
-			GameObject* temp = CreateEmptyGameObject(nullptr, json_object_get_string(currGO, "name"));
-			temp->CreateFromJson(currGO);
+		LoadNewSceneGO(numObjects, objArray, meshesToLoad, sceneGameObjects);
 
-			if (temp->HasComponent(ComponentType_GEOMETRY))
-				App->sceneIntro->octree.Insert(temp);
-		
-			sceneGameObjects.push_back(temp);
-		}
+		LoadNewSceneMeshes(meshesToLoad);
 
 		for (list<GameObject*>::iterator it = sceneGameObjects.begin(); it != sceneGameObjects.end(); ++it)
 		{
-			(*it)->SetParent(FindByID((*it)->parentUUID));
+			Mesh* itMesh = (Mesh*)(*it)->GetComponent(ComponentType_GEOMETRY);
+			if (itMesh)
+			{
+				SetGOMeshNewScene(itMesh, it);
+			}
+			if (!(*it)->SetParent(FindByID((*it)->parentUUID)))
+			{
+				rootGameObject = *it;
+			}
 		}
 	}
 }
 
+void ModuleGameObject::SetGOMeshNewScene(Mesh * itMesh, std::list<GameObject *>::iterator &it)
+{
+	bool found = false;
+	for (vector<MeshBuffer*>::iterator currentMeshBuffer = App->geometry->loadedMeshes.begin(); currentMeshBuffer != App->geometry->loadedMeshes.end(); ++currentMeshBuffer)
+	{
+		if (itMesh->GetUUID() == (*currentMeshBuffer)->uuid)
+		{
+			itMesh->buffer = *currentMeshBuffer;
+			(*it)->SetABB(itMesh->buffer->boundingBox);
+			found = true;
+			break;
+		}
+	}
+	if (found)
+		App->sceneIntro->octree.Insert(*it);
+}
+
+void ModuleGameObject::LoadNewSceneMeshes(std::vector<uint> &meshesToLoad)
+{
+	sort(meshesToLoad.begin(), meshesToLoad.end());
+	meshesToLoad.erase(unique(meshesToLoad.begin(), meshesToLoad.end()), meshesToLoad.end());
+
+	vector<MeshBuffer*> tempVec = App->geometry->LoadMeshImporterUUID(meshesToLoad);
+	App->geometry->loadedMeshes.insert(App->geometry->loadedMeshes.end(), tempVec.begin(), tempVec.end());
+}
+
+void ModuleGameObject::LoadNewSceneGO(int numObjects, JSON_Array * objArray, std::vector<uint> &meshesToLoad, std::list<GameObject *> &sceneGameObjects)
+{
+	for (int i = 0; i < numObjects; ++i)
+	{
+		JSON_Object* currGO = json_array_get_object(objArray, i);
+
+		GameObject* temp = CreateEmptyGameObject(nullptr, json_object_get_string(currGO, "name"));
+		temp->CreateFromJson(currGO, meshesToLoad);
+
+		sceneGameObjects.push_back(temp);
+	}
+}
+
+void ModuleGameObject::DeletePreviousScene()
+{
+	rootGameObject->RealDelete();
+	delete rootGameObject;
+
+	gameObjectsAll.clear();
+	App->geometry->currentGameObject = nullptr;
+	App->geometry->plane = nullptr;
+	App->sceneIntro->octree.Clear();
+
+	App->geometry->ClearLoadedMeshes();
+}
+
 GameObject* ModuleGameObject::FindByID(uint UUID)
 {
+
 	for (list<GameObject*>::iterator it = gameObjectsAll.begin(); it != gameObjectsAll.end(); ++it)
 	{
 		if ((*it)->UID == UUID)
 			return *it;
 	}
 
-	return rootGameObject;
+	return nullptr;
 }
 
 void ModuleGameObject::SaveGameObject(GameObject* object, JSON_Array*& parent)
