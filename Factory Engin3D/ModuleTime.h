@@ -47,8 +47,8 @@ public:
 public:
 	GameState gameState = GameState_NONE;
 
-	vector<float> fpsLog;
-	vector<float> msLog;
+	std::vector<float> fpsLog;
+	std::vector<float> msLog;
 
 	bool oneFrame = false;
 private:

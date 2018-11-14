@@ -37,10 +37,6 @@ public:
 	float3 GetPos() const;
 	void SetPos(float3 pos);
 
-	float4x4 GetViewMatrix() const;
-	float4x4 GetProjectionMatrix() const;
-	Frustum GetCameraFrustrum() const;
-
 	Camera * SetEditorCamera() const;
 
 

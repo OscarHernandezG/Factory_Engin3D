@@ -44,7 +44,7 @@ public:
 
 	void SaveMeshImporter(MeshBuffer newCurrentBuffer, const char * path, uint uuid);
 
-	vector<MeshBuffer*> LoadMeshImporter(const char * path, const vector<MeshNode>& nodes);
+	std::vector<MeshBuffer*> LoadMeshImporter(const char * path, const std::vector<MeshNode>& nodes);
 
 	GameObject* LoadGameObjectsFromMeshNode(MeshNode node, GameObject * father);
 
@@ -77,8 +77,8 @@ public:
 	GameObject* currentGameObject = nullptr;
 	GameObject* bHouse = nullptr;
 
-	vector<MeshNode> nodes;
-	vector<MeshBuffer*> loadedMeshes;
+	std::vector<MeshNode> nodes;
+	std::vector<MeshBuffer*> loadedMeshes;
 
 	uint textureID = 0u;
 	uint numFaces = 0u;
@@ -87,7 +87,7 @@ public:
 
 	AABB currentMeshBB = AABB(float3::zero, float3::zero);
 
-	string destination;
+	std::string destination;
 
 	GameObject* plane = nullptr;
 

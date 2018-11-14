@@ -2,7 +2,7 @@
 
 #include "ModuleGameObject.h"
 
-
+using namespace std;
 ModuleGameObject::ModuleGameObject(Application * app, bool start_enabled) : Module(app, start_enabled)
 {
 }

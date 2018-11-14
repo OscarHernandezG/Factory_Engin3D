@@ -18,10 +18,6 @@
 #include "ModuleTime.h"
 #include "ModuleResources.h"
 
-
-
-using namespace std;
-
 class Application
 {
 public:
@@ -39,7 +35,7 @@ public:
 	ModuleResources* resources;
 
 private:
-	list<Module*> list_modules;
+	std::list<Module*> list_modules;
 
 public:
 

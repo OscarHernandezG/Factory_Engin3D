@@ -9,9 +9,6 @@
 #include <list>
 #include "MathGeoLib/Geometry/AABB.h"
 
-using namespace std;
-
-
 template <typename T>
 struct Buffer
 {
@@ -38,14 +35,14 @@ struct MeshBuffer
 
 struct MeshNode
 {
-	string name;
+	std::string name;
 	
 	int id = -1;
 
 	uint componentUUID = 0;
 	
 	MeshBuffer buffer;
-	list<MeshNode> childs;
+	std::list<MeshNode> childs;
 
 	float4x4 transform;
 

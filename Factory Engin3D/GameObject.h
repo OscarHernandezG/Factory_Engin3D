@@ -8,8 +8,6 @@
 #include "Transform.h"
 #include "Camera.h"
 
-using namespace std;
-
 //class Component;
 //class Transform;
 
@@ -38,7 +36,7 @@ public:
 	inline void Delete() { toDelete = true;	}
 
 	Component* GetComponent(ComponentType type);
-	list<Component*> GetAllComponent(ComponentType type);
+	std::list<Component*> GetAllComponent(ComponentType type);
 	bool HasComponent(ComponentType type);
 	void RemoveComponent(Component* component);
 	Component* AddComponent(ComponentType type, ComponentInfo* info);
@@ -92,12 +90,12 @@ private:
 public:
 	Transform* transform = nullptr;
 
-	list<Component*> components;
+	std::list<Component*> components;
 
-	list<GameObject*> childs;
+	std::list<GameObject*> childs;
 	GameObject* father = nullptr;
 
-	string name;
+	std::string name;
 
 	bool toDelete = false;
 

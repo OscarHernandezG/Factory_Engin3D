@@ -177,7 +177,7 @@ void ModuleSceneIntro::GetPreviousTransform()
 
 void ModuleSceneIntro::ReInsertOctree(GameObject* object)
 {
-	for (list<GameObject*>::iterator iterator = object->childs.begin(); iterator != object->childs.end(); ++iterator)
+	for (std::list<GameObject*>::iterator iterator = object->childs.begin(); iterator != object->childs.end(); ++iterator)
 	{
 		ReInsertOctree(*iterator);
 	}

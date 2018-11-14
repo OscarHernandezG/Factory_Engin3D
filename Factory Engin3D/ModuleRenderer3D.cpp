@@ -189,7 +189,7 @@ update_status ModuleRenderer3D::PostUpdate()
 	std::vector<GameObject*> drawerGO;
 	if (cameraCulling)//Only draw camera View
 	{
-		App->sceneIntro->octree.GetIntersects(drawerGO, currentCam->frustum);
+		App->sceneIntro->octree.GetIntersects(drawerGO, App->geometry->GetPlayingCamera()->frustum);
 
 		for (auto iterator : drawerGO)
 			DrawOctreeObjects(iterator);
@@ -221,6 +221,7 @@ update_status ModuleRenderer3D::PostUpdate()
 			DrawQuad(corners, Green);
 
 			Camera* cam = App->geometry->GetPlayingCamera();
+			cam->UpdateFrustum();
 			if((Camera*)App->geometry->currentGameObject->GetComponent(ComponentType_CAMERA) == cam)
 			{
 				static float3 corners[8];
@@ -259,7 +260,7 @@ void ModuleRenderer3D::DrawOctreeObjects(GameObject * iterator)
 }
 void ModuleRenderer3D::DrawDynamicObjects(bool cameraCulling)
 {
-	for (list<GameObject*>::iterator it = App->gameObject->dynamicObjects.begin(); it != App->gameObject->dynamicObjects.end(); ++it)
+	for (std::list<GameObject*>::iterator it = App->gameObject->dynamicObjects.begin(); it != App->gameObject->dynamicObjects.end(); ++it)
 	{
 		Geometry* currentGeometry = (Geometry*)(*it)->GetComponent(ComponentType_GEOMETRY);
 		if (currentGeometry && (*it)->GetActive())
@@ -367,7 +368,7 @@ void ModuleRenderer3D::DebugDraw()
 	std::vector<const OctreeNode*> aabb;
 	App->sceneIntro->octree.GetBoxLimits(aabb);
 	//Octree draw
-	for (vector<const OctreeNode*>::const_iterator iterator = aabb.begin(); iterator != aabb.end(); ++iterator)
+	for (std::vector<const OctreeNode*>::const_iterator iterator = aabb.begin(); iterator != aabb.end(); ++iterator)
 	{
 		static float3 corners[8];
 		(*iterator)->limits.GetCornerPoints(corners);
@@ -383,7 +384,7 @@ void ModuleRenderer3D::DebugDraw()
 	std::vector<GameObject*> objects;
 	App->sceneIntro->octree.GetGameObjects(objects);
 	//Octree Objects
-	for (vector<GameObject*>::const_iterator iterator = objects.begin(); iterator != objects.end(); ++iterator)
+	for (std::vector<GameObject*>::const_iterator iterator = objects.begin(); iterator != objects.end(); ++iterator)
 	{
 		static float3 corners[8];
 		(*iterator)->transform->boundingBox.GetCornerPoints(corners);

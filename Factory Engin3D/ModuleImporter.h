@@ -14,7 +14,7 @@ enum LlibraryType
 	LlibraryType_MATERIAL,
 	LlibraryType_SCENE
 };
-using namespace std;
+
 class ModuleImporter : public Module
 {
 public:
@@ -30,7 +30,7 @@ public:
 
 	char* LoadFile(const char * path, LlibraryType type, uint number = 0);
 
-	string GetDirectionName(const char* path, LlibraryType type, uint number = 0);
+	std::string GetDirectionName(const char* path, LlibraryType type, uint number = 0);
 	void TextureDirection(std::string &goodFile, std::string &filePath);
 	void MeshDirection(std::string &filePath, std::string &goodFile, uint number = 0);
 	void SceneDirection(std::string & filePath, std::string & goodFile);

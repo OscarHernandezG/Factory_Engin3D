@@ -8,12 +8,14 @@
 
 #include "parson/parson.h"
 
-using namespace std;
+#include <string>
+#include"MathGeoLib/Math/float2.h"
 
 struct ImVec2;
 struct ImVec3;
 struct ImVec4;
 struct ExampleAppConsole;
+class GameObject;
 
 class ModuleImGui : public Module
 {
@@ -68,7 +70,7 @@ public:
 	void CreateCPUInfo(ImVec4 color);
 	void CreateGPUInfo(ImVec4 color);
 
-	void CheckCaps(string* caps);
+	void CheckCaps(std::string* caps);
 
 	void LogConsole(const char* consoleText);
 
@@ -105,8 +107,8 @@ public:
 
 	char* tempText = nullptr;
 
-	string randNumTextInt;
-	string randNumTextDouble;
+	std::string randNumTextInt;
+	std::string randNumTextDouble;
 	float brightnessPos = 1.0f;
 	int widthPos = SCREEN_WIDTH;
 	int heightPos = SCREEN_HEIGHT;
@@ -122,13 +124,13 @@ public:
 	ImGuiTextBuffer textBuff;
 	bool canScroll = false;
 
-	vector<float> ramLog;
+	std::vector<float> ramLog;
 
 	int resize = 0;
 
 	bool warningDialoge = false;
 
-	bool dragRotTransform = false;
+	bool dragTransform = false;
 
 	//--------------------------
 	// Window position

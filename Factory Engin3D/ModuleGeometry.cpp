@@ -23,7 +23,7 @@
 
 #include "pcg-c-basic-0.9/pcg_basic.h"
 
-
+using namespace std;
 ModuleGeometry::ModuleGeometry(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 }

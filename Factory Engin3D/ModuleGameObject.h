@@ -20,7 +20,7 @@ public:
 	update_status Update();
 	update_status PostUpdate();
 
-	void RemoveObjectsFromList(GameObject * it, list<GameObject*> &toDelete);
+	void RemoveObjectsFromList(GameObject * it, std::list<GameObject*> &toDelete);
 
 	bool CleanUp();
 
@@ -46,10 +46,10 @@ public:
 public:
 	GameObject* rootGameObject;
 
-	list<GameObject*> gameObjectsAll;
+	std::list<GameObject*> gameObjectsAll;
 
-	list<GameObject*> dynamicObjects;
+	std::list<GameObject*> dynamicObjects;
 
-	map<uint, float4x4> playingObjects;
+	std::map<uint, float4x4> playingObjects;
 };
 #endif // !__ModuleGameObjectManager_H__

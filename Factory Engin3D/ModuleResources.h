@@ -14,7 +14,7 @@ public:
 	bool CleanUp();
 
 	bool ExistFile(const char* path);
-	vector<string> ReadFolder(const char * path);
+	std::vector<std::string> ReadFolder(const char * path);
 private:
 
 };
