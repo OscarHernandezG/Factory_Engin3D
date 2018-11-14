@@ -125,29 +125,37 @@ void ModuleGameObject::LoadScene()
 		JSON_Array* objArray = json_value_get_array(scene);
 
 		int numObjects = json_array_get_count(objArray);
-		list<GameObject*> sceneGameObjects(numObjects);
+		list<GameObject*> sceneGameObjects;
 
 		for (int i = 0; i < numObjects; ++i)
 		{
 			JSON_Object* currGO = json_array_get_object(objArray, i);
 
-			GameObject* temp = CreateGameObject(float3::zero, Quat::identity, float3::one, rootGameObject, json_object_get_string(currGO, "name"));
+			GameObject* temp = CreateEmptyGameObject(nullptr, json_object_get_string(currGO, "name"));
 			temp->CreateFromJson(currGO);
 
 			if (temp->HasComponent(ComponentType_GEOMETRY))
-			App->sceneIntro->octree.Insert(temp);
+				App->sceneIntro->octree.Insert(temp);
+		
+			sceneGameObjects.push_back(temp);
 		}
 
+		for (list<GameObject*>::iterator it = sceneGameObjects.begin(); it != sceneGameObjects.end(); ++it)
+		{
+			(*it)->SetParent(FindByID((*it)->parentUUID));
+		}
+	}
+}
 
-		App->sceneIntro->octree.ReDoOctree();
-
+GameObject* ModuleGameObject::FindByID(uint UUID)
+{
+	for (list<GameObject*>::iterator it = gameObjectsAll.begin(); it != gameObjectsAll.end(); ++it)
+	{
+		if ((*it)->UID == UUID)
+			return *it;
 	}
 
-//todo load geometry 
-
-
-
-//todo redo hierarchy
+	return rootGameObject;
 }
 
 void ModuleGameObject::SaveGameObject(GameObject* object, JSON_Array*& parent)
@@ -231,11 +239,19 @@ GameObject* ModuleGameObject::CreateGameObject(float3 position, Quat rotation, f
 
 	gameObjectsAll.push_back(newGameObject);
 
-	//newGameObject->transform->boundingBox.minPoint = float3(-5, -5, -5);
-	//newGameObject->transform->boundingBox.minPoint = float3(5, 5, 5);
+	return newGameObject;
+}
 
-	//if (newGameObject)
-	//	App->sceneIntro->quadtree.Insert(newGameObject);
+GameObject* ModuleGameObject::CreateEmptyGameObject(GameObject* father, const char* name)
+{
+	GameObject* newGameObject = nullptr;
+
+	newGameObject = new GameObject(father, name);
+
+	if (father)
+		father->childs.push_back(newGameObject);
+
+	gameObjectsAll.push_back(newGameObject);
 
 	return newGameObject;
 }
