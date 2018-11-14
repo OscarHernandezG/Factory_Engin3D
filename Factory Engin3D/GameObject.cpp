@@ -86,14 +86,20 @@ void GameObject::Update(float dt)
 	}
 }
 
-void GameObject::SetParent(GameObject * parent)
+bool GameObject::SetParent(GameObject* parent)
 {
-	this->father = parent;
+	bool ret = false;
+	if (parent != nullptr)
+	{
+		this->father = parent;
+		parent->childs.push_back(this);
+		ret = true;
+	}
 
-	parent->childs.push_back(this);
+	return ret;
 }
 
-void GameObject::CreateFromJson(JSON_Object* info)
+void GameObject::CreateFromJson(JSON_Object* info, vector<uint>& meshesToLoad)
 {
 	UID = json_object_get_number(info, "UUID");
 	parentUUID = json_object_get_number(info, "Parent UUID");
@@ -109,18 +115,16 @@ void GameObject::CreateFromJson(JSON_Object* info)
 
 		else if (type == ComponentType_GEOMETRY)
 		{
-			MeshBuffer* buffer = App->geometry->LoadMeshBuffer(json_object_get_number(comp, "UUID"));
-			if (buffer)
-			{
-				Mesh* mesh = new Mesh(this);
-				mesh->buffer = buffer;
+			uint compUUID = json_object_get_number(comp, "UUID");
 
-				GeometryInfo inf;
-				inf.geometry = mesh;
-				Component* newComponent = AddComponent(type, &inf);
+			Mesh* mesh = new Mesh(this);
+			mesh->SetUUID(compUUID);
 
-				SetABB(mesh->buffer->boundingBox);
-			}
+			GeometryInfo inf;
+			inf.geometry = mesh;
+			Component* newComponent = AddComponent(type, &inf);
+
+			meshesToLoad.push_back(compUUID);
 		}
 	}
 }
@@ -158,10 +162,10 @@ ComponentInfo* GameObject::LoadComponentInfo(JSON_Object* info, ComponentType ty
 		JSON_Object* rotation = json_object_get_object(info, "Rotation");
 
 		Quat rot;
-		rot.x = json_object_get_number(scale, "X");
-		rot.y = json_object_get_number(scale, "Y");
-		rot.z = json_object_get_number(scale, "Z");
-		rot.w = json_object_get_number(scale, "W");
+		rot.x = json_object_get_number(rotation, "X");
+		rot.y = json_object_get_number(rotation, "Y");
+		rot.z = json_object_get_number(rotation, "Z");
+		rot.w = json_object_get_number(rotation, "W");
 
 ////------------------------------------------------------------------------
 		compInfo->UUID = json_object_get_number(info, "UUID");

@@ -35,11 +35,11 @@ public:
 
 	inline void Delete() { toDelete = true;	}
 
-	void SetParent(GameObject* parent);
+	bool SetParent(GameObject* parent);
 
 //Create from json
 //----------------------------------------------------------------
-	void CreateFromJson(JSON_Object* info);
+	void CreateFromJson(JSON_Object* info, std::vector<uint>& meshesToLoad);
 	ComponentInfo* LoadComponentInfo(JSON_Object * info, ComponentType type);
 //----------------------------------------------------------------
 
