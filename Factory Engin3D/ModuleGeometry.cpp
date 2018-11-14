@@ -228,117 +228,86 @@ vector<MeshBuffer*> ModuleGeometry::LoadMeshImporter(const char* path, const vec
 
 		if (buffer != nullptr)
 		{
-			MeshBuffer* bufferImporter = new MeshBuffer();
-			bufferImporter->id = i;
-			char* cursor = buffer;
+			MeshBuffer* curr = LoadBufferGPU(buffer, i);
 
-			uint ranges[3];
-
-			uint bytes = sizeof(ranges);
-			memcpy(ranges, cursor, bytes);
-
-			bufferImporter->index.size = ranges[0];
-			bufferImporter->vertex.size = ranges[1];
-			bufferImporter->texture.size = ranges[2];
-
-			cursor += bytes;
-			bytes = sizeof(uint)* bufferImporter->index.size;
-			bufferImporter->index.buffer = new uint[bufferImporter->index.size];
-			memcpy(bufferImporter->index.buffer, cursor, bytes);
-
-			glGenBuffers(1, (GLuint*)&(bufferImporter->index.id));
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferImporter->index.id);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * bufferImporter->index.size, bufferImporter->index.buffer, GL_STATIC_DRAW);
-
-			cursor += bytes;
-			bytes = sizeof(float)* bufferImporter->vertex.size;
-			bufferImporter->vertex.buffer = new float[bufferImporter->vertex.size];
-			memcpy(bufferImporter->vertex.buffer, cursor, bytes);
-
-			glGenBuffers(1, (GLuint*)&(bufferImporter->vertex.id));
-			glBindBuffer(GL_ARRAY_BUFFER, bufferImporter->vertex.id);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * bufferImporter->vertex.size, bufferImporter->vertex.buffer, GL_STATIC_DRAW);
-
-			cursor += bytes;
-			bytes = sizeof(float)* bufferImporter->texture.size;
-			bufferImporter->texture.buffer = new float[bufferImporter->texture.size];
-			memcpy(bufferImporter->texture.buffer, cursor, bytes);
-
-			glGenBuffers(1, &bufferImporter->texture.id);
-			glBindBuffer(GL_ARRAY_BUFFER, bufferImporter->texture.id);
-			glBufferData(GL_ARRAY_BUFFER, bufferImporter->texture.size * sizeof(float), bufferImporter->texture.buffer, GL_STATIC_DRAW);
-
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-			bufferImporter->boundingBox = LoadBoundingBox(bufferImporter->vertex);
-
-			buffers.push_back(bufferImporter);
-
-			delete buffer;
+			curr->uuid = (*iterator).componentUUID;
+			buffers.push_back(curr);
 		}
 	}
 	return buffers;
 }
 
-MeshBuffer* ModuleGeometry::LoadMeshBuffer(uint UUID)
+vector<MeshBuffer*> ModuleGeometry::LoadMeshImporterUUID(const vector<uint>& nodes)
 {
 	char* buffer = nullptr;
-	MeshBuffer* buffers = nullptr;
+	vector<MeshBuffer*> buffers;
 
-	buffer = App->importer->LoadFile("", LlibraryType_MESH, UUID);
-
-	if (buffer != nullptr)
+	for (vector<uint>::const_iterator iterator = nodes.begin(); iterator != nodes.end(); ++iterator)
 	{
-		buffers = new MeshBuffer();
+		buffer = App->importer->LoadFile("", LlibraryType_MESH, *iterator);
 
-		char* cursor = buffer;
+		if (buffer != nullptr)
+		{
+			MeshBuffer* curr = LoadBufferGPU(buffer);
+			curr->uuid = *iterator;
 
-		uint ranges[3];
-
-		uint bytes = sizeof(ranges);
-		memcpy(ranges, cursor, bytes);
-
-		buffers->index.size = ranges[0];
-		buffers->vertex.size = ranges[1];
-		buffers->texture.size = ranges[2];
-
-		cursor += bytes;
-		bytes = sizeof(uint)* buffers->index.size;
-		buffers->index.buffer = new uint[buffers->index.size];
-		memcpy(buffers->index.buffer, cursor, bytes);
-
-		glGenBuffers(1, (GLuint*)&(buffers->index.id));
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers->index.id);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * buffers->index.size, buffers->index.buffer, GL_STATIC_DRAW);
-
-		cursor += bytes;
-		bytes = sizeof(float)* buffers->vertex.size;
-		buffers->vertex.buffer = new float[buffers->vertex.size];
-		memcpy(buffers->vertex.buffer, cursor, bytes);
-
-		glGenBuffers(1, (GLuint*)&(buffers->vertex.id));
-		glBindBuffer(GL_ARRAY_BUFFER, buffers->vertex.id);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * buffers->vertex.size, buffers->vertex.buffer, GL_STATIC_DRAW);
-
-		cursor += bytes;
-		bytes = sizeof(float)* buffers->texture.size;
-		buffers->texture.buffer = new float[buffers->texture.size];
-		memcpy(buffers->texture.buffer, cursor, bytes);
-
-		glGenBuffers(1, &buffers->texture.id);
-		glBindBuffer(GL_ARRAY_BUFFER, buffers->texture.id);
-		glBufferData(GL_ARRAY_BUFFER, buffers->texture.size * sizeof(float), buffers->texture.buffer, GL_STATIC_DRAW);
-
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-		buffers->boundingBox = LoadBoundingBox(buffers->vertex);
-
-		delete buffer;
+			buffers.push_back(curr);
+		}
 	}
-
 	return buffers;
+}
+
+MeshBuffer* ModuleGeometry::LoadBufferGPU(char * buffer, int id)
+{
+	MeshBuffer* bufferImporter = new MeshBuffer();
+	char* cursor = buffer;
+
+	bufferImporter->id = id;
+
+	uint ranges[3];
+
+	uint bytes = sizeof(ranges);
+	memcpy(ranges, cursor, bytes);
+
+	bufferImporter->index.size = ranges[0];
+	bufferImporter->vertex.size = ranges[1];
+	bufferImporter->texture.size = ranges[2];
+
+	cursor += bytes;
+	bytes = sizeof(uint)* bufferImporter->index.size;
+	bufferImporter->index.buffer = new uint[bufferImporter->index.size];
+	memcpy(bufferImporter->index.buffer, cursor, bytes);
+
+	glGenBuffers(1, (GLuint*)&(bufferImporter->index.id));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferImporter->index.id);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * bufferImporter->index.size, bufferImporter->index.buffer, GL_STATIC_DRAW);
+
+	cursor += bytes;
+	bytes = sizeof(float)* bufferImporter->vertex.size;
+	bufferImporter->vertex.buffer = new float[bufferImporter->vertex.size];
+	memcpy(bufferImporter->vertex.buffer, cursor, bytes);
+
+	glGenBuffers(1, (GLuint*)&(bufferImporter->vertex.id));
+	glBindBuffer(GL_ARRAY_BUFFER, bufferImporter->vertex.id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * bufferImporter->vertex.size, bufferImporter->vertex.buffer, GL_STATIC_DRAW);
+
+	cursor += bytes;
+	bytes = sizeof(float)* bufferImporter->texture.size;
+	bufferImporter->texture.buffer = new float[bufferImporter->texture.size];
+	memcpy(bufferImporter->texture.buffer, cursor, bytes);
+
+	glGenBuffers(1, &bufferImporter->texture.id);
+	glBindBuffer(GL_ARRAY_BUFFER, bufferImporter->texture.id);
+	glBufferData(GL_ARRAY_BUFFER, bufferImporter->texture.size * sizeof(float), bufferImporter->texture.buffer, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	bufferImporter->boundingBox = LoadBoundingBox(bufferImporter->vertex);
+
+	delete buffer;
+
+	return bufferImporter;
 }
 
 GameObject* ModuleGeometry::LoadGameObjectsFromMeshNode(MeshNode node, GameObject* father)
@@ -358,7 +327,7 @@ GameObject* ModuleGeometry::LoadGameObjectsFromMeshNode(MeshNode node, GameObjec
 				Mesh* currMesh = new Mesh(newGameObject);
 
 				currMesh->buffer = (*currentMeshBuffer);
-				currMesh->SetUUID(node.componentUUID);
+				currMesh->SetUUID((*currentMeshBuffer)->uuid);
 				GeometryInfo info(currMesh);
 				newGameObject->AddComponent(ComponentType_GEOMETRY, &info);
 				App->sceneIntro->octree.Insert(newGameObject);
@@ -682,45 +651,16 @@ update_status ModuleGeometry::PostUpdate()
 		ground->axis = true;
 		ground->Render();
 	}
-
-
-
-	//if (bHouse != nullptr)
-	//{
-	//	if (bHouse->GetActive())
-	//	{
-	//		for (list<GameObject*>::iterator it = bHouse->childs.begin(); it != bHouse->childs.end(); ++it)
-	//		{
-	//			if ((*it)->GetActive())
-	//			{
-	//				Geometry* currentGeometry = (Geometry*)(*it)->GetComponent(ComponentType_GEOMETRY);
-	//				if (currentGeometry)
-	//					if (currentGeometry->GetType() == Primitive_Mesh)
-	//					{
-	//						Mesh* mesh = (Mesh*)currentGeometry;
-	//						mesh->fill = true;
-	//						mesh->wire = false;
-	//						mesh->Render();
-	//					}
-	//			}
-	//		}
-	//		Geometry* currentGeometry = (Geometry*)(bHouse)->GetComponent(ComponentType_GEOMETRY);
-	//		if (currentGeometry)
-	//			if (currentGeometry->GetType() == Primitive_Mesh)
-	//			{
-	//				Mesh* mesh = (Mesh*)currentGeometry;
-	//				mesh->fill = true;
-	//				mesh->wire = false;
-	//				mesh->Render();
-
-	//			}
-	//	}
-	//}
-
-
-
-
 		return UPDATE_CONTINUE;
+}
+
+void ModuleGeometry::ClearLoadedMeshes()
+{
+	for (vector<MeshBuffer*>::iterator it = App->geometry->loadedMeshes.begin(); it != App->geometry->loadedMeshes.end(); ++it)
+	{
+		delete *it;
+	}
+	App->geometry->loadedMeshes.clear();
 }
 
 void ModuleGeometry::Draww(GameObject* object)

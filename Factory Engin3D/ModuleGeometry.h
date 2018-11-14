@@ -23,6 +23,8 @@ public:
 	void LoadDefaultScene();
 	update_status PostUpdate();
 
+	void ClearLoadedMeshes();
+
 	void Draww(GameObject * object);
 
 	bool CleanUp();
@@ -45,7 +47,9 @@ public:
 
 	vector<MeshBuffer*> LoadMeshImporter(const char * path, const vector<MeshNode>& nodes);
 
-	MeshBuffer * LoadMeshBuffer(uint UUID);
+	vector<MeshBuffer*> LoadMeshImporterUUID(const vector<uint>& nodes);
+
+	MeshBuffer* LoadBufferGPU(char * buffer, int id = 0);
 
 	GameObject* LoadGameObjectsFromMeshNode(MeshNode node, GameObject * father);
 
