@@ -20,6 +20,7 @@
 #pragma comment( lib, "DevIL/libx86/ILUT.lib" )
 
 #include "GameObject.h"
+#include "Texture.h"
 
 #include "pcg-c-basic-0.9/pcg_basic.h"
 
@@ -331,6 +332,11 @@ GameObject* ModuleGeometry::LoadGameObjectsFromMeshNode(MeshNode node, GameObjec
 				GeometryInfo info(currMesh);
 				newGameObject->AddComponent(ComponentType_GEOMETRY, &info);
 				App->sceneIntro->octree.Insert(newGameObject);
+
+				TextureyInfo textureInfo;
+				textureInfo.textureId = textureID;
+				newGameObject->AddComponent(ComponentType_TEXTURE, &textureInfo);
+
 				break;
 			}
 	}
@@ -681,8 +687,8 @@ void ModuleGeometry::Draww(GameObject* object)
 
 void ModuleGeometry::LoadDefaultScene()
 {
-	App->importer->DistributeFile("assets\\models\\Street.fbx");
 	App->importer->DistributeFile("assets\\textures\\Baker_house.png");
+	App->importer->DistributeFile("assets\\models\\Street.fbx");
 
 	plane = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->rootGameObject, "Ground");
 
