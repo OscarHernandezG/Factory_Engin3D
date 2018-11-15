@@ -5,7 +5,7 @@
 #include "GameObject.h"
 
 
-struct TextureyInfo : ComponentInfo
+struct TextureInfo : ComponentInfo
 {
 	uint textureId = 0;
 };
@@ -13,7 +13,7 @@ struct TextureyInfo : ComponentInfo
 class Texture : Component
 {
 public:
-	Texture(GameObject* gameObject, TextureyInfo* info);
+	Texture(GameObject* gameObject, TextureInfo* info);
 	~Texture() {}
 
 	inline uint GetID() { return id; }

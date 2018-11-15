@@ -245,7 +245,7 @@ Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
 		newComponent = (Component*)new Camera(this);
 		break;
 	case ComponentType_TEXTURE:
-		newComponent = (Component*)new Texture(this, (TextureyInfo*)info);
+		newComponent = (Component*)new Texture(this, (TextureInfo*)info);
 		break;
 	case ComponentType_LIGHT:
 		break;
