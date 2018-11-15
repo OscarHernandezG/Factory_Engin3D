@@ -395,7 +395,7 @@ GameObject* ModuleGeometry::LoadGameObjectsFromMeshNode(MeshNode node, GameObjec
 	vector<MeshBuffer*>::iterator currentMeshBuffer;
 	for (currentMeshBuffer = loadedMeshes.begin(); currentMeshBuffer != loadedMeshes.end(); ++currentMeshBuffer)
 	{
-		if (node.id > 0)
+		if (node.id >= 0)
 			if ((*currentMeshBuffer)->id == node.id)
 			{
 				Mesh* currMesh = new Mesh(newGameObject);
@@ -496,6 +496,7 @@ void ModuleGeometry::UpdateMesh(char* path)
 
 	for (vector<MeshNode>::const_iterator iterator = nodes.begin(); iterator != nodes.end(); ++iterator)
 	{
+		if ((*iterator).id >= 0)
 		SaveMeshImporter((*iterator).buffer, path, (*iterator).componentUUID);
 	}
 
