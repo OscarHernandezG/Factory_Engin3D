@@ -35,7 +35,7 @@ void ModuleImporter::DistributeFile(char* file)
 	{
 		App->geometry->UpdateMesh(file);
 	}
-	else if (!extension.compare("png") || !extension.compare("dds") || !extension.compare("jpg") || !extension.compare("jpeg"))
+	else if (!extension.compare("png") || !extension.compare("dds") || !extension.compare("jpg") || !extension.compare("jpeg") || !extension.compare("tga"))
 		App->geometry->UpdateTexture(file);
 }
 
