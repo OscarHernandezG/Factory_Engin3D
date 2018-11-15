@@ -90,7 +90,8 @@ MeshNode ModuleGeometry::LoadMeshBuffer(const aiScene* scene, uint index)
 
 			string texturePath(textName.data);
 			uint uuid = pcg32_random();
-			texturesToLoad.push_back({ texturePath.substr(texturePath.find_last_of("\\") + 1), newMesh->mMaterialIndex });
+
+			texturesToLoad[newMesh->mMaterialIndex] = { texturePath.substr(texturePath.find_last_of("\\") + 1), newMesh->mMaterialIndex };
 		
 			tempBuffer.textureId = newMesh->mMaterialIndex;
 			tempBuffer.hasTexture = true;
@@ -157,6 +158,7 @@ MeshNode ModuleGeometry::LoadMeshNode(const aiScene* scene, aiNode* node)
 
 	if (node->mNumMeshes > 0)
 	{
+		LOG("Loading %s Mesh", node->mName.C_Str());
 		MeshNode currMeshBuff = LoadMeshBuffer(scene, node->mMeshes[0]);
 		meshNode = currMeshBuff;
 	}
@@ -193,8 +195,11 @@ MeshNode ModuleGeometry::LoadMesh(const char* path)
 		if (scene != nullptr)
 		{
 			if (scene->HasMeshes())
+			{
+				texturesToLoad.clear();
+				texturesToLoad.resize(scene->mNumMaterials);
 				meshRoot = LoadMeshNode(scene, scene->mRootNode);
-
+			}
 			aiReleaseImport(scene);
 		}
 
@@ -270,10 +275,10 @@ void ModuleGeometry::LoadMeshImporter(const char* path, const vector<MeshNode>& 
 	}
 }
 
-void ModuleGeometry::LoadTextureImporter(vector<Textures>& nodes, vector<Textures>& textures)
+void ModuleGeometry::LoadTextureImporter(vector<Textures>& texturesToLoad, vector<Textures>& loadedTextures)
 {
 	char* buffer = nullptr;
-	for (vector<Textures>::iterator iterator = nodes.begin(); iterator != nodes.end(); ++iterator)
+	for (vector<Textures>::iterator iterator = texturesToLoad.begin(); iterator != texturesToLoad.end(); ++iterator)
 	{
 		string path("Assets\\textures\\");
 		string name((*iterator).path);
@@ -283,8 +288,8 @@ void ModuleGeometry::LoadTextureImporter(vector<Textures>& nodes, vector<Texture
 
 		if (textureId > 0)
 		{
-			(*iterator).id = textureId;
-			textures.push_back(*iterator);
+			(*iterator).textureId = textureId;
+			loadedTextures.push_back(*iterator);
 		}
 	}
 }
@@ -389,7 +394,7 @@ GameObject* ModuleGeometry::LoadGameObjectsFromMeshNode(MeshNode node, GameObjec
 	vector<MeshBuffer*>::iterator currentMeshBuffer;
 	for (currentMeshBuffer = loadedMeshes.begin(); currentMeshBuffer != loadedMeshes.end(); ++currentMeshBuffer)
 	{
-		if (node.id > 0)
+		if (node.id >= 0)
 			if ((*currentMeshBuffer)->id == node.id)
 			{
 				Mesh* currMesh = new Mesh(newGameObject);
@@ -408,7 +413,7 @@ GameObject* ModuleGeometry::LoadGameObjectsFromMeshNode(MeshNode node, GameObjec
 
 
 	if (node.hasTexture)
-		for (vector<Textures>::iterator currentTexture = loadedTextures.begin(); currentTexture != loadedTextures.end(); ++currentTexture)
+		for (vector<Textures>::iterator currentTexture = texturesToLoad.begin(); currentTexture != texturesToLoad.end(); ++currentTexture)
 		{
 			if ((*currentTexture).id == node.textureId)
 			{
@@ -490,12 +495,12 @@ void ModuleGeometry::UpdateMesh(const char* path)
 
 	for (vector<MeshNode>::const_iterator iterator = nodes.begin(); iterator != nodes.end(); ++iterator)
 	{
+		if ((*iterator).id >= 0)
 		SaveMeshImporter((*iterator).buffer, path, (*iterator).componentUUID);
 	}
 
 	LoadMeshImporter(path, nodes, loadedMeshes);
-
-	//LoadTextureImporter(texturesToLoad, loadedTextures);
+	LoadTextureImporter(texturesToLoad, loadedTextures);
 
 	GameObject* newGameObject = LoadGameObjectsFromMeshNode(tempMesh, App->gameObject->rootGameObject);
 
