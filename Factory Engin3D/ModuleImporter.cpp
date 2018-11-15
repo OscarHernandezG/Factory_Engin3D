@@ -26,18 +26,50 @@ bool ModuleImporter::Init()
 	return true;
 }
 
-void ModuleImporter::DistributeFile(char* file)
+void ModuleImporter::DistributeFile(char* file, bool needPath)
 {
 	string filePath(file);
 	string extension = filePath.substr(filePath.find_last_of(".") + 1);
 
-
 	if (!extension.compare("fbx") || !extension.compare("obj"))
 	{
-		App->geometry->UpdateMesh(file);
+		if (needPath)
+			GetFullPath(filePath, LlibraryType_MESH);
+		App->geometry->UpdateMesh(filePath.data());
 	}
 	else if (!extension.compare("png") || !extension.compare("dds") || !extension.compare("jpg") || !extension.compare("jpeg"))
-		App->geometry->UpdateTexture(file);
+	{
+		if (needPath)
+			GetFullPath(filePath, LlibraryType_TEXTURE);
+		App->geometry->UpdateTexture(filePath.data());
+	}
+}
+
+void ModuleImporter::GetFullPath(string& file, LlibraryType type)
+{
+	string fullPath = "Assets\\";
+
+	switch (type)
+	{
+	case LlibratyType_NONE:
+		break;
+	case LlibraryType_TEXTURE:
+		fullPath.append("textures\\");
+		break;
+	case LlibraryType_MESH:
+		fullPath.append("models\\");
+		break;
+	case LlibraryType_MATERIAL:
+		break;
+	case LlibraryType_SCENE:
+		break;
+	default:
+		break;
+	}
+
+	fullPath.append(file);
+
+	file = (char*)fullPath.data();
 }
 
 
@@ -114,10 +146,6 @@ void ModuleImporter::MeshDirection(std::string &filePath, std::string &goodFile,
 {
 	goodFile += "Meshes/";
 
-	//uint initialPos = filePath.find_last_of("\\") + 1;
-	//uint finalPos = filePath.find_last_of(".");
-
-	//goodFile += filePath.substr(initialPos, (finalPos - initialPos));
 	goodFile += to_string(uuid);
 	goodFile += ".fty";
 }

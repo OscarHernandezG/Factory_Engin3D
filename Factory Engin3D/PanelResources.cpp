@@ -23,15 +23,22 @@ void ModuleImGui::DrawAssets(AssetsHierarchy& assets)
 		ImGuiTreeNodeFlags_ flag = ImGuiTreeNodeFlags_None;
 		if ((*iter).childFiles.empty())
 			flag = ImGuiTreeNodeFlags_Leaf;
+
 		if (ImGui::TreeNodeEx((*iter).file.data(),flag))
 		{
 			DrawAssets(*iter);
 			ImGui::TreePop();
+		}
+
+		if (ImGui::IsItemClicked(App->input->GetMouseButton(SDL_BUTTON_RIGHT)))
+		{
+			App->importer->DistributeFile((char*)((*iter).file.data()),true);
 		}
 	}
 }
 
 void ModuleImGui::RefreshAssets(const char* path)
 {
+	assetsHierarchy.file = "Assets";
 	App->resources->ReadFolder(path, assetsHierarchy.childFiles);
 }

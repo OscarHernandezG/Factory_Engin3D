@@ -49,7 +49,7 @@ public:
 	void RemoveComponent(Component* component);
 	// Get
 	Component* GetComponent(ComponentType type);
-	list<Component*> GetAllComponent(ComponentType type);
+	std::list<Component*> GetAllComponent(ComponentType type);
 
 	bool HasComponent(ComponentType type);
 //----------------------------------------------------------------
