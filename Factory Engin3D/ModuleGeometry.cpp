@@ -75,8 +75,32 @@ MeshNode ModuleGeometry::LoadMeshBuffer(const aiScene* scene, uint index, char* 
 	if (newMesh->HasTextureCoords(0))
 	{
 		LoadMeshTextureCoords(tempBuffer.buffer, newMesh);
+
 	}
 
+	if (scene->HasMaterials())
+	{
+		aiMaterial* material = scene->mMaterials[newMesh->mMaterialIndex];
+
+		if (material)
+		{
+			aiString textName;
+			material->GetTexture(aiTextureType_DIFFUSE, 0, &textName);
+
+			//App->importer->DistributeFile(textName.data);
+
+			tempBuffer.textureId = LoadTexture(textName.data);
+			tempBuffer.hasTexture = true;
+		}
+	}
+
+	if (newMesh->GetNumColorChannels() > 0)
+		if (newMesh->HasVertexColors(0))
+		{
+			tempBuffer.buffer.color.size = tempBuffer.buffer.vertex.size * 4;
+			tempBuffer.buffer.color.buffer = new float[tempBuffer.buffer.color.size];
+			memcpy(tempBuffer.buffer.color.buffer, newMesh->mColors[0], sizeof(float) * tempBuffer.buffer.color.size);
+		}
 	tempBuffer.id = index;
 	tempBuffer.componentUUID = pcg32_random();
 
@@ -182,7 +206,7 @@ MeshNode ModuleGeometry::LoadMesh(char* path)
 
 void ModuleGeometry::SaveMeshImporter(MeshBuffer newCurrentBuffer, const char* path, uint uuid)
 {
-	uint ranges[3] = { newCurrentBuffer.index.size, newCurrentBuffer.vertex.size, newCurrentBuffer.texture.size};
+	uint ranges[4] = { newCurrentBuffer.index.size, newCurrentBuffer.vertex.size, newCurrentBuffer.texture.size, newCurrentBuffer.color.size};
 
 	string;
 
@@ -190,6 +214,8 @@ void ModuleGeometry::SaveMeshImporter(MeshBuffer newCurrentBuffer, const char* p
 
 	if(newCurrentBuffer.texture.buffer != nullptr)
 		size += sizeof(float) * newCurrentBuffer.texture.size * 2;
+	if (newCurrentBuffer.color.buffer != nullptr)
+		size += sizeof(float) * newCurrentBuffer.color.size * 4;
 
 	char* exporter = new char[size];
 	char* cursor = exporter;
@@ -211,6 +237,14 @@ void ModuleGeometry::SaveMeshImporter(MeshBuffer newCurrentBuffer, const char* p
 		bytes = sizeof(float)* newCurrentBuffer.texture.size;
 		memcpy(cursor, newCurrentBuffer.texture.buffer, bytes);
 	}
+
+	if (newCurrentBuffer.color.buffer != nullptr)
+	{
+		cursor += bytes;
+		bytes = sizeof(float)* newCurrentBuffer.color.size;
+		memcpy(cursor, newCurrentBuffer.color.buffer, bytes);
+	}
+
 	App->importer->SaveFile(path, size, exporter, LlibraryType_MESH, uuid);
 	
 	delete[] exporter;
@@ -265,7 +299,7 @@ MeshBuffer* ModuleGeometry::LoadBufferGPU(char * buffer, int id)
 
 	bufferImporter->id = id;
 
-	uint ranges[3];
+	uint ranges[4];
 
 	uint bytes = sizeof(ranges);
 	memcpy(ranges, cursor, bytes);
@@ -273,7 +307,9 @@ MeshBuffer* ModuleGeometry::LoadBufferGPU(char * buffer, int id)
 	bufferImporter->index.size = ranges[0];
 	bufferImporter->vertex.size = ranges[1];
 	bufferImporter->texture.size = ranges[2];
+	bufferImporter->color.size = ranges[3];
 
+	// Index
 	cursor += bytes;
 	bytes = sizeof(uint)* bufferImporter->index.size;
 	bufferImporter->index.buffer = new uint[bufferImporter->index.size];
@@ -283,6 +319,7 @@ MeshBuffer* ModuleGeometry::LoadBufferGPU(char * buffer, int id)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferImporter->index.id);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * bufferImporter->index.size, bufferImporter->index.buffer, GL_STATIC_DRAW);
 
+	// Vertex
 	cursor += bytes;
 	bytes = sizeof(float)* bufferImporter->vertex.size;
 	bufferImporter->vertex.buffer = new float[bufferImporter->vertex.size];
@@ -292,6 +329,7 @@ MeshBuffer* ModuleGeometry::LoadBufferGPU(char * buffer, int id)
 	glBindBuffer(GL_ARRAY_BUFFER, bufferImporter->vertex.id);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * bufferImporter->vertex.size, bufferImporter->vertex.buffer, GL_STATIC_DRAW);
 
+	//Texture
 	cursor += bytes;
 	bytes = sizeof(float)* bufferImporter->texture.size;
 	bufferImporter->texture.buffer = new float[bufferImporter->texture.size];
@@ -301,6 +339,18 @@ MeshBuffer* ModuleGeometry::LoadBufferGPU(char * buffer, int id)
 	glBindBuffer(GL_ARRAY_BUFFER, bufferImporter->texture.id);
 	glBufferData(GL_ARRAY_BUFFER, bufferImporter->texture.size * sizeof(float), bufferImporter->texture.buffer, GL_STATIC_DRAW);
 
+	// Color
+	cursor += bytes;
+	bytes = sizeof(float)* bufferImporter->color.size;
+	bufferImporter->color.buffer = new float[bufferImporter->color.size];
+	memcpy(bufferImporter->color.buffer, cursor, bytes);
+
+	glGenBuffers(1, &bufferImporter->color.id);
+	glBindBuffer(GL_ARRAY_BUFFER, bufferImporter->color.id);
+	glBufferData(GL_ARRAY_BUFFER, bufferImporter->color.size * sizeof(float), bufferImporter->color.buffer, GL_STATIC_DRAW);
+
+
+	// Clear buffers
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
@@ -327,6 +377,9 @@ GameObject* ModuleGeometry::LoadGameObjectsFromMeshNode(MeshNode node, GameObjec
 			{
 				Mesh* currMesh = new Mesh(newGameObject);
 
+				currMesh->hasColor = node.hasColor;
+				currMesh->color = node.color;
+
 				currMesh->buffer = (*currentMeshBuffer);
 				currMesh->SetUUID((*currentMeshBuffer)->uuid);
 				GeometryInfo info(currMesh);
@@ -334,7 +387,7 @@ GameObject* ModuleGeometry::LoadGameObjectsFromMeshNode(MeshNode node, GameObjec
 				App->sceneIntro->octree.Insert(newGameObject);
 
 				TextureyInfo textureInfo;
-				textureInfo.textureId = textureID;
+				textureInfo.textureId = node.textureId;
 				newGameObject->AddComponent(ComponentType_TEXTURE, &textureInfo);
 
 				break;
@@ -615,13 +668,13 @@ uint ModuleGeometry::LoadTexture(char* path) const
 		else
 		{
 			isSuccess = false;
-			LOG("Image conversion error %s", iluErrorString(ilGetError()));
+			LOG("Image conversion error, %s", iluErrorString(ilGetError()));
 		}
 	}
 	else
 	{
 		isSuccess = false;
-		LOG("Error loading texture %s", iluErrorString(ilGetError()));
+		LOG("Error loading texture, %s", iluErrorString(ilGetError()));
 	}
 
 	ilDeleteImages(1, &newTextureID);
