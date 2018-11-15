@@ -89,7 +89,8 @@ MeshNode ModuleGeometry::LoadMeshBuffer(const aiScene* scene, uint index, char* 
 
 			string texturePath(textName.data);
 			uint uuid = pcg32_random();
-			texturesToLoad.push_back({ texturePath.substr(texturePath.find_last_of("\\") + 1), newMesh->mMaterialIndex });
+
+			texturesToLoad[newMesh->mMaterialIndex] = { texturePath.substr(texturePath.find_last_of("\\") + 1), newMesh->mMaterialIndex };
 		
 			tempBuffer.textureId = newMesh->mMaterialIndex;
 			tempBuffer.hasTexture = true;
@@ -158,6 +159,7 @@ MeshNode ModuleGeometry::LoadMeshNode(const aiScene* scene, aiNode* node, char* 
 
 	if (node->mNumMeshes > 0)
 	{
+		LOG("Loading %s Mesh", node->mName.C_Str());
 		MeshNode currMeshBuff = LoadMeshBuffer(scene, node->mMeshes[0], path);
 		meshNode = currMeshBuff;
 	}
@@ -194,8 +196,11 @@ MeshNode ModuleGeometry::LoadMesh(char* path)
 		if (scene != nullptr)
 		{
 			if (scene->HasMeshes())
+			{
+				texturesToLoad.clear();
+				texturesToLoad.resize(scene->mNumMaterials);
 				meshRoot = LoadMeshNode(scene, scene->mRootNode, path);
-
+			}
 			aiReleaseImport(scene);
 		}
 
@@ -271,10 +276,10 @@ void ModuleGeometry::LoadMeshImporter(const char* path, const vector<MeshNode>& 
 	}
 }
 
-void ModuleGeometry::LoadTextureImporter(vector<Textures>& nodes, vector<Textures>& textures)
+void ModuleGeometry::LoadTextureImporter(vector<Textures>& texturesToLoad, vector<Textures>& loadedTextures)
 {
 	char* buffer = nullptr;
-	for (vector<Textures>::iterator iterator = nodes.begin(); iterator != nodes.end(); ++iterator)
+	for (vector<Textures>::iterator iterator = texturesToLoad.begin(); iterator != texturesToLoad.end(); ++iterator)
 	{
 		string path("Assets\\textures\\");
 		string name((*iterator).path);
@@ -284,8 +289,8 @@ void ModuleGeometry::LoadTextureImporter(vector<Textures>& nodes, vector<Texture
 
 		if (textureId > 0)
 		{
-			(*iterator).id = textureId;
-			textures.push_back(*iterator);
+			(*iterator).textureId = textureId;
+			loadedTextures.push_back(*iterator);
 		}
 	}
 }
@@ -409,7 +414,7 @@ GameObject* ModuleGeometry::LoadGameObjectsFromMeshNode(MeshNode node, GameObjec
 
 
 	if (node.hasTexture)
-		for (vector<Textures>::iterator currentTexture = loadedTextures.begin(); currentTexture != loadedTextures.end(); ++currentTexture)
+		for (vector<Textures>::iterator currentTexture = texturesToLoad.begin(); currentTexture != texturesToLoad.end(); ++currentTexture)
 		{
 			if ((*currentTexture).id == node.textureId)
 			{
@@ -495,8 +500,7 @@ void ModuleGeometry::UpdateMesh(char* path)
 	}
 
 	LoadMeshImporter(path, nodes, loadedMeshes);
-
-	//LoadTextureImporter(texturesToLoad, loadedTextures);
+	LoadTextureImporter(texturesToLoad, loadedTextures);
 
 	GameObject* newGameObject = LoadGameObjectsFromMeshNode(tempMesh, App->gameObject->rootGameObject);
 
