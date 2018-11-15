@@ -153,6 +153,7 @@ public:
 	//Resource Panel
 	AssetsHierarchy assetsHierarchy;
 	Timer contRefresh;
+	bool popUp = false;
 
 	//--------------------------
 	// Window position

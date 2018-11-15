@@ -472,7 +472,7 @@ float3 GameObject::GetBBPos()
 		distance.y = (size.y / 2) / math::Tan((0.3333333 * reScale.y));
 		distance.z = (size.z / 2) / math::Tan((0.3333333 * reScale.z));
 	}
-	return distance + GetPos();
+	return distance + GetGlobalPos();
 }
 
 AABB GameObject::GetGlobalAABB(AABB localAABB)

@@ -3,6 +3,7 @@
 #include "ModuleImGui.h"
 #include "ModuleWindow.h"
 #include "ModuleResources.h"
+
 void ModuleImGui::CreateTransform(float2 scale)
 {
 	ImGui::Begin("Transform", &transformWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);

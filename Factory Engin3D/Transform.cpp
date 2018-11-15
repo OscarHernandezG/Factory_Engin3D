@@ -61,11 +61,10 @@ float3 Transform::GetPos() const
 
 float3 Transform::GetGlobalPos() const
 {
-	if (gameObject)
-		if (gameObject->father)
-			return position + gameObject->father->GetGlobalPos();
+	float3 pos;
+	GetMatrix().Decompose(pos, Quat(), float3());
 
-		else return position;
+	return pos;
 }
 //-------------------------------------------------------------------------
 

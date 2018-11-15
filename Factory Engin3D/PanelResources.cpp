@@ -13,6 +13,23 @@ void ModuleImGui::CreateAssetsWindow(float2 scale)
 	}
 	DrawAssets(assetsHierarchy);
 
+	if (popUp)
+	{
+		ImGui::OpenPopup("FilePopup");
+		if (ImGui::BeginPopup("FilePopup"))
+		{
+			if (ImGui::MenuItem("Import"))
+			{
+				App->importer->DistributeFile("BakerHouse.fbx", true);
+				popUp = false;
+			}
+			if (ImGui::MenuItem("Close"))
+				popUp = false;
+			ImGui::EndPopup();
+		}
+	}
+
+
 	ImGui::End();
 }
 
@@ -30,10 +47,8 @@ void ModuleImGui::DrawAssets(AssetsHierarchy& assets)
 			ImGui::TreePop();
 		}
 
-		if (ImGui::IsItemClicked(App->input->GetMouseButton(SDL_BUTTON_RIGHT)))
-		{
-			App->importer->DistributeFile((char*)((*iter).file.data()),true);
-		}
+		if (ImGui::IsItemClicked(1))
+			popUp = true;
 	}
 }
 
