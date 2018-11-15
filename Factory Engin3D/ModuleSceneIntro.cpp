@@ -125,7 +125,7 @@ void ModuleSceneIntro::GuizmoUpdate()
 				saveTransform = false;
 				octree.ReDoOctree(AABB(), true);
 			}
-			lastMat = transformObject->GetGlobalMatrix();
+			lastMat = transformObject->GetLocalMatrix();
 		}
 	}
 }
@@ -171,7 +171,7 @@ void ModuleSceneIntro::MoveGO(math::float4x4 &globalMatrix, GameObject* transfor
 void ModuleSceneIntro::SaveLastTransform(float4x4 matrix)
 {
 	LastTransform prevTrans;
-	if (prevTransforms.empty() || App->geometry->currentGameObject->GetGlobalMatrix().ptr() != prevTransforms.top().matrix.ptr())
+	if (prevTransforms.empty() || App->geometry->currentGameObject->GetLocalMatrix().ptr() != prevTransforms.top().matrix.ptr())
 	{
 		prevTrans.matrix = matrix;
 		prevTrans.object = App->geometry->currentGameObject;
