@@ -89,7 +89,11 @@ MeshNode ModuleGeometry::LoadMeshBuffer(const aiScene* scene, uint index, char* 
 
 			//App->importer->DistributeFile(textName.data);
 
-			tempBuffer.textureId = LoadTexture(textName.data);
+			string texturePath(textName.data);
+
+			texturePath = texturePath.substr(texturePath.find_last_of("\\") + 1);
+		
+			tempBuffer.textureId = LoadTexture((char*)string("Assets\\textures\\" + texturePath).data());
 			tempBuffer.hasTexture = true;
 		}
 	}
@@ -740,7 +744,7 @@ void ModuleGeometry::Draww(GameObject* object)
 
 void ModuleGeometry::LoadDefaultScene()
 {
-	App->importer->DistributeFile("assets\\textures\\Baker_house.png");
+	//App->importer->DistributeFile("assets\\textures\\Baker_house.png");
 	App->importer->DistributeFile("assets\\models\\Street.fbx");
 
 	plane = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->rootGameObject, "Ground");
