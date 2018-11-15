@@ -53,6 +53,10 @@ public:
 
 	MeshBuffer* LoadBufferGPU(char * buffer, int id = 0);
 
+	vector<MeshBuffer*> LoadMeshImporterUUID(const vector<uint>& nodes);
+
+	MeshBuffer* LoadBufferGPU(char * buffer, int id = 0);
+
 	GameObject* LoadGameObjectsFromMeshNode(MeshNode node, GameObject * father);
 
 	GameObject * LoadEmptyGameObjectsFromMeshNode(MeshNode node, GameObject * father);

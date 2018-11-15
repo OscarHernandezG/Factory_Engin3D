@@ -143,7 +143,6 @@ void ModuleGameObject::LoadScene()
 		}
 	}
 }
-
 void ModuleGameObject::SetGOMeshNewScene(Mesh * itMesh, std::list<GameObject *>::iterator &it)
 {
 	bool found = false;

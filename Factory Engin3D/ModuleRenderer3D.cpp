@@ -394,7 +394,6 @@ void ModuleRenderer3D::DebugDraw()
 		else
 			DrawQuad(corners, Red);
 	}
-
 	if (App->geometry->currentGameObject)
 		if (!App->geometry->currentGameObject->GetObjectStatic())
 		{

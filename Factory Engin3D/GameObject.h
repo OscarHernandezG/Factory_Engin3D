@@ -34,7 +34,6 @@ public:
 	inline void Delete() { toDelete = true;	}
 
 	bool SetParent(GameObject* parent);
-
 //Create from json
 //----------------------------------------------------------------
 	void CreateFromJson(JSON_Object* info, std::vector<uint>& meshesToLoad);
@@ -50,8 +49,7 @@ public:
 	void RemoveComponent(Component* component);
 	// Get
 	Component* GetComponent(ComponentType type);
-
-	std::list<Component*> GetAllComponent(ComponentType type);
+	list<Component*> GetAllComponent(ComponentType type);
 
 	bool HasComponent(ComponentType type);
 //----------------------------------------------------------------
@@ -66,7 +64,6 @@ public:
 	float3 GetPos() const;
 	float3 GetGlobalPos() const;
 //----------------------------------------------------------------
-
 
 // Scale
 //----------------------------------------------------------------
@@ -91,13 +88,11 @@ public:
 	Quat GetGlobalRotation() const;
 //----------------------------------------------------------------
 
-
 // Transform
 //----------------------------------------------------------------
 	void SetTransform(float4x4 transform);
 	void SetIdentity();
 //----------------------------------------------------------------
-
 
 // AABB
 //----------------------------------------------------------------
