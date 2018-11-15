@@ -37,7 +37,7 @@ void ModuleImporter::DistributeFile(char* file, bool needPath)
 			GetFullPath(filePath, LlibraryType_MESH);
 		App->geometry->UpdateMesh(filePath.data());
 	}
-	else if (!extension.compare("png") || !extension.compare("dds") || !extension.compare("jpg") || !extension.compare("jpeg"))
+	else if (!extension.compare("png") || !extension.compare("dds") || !extension.compare("jpg") || !extension.compare("jpeg") || !extension.compare("tga"))
 	{
 		if (needPath)
 			GetFullPath(filePath, LlibraryType_TEXTURE);
@@ -69,7 +69,7 @@ void ModuleImporter::GetFullPath(string& file, LlibraryType type)
 
 	fullPath.append(file);
 
-	file = (char*)fullPath.data();
+	file = fullPath.data();
 }
 
 

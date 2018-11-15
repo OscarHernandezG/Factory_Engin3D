@@ -25,7 +25,7 @@ public:
 	bool Init();
 
 	void DistributeFile(char * file, bool needPath = false);
-	void GetFullPath(string& file, LlibraryType type);
+	void GetFullPath(std::string& file, LlibraryType type);
 
 	void SaveFile(const char * path, uint size, char* outputFile, LlibraryType type, uint uuid = 0);
 

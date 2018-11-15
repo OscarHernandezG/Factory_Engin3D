@@ -15,6 +15,14 @@ struct aiScene;
 struct aiNode;
 struct MeshBuffer;
 
+struct Textures
+{
+	std::string path;
+	uint id = 0;
+
+	uint textureId = 0;
+};
+
 class ModuleGeometry : public Module
 {
 public:
@@ -31,7 +39,7 @@ public:
 
 	bool CleanUp();
 
-	MeshNode LoadMeshBuffer(const aiScene * scene, uint index, char* path);
+	MeshNode LoadMeshBuffer(const aiScene * scene, uint index);
 
 	void LoadMeshTextureCoords(MeshBuffer &buffer, aiMesh* newMesh);
 
@@ -39,15 +47,17 @@ public:
 
 	void LoadMeshVertex(MeshBuffer &buffer, aiMesh* newMesh);
 
-	MeshNode LoadMeshNode(const aiScene* scene, aiNode* node, char* path);
+	MeshNode LoadMeshNode(const aiScene * scene, aiNode * node);
 
 	float4x4 AiNatrixToFloatMat(const aiMatrix4x4 &aiMat);
 
-	MeshNode LoadMesh(char* path);
+	MeshNode LoadMesh(const char* path);
 
 	void SaveMeshImporter(MeshBuffer newCurrentBuffer, const char * path, uint uuid);
 
-	std::vector<MeshBuffer*> LoadMeshImporter(const char * path, const std::vector<MeshNode>& nodes);
+	void LoadMeshImporter(const char * path, const std::vector<MeshNode>& nodes, std::vector<MeshBuffer*>& buffer);
+
+	void LoadTextureImporter(std::vector<Textures>& nodes, std::vector<Textures>& textures);
 
 	std::vector<MeshBuffer*> LoadMeshImporterUUID(const std::vector<uint>& nodes);
 
@@ -57,7 +67,7 @@ public:
 
 	GameObject * LoadEmptyGameObjectsFromMeshNode(MeshNode node, GameObject * father);
 
-	void UpdateMesh(char * path);
+	void UpdateMesh(const char * path);
 
 	void SaveGameObjectJson(GameObject* object, JSON_Object* parent);
 
@@ -87,7 +97,9 @@ public:
 	std::vector<MeshNode> nodes;
 	std::vector<MeshBuffer*> loadedMeshes;
 
-	uint textureID = 0u;
+	std::vector<Textures> texturesToLoad;
+	std::vector<Textures> loadedTextures;
+
 	uint numFaces = 0u;
 
 	char* droppedFileDir = nullptr;

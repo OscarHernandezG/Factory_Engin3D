@@ -2,12 +2,11 @@
 #define __Mesh_H__
 
 #include "MathGeoLib/MathGeoLib.h"
-#include "Geometries.h"
+#include "Geometry.h"
 
 #include "Globals.h"
 
 #include <list>
-#include "MathGeoLib/Geometry/AABB.h"
 
 template <typename T>
 struct Buffer
@@ -22,6 +21,7 @@ struct MeshBuffer
 	Buffer<uint> index;
 	Buffer<float> vertex;
 	Buffer<float> texture;
+	Buffer<float> color;
 
 	AABB boundingBox;
 
@@ -47,6 +47,12 @@ struct MeshNode
 	std::list<MeshNode> childs;
 
 	float4x4 transform;
+
+	bool hasTexture = false;
+	int textureId = 0;
+
+	bool hasColor = false;
+	float4 color = float4::zero;
 
 	bool operator ==(MeshNode node2)
 	{
@@ -78,6 +84,9 @@ public:
 
 public:
 	MeshBuffer* buffer = nullptr;
+
+	bool hasColor = false;
+	float4 color = float4::zero;
 
 	int meshId;
 };

@@ -58,7 +58,7 @@ bool ModuleGeometry::CleanUp()
 	return true;
 }
 
-MeshNode ModuleGeometry::LoadMeshBuffer(const aiScene* scene, uint index, char* path)
+MeshNode ModuleGeometry::LoadMeshBuffer(const aiScene* scene, uint index)
 {
 	MeshNode tempBuffer;
 
@@ -76,12 +76,36 @@ MeshNode ModuleGeometry::LoadMeshBuffer(const aiScene* scene, uint index, char* 
 	if (newMesh->HasTextureCoords(0))
 	{
 		LoadMeshTextureCoords(tempBuffer.buffer, newMesh);
+
 	}
 
+	if (scene->HasMaterials())
+	{
+		aiMaterial* material = scene->mMaterials[newMesh->mMaterialIndex];
+	
+		if (material)
+		{
+			aiString textName;
+			material->GetTexture(aiTextureType_DIFFUSE, 0, &textName);
+
+			string texturePath(textName.data);
+			uint uuid = pcg32_random();
+			texturesToLoad.push_back({ texturePath.substr(texturePath.find_last_of("\\") + 1), newMesh->mMaterialIndex });
+		
+			tempBuffer.textureId = newMesh->mMaterialIndex;
+			tempBuffer.hasTexture = true;
+		};
+	}
+
+	if (newMesh->GetNumColorChannels() > 0)
+		if (newMesh->HasVertexColors(0))
+		{
+			tempBuffer.buffer.color.size = tempBuffer.buffer.vertex.size * 4;
+			tempBuffer.buffer.color.buffer = new float[tempBuffer.buffer.color.size];
+			memcpy(tempBuffer.buffer.color.buffer, newMesh->mColors[0], sizeof(float) * tempBuffer.buffer.color.size);
+		}
 	tempBuffer.id = index;
 	tempBuffer.componentUUID = pcg32_random();
-
-	//SaveMeshImporter(tempBuffer.buffer, path, tempBuffer.componentUUID);
 
 	tempBuffer.buffer.boundingBox = LoadBoundingBox(tempBuffer.buffer.vertex);
 
@@ -127,18 +151,18 @@ void ModuleGeometry::LoadMeshVertex(MeshBuffer &buffer, aiMesh * newMesh)
 	LOG("New mesh loaded with %d vertices", buffer.vertex.size);
 }
 
-MeshNode ModuleGeometry::LoadMeshNode(const aiScene* scene, aiNode* node, char* path)
+MeshNode ModuleGeometry::LoadMeshNode(const aiScene* scene, aiNode* node)
 {
 	MeshNode meshNode;
 
 	if (node->mNumMeshes > 0)
 	{
-		MeshNode currMeshBuff = LoadMeshBuffer(scene, node->mMeshes[0], path);
+		MeshNode currMeshBuff = LoadMeshBuffer(scene, node->mMeshes[0]);
 		meshNode = currMeshBuff;
 	}
 	for (int child = 0; child < node->mNumChildren; ++child)
 	{
-		meshNode.childs.push_back(LoadMeshNode(scene, node->mChildren[child], path));
+		meshNode.childs.push_back(LoadMeshNode(scene, node->mChildren[child]));
 	}
 	
 	meshNode.transform = AiNatrixToFloatMat(node->mTransformation);
@@ -158,18 +182,18 @@ float4x4 ModuleGeometry::AiNatrixToFloatMat(const aiMatrix4x4 & aiMat)
 	return mat;
 }
 
-MeshNode ModuleGeometry::LoadMesh(char* path)
+MeshNode ModuleGeometry::LoadMesh(const char* path)
 {
 	MeshNode meshRoot;
 	if (path != nullptr)
 	{
-		char* filePath = path;
+		const char* filePath = path;
 		const aiScene* scene = aiImportFile(filePath, aiProcessPreset_TargetRealtime_MaxQuality);
 
 		if (scene != nullptr)
 		{
 			if (scene->HasMeshes())
-				meshRoot = LoadMeshNode(scene, scene->mRootNode, path);
+				meshRoot = LoadMeshNode(scene, scene->mRootNode);
 
 			aiReleaseImport(scene);
 		}
@@ -183,7 +207,7 @@ MeshNode ModuleGeometry::LoadMesh(char* path)
 
 void ModuleGeometry::SaveMeshImporter(MeshBuffer newCurrentBuffer, const char* path, uint uuid)
 {
-	uint ranges[3] = { newCurrentBuffer.index.size, newCurrentBuffer.vertex.size, newCurrentBuffer.texture.size};
+	uint ranges[4] = { newCurrentBuffer.index.size, newCurrentBuffer.vertex.size, newCurrentBuffer.texture.size, newCurrentBuffer.color.size};
 
 	string;
 
@@ -191,6 +215,8 @@ void ModuleGeometry::SaveMeshImporter(MeshBuffer newCurrentBuffer, const char* p
 
 	if(newCurrentBuffer.texture.buffer != nullptr)
 		size += sizeof(float) * newCurrentBuffer.texture.size * 2;
+	if (newCurrentBuffer.color.buffer != nullptr)
+		size += sizeof(float) * newCurrentBuffer.color.size * 4;
 
 	char* exporter = new char[size];
 	char* cursor = exporter;
@@ -212,16 +238,22 @@ void ModuleGeometry::SaveMeshImporter(MeshBuffer newCurrentBuffer, const char* p
 		bytes = sizeof(float)* newCurrentBuffer.texture.size;
 		memcpy(cursor, newCurrentBuffer.texture.buffer, bytes);
 	}
+
+	if (newCurrentBuffer.color.buffer != nullptr)
+	{
+		cursor += bytes;
+		bytes = sizeof(float)* newCurrentBuffer.color.size;
+		memcpy(cursor, newCurrentBuffer.color.buffer, bytes);
+	}
+
 	App->importer->SaveFile(path, size, exporter, LlibraryType_MESH, uuid);
 	
 	delete[] exporter;
 }
 
-vector<MeshBuffer*> ModuleGeometry::LoadMeshImporter(const char* path, const vector<MeshNode>& nodes)
+void ModuleGeometry::LoadMeshImporter(const char* path, const vector<MeshNode>& nodes, vector<MeshBuffer*>& buffers)
 {
 	char* buffer = nullptr;
-	vector<MeshBuffer*> buffers;
-
 	for (vector<MeshNode>::const_iterator iterator = nodes.begin(); iterator != nodes.end(); ++iterator)
 	{
 		int i = (*iterator).id;
@@ -236,7 +268,25 @@ vector<MeshBuffer*> ModuleGeometry::LoadMeshImporter(const char* path, const vec
 			buffers.push_back(curr);
 		}
 	}
-	return buffers;
+}
+
+void ModuleGeometry::LoadTextureImporter(vector<Textures>& nodes, vector<Textures>& textures)
+{
+	char* buffer = nullptr;
+	for (vector<Textures>::iterator iterator = nodes.begin(); iterator != nodes.end(); ++iterator)
+	{
+		string path("Assets\\textures\\");
+		string name((*iterator).path);
+		path.append(name);
+
+		uint textureId = LoadTexture((char*)path.data());
+
+		if (textureId > 0)
+		{
+			(*iterator).id = textureId;
+			textures.push_back(*iterator);
+		}
+	}
 }
 
 vector<MeshBuffer*> ModuleGeometry::LoadMeshImporterUUID(const vector<uint>& nodes)
@@ -266,7 +316,7 @@ MeshBuffer* ModuleGeometry::LoadBufferGPU(char * buffer, int id)
 
 	bufferImporter->id = id;
 
-	uint ranges[3];
+	uint ranges[4];
 
 	uint bytes = sizeof(ranges);
 	memcpy(ranges, cursor, bytes);
@@ -274,7 +324,9 @@ MeshBuffer* ModuleGeometry::LoadBufferGPU(char * buffer, int id)
 	bufferImporter->index.size = ranges[0];
 	bufferImporter->vertex.size = ranges[1];
 	bufferImporter->texture.size = ranges[2];
+	bufferImporter->color.size = ranges[3];
 
+	// Index
 	cursor += bytes;
 	bytes = sizeof(uint)* bufferImporter->index.size;
 	bufferImporter->index.buffer = new uint[bufferImporter->index.size];
@@ -284,6 +336,7 @@ MeshBuffer* ModuleGeometry::LoadBufferGPU(char * buffer, int id)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferImporter->index.id);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * bufferImporter->index.size, bufferImporter->index.buffer, GL_STATIC_DRAW);
 
+	// Vertex
 	cursor += bytes;
 	bytes = sizeof(float)* bufferImporter->vertex.size;
 	bufferImporter->vertex.buffer = new float[bufferImporter->vertex.size];
@@ -293,6 +346,7 @@ MeshBuffer* ModuleGeometry::LoadBufferGPU(char * buffer, int id)
 	glBindBuffer(GL_ARRAY_BUFFER, bufferImporter->vertex.id);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * bufferImporter->vertex.size, bufferImporter->vertex.buffer, GL_STATIC_DRAW);
 
+	//Texture
 	cursor += bytes;
 	bytes = sizeof(float)* bufferImporter->texture.size;
 	bufferImporter->texture.buffer = new float[bufferImporter->texture.size];
@@ -302,6 +356,18 @@ MeshBuffer* ModuleGeometry::LoadBufferGPU(char * buffer, int id)
 	glBindBuffer(GL_ARRAY_BUFFER, bufferImporter->texture.id);
 	glBufferData(GL_ARRAY_BUFFER, bufferImporter->texture.size * sizeof(float), bufferImporter->texture.buffer, GL_STATIC_DRAW);
 
+	// Color
+	cursor += bytes;
+	bytes = sizeof(float)* bufferImporter->color.size;
+	bufferImporter->color.buffer = new float[bufferImporter->color.size];
+	memcpy(bufferImporter->color.buffer, cursor, bytes);
+
+	glGenBuffers(1, &bufferImporter->color.id);
+	glBindBuffer(GL_ARRAY_BUFFER, bufferImporter->color.id);
+	glBufferData(GL_ARRAY_BUFFER, bufferImporter->color.size * sizeof(float), bufferImporter->color.buffer, GL_STATIC_DRAW);
+
+
+	// Clear buffers
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
@@ -328,19 +394,29 @@ GameObject* ModuleGeometry::LoadGameObjectsFromMeshNode(MeshNode node, GameObjec
 			{
 				Mesh* currMesh = new Mesh(newGameObject);
 
+				currMesh->hasColor = node.hasColor;
+				currMesh->color = node.color;
+
 				currMesh->buffer = (*currentMeshBuffer);
 				currMesh->SetUUID((*currentMeshBuffer)->uuid);
 				GeometryInfo info(currMesh);
 				newGameObject->AddComponent(ComponentType_GEOMETRY, &info);
 				App->sceneIntro->octree.Insert(newGameObject);
-
-				TextureyInfo textureInfo;
-				textureInfo.textureId = textureID;
-				newGameObject->AddComponent(ComponentType_TEXTURE, &textureInfo);
-
 				break;
 			}
 	}
+
+
+	if (node.hasTexture)
+		for (vector<Textures>::iterator currentTexture = loadedTextures.begin(); currentTexture != loadedTextures.end(); ++currentTexture)
+		{
+			if ((*currentTexture).id == node.textureId)
+			{
+				TextureInfo textureInfo;
+				textureInfo.textureId = (*currentTexture).textureId;
+				newGameObject->AddComponent(ComponentType_TEXTURE, &textureInfo);
+			}
+		}
 
 	for (list<MeshNode>::iterator childs = node.childs.begin(); childs != node.childs.end(); ++childs)
 	{
@@ -357,7 +433,6 @@ GameObject* ModuleGeometry::LoadEmptyGameObjectsFromMeshNode(MeshNode node, Game
 	GameObject* newGameObject = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, father, node.name.data());
 	newGameObject->SetTransform(node.transform);
 	newGameObject->SetABB((node.buffer).boundingBox);
-
 
 
 	vector<MeshNode>::iterator currentMeshBuffer;
@@ -385,7 +460,7 @@ GameObject* ModuleGeometry::LoadEmptyGameObjectsFromMeshNode(MeshNode node, Game
 }
 
 
-void ModuleGeometry::UpdateMesh(char* path)
+void ModuleGeometry::UpdateMesh(const char* path)
 {
 	MeshNode tempMesh = LoadMesh(path);
 	
@@ -399,16 +474,16 @@ void ModuleGeometry::UpdateMesh(char* path)
 	JSON_Value* rootValue = json_value_init_object();
 	JSON_Object* rootObject = json_value_get_object(rootValue);
 
-	SaveGameObjectJson(tempGO, rootObject);
+	//SaveGameObjectJson(tempGO, rootObject);
 
 	tempGO->Delete();
 
-	int sizeBuf = json_serialization_size_pretty(rootValue);
-	char* buf = new char[sizeBuf];
-	json_serialize_to_buffer_pretty(rootValue, buf, sizeBuf);
-	App->importer->SaveFile("tempGO", sizeBuf, buf, LlibraryType::LlibraryType_MESH);
-	delete[] buf;
-	json_value_free(rootValue);
+	//int sizeBuf = json_serialization_size_pretty(rootValue);
+	//char* buf = new char[sizeBuf];
+	//json_serialize_to_buffer_pretty(rootValue, buf, sizeBuf);
+	//App->importer->SaveFile("tempGO", sizeBuf, buf, LlibraryType::LlibraryType_MESH);
+	//delete[] buf;
+	//json_value_free(rootValue);
 
 	sort(nodes.begin(), nodes.end());
 	nodes.erase(unique(nodes.begin(), nodes.end()), nodes.end());
@@ -418,11 +493,13 @@ void ModuleGeometry::UpdateMesh(char* path)
 		SaveMeshImporter((*iterator).buffer, path, (*iterator).componentUUID);
 	}
 
+	LoadMeshImporter(path, nodes, loadedMeshes);
 
-	vector<MeshBuffer*> tempVec = LoadMeshImporter(path, nodes);
-	loadedMeshes.insert(loadedMeshes.end(), tempVec.begin(), tempVec.end());
+	//LoadTextureImporter(texturesToLoad, loadedTextures);
 
 	GameObject* newGameObject = LoadGameObjectsFromMeshNode(tempMesh, App->gameObject->rootGameObject);
+
+	texturesToLoad.clear();
 
 	currentGameObject = newGameObject;
 	bHouse = newGameObject;
@@ -616,13 +693,13 @@ uint ModuleGeometry::LoadTexture(char* path) const
 		else
 		{
 			isSuccess = false;
-			LOG("Image conversion error %s", iluErrorString(ilGetError()));
+			LOG("Image conversion error, %s", iluErrorString(ilGetError()));
 		}
 	}
 	else
 	{
 		isSuccess = false;
-		LOG("Error loading texture %s", iluErrorString(ilGetError()));
+		LOG("Error loading texture, %s", iluErrorString(ilGetError()));
 	}
 
 	ilDeleteImages(1, &newTextureID);
@@ -638,11 +715,11 @@ void ModuleGeometry::UpdateTexture(char* path)
 	uint tempTexture = LoadTexture(path);
 	if (tempTexture != 0)
 	{
-		if (textureID != 0)
-		{
-			glDeleteTextures(1, &textureID);
-		}
-		textureID = tempTexture;
+	//	if (textureID != 0)
+	//	{
+	//		glDeleteTextures(1, &textureID);
+	//	}
+	//	textureID = tempTexture;
 	}
 }
 
@@ -693,7 +770,7 @@ void ModuleGeometry::Draww(GameObject* object)
 
 void ModuleGeometry::LoadDefaultScene()
 {
-	App->importer->DistributeFile("assets\\textures\\Baker_house.png");
+	//App->importer->DistributeFile("assets\\textures\\Baker_house.png");
 	App->importer->DistributeFile("assets\\models\\Street.fbx");
 
 	GameObject* cameraObject = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->rootGameObject, "Camera");
