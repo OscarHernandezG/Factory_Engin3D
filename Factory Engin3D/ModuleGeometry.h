@@ -85,9 +85,9 @@ public:
 
 	//Geometry* LoadPrimitive(PrimitiveTypes type);
 
-	uint LoadTexture(char* path) const;
+	uint LoadTexture(const char* path) const;
 
-	void UpdateTexture(char* path);
+	void UpdateTexture(const char* path);
 
 	Camera* GetPlayingCamera() const;
 public:

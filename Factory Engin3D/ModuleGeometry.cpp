@@ -94,7 +94,7 @@ MeshNode ModuleGeometry::LoadMeshBuffer(const aiScene* scene, uint index)
 		
 			tempBuffer.textureId = newMesh->mMaterialIndex;
 			tempBuffer.hasTexture = true;
-		};
+		}
 	}
 
 	if (newMesh->GetNumColorChannels() > 0)
@@ -644,7 +644,7 @@ void ModuleGeometry::Lower(float& val1, float val2)
 	val1 = val1 < val2 ? val1 : val2;
 }
 
-uint ModuleGeometry::LoadTexture(char* path) const
+uint ModuleGeometry::LoadTexture(const char* path) const
 {
 	bool isSuccess = true;
 	ILuint newTextureID = 0;
@@ -710,7 +710,7 @@ uint ModuleGeometry::LoadTexture(char* path) const
 	return opengGlTexture;
 }
 
-void ModuleGeometry::UpdateTexture(char* path)
+void ModuleGeometry::UpdateTexture(const char* path)
 {
 	uint tempTexture = LoadTexture(path);
 	if (tempTexture != 0)
@@ -770,7 +770,7 @@ void ModuleGeometry::Draww(GameObject* object)
 
 void ModuleGeometry::LoadDefaultScene()
 {
-	//App->importer->DistributeFile("assets\\textures\\Baker_house.png");
+	App->importer->DistributeFile("assets\\textures\\Baker_house.png");
 	App->importer->DistributeFile("assets\\models\\Street.fbx");
 
 	GameObject* cameraObject = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->rootGameObject, "Camera");
