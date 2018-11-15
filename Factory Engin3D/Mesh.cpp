@@ -33,6 +33,12 @@ void Mesh::InnerRender() const
 			}
 		}
 
+		if (buffer->color.buffer != nullptr)
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, buffer->color.id);
+			glColorPointer(4, GL_FLOAT, 0, NULL);
+		}
+
 		//Draw mesh
 		glDrawElements(GL_TRIANGLES, buffer->index.size, GL_UNSIGNED_INT, NULL);
 
@@ -40,8 +46,9 @@ void Mesh::InnerRender() const
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-		glBindTexture(GL_TEXTURE_2D, 0);
+		//glColor4f(1, 1, 1, 1);
 
+		glBindTexture(GL_TEXTURE_2D, 0);
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		glDisableClientState(GL_VERTEX_ARRAY);
 	}
