@@ -942,28 +942,28 @@ void ModuleImGui::CreateMeshesHeader()
 
 void ModuleImGui::CreateTextureHeader()
 {
-	if (App->geometry->textureID != 0)
-	{
-		Geometry* currentGeometry = (Geometry*)App->geometry->currentGameObject->GetComponent(ComponentType_GEOMETRY);
-		if (currentGeometry != nullptr)
-			if (currentGeometry->GetType() == PrimitiveTypes::Primitive_Mesh)
-			{
-				Mesh* mesh = (Mesh*)currentGeometry;
+	//if (App->geometry->textureID != 0)
+	//{
+	//	Geometry* currentGeometry = (Geometry*)App->geometry->currentGameObject->GetComponent(ComponentType_GEOMETRY);
+	//	if (currentGeometry != nullptr)
+	//		if (currentGeometry->GetType() == PrimitiveTypes::Primitive_Mesh)
+	//		{
+	//			Mesh* mesh = (Mesh*)currentGeometry;
 
-				ImGui::Text("Texture id: %i", App->geometry->textureID);
-				// TODO
-				//ImGui::Text("Texture used by %i meshes", mesh->buffers.size());
-				ImGui::Text("UV Preview");
-				ImGui::Separator();
-				ImGui::Image((void*)App->geometry->textureID, { 200,200 });
-				if (ImGui::Button("Remove Texture", { 125,25 }))
-				{
-					glDeleteTextures(1, &App->geometry->textureID);
-					App->geometry->textureID = 0;
-				}
-			}
-	}
-	else
+	//			ImGui::Text("Texture id: %i", App->geometry->textureID);
+	//			// TODO
+	//			//ImGui::Text("Texture used by %i meshes", mesh->buffers.size());
+	//			ImGui::Text("UV Preview");
+	//			ImGui::Separator();
+	//			ImGui::Image((void*)App->geometry->textureID, { 200,200 });
+	//			if (ImGui::Button("Remove Texture", { 125,25 }))
+	//			{
+	//				glDeleteTextures(1, &App->geometry->textureID);
+	//				App->geometry->textureID = 0;
+	//			}
+	//		}
+	//}
+	//else
 	{
 		ImGui::TextWrapped("There isn't any texture");
 	}

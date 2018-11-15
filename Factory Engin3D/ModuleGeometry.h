@@ -13,6 +13,14 @@ struct aiMesh;
 struct aiScene;
 struct aiNode;
 
+struct Textures
+{
+	std::string path;
+	uint id = 0;
+
+	uint textureId = 0;
+};
+
 class ModuleGeometry : public Module
 {
 public:
@@ -45,7 +53,9 @@ public:
 
 	void SaveMeshImporter(MeshBuffer newCurrentBuffer, const char * path, uint uuid);
 
-	vector<MeshBuffer*> LoadMeshImporter(const char * path, const vector<MeshNode>& nodes);
+	void LoadMeshImporter(const char * path, const vector<MeshNode>& nodes, vector<MeshBuffer*>& buffer);
+
+	void LoadTextureImporter(vector<Textures>& nodes, vector<Textures>& textures);
 
 	vector<MeshBuffer*> LoadMeshImporterUUID(const vector<uint>& nodes);
 
@@ -81,10 +91,12 @@ public:
 	GameObject* currentGameObject = nullptr;
 	GameObject* bHouse = nullptr;
 
-	vector<MeshNode> nodes;
-	vector<MeshBuffer*> loadedMeshes;
+	std::vector<MeshNode> nodes;
+	std::vector<MeshBuffer*> loadedMeshes;
 
-	uint textureID = 0u;
+	std::vector<Textures> texturesToLoad;
+	std::vector<Textures> loadedTextures;
+
 	uint numFaces = 0u;
 
 	char* droppedFileDir = nullptr;
