@@ -47,7 +47,7 @@ public:
 	Octree octree;
 	
 	float4x4 lastMat;
-	stack<LastTransform> prevTransforms;
+	std::stack<LastTransform> prevTransforms;
 	bool saveTransform = false;
 	bool isSnap = false;
 	float3 snap = float3::two;
