@@ -159,6 +159,7 @@ public:
 
 	//Hierarchy Panel
 	bool popHierarchy = false;
+	GameObject* parentObject = nullptr;
 
 	//--------------------------
 	// Window position

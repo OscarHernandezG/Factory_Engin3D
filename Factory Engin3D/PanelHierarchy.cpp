@@ -21,10 +21,17 @@ void ModuleImGui::CreateGameObjectHierarchy(float2 scale)
 	{
 		if (ImGui::MenuItem("GO"))
 		{
-			App->importer->DistributeFile(pathClicked.data(), true);
+			if(parentObject)
+				App->gameObject->CreateEmptyGameObject(parentObject, "Empty Object");
+			else
+				App->gameObject->CreateEmptyGameObject(App->gameObject->rootGameObject, "Empty Object");
 		}
 		ImGui::MenuItem("Close");
 		ImGui::EndPopup();
+	}
+	else if(parentObject)
+	{
+		parentObject = nullptr;
 	}
 }
 
@@ -54,6 +61,8 @@ void ModuleImGui::CreateGOTreeNode(GameObject* current)
 		for (std::list<GameObject*>::iterator childs = current->childs.begin(); childs != current->childs.end(); ++childs)
 		{
 			CreateGOTreeNode(*childs);
+			if(ImGui::IsItemClicked(1))
+				parentObject = *childs;
 		}
 		ImGui::TreePop();
 	}
