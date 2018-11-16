@@ -4,6 +4,8 @@
 
 #include "glew-2.1.0/include/GL/glew.h"
 
+#include "ResourceMesh.h"
+
 #include "Assimp/include/cimport.h"
 #include "Assimp/include/scene.h"
 #include "Assimp/include/postprocess.h"
@@ -14,10 +16,6 @@
 #include "DevIL/includex86/IL/ilut.h"
 
 #include <fstream>
-
-#pragma comment( lib, "DevIL/libx86/DevIL.lib" )
-#pragma comment( lib, "DevIL/libx86/ILU.lib" )
-#pragma comment( lib, "DevIL/libx86/ILUT.lib" )
 
 #include "GameObject.h"
 #include "Texture.h"
@@ -115,7 +113,7 @@ MeshNode ModuleGeometry::LoadMeshBuffer(const aiScene* scene, uint index, char* 
 	return tempBuffer;
 }
 
-void ModuleGeometry::LoadMeshTextureCoords(MeshBuffer &buffer, aiMesh * newMesh)
+void ModuleGeometry::LoadMeshTextureCoords(ResourceMesh& buffer, aiMesh * newMesh)
 {
 	buffer.texture.size = newMesh->mNumVertices * 2;
 	buffer.texture.buffer = new float[buffer.texture.size];
@@ -125,7 +123,7 @@ void ModuleGeometry::LoadMeshTextureCoords(MeshBuffer &buffer, aiMesh * newMesh)
 	}
 }
 
-void ModuleGeometry::LoadMeshIndex(aiMesh * newMesh, MeshBuffer &buffer)
+void ModuleGeometry::LoadMeshIndex(aiMesh * newMesh, ResourceMesh& buffer)
 {
 	numFaces += newMesh->mNumFaces;
 	buffer.index.size = newMesh->mNumFaces * 3;
@@ -143,7 +141,7 @@ void ModuleGeometry::LoadMeshIndex(aiMesh * newMesh, MeshBuffer &buffer)
 	}
 }
 
-void ModuleGeometry::LoadMeshVertex(MeshBuffer &buffer, aiMesh * newMesh)
+void ModuleGeometry::LoadMeshVertex(ResourceMesh& buffer, aiMesh * newMesh)
 {
 	buffer.vertex.size = newMesh->mNumVertices * 3;
 	buffer.vertex.buffer = new float[buffer.vertex.size];
@@ -211,7 +209,7 @@ MeshNode ModuleGeometry::LoadMesh(char* path)
 	return meshRoot;
 }
 
-void ModuleGeometry::SaveMeshImporter(MeshBuffer newCurrentBuffer, const char* path, uint uuid)
+void ModuleGeometry::SaveMeshImporter(ResourceMesh newCurrentBuffer, const char* path, uint uuid)
 {
 	uint ranges[4] = { newCurrentBuffer.index.size, newCurrentBuffer.vertex.size, newCurrentBuffer.texture.size, newCurrentBuffer.color.size};
 
@@ -257,7 +255,7 @@ void ModuleGeometry::SaveMeshImporter(MeshBuffer newCurrentBuffer, const char* p
 	delete[] exporter;
 }
 
-void ModuleGeometry::LoadMeshImporter(const char* path, const vector<MeshNode>& nodes, vector<MeshBuffer*>& buffers)
+void ModuleGeometry::LoadMeshImporter(const char* path, const vector<MeshNode>& nodes, vector<ResourceMesh*>& buffers)
 {
 	char* buffer = nullptr;
 	for (vector<MeshNode>::const_iterator iterator = nodes.begin(); iterator != nodes.end(); ++iterator)
@@ -268,7 +266,7 @@ void ModuleGeometry::LoadMeshImporter(const char* path, const vector<MeshNode>& 
 
 		if (buffer != nullptr)
 		{
-			MeshBuffer* curr = LoadBufferGPU(buffer, i);
+			ResourceMesh* curr = LoadBufferGPU(buffer, i);
 
 			curr->uuid = (*iterator).componentUUID;
 			buffers.push_back(curr);
@@ -276,7 +274,7 @@ void ModuleGeometry::LoadMeshImporter(const char* path, const vector<MeshNode>& 
 	}
 }
 
-void ModuleGeometry::LoadTextureImporter(vector<Textures>& texturesToLoad, vector<Textures>& loadedTextures)
+void ModuleGeometry::LoadTextureImporter(vector<Textures>& texturesToLoad)
 {
 	char* buffer = nullptr;
 	for (vector<Textures>::iterator iterator = texturesToLoad.begin(); iterator != texturesToLoad.end(); ++iterator)
@@ -285,20 +283,19 @@ void ModuleGeometry::LoadTextureImporter(vector<Textures>& texturesToLoad, vecto
 		string name((*iterator).path);
 		path.append(name);
 
-		uint textureId = LoadTexture((char*)path.data());
+		ResourceTexture* textureId = App->resources->LoadTexture((char*)path.data());
 
-		if (textureId > 0)
-		{
-			(*iterator).textureId = textureId;
-			loadedTextures.push_back(*iterator);
-		}
+		if (!(textureId->GetID() > 0))
+			LOG("Warning, texture not loaded");
+
+		(*iterator).texture = textureId;
 	}
 }
 
-vector<MeshBuffer*> ModuleGeometry::LoadMeshImporterUUID(const vector<uint>& nodes)
+vector<ResourceMesh*> ModuleGeometry::LoadMeshImporterUUID(const vector<uint>& nodes)
 {
 	char* buffer = nullptr;
-	vector<MeshBuffer*> buffers;
+	vector<ResourceMesh*> buffers;
 
 	for (vector<uint>::const_iterator iterator = nodes.begin(); iterator != nodes.end(); ++iterator)
 	{
@@ -306,7 +303,7 @@ vector<MeshBuffer*> ModuleGeometry::LoadMeshImporterUUID(const vector<uint>& nod
 
 		if (buffer != nullptr)
 		{
-			MeshBuffer* curr = LoadBufferGPU(buffer);
+			ResourceMesh* curr = LoadBufferGPU(buffer);
 			curr->uuid = *iterator;
 
 			buffers.push_back(curr);
@@ -315,9 +312,9 @@ vector<MeshBuffer*> ModuleGeometry::LoadMeshImporterUUID(const vector<uint>& nod
 	return buffers;
 }
 
-MeshBuffer* ModuleGeometry::LoadBufferGPU(char * buffer, int id)
+ResourceMesh* ModuleGeometry::LoadBufferGPU(char * buffer, int id)
 {
-	MeshBuffer* bufferImporter = new MeshBuffer();
+	ResourceMesh* bufferImporter = new ResourceMesh(nullptr);
 	char* cursor = buffer;
 
 	bufferImporter->id = id;
@@ -392,7 +389,7 @@ GameObject* ModuleGeometry::LoadGameObjectsFromMeshNode(MeshNode node, GameObjec
 
 	// TODO remove and use the vector
 
-	vector<MeshBuffer*>::iterator currentMeshBuffer;
+	vector<ResourceMesh*>::iterator currentMeshBuffer;
 	for (currentMeshBuffer = loadedMeshes.begin(); currentMeshBuffer != loadedMeshes.end(); ++currentMeshBuffer)
 	{
 		if (node.id >= 0)
@@ -419,7 +416,7 @@ GameObject* ModuleGeometry::LoadGameObjectsFromMeshNode(MeshNode node, GameObjec
 			if ((*currentTexture).id == node.textureId)
 			{
 				TextureInfo textureInfo;
-				textureInfo.textureId = (*currentTexture).textureId;
+				textureInfo.texture = (*currentTexture).texture;
 				newGameObject->AddComponent(ComponentType_TEXTURE, &textureInfo);
 			}
 		}
@@ -470,26 +467,14 @@ void ModuleGeometry::UpdateMesh(char* path)
 {
 	MeshNode tempMesh = LoadMesh(path);
 	
-	// This GO is the one we have to save in the scene
 	GameObject* tempGO = LoadEmptyGameObjectsFromMeshNode(tempMesh, App->gameObject->rootGameObject);
 
 
-	// Save scene in json and use the info to load the new gameObject
-	// TODO: check the UUID from the gameobject, we have to save the uuid in the scene file (components too?)
-	//std::sort(loadedMeshes.begin(), loadedMeshes.end());
 	JSON_Value* rootValue = json_value_init_object();
 	JSON_Object* rootObject = json_value_get_object(rootValue);
 
-	//SaveGameObjectJson(tempGO, rootObject);
 
 	tempGO->Delete();
-
-	//int sizeBuf = json_serialization_size_pretty(rootValue);
-	//char* buf = new char[sizeBuf];
-	//json_serialize_to_buffer_pretty(rootValue, buf, sizeBuf);
-	//App->importer->SaveFile("tempGO", sizeBuf, buf, LlibraryType::LlibraryType_MESH);
-	//delete[] buf;
-	//json_value_free(rootValue);
 
 	sort(nodes.begin(), nodes.end());
 	nodes.erase(unique(nodes.begin(), nodes.end()), nodes.end());
@@ -501,15 +486,13 @@ void ModuleGeometry::UpdateMesh(char* path)
 	}
 
 	LoadMeshImporter(path, nodes, loadedMeshes);
-	LoadTextureImporter(texturesToLoad, loadedTextures);
+	LoadTextureImporter(texturesToLoad);
 
 	GameObject* newGameObject = LoadGameObjectsFromMeshNode(tempMesh, App->gameObject->rootGameObject);
 
 	texturesToLoad.clear();
 
 	currentGameObject = newGameObject;
-	bHouse = newGameObject;
-
 }
 
 void ModuleGeometry::SaveGameObjectJson(GameObject* object, JSON_Object* parent)
@@ -650,76 +633,12 @@ void ModuleGeometry::Lower(float& val1, float val2)
 	val1 = val1 < val2 ? val1 : val2;
 }
 
-uint ModuleGeometry::LoadTexture(char* path) const
-{
-	bool isSuccess = true;
-	ILuint newTextureID = 0;
-	uint opengGlTexture = 0u;
-	ilGenImages(1, &newTextureID);
-	ilBindImage(newTextureID);
 
-	if ((bool)ilLoadImage(path))
-	{
-		ilEnable(IL_FILE_OVERWRITE);
-
-		ILuint size;
-		ILubyte *data;
-
-		ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);
-		size = ilSaveL(IL_DDS, NULL, 0);
-		if (size > 0) {
-			data = new ILubyte[size];
-			if (ilSaveL(IL_DDS, data, size) > 0)
-				App->importer->SaveFile(path, size, (char*)data, LlibraryType_TEXTURE);
-		}
-
-		ILinfo info;
-		iluGetImageInfo(&info);
-		if (info.Origin == IL_ORIGIN_UPPER_LEFT)
-		{
-			iluFlipImage();
-		}
-
-		if (ilConvertImage(IL_RGB, IL_UNSIGNED_BYTE))
-		{
-			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-			glGenTextures(1, &opengGlTexture);
-			glBindTexture(GL_TEXTURE_2D, opengGlTexture);
-
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-			glTexImage2D(GL_TEXTURE_2D, 0, ilGetInteger(IL_IMAGE_FORMAT), ilGetInteger(IL_IMAGE_WIDTH), ilGetInteger(IL_IMAGE_HEIGHT),
-				0, ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE, ilGetData());
-		}
-		else
-		{
-			isSuccess = false;
-			LOG("Image conversion error, %s", iluErrorString(ilGetError()));
-		}
-	}
-	else
-	{
-		isSuccess = false;
-		LOG("Error loading texture, %s", iluErrorString(ilGetError()));
-	}
-
-	ilDeleteImages(1, &newTextureID);
-
-	if (!isSuccess)
-		opengGlTexture = 0;
-
-	return opengGlTexture;
-}
 
 void ModuleGeometry::UpdateTexture(char* path)
 {
-	uint tempTexture = LoadTexture(path);
-	if (tempTexture != 0)
+	//uint tempTexture = App->resources->LoadTexture(path);
+	//if (tempTexture != 0)
 	{
 	//	if (textureID != 0)
 	//	{
@@ -746,27 +665,11 @@ update_status ModuleGeometry::PostUpdate()
 
 void ModuleGeometry::ClearLoadedMeshes()
 {
-	for (vector<MeshBuffer*>::iterator it = App->geometry->loadedMeshes.begin(); it != App->geometry->loadedMeshes.end(); ++it)
+	for (vector<ResourceMesh*>::iterator it = App->geometry->loadedMeshes.begin(); it != App->geometry->loadedMeshes.end(); ++it)
 	{
 		delete *it;
 	}
 	App->geometry->loadedMeshes.clear();
-}
-
-void ModuleGeometry::Draww(GameObject* object)
-{
-	assert(object);
-
-	for (list<GameObject*>::iterator it = object->childs.begin(); it != object->childs.end(); ++it)
-	{
-		Draww(*it);
-	}
-
-	Mesh* mesh = (Mesh*)(*object).GetComponent(ComponentType_GEOMETRY);
-	if (mesh)
-	{
-		mesh->Render();
-	}
 }
 
 void ModuleGeometry::LoadDefaultScene()

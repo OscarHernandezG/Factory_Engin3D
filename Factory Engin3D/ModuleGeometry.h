@@ -9,6 +9,8 @@
 
 #include <vector>
 
+#include "Resource.h"
+
 struct aiMesh;
 struct aiScene;
 struct aiNode;
@@ -18,7 +20,7 @@ struct Textures
 	std::string path;
 	uint id = 0;
 
-	uint textureId = 0;
+	ResourceTexture* texture = nullptr;
 };
 
 class ModuleGeometry : public Module
@@ -33,17 +35,15 @@ public:
 
 	void ClearLoadedMeshes();
 
-	void Draww(GameObject * object);
-
 	bool CleanUp();
 
 	MeshNode LoadMeshBuffer(const aiScene * scene, uint index, char* path);
 
-	void LoadMeshTextureCoords(MeshBuffer &buffer, aiMesh* newMesh);
+	void LoadMeshTextureCoords(ResourceMesh& buffer, aiMesh* newMesh);
 
-	void LoadMeshIndex(aiMesh* newMesh, MeshBuffer &buffer);
+	void LoadMeshIndex(aiMesh* newMesh, ResourceMesh& buffer);
 
-	void LoadMeshVertex(MeshBuffer &buffer, aiMesh* newMesh);
+	void LoadMeshVertex(ResourceMesh& buffer, aiMesh* newMesh);
 
 	MeshNode LoadMeshNode(const aiScene* scene, aiNode* node, char* path);
 
@@ -51,15 +51,15 @@ public:
 
 	MeshNode LoadMesh(char* path);
 
-	void SaveMeshImporter(MeshBuffer newCurrentBuffer, const char * path, uint uuid);
+	void SaveMeshImporter(ResourceMesh newCurrentBuffer, const char * path, uint uuid);
 
-	void LoadMeshImporter(const char * path, const vector<MeshNode>& nodes, vector<MeshBuffer*>& buffer);
+	void LoadMeshImporter(const char * path, const vector<MeshNode>& nodes, vector<ResourceMesh*>& buffer);
 
-	void LoadTextureImporter(vector<Textures>& nodes, vector<Textures>& textures);
+	void LoadTextureImporter(vector<Textures>& texturesToLoad);
 
-	vector<MeshBuffer*> LoadMeshImporterUUID(const vector<uint>& nodes);
+	vector<ResourceMesh*> LoadMeshImporterUUID(const vector<uint>& nodes);
 
-	MeshBuffer* LoadBufferGPU(char * buffer, int id = 0);
+	ResourceMesh* LoadBufferGPU(char * buffer, int id = 0);
 
 	GameObject* LoadGameObjectsFromMeshNode(MeshNode node, GameObject * father);
 
@@ -83,19 +83,15 @@ public:
 
 	//Geometry* LoadPrimitive(PrimitiveTypes type);
 
-	uint LoadTexture(char* path) const;
-
 	void UpdateTexture(char* path);
 
 public:
 	GameObject* currentGameObject = nullptr;
-	GameObject* bHouse = nullptr;
 
 	std::vector<MeshNode> nodes;
-	std::vector<MeshBuffer*> loadedMeshes;
+	std::vector<ResourceMesh*> loadedMeshes;
 
 	std::vector<Textures> texturesToLoad;
-	std::vector<Textures> loadedTextures;
 
 	uint numFaces = 0u;
 
