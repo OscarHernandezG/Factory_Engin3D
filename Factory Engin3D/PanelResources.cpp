@@ -1,16 +1,18 @@
 #include "Application.h"
 #include "ModuleImGui.h"
+#include "imgui-1.65/imgui_dock.h"
 
 void ModuleImGui::CreateAssetsWindow(float2 scale)
 {
-	ImGui::Begin("Assets", &canScroll, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
-	SetWindowDim(configurationPos, configurationSize, scale);
+	ImGui::BeginDock("Assets");
 
-	if (contRefresh.ReadSec() >= 1)
-	{
-		RefreshAssets(".\\Assets\\");
-		contRefresh.Start();
-	}
+		//SetWindowDim(configurationPos, configurationSize, scale);
+
+		if (contRefresh.ReadSec() >= 1)
+		{
+			RefreshAssets(".\\Assets\\");
+			contRefresh.Start();
+		}
 	DrawAssets(assetsHierarchy);
 
 	if (popUp)
@@ -18,19 +20,20 @@ void ModuleImGui::CreateAssetsWindow(float2 scale)
 		ImGui::OpenPopup("FilePopup");
 		if (ImGui::BeginPopup("FilePopup"))
 		{
-			if (ImGui::MenuItem("Import"))
+			if (ImGui::MenuItem("Load"))
 			{
-				App->importer->DistributeFile("BakerHouse.fbx", true);
+				App->importer->DistributeFile(pathClicked.data(), true);
 				popUp = false;
 			}
 			if (ImGui::MenuItem("Close"))
 				popUp = false;
 			ImGui::EndPopup();
 		}
+		if ((ImGui::IsMouseClicked(0) || ImGui::IsMouseClicked(1)) && !ImGui::IsAnyItemHovered())
+			popUp = false;
 	}
 
-
-	ImGui::End();
+	ImGui::EndDock();
 }
 
 void ModuleImGui::DrawAssets(AssetsHierarchy& assets)
@@ -41,14 +44,17 @@ void ModuleImGui::DrawAssets(AssetsHierarchy& assets)
 		if ((*iter).childFiles.empty())
 			flag = ImGuiTreeNodeFlags_Leaf;
 
-		if (ImGui::TreeNodeEx((*iter).file.data(),flag))
+		if (ImGui::TreeNodeEx((*iter).file.data(), flag))
 		{
 			DrawAssets(*iter);
 			ImGui::TreePop();
 		}
 
 		if (ImGui::IsItemClicked(1))
+		{
 			popUp = true;
+			pathClicked = (*iter).file.data();
+		}
 	}
 }
 

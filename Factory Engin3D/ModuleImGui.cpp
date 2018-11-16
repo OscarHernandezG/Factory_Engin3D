@@ -4,6 +4,7 @@
 #include "imgui-1.65/imgui_impl_sdl.h"
 #include "imgui-1.65/imgui_impl_opengl2.h"
 #include "imgui-1.65/imgui_internal.h"
+#include "imgui-1.65/imgui_dock.h"
 
 #include "MathGeoLib/Geometry/GeometryAll.h"
 
@@ -34,24 +35,25 @@ bool ModuleImGui::Start()
 	// Window position
 	aboutPos = float2(955.0f, 520.0f);
 	configurationPos = float2(355.0f, 575.0f);
-	transformPos = float2(955.0f, 315.0f);
+	transformPos = float2(958.0f, 18.0f);
 	consolePos = float2(0.0f, 575.0f);
-	scenePos = float2(0.0f, 225.0f);
+	scenePos = float2(0.0f, 18.0f);
 	playPos = float2(550.0f, 25.0f);
 	playCountPos = float2(-120.0f, 0.0f);
 	// Window sizes
 	aboutSize = float2(325.0f, 340.0f);
 	configurationSize = float2(600.0f, 287.0f);
-	transformSize = float2(325.0f, 206.0f);
+	transformSize = float2(323.0f, 852.0f);
 	consoleSize = float2(355.0f, 287.0f);
-	sceneSize = float2(295.0f, 354.0f);
+	sceneSize = float2(311.0f, 525.0f);
 	playSize = float2(185.0f, 40.0f);
 	playCountSize = float2(205.0f, 0.0f);
 	//--------------------------
 
+	ImGui::InitDock();
 	contRefresh.Start();
 	RefreshAssets(".\\Assets\\");
-
+	ImGui::DragBehaviorT
 	return ret;
 }
 
@@ -88,18 +90,26 @@ update_status ModuleImGui::PreUpdate()
 	if (configurationWindow)
 		CreateConfigWindow(scale);
 
-	if (consoleWindow)
-		CreateConsole(scale);
-
 	if (transformWindow)
 		CreateTransform(scale);
 
 	if (hierarchyWindow)
 		CreateGameObjectHierarchy(scale);
 
-	CreateGameManager(scale);
+//------------------
+	if (ImGui::Begin("-.-", &configurationWindow, ImGuiWindowFlags_NoTitleBar))
+	{
+		ImGui::BeginDockspace();
+		if (consoleWindow)
+			CreateConsole(scale);
 
-	CreateAssetsWindow(scale);
+		CreateAssetsWindow(scale);
+		ImGui::EndDockspace();
+	}
+		ImGui::End();
+//------------------
+
+		CreateGameManager(scale);
 
 	status = CreateMainMenuBar();
 

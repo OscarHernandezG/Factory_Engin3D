@@ -87,6 +87,7 @@
     <ClInclude Include="DevIL\includex86\IL\ilu_region.h" />
     <ClInclude Include="DevIL\includex86\IL\il_wrap.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="imgui-1.65\imgui_dock.h" />
     <ClInclude Include="ImGuizmo\ImGuizmo.h" />
     <ClInclude Include="ModuleGameObject.h" />
     <ClInclude Include="Geometries.h" />
@@ -189,6 +190,7 @@
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Globals.cpp" />
+    <ClCompile Include="imgui-1.65\imgui_dock.cpp" />
     <ClCompile Include="ImGuizmo\ImGuizmo.cpp" />
     <ClCompile Include="ModuleGameObject.cpp" />
     <ClCompile Include="imgui-1.65\imgui.cpp" />

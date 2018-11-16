@@ -1,8 +1,6 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleImGui.h"
-#include "ModuleWindow.h"
-#include "ModuleResources.h"
 
 void ModuleImGui::CreateTransform(float2 scale)
 {

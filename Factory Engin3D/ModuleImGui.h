@@ -106,6 +106,7 @@ public:
 	bool consoleWindow = false;
 	bool transformWindow = false;
 	bool hierarchyWindow = true;
+	bool assetsWindow = true;
 	bool exitOption = false;
 
 
@@ -154,6 +155,7 @@ public:
 	AssetsHierarchy assetsHierarchy;
 	Timer contRefresh;
 	bool popUp = false;
+	std::string pathClicked;
 
 	//--------------------------
 	// Window position
