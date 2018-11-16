@@ -14,6 +14,18 @@ void ModuleImGui::CreateGameObjectHierarchy(float2 scale)
 	}
 	ImGui::End();
 
+	if (ImGui::IsMouseClicked(1) && !popHierarchy)
+		ImGui::OpenPopup("GameObjectsPop");
+	
+	if (popHierarchy = ImGui::BeginPopup("GameObjectsPop"))
+	{
+		if (ImGui::MenuItem("GO"))
+		{
+			App->importer->DistributeFile(pathClicked.data(), true);
+		}
+		ImGui::MenuItem("Close");
+		ImGui::EndPopup();
+	}
 }
 
 void ModuleImGui::CreateGOTreeNode(GameObject* current)

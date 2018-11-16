@@ -26,7 +26,7 @@ void ModuleImGui::CreateGameManager(float2 scale)
 		{
 			if (App->time->gameState == GameState_PLAYING)
 				App->time->gameState = GameState_PAUSE;
-			else
+			else if(App->time->gameState != GameState_NONE)
 				App->time->gameState = GameState_PLAYING;
 		}
 		ImGui::SameLine();

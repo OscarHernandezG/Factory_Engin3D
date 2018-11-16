@@ -154,8 +154,11 @@ public:
 	//Resource Panel
 	AssetsHierarchy assetsHierarchy;
 	Timer contRefresh;
-	bool popUp = false;
+	bool popRecource = false;
 	std::string pathClicked;
+
+	//Hierarchy Panel
+	bool popHierarchy = false;
 
 	//--------------------------
 	// Window position

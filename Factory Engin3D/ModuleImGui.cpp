@@ -53,7 +53,6 @@ bool ModuleImGui::Start()
 	ImGui::InitDock();
 	contRefresh.Start();
 	RefreshAssets(".\\Assets\\");
-	ImGui::DragBehaviorT
 	return ret;
 }
 

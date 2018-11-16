@@ -6,34 +6,34 @@ void ModuleImGui::CreateAssetsWindow(float2 scale)
 {
 	ImGui::BeginDock("Assets");
 
-		//SetWindowDim(configurationPos, configurationSize, scale);
+	//SetWindowDim(configurationPos, configurationSize, scale);
 
-		if (contRefresh.ReadSec() >= 1)
-		{
-			RefreshAssets(".\\Assets\\");
-			contRefresh.Start();
-		}
+	if (contRefresh.ReadSec() >= 1)
+	{
+		RefreshAssets(".\\Assets\\");
+		contRefresh.Start();
+	}
 	DrawAssets(assetsHierarchy);
 
-	if (popUp)
+	if (popRecource)
 	{
-		ImGui::OpenPopup("FilePopup");
-		if (ImGui::BeginPopup("FilePopup"))
-		{
-			if (ImGui::MenuItem("Load"))
-			{
-				App->importer->DistributeFile(pathClicked.data(), true);
-				popUp = false;
-			}
-			if (ImGui::MenuItem("Close"))
-				popUp = false;
-			ImGui::EndPopup();
-		}
-		if ((ImGui::IsMouseClicked(0) || ImGui::IsMouseClicked(1)) && !ImGui::IsAnyItemHovered())
-			popUp = false;
+		ImGui::OpenPopup("AssetsPopup");
+		popRecource = false;
 	}
-
+	if (ImGui::BeginPopup("AssetsPopup"))
+	{
+		if (ImGui::MenuItem("Load"))
+		{
+			App->importer->DistributeFile(pathClicked.data(), true);
+			pathClicked.clear();
+		}
+		ImGui::MenuItem("Close");
+		ImGui::EndPopup();
+	}
 	ImGui::EndDock();
+
+	if (ImGui::IsMouseClicked(1) || ImGui::IsMouseClicked(0))
+		ImGui::CloseCurrentPopup();
 }
 
 void ModuleImGui::DrawAssets(AssetsHierarchy& assets)
@@ -52,8 +52,8 @@ void ModuleImGui::DrawAssets(AssetsHierarchy& assets)
 
 		if (ImGui::IsItemClicked(1))
 		{
-			popUp = true;
 			pathClicked = (*iter).file.data();
+			popRecource = true;
 		}
 	}
 }
