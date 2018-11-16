@@ -23,13 +23,16 @@ void Mesh::InnerRender() const
 			if (buffer->texture.buffer != nullptr && buffer->texture.size > 0)
 			{
 				Texture* texture = (Texture*)gameObject->GetComponent(ComponentType_TEXTURE);
-				//Load Texture UV
-				glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-				glBindBuffer(GL_ARRAY_BUFFER, buffer->texture.id);
-				glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+				if (texture != nullptr)
+				{
+					//Load Texture UV
+					glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+					glBindBuffer(GL_ARRAY_BUFFER, buffer->texture.id);
+					glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
-				//Load texture
-				glBindTexture(GL_TEXTURE_2D, texture->GetID());
+					//Load texture
+					glBindTexture(GL_TEXTURE_2D, texture->GetID());
+				}
 			}
 		}
 

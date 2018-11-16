@@ -51,7 +51,7 @@ public:
 
 	uint componentUUID = 0;
 
-	ResourceMesh* buffer;
+	ResourceMesh buffer;
 	std::list<MeshNode> childs;
 
 	float4x4 transform;
