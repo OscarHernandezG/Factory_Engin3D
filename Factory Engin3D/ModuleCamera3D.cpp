@@ -45,6 +45,12 @@ update_status ModuleCamera3D::Update()
 {
 	float speed = cameraSpeed * App->time->Getdt();
 
+	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_DOWN)
+	{
+		isCameraFocused = true;
+		cameraMovementButton = MouseButton_Left;
+	}
+
 	if (!App->gui->IsAnyWindowHovered())
 	{
 		if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)	speed *= 2.0f;
@@ -90,12 +96,6 @@ update_status ModuleCamera3D::Update()
 			// We do not use dt to zoom with the mouse wheel, the speed at which the mouse wheel rotates is independent of the fps
 			// The movement of the mouse wheel is not a "KEY_REPEAT" every frame but a "KEY_DOWN" occasionally
 			cameraComponent->frustum.pos += cameraComponent->frustum.front * wheel * cameraSpeed;
-		}
-
-		if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_DOWN)
-		{
-			isCameraFocused = true;
-			cameraMovementButton = MouseButton_Left;
 		}
 
 
