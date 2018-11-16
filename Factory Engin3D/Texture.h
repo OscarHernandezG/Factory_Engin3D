@@ -17,7 +17,7 @@ public:
 	Texture(GameObject* gameObject, TextureInfo* info);
 	~Texture() {}
 
-	inline uint GetID() { return texture->GetID(); }
+	inline uint GetID() { if (texture) return texture->GetID(); else return 0u; }
 
 private:
 	ResourceTexture* texture = nullptr;
