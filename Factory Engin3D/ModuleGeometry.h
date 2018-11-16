@@ -10,6 +10,8 @@
 #include <vector>
 
 #include "Resource.h"
+#include "ResourceMesh.h"
+#include "ResourceTexture.h"
 
 struct aiMesh;
 struct aiScene;
@@ -20,7 +22,7 @@ struct Textures
 	std::string path;
 	uint id = 0;
 
-	ResourceTexture* texture = nullptr;
+	ResourceTexture* textureResource = nullptr;
 };
 
 class ModuleGeometry : public Module
@@ -32,8 +34,6 @@ public:
 	bool Start();
 	void LoadDefaultScene();
 	update_status PostUpdate();
-
-	void ClearLoadedMeshes();
 
 	bool CleanUp();
 
@@ -59,7 +59,7 @@ public:
 
 	vector<ResourceMesh*> LoadMeshImporterUUID(const vector<uint>& nodes);
 
-	ResourceMesh* LoadBufferGPU(char * buffer, int id = 0);
+	//ResourceMesh* LoadBufferGPU(char * buffer, int id = 0);
 
 	GameObject* LoadGameObjectsFromMeshNode(MeshNode node, GameObject * father);
 
@@ -89,7 +89,7 @@ public:
 	GameObject* currentGameObject = nullptr;
 
 	std::vector<MeshNode> nodes;
-	std::vector<ResourceMesh*> loadedMeshes;
+	std::vector<ResourceMesh*> currentMeshes;
 
 	std::vector<Textures> texturesToLoad;
 
