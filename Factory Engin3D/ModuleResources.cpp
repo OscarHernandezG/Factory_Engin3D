@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleResources.h"
 
+#include "glew-2.1.0/include/GL/glew.h"
 
 #pragma comment( lib, "DevIL/libx86/DevIL.lib" )
 #pragma comment( lib, "DevIL/libx86/ILU.lib" )
@@ -98,6 +99,111 @@ Resource* ModuleResources::FindLoadedResource(const char* path, ResourceType typ
 	return nullptr;
 }
 
+ResourceMesh* ModuleResources::LoadMesh(uint name)
+{
+	char* buffer = App->importer->LoadFile("", LlibraryType_MESH, name);
+	ResourceMesh* mesh = nullptr;
+
+	if (buffer)
+	{
+		string assetName = std::to_string(name).data();
+		assetName += ".fty";
+
+		FindLoadedResource(assetName.data(), ResourceType::mesh);
+
+		if (RealLoadMesh(buffer, mesh, assetName.data()));
+			mesh->uuid = name;
+	}
+
+	return mesh;
+}
+
+bool ModuleResources::RealLoadMesh(char* buffer, ResourceMesh*& mesh, const char* name)
+{
+	ResourceMesh* bufferImporter = new ResourceMesh(name);
+	char* cursor = buffer;
+
+	uint ranges[4];
+
+	uint bytes = sizeof(ranges);
+	memcpy(ranges, cursor, bytes);
+
+	bufferImporter->index.size = ranges[0];
+	bufferImporter->vertex.size = ranges[1];
+	bufferImporter->texture.size = ranges[2];
+	bufferImporter->color.size = ranges[3];
+
+	// Index
+	LoadIndexGPU(cursor, bytes, bufferImporter);
+
+	// Vertex
+	LoadVertexGPU(cursor, bytes, bufferImporter);
+
+	//Texture UV
+	LoadTextureUVGPU(cursor, bytes, bufferImporter);
+
+	// Color
+	LoadColorGPU(cursor, bytes, bufferImporter);
+
+
+	// Clear buffers
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	mesh = bufferImporter;
+	
+	delete buffer;
+
+	return (bufferImporter != nullptr);
+}
+
+void ModuleResources::LoadColorGPU(char * &cursor, uint &bytes, ResourceMesh * bufferImporter)
+{
+	cursor += bytes;
+	bytes = sizeof(float)* bufferImporter->color.size;
+	bufferImporter->color.buffer = new float[bufferImporter->color.size];
+	memcpy(bufferImporter->color.buffer, cursor, bytes);
+
+	glGenBuffers(1, &bufferImporter->color.id);
+	glBindBuffer(GL_ARRAY_BUFFER, bufferImporter->color.id);
+	glBufferData(GL_ARRAY_BUFFER, bufferImporter->color.size * sizeof(float), bufferImporter->color.buffer, GL_STATIC_DRAW);
+}
+
+void ModuleResources::LoadTextureUVGPU(char * &cursor, uint &bytes, ResourceMesh * bufferImporter)
+{
+	cursor += bytes;
+	bytes = sizeof(float)* bufferImporter->texture.size;
+	bufferImporter->texture.buffer = new float[bufferImporter->texture.size];
+	memcpy(bufferImporter->texture.buffer, cursor, bytes);
+
+	glGenBuffers(1, &bufferImporter->texture.id);
+	glBindBuffer(GL_ARRAY_BUFFER, bufferImporter->texture.id);
+	glBufferData(GL_ARRAY_BUFFER, bufferImporter->texture.size * sizeof(float), bufferImporter->texture.buffer, GL_STATIC_DRAW);
+}
+
+void ModuleResources::LoadVertexGPU(char * &cursor, uint &bytes, ResourceMesh * bufferImporter)
+{
+	cursor += bytes;
+	bytes = sizeof(float)* bufferImporter->vertex.size;
+	bufferImporter->vertex.buffer = new float[bufferImporter->vertex.size];
+	memcpy(bufferImporter->vertex.buffer, cursor, bytes);
+
+	glGenBuffers(1, (GLuint*)&(bufferImporter->vertex.id));
+	glBindBuffer(GL_ARRAY_BUFFER, bufferImporter->vertex.id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * bufferImporter->vertex.size, bufferImporter->vertex.buffer, GL_STATIC_DRAW);
+}
+
+void ModuleResources::LoadIndexGPU(char * &cursor, uint &bytes, ResourceMesh * bufferImporter)
+{
+	cursor += bytes;
+	bytes = sizeof(uint)* bufferImporter->index.size;
+	bufferImporter->index.buffer = new uint[bufferImporter->index.size];
+	memcpy(bufferImporter->index.buffer, cursor, bytes);
+
+	glGenBuffers(1, (GLuint*)&(bufferImporter->index.id));
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferImporter->index.id);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * bufferImporter->index.size, bufferImporter->index.buffer, GL_STATIC_DRAW);
+}
 
 ResourceTexture* ModuleResources::LoadTexture(char* path)
 {
