@@ -3,6 +3,12 @@
 
 #include "Module.h"
 
+#include "Resource.h"
+
+#include "ResourceTexture.h"
+#include "ResourceMesh.h"
+
+
 class ModuleResources: public Module
 {
 public:
@@ -15,7 +21,16 @@ public:
 
 	bool ExistFile(const char* path);
 	vector<string> ReadFolder(const char * path);
-private:
 
+	Resource* FindLoadedResource(const char* path, ResourceType type);
+
+	ResourceTexture* LoadTexture(char * path);
+
+
+private:
+	bool RealLoadTexture(char* path, uint &opengGlTexture);
+
+public:
+	std::list<Resource*> resources;
 };
 #endif // !__ModuleResource__H
