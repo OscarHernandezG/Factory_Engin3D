@@ -72,6 +72,26 @@ void Mesh::ClearMesh()
 
 	delete buffer->index.buffer;
 	delete buffer->vertex.buffer;
-	//		delete (*iterator).texture.buffer;
+	delete buffer->texture.buffer;
 }
 
+
+
+
+// ------------------------------------------------------------------------------
+// Mesh Node
+// ------------------------------------------------------------------------------
+bool MeshNode::operator==(const MeshNode& node2) const
+{
+	return (this->id == node2.id);
+}
+
+bool MeshNode::operator!=(const MeshNode& node2) const
+{
+	return !(this->id == node2.id);
+}
+
+bool MeshNode::operator<(const MeshNode& node2) const
+{
+	return (this->id < node2.id);
+}

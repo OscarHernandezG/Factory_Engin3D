@@ -1,73 +1,13 @@
 #ifndef __Mesh_H__
 #define __Mesh_H__
 
-#include "MathGeoLib/MathGeoLib.h"
-#include "Geometry.h"
-
 #include "Globals.h"
 
-#include <list>
+#include "MathGeoLib/Math/float4.h"
+#include "Geometry.h"
 
-template <typename T>
-struct Buffer
-{
-	uint id = 0u;
-	uint size = 0u;
-	T* buffer = nullptr;
-};
+#include "ResourceMesh.h"
 
-struct MeshBuffer
-{
-	Buffer<uint> index;
-	Buffer<float> vertex;
-	Buffer<float> texture;
-	Buffer<float> color;
-
-	AABB boundingBox;
-
-	int id = -1;
-
-	uint uuid = 0;
-
-	bool operator ==(MeshBuffer* mesh2)
-	{
-		return (this->id == mesh2->id);
-	}
-};
-
-struct MeshNode
-{
-	std::string name;
-	
-	int id = -1;
-
-	uint componentUUID = 0;
-	
-	MeshBuffer buffer;
-	std::list<MeshNode> childs;
-
-	float4x4 transform;
-
-	bool hasTexture = false;
-	int textureId = 0;
-
-	bool hasColor = false;
-	float4 color = float4::zero;
-
-	bool operator ==(MeshNode node2)
-	{
-		return (this->id == node2.id);
-	}
-	bool operator !=(MeshNode node2)
-	{
-		return !(this->id == node2.id);
-	}
-
-	bool operator <(MeshNode node2)
-	{
-		return (this->id < node2.id);
-	}
-};
 
 class Mesh :public Geometry
 {
@@ -83,11 +23,46 @@ public:
 	void ClearMesh();
 
 public:
-	MeshBuffer* buffer = nullptr;
+	ResourceMesh* buffer = nullptr;
 
 	bool hasColor = false;
 	float4 color = float4::zero;
 
 	int meshId;
 };
+
+
+class MeshNode
+{
+public:
+	MeshNode() {}
+	~MeshNode() {}
+
+	bool operator==(const MeshNode& node2) const;
+
+	bool operator!=(const MeshNode& node2) const;
+
+	bool operator<(const MeshNode& node2) const;
+
+public:
+	std::string name;
+
+	int id = -1;
+
+	uint componentUUID = 0;
+
+	ResourceMesh* buffer;
+	std::list<MeshNode> childs;
+
+	float4x4 transform;
+
+	bool hasTexture = false;
+	int textureId = 0;
+
+	bool hasColor = false;
+	float4 color = float4::zero;
+
+
+};
+
 #endif // !__Mesh_H__
