@@ -3,11 +3,12 @@
 
 #include "Component.h"
 #include "GameObject.h"
+#include "ResourceTexture.h"
 
 
 struct TextureInfo : ComponentInfo
 {
-	uint textureId = 0;
+	ResourceTexture* texture = nullptr;
 };
 
 class Texture : Component
@@ -16,9 +17,10 @@ public:
 	Texture(GameObject* gameObject, TextureInfo* info);
 	~Texture() {}
 
-	inline uint GetID() { return id; }
+	inline uint GetID() { return texture->GetID(); }
 
 private:
-	uint id = 0;
+	ResourceTexture* texture = nullptr;
+
 };
 #endif // !__Texture_H__

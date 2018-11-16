@@ -2,5 +2,5 @@
 
 Texture::Texture(GameObject* gameObject, TextureInfo* info) : Component(gameObject)
 {
-	this->id = info->textureId;
+	this->texture  = info->texture;
 }
