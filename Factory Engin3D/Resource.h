@@ -11,6 +11,7 @@ enum ResourceType
 class Resource
 {
 public:
+	Resource() {}
 	Resource(ResourceType type, const char* path);
 	~Resource();
 

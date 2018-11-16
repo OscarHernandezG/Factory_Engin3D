@@ -23,6 +23,7 @@ struct Buffer
 class ResourceMesh : public Resource
 {
 public:
+	ResourceMesh() {}
 	ResourceMesh(const char* path);
 	~ResourceMesh();
 
