@@ -101,6 +101,8 @@ public:
 //----------------------------------------------------------------
 
 
+	void Inspector(bool dragTransform);
+
 	void SaveComponent(JSON_Object* parent);
 
 public:

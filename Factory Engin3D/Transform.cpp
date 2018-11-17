@@ -1,6 +1,8 @@
-#include "Transform.h"
+#include "Application.h"
 
+#include "Transform.h"
 #include "GameObject.h"
+
 
 Transform::Transform(TransformInfo* info) : Component(info->gameObject, ComponentType_TRANSFORM)
 {
@@ -179,6 +181,77 @@ float4x4 Transform::GetLocalMatrix() const
 }
 //-------------------------------------------------------------------------
 
+
+
+void Transform::Inspector(bool dragTransform)
+{
+	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+	float4x4 prevTransformMat = GetMatrix();
+		if (ImGui::DragFloat3("Position", &position[0]) && App->gameObject->CanTransform(gameObject)) {
+			if (dragTransform)
+			{
+				App->sceneIntro->SaveLastTransform(prevTransformMat);
+				dragTransform = false;
+			}
+			SetPos(position);
+			App->sceneIntro->octree.ReDoOctree(AABB(), true);
+		}
+
+		if (ImGui::DragFloat3("Scale", &scale[0]) && App->gameObject->CanTransform(gameObject))
+		{
+			if (dragTransform)
+			{
+				App->sceneIntro->SaveLastTransform(prevTransformMat);
+				dragTransform = false;
+			}
+			SetScale(scale);
+			App->sceneIntro->octree.ReDoOctree(AABB(), true);
+		}
+		float3 angles;
+		angles = rotation.ToEulerXYZ();
+
+		angles.x = math::RadToDeg(angles.x);
+		angles.y = math::RadToDeg(angles.y);
+		angles.z = math::RadToDeg(angles.z);
+
+		if (ImGui::DragFloat3("Rotation", angles.ptr()) && App->gameObject->CanTransform(gameObject))
+		{
+			if (dragTransform)
+			{
+				App->sceneIntro->SaveLastTransform(prevTransformMat);
+				dragTransform = false;
+			}
+			angles.x = math::DegToRad(angles.x);
+			angles.y = math::DegToRad(angles.y);
+			angles.z = math::DegToRad(angles.z);
+			SetRotation(Quat::FromEulerXYZ(angles.x, angles.y, angles.z));
+
+			App->sceneIntro->octree.ReDoOctree(AABB(), true);
+		}
+		else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP)
+			dragTransform = true;
+
+		if (ImGui::Button("Reset", ImVec2(100, 20)))
+		{
+			App->sceneIntro->SaveLastTransform(prevTransformMat);
+			gameObject->SetIdentity();
+			App->sceneIntro->octree.ReDoOctree(AABB(), true);
+		}
+
+		if (ImGui::RadioButton("None", App->sceneIntro->GetGuizOperation() == ImGuizmo::BOUNDS))
+			App->sceneIntro->SetGuizOperation(ImGuizmo::BOUNDS);
+		ImGui::SameLine();
+		if (ImGui::RadioButton("Move", App->sceneIntro->GetGuizOperation() == ImGuizmo::TRANSLATE))
+			App->sceneIntro->SetGuizOperation(ImGuizmo::TRANSLATE);
+		ImGui::SameLine();
+		if (ImGui::RadioButton("Scale", App->sceneIntro->GetGuizOperation() == ImGuizmo::SCALE))
+			App->sceneIntro->SetGuizOperation(ImGuizmo::SCALE);
+		ImGui::SameLine();
+		if (ImGui::RadioButton("Rotate", App->sceneIntro->GetGuizOperation() == ImGuizmo::ROTATE))
+			App->sceneIntro->SetGuizOperation(ImGuizmo::ROTATE);
+	}
+}
 
 
 void Transform::SaveComponent(JSON_Object * parent)
