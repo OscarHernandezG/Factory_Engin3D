@@ -148,6 +148,14 @@ bool ModuleRenderer3D::Start()
 	struct aiLogStream stream;
 	stream.callback = myCallback;
 	aiAttachLogStream(&stream);
+
+	if (App->time->gameState == GameState_NONE)
+		currentCam = App->camera->GetEditorCamera();
+	else if (App->time->gameState != GameState_TICK)
+	{
+		currentCam = App->geometry->GetPlayingCamera();
+		currentCam->UpdateFrustum();
+	}
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
@@ -163,13 +171,14 @@ update_status ModuleRenderer3D::PreUpdate()
 	//glLoadIdentity();
 
 	if (App->time->gameState == GameState_NONE)
-		currentCam = App->camera->SetEditorCamera();
+		currentCam = App->camera->GetEditorCamera();
 	else if (App->time->gameState != GameState_TICK)
 	{
 		currentCam = App->geometry->GetPlayingCamera();
 		currentCam->UpdateFrustum();
 	}
 	glMatrixMode(GL_MODELVIEW);
+	if (currentCam)
 	glLoadMatrixf(currentCam->GetViewMatrix().ptr());
 
 	// Light 0 on cam pos
@@ -320,8 +329,13 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	ProjectionMatrix = Perspective(60.0f, (float)width / (float)height, 0.125f, 512.0f);
-	glLoadMatrixf((GLfloat*)ProjectionMatrix.ptr());
+	//ProjectionMatrix = Perspective(60.0f, (float)width / (float)height, 0.125f, 512.0f);
+	if (currentCam)
+	{
+		currentCam->frustum.horizontalFov = 2.f * atan(tan(currentCam->frustum.verticalFov * 0.5f) * (float(width) / height));
+		glLoadMatrixf(currentCam->GetProjectionMatrix().ptr());
+	}
+
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -337,6 +351,9 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	//App->gui->ResizeImGui(size);
 
 	prevSize = currSize;
+
+	App->window->width = width;
+	App->window->height = height;
 }
 
 void ModuleRenderer3D::SetLightAmbient()
