@@ -17,10 +17,13 @@ public:
 	Texture(GameObject* gameObject, TextureInfo* info);
 	~Texture() {}
 
+	void Inspector();
+
 	inline uint GetID() { if (texture) return texture->GetID(); else return 0u; }
 
 private:
 	ResourceTexture* texture = nullptr;
 
+	std::string name;
 };
 #endif // !__Texture_H__
