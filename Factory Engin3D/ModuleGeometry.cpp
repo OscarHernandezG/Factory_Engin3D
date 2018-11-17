@@ -132,6 +132,13 @@ MeshNode ModuleGeometry::LoadMesh(const char* path)
 				texturesToLoad.clear();
 				texturesToLoad.resize(scene->mNumMaterials);
 				meshRoot = LoadMeshNode(scene, scene->mRootNode);
+
+				string rootName = path;
+
+				rootName = rootName.substr(rootName.find_last_of("\\") + 1); 
+				rootName = rootName.substr(0, rootName.size() - 4); // Remove the extension (.fbx, .obj)
+
+				meshRoot.name = rootName;
 			}
 			aiReleaseImport(scene);
 		}
@@ -476,7 +483,6 @@ void ModuleGeometry::LoadMeshImporterUUID(const vector<uint>& nodes, vector<Reso
 }
 
 
-
 // Bounding Box
 //----------------------------------------------------------------
 // Load
@@ -547,7 +553,7 @@ float3 ModuleGeometry::GetCurrentMeshPivot() const
 //----------------------------------------------------------------
 
 
-Camera * ModuleGeometry::GetPlayingCamera() const
+Camera* ModuleGeometry::GetPlayingCamera() const
 {
 	return playingCamera;
 }
