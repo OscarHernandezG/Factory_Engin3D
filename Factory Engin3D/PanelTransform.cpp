@@ -105,6 +105,12 @@ void ModuleImGui::CreateTransform(float2 scale)
 			if (ImGui::RadioButton("Rotate", App->sceneIntro->GetGuizOperation() == ImGuizmo::ROTATE))
 				App->sceneIntro->SetGuizOperation(ImGuizmo::ROTATE);
 		}
+		if (ImGui::Button("Remove", ImVec2(100, 20)))
+		{
+			DeleteGO(currObject);
+			App->geometry->currentGameObject = nullptr;
+		}
+
 	}
 	else {
 		ImGui::TextWrapped("There aren't any meshes");

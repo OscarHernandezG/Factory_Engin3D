@@ -10,15 +10,10 @@ void ModuleImGui::CreateGameManager(float2 scale)
 		if (ImGui::Button("Play", { 50,25 }))
 		{
 			if (App->time->gameState == GameState_NONE)
-			{
-				App->time->gameState = GameState_PLAYING;
-				App->gameObject->SaveBeforePlay();
-			}
+				ChangePlayState(false, GameState_PLAYING);
 			else
-			{
-				App->time->gameState = GameState_STOP;
-				App->gameObject->LoadAfterPlay();
-			}
+				ChangePlayState(true, GameState_STOP);
+
 		}
 		ImGui::SameLine();
 
@@ -52,5 +47,19 @@ void ModuleImGui::CreateGameManager(float2 scale)
 	}
 	ImGui::End();
 
+}
+
+void ModuleImGui::ChangePlayState(bool show, GameState state)
+{
+	assetsWindow = show;
+	hierarchyWindow = show;
+	App->time->gameState = state;
+
+	if (show)
+		App->gameObject->LoadAfterPlay();
+	
+	else
+		App->gameObject->SaveBeforePlay();
+	
 }
 

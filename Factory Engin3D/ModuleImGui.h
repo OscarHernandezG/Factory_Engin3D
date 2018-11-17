@@ -17,6 +17,7 @@ struct ImVec4;
 struct ExampleAppConsole;
 class GameObject;
 class Timer;
+enum GameState;
 
 struct AssetsHierarchy
 {
@@ -85,9 +86,12 @@ public:
 	//Panel Hierarchy
 	void CreateGameObjectHierarchy(float2 scale);
 	void CreateGOTreeNode(GameObject * current);
+	void DeleteGO(GameObject * &object);
 
 	//PanelTime
 	void CreateGameManager(float2 scale);
+
+	void ChangePlayState(bool show, GameState state);
 
 	//Panel Resources
 	void CreateAssetsWindow(float2 scale);
@@ -159,7 +163,7 @@ public:
 
 	//Hierarchy Panel
 	bool popHierarchy = false;
-	GameObject* parentObject = nullptr;
+	GameObject* objectSelected = nullptr;
 
 	//--------------------------
 	// Window position

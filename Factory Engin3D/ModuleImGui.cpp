@@ -96,16 +96,19 @@ update_status ModuleImGui::PreUpdate()
 		CreateGameObjectHierarchy(scale);
 
 //------------------
-	if (ImGui::Begin("-.-", &configurationWindow, ImGuiWindowFlags_NoTitleBar))
+	if (assetsWindow)
 	{
-		ImGui::BeginDockspace();
-		if (consoleWindow)
-			CreateConsole(scale);
+		if (ImGui::Begin("Dock windows", &assetsWindow, ImGuiWindowFlags_NoTitleBar))
+		{
+			ImGui::BeginDockspace();
+			if (consoleWindow)
+				CreateConsole(scale);
 
-		CreateAssetsWindow(scale);
-		ImGui::EndDockspace();
-	}
+			CreateAssetsWindow(scale);
+			ImGui::EndDockspace();
+		}
 		ImGui::End();
+	}
 //------------------
 
 		CreateGameManager(scale);

@@ -21,17 +21,23 @@ void ModuleImGui::CreateGameObjectHierarchy(float2 scale)
 	{
 		if (ImGui::MenuItem("GO"))
 		{
-			if(parentObject)
-				App->gameObject->CreateEmptyGameObject(parentObject, "Empty Object");
+			if(objectSelected)
+				App->gameObject->CreateEmptyGameObject(objectSelected, "Empty Object");
 			else
 				App->gameObject->CreateEmptyGameObject(App->gameObject->rootGameObject, "Empty Object");
 		}
+		if(objectSelected)
+			if (ImGui::MenuItem("Delete"))
+			{
+				DeleteGO(objectSelected);
+			}
+
 		ImGui::MenuItem("Close");
 		ImGui::EndPopup();
 	}
-	else if(parentObject)
+	else if(objectSelected)
 	{
-		parentObject = nullptr;
+		objectSelected = nullptr;
 	}
 }
 
@@ -50,7 +56,6 @@ void ModuleImGui::CreateGOTreeNode(GameObject* current)
 
 	sprintf_s(name, 80, "%s", sName.c_str());
 
-
 	if (ImGui::TreeNodeEx(name, flags))
 	{
 		if (ImGui::IsItemClicked(0))
@@ -62,8 +67,16 @@ void ModuleImGui::CreateGOTreeNode(GameObject* current)
 		{
 			CreateGOTreeNode(*childs);
 			if(ImGui::IsItemClicked(1))
-				parentObject = *childs;
+				objectSelected = *childs;
 		}
 		ImGui::TreePop();
 	}
+}
+
+void ModuleImGui::DeleteGO(GameObject* &object)
+{
+	if (App->time->gameState == GameState_NONE)
+		object->Delete();
+	else
+		object->SetActive(false);
 }
