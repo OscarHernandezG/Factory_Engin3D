@@ -617,9 +617,6 @@
     <ClCompile Include="PanelResources.cpp">
       <Filter>Sources\Modules\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="PanelTransform.cpp">
-      <Filter>Sources\Modules\ImGui</Filter>
-    </ClCompile>
     <ClCompile Include="PanelTime.cpp">
       <Filter>Sources\Modules\ImGui</Filter>
     </ClCompile>
@@ -631,6 +628,9 @@
     </ClCompile>
     <ClCompile Include="ResourceTexture.cpp">
       <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="PanelInspector.cpp">
+      <Filter>Sources\Modules\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

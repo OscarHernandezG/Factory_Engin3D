@@ -3,6 +3,7 @@
 #include "ModuleImGui.h"
 #include "ModuleWindow.h"
 #include "ModuleResources.h"
+
 void ModuleImGui::CreateInspector(float2 scale)
 {
 	ImGui::Begin("Inspector", &inspectorWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
@@ -34,8 +35,10 @@ void ModuleImGui::CreateInspector(float2 scale)
 			App->sceneIntro->octree.ReDoOctree(AABB(), true);
 		}
 
-		if (currObject->transform)
-			currObject->transform->Inspector(dragTransform);
+		for (std::list<Component*>::iterator comp = currObject->components.begin(); comp != currObject->components.end(); ++comp)
+		{
+			(*comp)->Inspector();
+		}
 
 	}
 	else {

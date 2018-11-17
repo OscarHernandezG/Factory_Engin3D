@@ -249,7 +249,7 @@
     <ClCompile Include="PanelConfiguration.cpp" />
     <ClCompile Include="PanelConsole.cpp" />
     <ClCompile Include="PanelHierarchy.cpp" />
-    <ClCompile Include="PanelTransform.cpp" />
+    <ClCompile Include="PanelInspector.cpp" />
     <ClCompile Include="PanelTime.cpp" />
     <ClCompile Include="PanelResources.cpp" />
     <ClCompile Include="parson\parson.c" />
