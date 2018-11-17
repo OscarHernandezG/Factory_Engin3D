@@ -64,9 +64,6 @@
     <Filter Include="Sources\Containers\PCG">
       <UniqueIdentifier>{078b7319-de84-4e9b-a8cb-9702de797d35}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources\Resources">
-      <UniqueIdentifier>{d16de3d5-46cd-4924-b25b-2d8b6b43521d}</UniqueIdentifier>
-
     <Filter Include="Sources\Modules\ImGui">
       <UniqueIdentifier>{14150202-2910-4bea-aead-295769e1a46c}</UniqueIdentifier>
     </Filter>
@@ -396,15 +393,6 @@
     <ClInclude Include="ModuleResources.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>Sources\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="ResourceMesh.h">
-      <Filter>Sources\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="ResourceTexture.h">
-      <Filter>Sources\Resources</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -602,14 +590,6 @@
     <ClCompile Include="ModuleResources.cpp">
       <Filter>Sources\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Resource.cpp">
-      <Filter>Sources\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="ResourceMesh.cpp">
-      <Filter>Sources\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="ResourceTexture.cpp">
-      <Filter>Sources\Resources</Filter>
     <ClCompile Include="PanelAbout.cpp">
       <Filter>Sources\Modules\ImGui</Filter>
     </ClCompile>
