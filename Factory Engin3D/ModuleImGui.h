@@ -82,7 +82,7 @@ public:
 
 	//Panel Transform
 	void CreateTransform(float2 scale);
-	void SavePrevTransform(const math::float4x4 &prevTransformMat);
+	void SavePrevTransform(const float4x4 &prevTransformMat);
 	void GuizmosOptions();
 
 	//Panel Hierarchy
@@ -156,8 +156,8 @@ public:
 	bool warningDialoge = false;
 
 	//Transform Panel
-	bool dragTransform = false;
-	bool redoOc = false;
+	bool dragTransform = true;
+	bool needRedoOc = false;
 
 	//Resource Panel
 	AssetsHierarchy assetsHierarchy;

@@ -778,7 +778,7 @@ void ModuleGeometry::LoadDefaultScene()
 	App->importer->DistributeFile("assets\\textures\\Baker_house.png");
 	App->importer->DistributeFile("assets\\models\\Street.fbx");
 
-	GameObject* cameraObject = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->rootGameObject, "Camera");
+	cameraObject = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->rootGameObject, "Camera");
 	playingCamera = (Camera*)cameraObject->AddComponent(ComponentType_CAMERA, nullptr);
 	
 	plane = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->rootGameObject, "Ground");

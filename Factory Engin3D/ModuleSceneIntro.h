@@ -25,6 +25,7 @@ public:
 	bool Start();
 	update_status PreUpdate();
 	update_status Update();
+	update_status PostUpdate(); 
 	void GuizmoUpdate();
 	void MoveGO(math::float4x4 &globalMatrix, GameObject * transformObject);
 	void SaveLastTransform(float4x4 matrix);
@@ -45,12 +46,14 @@ public:
 
 	char* droppedFileDir = nullptr;
 	Octree octree;
-	
+	bool redoOc = false;
+
 	float4x4 lastMat;
 	std::stack<LastTransform> prevTransforms;
 	bool saveTransform = false;
 	bool isSnap = false;
 	float3 snap = float3::two;
+
 private:
 	ImGuizmo::OPERATION guizOperation = ImGuizmo::OPERATION::TRANSLATE;
 	ImGuizmo::MODE guizMode = ImGuizmo::MODE::WORLD;

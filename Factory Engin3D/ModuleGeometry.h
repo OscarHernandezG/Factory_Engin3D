@@ -109,7 +109,7 @@ public:
 	std::string destination;
 
 	GameObject* plane = nullptr;
-
+	GameObject* cameraObject = nullptr;
 private:
 	Camera * playingCamera = nullptr;
 };

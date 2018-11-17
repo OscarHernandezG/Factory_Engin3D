@@ -20,7 +20,7 @@ void ModuleImGui::CreateTransform(float2 scale)
 			if (currObject->GetActive())
 				App->sceneIntro->ReInsertOctree(currObject);
 
-			redoOc = true;
+			needRedoOc = true;
 		}
 		ImGui::SameLine();
 		if (ImGui::Checkbox("Static Object", currObject->GetStaticReference()))
@@ -31,14 +31,14 @@ void ModuleImGui::CreateTransform(float2 scale)
 			else
 				App->gameObject->RemoveDynamic(currObject);
 
-			redoOc = true;
+			needRedoOc = true;
 		}
 		float3 position, scale, angles;
 		Quat rotate;
 
 		if (currObject->transform != nullptr)
 		{
-			float4x4 prevTransformMat = currObject->GetGlobalMatrix();
+			float4x4 prevTransformMat = currObject->GetLocalMatrix();
 			// Use go, not trans!
 			position = currObject->transform->GetPos();
 			scale = currObject->transform->GetScale();
@@ -53,14 +53,15 @@ void ModuleImGui::CreateTransform(float2 scale)
 			if (ImGui::DragFloat3("Position", &position[0]) && App->gameObject->CanTransform(currObject)) {
 				SavePrevTransform(prevTransformMat);
 				currObject->SetPos(position);
-				redoOc = true;
+				needRedoOc = true;
+				LOG("SAVED");
 			}
 
 			if (ImGui::DragFloat3("Scale", &scale[0]) && App->gameObject->CanTransform(currObject))
 			{
 				SavePrevTransform(prevTransformMat);
 				currObject->SetScale(scale);
-				redoOc = true;
+				needRedoOc = true;
 			}
 
 			if (ImGui::DragFloat3("Rotation", &angles[0]) && App->gameObject->CanTransform(currObject))
@@ -70,27 +71,28 @@ void ModuleImGui::CreateTransform(float2 scale)
 				angles.y = math::DegToRad(angles.y);
 				angles.z = math::DegToRad(angles.z);
 				currObject->SetRotation(Quat::FromEulerXYZ(angles.x, angles.y, angles.z));
-				redoOc = true;
+				needRedoOc = true;
 			}
 
 			if (ImGui::Button("Reset", ImVec2(100, 20)))
 			{
 				App->sceneIntro->SaveLastTransform(prevTransformMat);
 				currObject->SetIdentity();
-				redoOc = true;
+				needRedoOc = true;
 			}
 
 			if ((App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP || App->input->GetKey(SDL_SCANCODE_KP_ENTER) == KEY_DOWN 
-																	   || App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) && redoOc)
+																	   || App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) && needRedoOc)
 			{
 				dragTransform = true;
-				redoOc = false;
-				App->sceneIntro->octree.ReDoOctree(AABB(), true);
+				needRedoOc = false;
+				App->sceneIntro->redoOc = true;
+				LOG("LOAD");
 			}
 			GuizmosOptions();
 
 		}
-		if (ImGui::Button("Remove", ImVec2(100, 20)))
+		if (ImGui::Button("Delete", ImVec2(100, 20)))
 		{
 			DeleteGO(currObject);
 			App->geometry->currentGameObject = nullptr;
@@ -103,12 +105,13 @@ void ModuleImGui::CreateTransform(float2 scale)
 	ImGui::End();
 }
 
-void ModuleImGui::SavePrevTransform(const math::float4x4 &prevTransformMat)
+void ModuleImGui::SavePrevTransform(const float4x4 &prevTransformMat)
 {
 	if (dragTransform)
 	{
 		App->sceneIntro->SaveLastTransform(prevTransformMat);
 		dragTransform = false;
+		LOG("REALSAVED");
 	}
 }
 

@@ -19,7 +19,7 @@ void ModuleImGui::CreateGameObjectHierarchy(float2 scale)
 	
 	if (popHierarchy = ImGui::BeginPopup("GameObjectsPop"))
 	{
-		if (ImGui::MenuItem("New  Game Object"))
+		if (ImGui::MenuItem("New Game Object"))
 		{
 			if(objectSelected)
 				App->gameObject->CreateEmptyGameObject(objectSelected, "Empty Object");
@@ -82,5 +82,5 @@ void ModuleImGui::DeleteGO(GameObject* &object)
 		object->SetActive(false);
 	}
 
-	App->sceneIntro->octree.ReDoOctree(AABB(), true);
+	App->sceneIntro->redoOc = true;
 }

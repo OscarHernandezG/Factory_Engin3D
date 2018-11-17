@@ -49,7 +49,6 @@ update_status ModuleGameObject::PostUpdate()
 		gameObjectsAll.remove(it);
 		(*iterator)->RealDelete();
 		delete *iterator;
-		(*iterator) = nullptr;
 	}
 	return UPDATE_CONTINUE;
 }
@@ -62,6 +61,10 @@ void ModuleGameObject::RemoveObjectsFromList(GameObject * it, list<GameObject*> 
 		gameObjectsAll.remove(*childIt);
 		toDelete.remove(*childIt);
 	}
+	if (it == App->geometry->plane)
+		App->geometry->plane = nullptr;
+	if (it == App->geometry->cameraObject)
+		App->geometry->cameraObject = nullptr;
 }
 
 bool ModuleGameObject::CleanUp()
@@ -337,7 +340,7 @@ void ModuleGameObject::SaveBeforePlay()
 {
 	for (list<GameObject*>::iterator iterator = gameObjectsAll.begin(); iterator != gameObjectsAll.end(); ++iterator)
 	{
-		playingObjects[(*iterator)->UID] = (*iterator)->GetGlobalMatrix();
+		playingObjects[(*iterator)->UID] = (*iterator)->GetLocalMatrix();
 	}
 }
 

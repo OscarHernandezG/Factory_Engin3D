@@ -42,12 +42,9 @@ update_status ModuleSceneIntro::PreUpdate()
 
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)//Debug Draw
 		App->renderer3D->debugQuad = !App->renderer3D->debugQuad;
-	
-
 
 	if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN) //Camera Culling
 		App->renderer3D->cameraCulling = !App->renderer3D->cameraCulling;
-	
 
 	if (App->input->GetKey(SDL_SCANCODE_0) == KEY_DOWN)//Empty game object
 	{
@@ -63,8 +60,8 @@ update_status ModuleSceneIntro::PreUpdate()
 		octree.Insert(random);
 	}
 
-	//if (App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN) //Camera Culling
-		//App->geometry->currentGameObject = (GameObject*)App->geometry->GetPlayingCamera();
+	if (App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN) //Camera Culling
+		App->geometry->currentGameObject = App->geometry->cameraObject;
 
 	//Guizmos Options
 
@@ -85,7 +82,7 @@ update_status ModuleSceneIntro::PreUpdate()
 		if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
 		{
 			GetPreviousTransform();
-			octree.ReDoOctree(AABB(), true);
+			redoOc = true;
 		}
 		isSnap = true;
 	}
@@ -103,6 +100,17 @@ update_status ModuleSceneIntro::Update()
 {
 
 	GuizmoUpdate();
+	return UPDATE_CONTINUE;
+}
+
+update_status ModuleSceneIntro::PostUpdate()
+{
+	if (redoOc)
+	{
+		octree.ReDoOctree(AABB(), true);
+		redoOc = false;
+	}
+
 	return UPDATE_CONTINUE;
 }
 
@@ -130,7 +138,7 @@ void ModuleSceneIntro::GuizmoUpdate()
 			{
 				SaveLastTransform(lastMat);
 				saveTransform = false;
-				octree.ReDoOctree(AABB(), true);
+				redoOc = true;
 			}
 			lastMat = transformObject->GetLocalMatrix();
 		}
