@@ -246,17 +246,8 @@ void ModuleCamera3D::SetPos(float3 pos)
 }
 
 // -----------------------------------------------------------------
-float4x4 ModuleCamera3D::GetViewMatrix() const
-{
-	return cameraComponent->GetViewMatrix();
-}
 
-float4x4 ModuleCamera3D::GetProjectionMatrix() const
+Camera* ModuleCamera3D::SetEditorCamera() const
 {
-	return cameraComponent->GetProjectionMatrix();
-}
-
-Frustum ModuleCamera3D::GetCameraFrustrum() const
-{
-	return cameraComponent->frustum;
+	return cameraComponent;
 }

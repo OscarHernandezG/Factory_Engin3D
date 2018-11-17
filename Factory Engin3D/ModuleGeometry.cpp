@@ -22,6 +22,7 @@
 
 #include "pcg-c-basic-0.9/pcg_basic.h"
 
+using namespace std;
 
 ModuleGeometry::ModuleGeometry(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -55,7 +56,7 @@ bool ModuleGeometry::CleanUp()
 	return true;
 }
 
-MeshNode ModuleGeometry::LoadMeshBuffer(const aiScene* scene, uint index, char* path)
+MeshNode ModuleGeometry::LoadMeshBuffer(const aiScene* scene, uint index)
 {
 	MeshNode tempBuffer;
 
@@ -91,7 +92,7 @@ MeshNode ModuleGeometry::LoadMeshBuffer(const aiScene* scene, uint index, char* 
 		
 			tempBuffer.textureId = newMesh->mMaterialIndex;
 			tempBuffer.hasTexture = true;
-		};
+		}
 	}
 
 	if (newMesh->GetNumColorChannels() > 0)
@@ -103,8 +104,6 @@ MeshNode ModuleGeometry::LoadMeshBuffer(const aiScene* scene, uint index, char* 
 		}
 	tempBuffer.id = index;
 	tempBuffer.componentUUID = pcg32_random();
-
-	//SaveMeshImporter(tempBuffer.buffer, path, tempBuffer.componentUUID);
 
 	tempBuffer.buffer.boundingBox = LoadBoundingBox(tempBuffer.buffer.vertex);
 
@@ -150,19 +149,19 @@ void ModuleGeometry::LoadMeshVertex(ResourceMesh& buffer, aiMesh * newMesh)
 	LOG("New mesh loaded with %d vertices", buffer.vertex.size);
 }
 
-MeshNode ModuleGeometry::LoadMeshNode(const aiScene* scene, aiNode* node, char* path)
+MeshNode ModuleGeometry::LoadMeshNode(const aiScene* scene, aiNode* node)
 {
 	MeshNode meshNode;
 
 	if (node->mNumMeshes > 0)
 	{
 		LOG("Loading %s Mesh", node->mName.C_Str());
-		MeshNode currMeshBuff = LoadMeshBuffer(scene, node->mMeshes[0], path);
+		MeshNode currMeshBuff = LoadMeshBuffer(scene, node->mMeshes[0]);
 		meshNode = currMeshBuff;
 	}
 	for (int child = 0; child < node->mNumChildren; ++child)
 	{
-		meshNode.childs.push_back(LoadMeshNode(scene, node->mChildren[child], path));
+		meshNode.childs.push_back(LoadMeshNode(scene, node->mChildren[child]));
 	}
 	
 	meshNode.transform = AiNatrixToFloatMat(node->mTransformation);
@@ -182,12 +181,12 @@ float4x4 ModuleGeometry::AiNatrixToFloatMat(const aiMatrix4x4 & aiMat)
 	return mat;
 }
 
-MeshNode ModuleGeometry::LoadMesh(char* path)
+MeshNode ModuleGeometry::LoadMesh(const char* path)
 {
 	MeshNode meshRoot;
 	if (path != nullptr)
 	{
-		char* filePath = path;
+		const char* filePath = path;
 		const aiScene* scene = aiImportFile(filePath, aiProcessPreset_TargetRealtime_MaxQuality);
 
 		if (scene != nullptr)
@@ -196,7 +195,7 @@ MeshNode ModuleGeometry::LoadMesh(char* path)
 			{
 				texturesToLoad.clear();
 				texturesToLoad.resize(scene->mNumMaterials);
-				meshRoot = LoadMeshNode(scene, scene->mRootNode, path);
+				meshRoot = LoadMeshNode(scene, scene->mRootNode);
 			}
 			aiReleaseImport(scene);
 		}
@@ -467,11 +466,11 @@ GameObject* ModuleGeometry::LoadEmptyGameObjectsFromMeshNode(MeshNode node, Game
 // ==================================================================================================================
 // ==================================================================================================================
 // ==================================================================================================================
-void ModuleGeometry::UpdateMesh(char* path)
+void ModuleGeometry::UpdateMesh(const char* path)
 {
 	nodes.clear();
 	MeshNode tempMesh = LoadMesh(path);
-	
+
 	GameObject* tempGO = LoadEmptyGameObjectsFromMeshNode(tempMesh, App->gameObject->rootGameObject);
 
 
@@ -487,7 +486,7 @@ void ModuleGeometry::UpdateMesh(char* path)
 	for (vector<MeshNode>::const_iterator iterator = nodes.begin(); iterator != nodes.end(); ++iterator)
 	{
 		if ((*iterator).id >= 0)
-		SaveMeshImporter((*iterator).buffer, path, (*iterator).componentUUID);
+			SaveMeshImporter((*iterator).buffer, path, (*iterator).componentUUID);
 	}
 
 	currentMeshes.clear();
@@ -639,9 +638,7 @@ void ModuleGeometry::Lower(float& val1, float val2)
 	val1 = val1 < val2 ? val1 : val2;
 }
 
-
-
-void ModuleGeometry::UpdateTexture(char* path)
+void ModuleGeometry::UpdateTexture(const char* path)
 {
 	//uint tempTexture = App->resources->LoadTexture(path);
 	//if (tempTexture != 0)
@@ -652,6 +649,11 @@ void ModuleGeometry::UpdateTexture(char* path)
 	//	}
 	//	textureID = tempTexture;
 	}
+}
+
+Camera * ModuleGeometry::GetPlayingCamera() const
+{
+	return playingCamera;
 }
 
 update_status ModuleGeometry::PostUpdate()
@@ -671,9 +673,12 @@ update_status ModuleGeometry::PostUpdate()
 
 void ModuleGeometry::LoadDefaultScene()
 {
-	//App->importer->DistributeFile("assets\\textures\\Baker_house.png");
+	App->importer->DistributeFile("assets\\textures\\Baker_house.png");
 	App->importer->DistributeFile("assets\\models\\Street.fbx");
 
+	GameObject* cameraObject = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->rootGameObject, "Camera");
+	playingCamera = (Camera*)cameraObject->AddComponent(ComponentType_CAMERA, nullptr);
+	
 	plane = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->rootGameObject, "Ground");
 
 	GeometryInfo planeInfo(new PrimitivePlane());

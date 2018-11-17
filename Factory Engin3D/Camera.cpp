@@ -28,8 +28,6 @@ Camera::Camera(GameObject* gameObject) : Component(gameObject)
 
 float4x4 Camera::GetViewMatrix()
 {
-	UpdateFrustum();
-
 	float4x4 matrix;
 
 	matrix = frustum.ViewMatrix();
@@ -40,8 +38,6 @@ float4x4 Camera::GetViewMatrix()
 
 float4x4 Camera::GetProjectionMatrix()
 {
-	UpdateFrustum();
-
 	float4x4 matrix;
 
 	matrix = frustum.ProjectionMatrix();
@@ -53,19 +49,18 @@ float4x4 Camera::GetProjectionMatrix()
 
 void Camera::UpdateFrustum()
 {
-	//if (gameObject != nullptr && gameObject->transform != nullptr)
-	//{
-	//	frustum.pos = gameObject->transform->GetPos();
-	//	frustum.front = gameObject->transform->GetRotation() * float3::unitZ;
-	//	frustum.up = gameObject->transform->GetRotation() * float3::unitY;
-	//}
-	//else
-	//{
-	//	frustum.pos = float3::zero;
-	//	frustum.front = float3::unitZ;
-	//	frustum.up = float3::unitY;
-	//}
-
+	if (gameObject != nullptr && gameObject->transform != nullptr)
+	{
+		frustum.pos = gameObject->transform->GetPos();
+		frustum.front = gameObject->transform->GetRotation() * float3::unitZ;
+		frustum.up = gameObject->transform->GetRotation() * float3::unitY;
+	}
+	else
+	{
+		frustum.pos = float3::zero;
+		frustum.front = float3::unitZ;
+		frustum.up = float3::unitY;
+	}
 }
 
 void Camera::SetPos(float x, float y, float z)

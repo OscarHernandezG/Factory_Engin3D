@@ -3,6 +3,7 @@
 #include "pcg-c-basic-0.9/pcg_basic.h"
 #include <time.h>
 
+using namespace std;
 Application::Application()
 {
 	window = new ModuleWindow(this);

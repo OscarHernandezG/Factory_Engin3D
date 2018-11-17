@@ -20,13 +20,12 @@ public:
 	bool CleanUp();
 
 	bool ExistFile(const char* path);
-	vector<string> ReadFolder(const char * path);
+	void ReadFolder(const char * path, std::vector<AssetsHierarchy>& filesStr);
 
 	Resource* FindLoadedResource(const char* path, ResourceType type);
 
 	ResourceMesh* LoadMesh(uint name);
 	ResourceTexture* LoadTexture(char * path);
-
 
 private:
 	bool RealLoadMesh(char * buffer, ResourceMesh*& mesh, const char* name);

@@ -8,8 +8,6 @@
 #include "Transform.h"
 #include "Camera.h"
 
-using namespace std;
-
 //class Component;
 //class Transform;
 
@@ -36,7 +34,6 @@ public:
 	inline void Delete() { toDelete = true;	}
 
 	bool SetParent(GameObject* parent);
-
 //Create from json
 //----------------------------------------------------------------
 	void CreateFromJson(JSON_Object* info, std::vector<uint>& meshesToLoad);
@@ -52,7 +49,7 @@ public:
 	void RemoveComponent(Component* component);
 	// Get
 	Component* GetComponent(ComponentType type);
-	list<Component*> GetAllComponent(ComponentType type);
+	std::list<Component*> GetAllComponent(ComponentType type);
 
 	bool HasComponent(ComponentType type);
 //----------------------------------------------------------------
@@ -67,7 +64,6 @@ public:
 	float3 GetPos() const;
 	float3 GetGlobalPos() const;
 //----------------------------------------------------------------
-
 
 // Scale
 //----------------------------------------------------------------
@@ -92,13 +88,11 @@ public:
 	Quat GetGlobalRotation() const;
 //----------------------------------------------------------------
 
-
 // Transform
 //----------------------------------------------------------------
 	void SetTransform(float4x4 transform);
 	void SetIdentity();
 //----------------------------------------------------------------
-
 
 // AABB
 //----------------------------------------------------------------
@@ -154,13 +148,13 @@ private:
 public:
 	Transform* transform = nullptr;
 
-	list<Component*> components;
+	std::list<Component*> components;
 
-	list<GameObject*> childs;
+	std::list<GameObject*> childs;
 	GameObject* father = nullptr;
 	uint parentUUID = 0;
 
-	string name;
+	std::string name;
 
 	bool toDelete = false;
 

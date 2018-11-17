@@ -14,6 +14,7 @@
 
 #include <fstream>
 
+using namespace std;
 ModuleResources::ModuleResources(Application * app, bool start_enabled): Module(app, start_enabled)
 {
 }
@@ -49,11 +50,11 @@ bool ModuleResources::ExistFile(const char * path)
 	return ret;
 }
 
-vector<string> ModuleResources::ReadFolder(const char * path)
+void ModuleResources::ReadFolder(const char * path, std::vector<AssetsHierarchy>& filesStr)
 {
+	filesStr.clear();
 	string currPath(path);
-	vector<string> filesStr;
-
+	
 	if (GetFileAttributes(currPath.data()) != INVALID_FILE_ATTRIBUTES)
 	{
 		currPath.append("*");
@@ -63,23 +64,23 @@ vector<string> ModuleResources::ReadFolder(const char * path)
 		{
 			do {
 				if (strcmp(data.cFileName, "..") && strcmp(data.cFileName, "."))
-					filesStr.push_back(data.cFileName);
+				{
+					int vector = filesStr.size();
+
+					AssetsHierarchy internal;
+					internal.file = (data.cFileName);								//Set Name
+					filesStr.push_back(internal);									//Push empty childs
+
+					string newPath(path);
+					newPath.append(data.cFileName);
+					newPath += "\\";
+
+					ReadFolder(newPath.data(), filesStr[vector].childFiles);		//Get childs
+				}
 			} while (FindNextFile(file, &data) != 0);
 		}
 		FindClose(file);
-
-
-
-		/*for (vector<string>::iterator it = filesStr.begin(); it != filesStr.end(); ++it)
-		{
-			string newPath(path);
-			newPath.append(*it);
-			newPath += "\\";
-			ReadFolder(newPath.data());
-		}*/
 	}
-
-	return filesStr;
 	/*else if (ExistFile(path))
 	{
 		bool hi = true;

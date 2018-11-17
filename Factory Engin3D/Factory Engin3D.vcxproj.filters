@@ -66,6 +66,9 @@
     </Filter>
     <Filter Include="Sources\Resources">
       <UniqueIdentifier>{d16de3d5-46cd-4924-b25b-2d8b6b43521d}</UniqueIdentifier>
+
+    <Filter Include="Sources\Modules\ImGui">
+      <UniqueIdentifier>{14150202-2910-4bea-aead-295769e1a46c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -607,6 +610,26 @@
     </ClCompile>
     <ClCompile Include="ResourceTexture.cpp">
       <Filter>Sources\Resources</Filter>
+    <ClCompile Include="PanelAbout.cpp">
+      <Filter>Sources\Modules\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="PanelConfiguration.cpp">
+      <Filter>Sources\Modules\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="PanelConsole.cpp">
+      <Filter>Sources\Modules\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="PanelHierarchy.cpp">
+      <Filter>Sources\Modules\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="PanelResources.cpp">
+      <Filter>Sources\Modules\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="PanelTransform.cpp">
+      <Filter>Sources\Modules\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="PanelTime.cpp">
+      <Filter>Sources\Modules\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

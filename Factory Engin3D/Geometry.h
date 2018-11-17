@@ -1,5 +1,5 @@
-#ifndef __ModuleGeometry_H__
-#define __ModuleGeometry_H__
+#ifndef __Geometry_H__
+#define __Geometry_H__
 #include "Globals.h"
 
 #include "MathGeoLib/MathGeoLib.h"

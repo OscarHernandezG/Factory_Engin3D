@@ -4,6 +4,7 @@
 #include "Texture.h"
 #include "pcg-c-basic-0.9/pcg_basic.h"
 
+using namespace std;
 
 GameObject::GameObject(GameObject* father, const char * name)
 {

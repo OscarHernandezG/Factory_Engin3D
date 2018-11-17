@@ -1,10 +1,12 @@
-#ifndef __ModuleGameObjectManager_H__
-#define __ModuleGameObjectManager_H__
+#ifndef __ModuleGameObject_H__
+#define __ModuleGameObject_H__
 
 #include "Module.h"
 
 #include "Transform.h"
 #include "GameObject.h"
+
+#include <map>
 
 class ModuleGameObject : public Module
 {
@@ -18,7 +20,7 @@ public:
 	update_status Update();
 	update_status PostUpdate();
 
-	void RemoveObjectsFromList(GameObject * it);
+	void RemoveObjectsFromList(GameObject * it, std::list<GameObject*> &toDelete);
 
 	bool CleanUp();
 
@@ -49,12 +51,17 @@ public:
 
 	bool CanTransform(GameObject * object);
 
+	void SaveBeforePlay();
+	void LoadAfterPlay();
+
+
 public:
 	GameObject* rootGameObject;
 
-	list<GameObject*> gameObjectsAll;
+	std::list<GameObject*> gameObjectsAll;
 
-	list<GameObject*> dynamicObjects;
+	std::list<GameObject*> dynamicObjects;
 
+	std::map<uint, float4x4> playingObjects;
 };
 #endif // !__ModuleGameObjectManager_H__

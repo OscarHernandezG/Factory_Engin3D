@@ -162,8 +162,15 @@ update_status ModuleRenderer3D::PreUpdate()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	//glLoadIdentity();
 
+	if (App->time->gameState == GameState_NONE)
+		currentCam = App->camera->SetEditorCamera();
+	else if (App->time->gameState != GameState_TICK)
+	{
+		currentCam = App->geometry->GetPlayingCamera();
+		currentCam->UpdateFrustum();
+	}
 	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(App->camera->GetViewMatrix().ptr());
+	glLoadMatrixf(currentCam->GetViewMatrix().ptr());
 
 	// Light 0 on cam pos
 	lights[0].SetPos(App->camera->GetPos());
@@ -182,7 +189,7 @@ update_status ModuleRenderer3D::PostUpdate()
 	std::vector<GameObject*> drawerGO;
 	if (cameraCulling)//Only draw camera View
 	{
-		App->sceneIntro->octree.GetIntersects(drawerGO, App->camera->GetCameraFrustrum());
+		App->sceneIntro->octree.GetIntersects(drawerGO, App->geometry->GetPlayingCamera()->frustum);
 
 		for (auto iterator : drawerGO)
 			DrawOctreeObjects(iterator);
@@ -212,6 +219,17 @@ update_status ModuleRenderer3D::PostUpdate()
 			App->geometry->currentGameObject->transform->boundingBox.GetCornerPoints(corners);
 
 			DrawQuad(corners, Green);
+
+			Camera* cam = App->geometry->GetPlayingCamera();
+			cam->UpdateFrustum();
+			if((Camera*)App->geometry->currentGameObject->GetComponent(ComponentType_CAMERA) == cam)
+			{
+				static float3 corners[8];
+				cam->frustum.GetCornerPoints(corners);
+
+				DrawQuad(corners, Green);
+			}
+
 		}
 	}
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -242,12 +260,12 @@ void ModuleRenderer3D::DrawOctreeObjects(GameObject * iterator)
 }
 void ModuleRenderer3D::DrawDynamicObjects(bool cameraCulling)
 {
-	for (list<GameObject*>::iterator it = App->gameObject->dynamicObjects.begin(); it != App->gameObject->dynamicObjects.end(); ++it)
+	for (std::list<GameObject*>::iterator it = App->gameObject->dynamicObjects.begin(); it != App->gameObject->dynamicObjects.end(); ++it)
 	{
 		Geometry* currentGeometry = (Geometry*)(*it)->GetComponent(ComponentType_GEOMETRY);
 		if (currentGeometry && (*it)->GetActive())
 		{
-			if (!cameraCulling || App->camera->GetCameraFrustrum().Intersects(*(*it)->GetAABB()))
+			if (!cameraCulling || currentCam->frustum.Intersects(*(*it)->GetAABB()))
 				DrawObject(currentGeometry);
 		}
 	}
@@ -350,7 +368,7 @@ void ModuleRenderer3D::DebugDraw()
 	std::vector<const OctreeNode*> aabb;
 	App->sceneIntro->octree.GetBoxLimits(aabb);
 	//Octree draw
-	for (vector<const OctreeNode*>::const_iterator iterator = aabb.begin(); iterator != aabb.end(); ++iterator)
+	for (std::vector<const OctreeNode*>::const_iterator iterator = aabb.begin(); iterator != aabb.end(); ++iterator)
 	{
 		static float3 corners[8];
 		(*iterator)->limits.GetCornerPoints(corners);
@@ -366,23 +384,23 @@ void ModuleRenderer3D::DebugDraw()
 	std::vector<GameObject*> objects;
 	App->sceneIntro->octree.GetGameObjects(objects);
 	//Octree Objects
-	for (vector<GameObject*>::const_iterator iterator = objects.begin(); iterator != objects.end(); ++iterator)
+	for (std::vector<GameObject*>::const_iterator iterator = objects.begin(); iterator != objects.end(); ++iterator)
 	{
 		static float3 corners[8];
 		(*iterator)->transform->boundingBox.GetCornerPoints(corners);
 
-		if((*iterator) == App->geometry->currentGameObject)
+		if (App->geometry->currentGameObject && (*iterator) == App->geometry->currentGameObject)
 			DrawQuad(corners, Green);
 		else
 			DrawQuad(corners, Red);
 	}
 	if (App->geometry->currentGameObject)
-	if (!App->geometry->currentGameObject->GetObjectStatic())
-	{
-		static float3 corners[8];
-		App->geometry->currentGameObject->transform->boundingBox.GetCornerPoints(corners);
-		DrawQuad(corners, Blue);
-	}
+		if (!App->geometry->currentGameObject->GetObjectStatic())
+		{
+			static float3 corners[8];
+			App->geometry->currentGameObject->transform->boundingBox.GetCornerPoints(corners);
+			DrawQuad(corners, Blue);
+		}
 }
 
 
@@ -424,6 +442,20 @@ void ModuleRenderer3D::DrawQuad(static float3* corners, Color color)
 
 	glEnd();
 
+}
+
+float4x4 ModuleRenderer3D::GetViewMatrix() const
+{
+	return currentCam->GetViewMatrix();
+}
+
+float4x4 ModuleRenderer3D::GetProjectionMatrix() const
+{
+	return currentCam->GetProjectionMatrix();
+}
+Frustum ModuleRenderer3D::GetCameraFrustrum() const
+{
+	return currentCam->frustum;
 }
 
 

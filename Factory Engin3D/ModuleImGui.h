@@ -8,13 +8,21 @@
 
 #include "parson/parson.h"
 
-using namespace std;
+#include <string>
+#include"MathGeoLib/Math/float2.h"
 
 struct ImVec2;
 struct ImVec3;
 struct ImVec4;
 struct ExampleAppConsole;
+class GameObject;
+class Timer;
 
+struct AssetsHierarchy
+{
+	std::string file;
+	std::vector<AssetsHierarchy> childFiles;
+};
 class ModuleImGui : public Module
 {
 public:
@@ -31,24 +39,13 @@ public:
 
 	void DrawUI();
 
-
 	bool CleanUp();
 
 	void CreateExampleWindow();
 	void CreateMGLWindow();
 	void CreateRandomNumberWindow();
-	void CreateAboutWindow(float2 scale);
-	void CreateConfigWindow(float2 scale);
-	void CreateConsole(float2 scale);
-	void CreateTransform(float2 scale);
-	void CreateGameObjectHierarchy(float2 scale);
+
 	void SetWindowDim(float2 & pos, float2 & size, float2 & scale, bool gameWindow = false);
-	void CreateGameManager(float2 scale);
-	void CreateAssetsWindow(float2 scale);
-
-	void TreeAssets(const char * path);
-
-	void CreateGOTreeNode(GameObject * current);
 
 	update_status CreateMainMenuBar();
 
@@ -56,6 +53,14 @@ public:
 	bool CreateOptions();
 	void CheckShortCuts();
 	void CreateDebugMenu();
+
+	void ResizeImGui(float2 scale);
+
+	//Panel About
+	void CreateAboutWindow(float2 scale);
+
+	//Panel Configuration
+	void CreateConfigWindow(float2 scale);
 
 	void CreateAppHeader();
 	void CreateWindowHeader();
@@ -68,12 +73,27 @@ public:
 	void CreateCPUInfo(ImVec4 color);
 	void CreateGPUInfo(ImVec4 color);
 
-	void CheckCaps(string* caps);
+	void CheckCaps(std::string* caps);
 
+	//Panel Console
+	void CreateConsole(float2 scale);
 	void LogConsole(const char* consoleText);
 
-	void ResizeImGui(float2 scale);
+	//Panel Transform
+	void CreateTransform(float2 scale);
 
+	//Panel Hierarchy
+	void CreateGameObjectHierarchy(float2 scale);
+	void CreateGOTreeNode(GameObject * current);
+
+	//PanelTime
+	void CreateGameManager(float2 scale);
+
+	//Panel Resources
+	void CreateAssetsWindow(float2 scale);
+	void DrawAssets(AssetsHierarchy& assets);
+	void RefreshAssets(const char * path);
+	
 public:
 	bool created = false;
 
@@ -105,8 +125,8 @@ public:
 
 	char* tempText = nullptr;
 
-	string randNumTextInt;
-	string randNumTextDouble;
+	std::string randNumTextInt;
+	std::string randNumTextDouble;
 	float brightnessPos = 1.0f;
 	int widthPos = SCREEN_WIDTH;
 	int heightPos = SCREEN_HEIGHT;
@@ -122,13 +142,17 @@ public:
 	ImGuiTextBuffer textBuff;
 	bool canScroll = false;
 
-	vector<float> ramLog;
+	std::vector<float> ramLog;
 
 	int resize = 0;
 
 	bool warningDialoge = false;
 
-	bool dragRotTransform = false;
+	bool dragTransform = false;
+
+	//Resource Panel
+	AssetsHierarchy assetsHierarchy;
+	Timer contRefresh;
 
 	//--------------------------
 	// Window position

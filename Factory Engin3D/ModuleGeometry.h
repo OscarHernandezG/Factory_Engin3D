@@ -1,9 +1,10 @@
-#ifndef __ModuleGeometryManager_H__
-#define __ModuleGeometryManager_H__
+#ifndef __ModuleGeometry_H__
+#define __ModuleGeometry_H__
 #include "Module.h"
 
 #include "Transform.h"
 #include "Geometries.h"
+#include "Camera.h"
 
 #include "Assimp/include/matrix4x4.h"
 
@@ -16,6 +17,7 @@
 struct aiMesh;
 struct aiScene;
 struct aiNode;
+struct MeshBuffer;
 
 struct Textures
 {
@@ -37,7 +39,7 @@ public:
 
 	bool CleanUp();
 
-	MeshNode LoadMeshBuffer(const aiScene * scene, uint index, char* path);
+	MeshNode LoadMeshBuffer(const aiScene * scene, uint index);
 
 	void LoadMeshTextureCoords(ResourceMesh& buffer, aiMesh* newMesh);
 
@@ -45,27 +47,25 @@ public:
 
 	void LoadMeshVertex(ResourceMesh& buffer, aiMesh* newMesh);
 
-	MeshNode LoadMeshNode(const aiScene* scene, aiNode* node, char* path);
+	MeshNode LoadMeshNode(const aiScene * scene, aiNode * node);
 
 	float4x4 AiNatrixToFloatMat(const aiMatrix4x4 &aiMat);
 
-	MeshNode LoadMesh(char* path);
+	MeshNode LoadMesh(const char* path);
 
 	void SaveMeshImporter(ResourceMesh newCurrentBuffer, const char * path, uint uuid);
 
-	void LoadMeshImporter(const char * path, const vector<MeshNode>& nodes, vector<ResourceMesh*>& buffer);
+	void LoadMeshImporter(const char * path, const std::vector<MeshNode>& nodes, std::vector<ResourceMesh*>& buffer);
 
-	void LoadTextureImporter(vector<Textures>& texturesToLoad);
+	void LoadTextureImporter(std::vector<Textures>& texturesToLoad);
 
-	vector<ResourceMesh*> LoadMeshImporterUUID(const vector<uint>& nodes);
-
-	//ResourceMesh* LoadBufferGPU(char * buffer, int id = 0);
+	std::vector<ResourceMesh*> LoadMeshImporterUUID(const std::vector<uint>& nodes);
 
 	GameObject* LoadGameObjectsFromMeshNode(MeshNode node, GameObject * father);
 
 	GameObject * LoadEmptyGameObjectsFromMeshNode(MeshNode node, GameObject * father);
 
-	void UpdateMesh(char * path);
+	void UpdateMesh(const char * path);
 
 	void SaveGameObjectJson(GameObject* object, JSON_Object* parent);
 
@@ -83,7 +83,10 @@ public:
 
 	//Geometry* LoadPrimitive(PrimitiveTypes type);
 
-	void UpdateTexture(char* path);
+
+	void UpdateTexture(const char* path);
+
+	Camera* GetPlayingCamera() const;
 
 public:
 	GameObject* currentGameObject = nullptr;
@@ -99,8 +102,11 @@ public:
 
 	AABB currentMeshBB = AABB(float3::zero, float3::zero);
 
-	string destination;
+	std::string destination;
 
 	GameObject* plane = nullptr;
+
+private:
+	Camera * playingCamera = nullptr;
 };
 #endif // !__ModuleGeometryManager_H__
