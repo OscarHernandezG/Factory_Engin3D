@@ -183,16 +183,16 @@ float4x4 Transform::GetLocalMatrix() const
 
 
 
-void Transform::Inspector(bool dragTransform)
+void Transform::Inspector()
 {
 	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 	float4x4 prevTransformMat = GetMatrix();
 		if (ImGui::DragFloat3("Position", &position[0]) && App->gameObject->CanTransform(gameObject)) {
-			if (dragTransform)
+			if (App->gui->dragTransform)
 			{
 				App->sceneIntro->SaveLastTransform(prevTransformMat);
-				dragTransform = false;
+				App->gui->dragTransform = false;
 			}
 			SetPos(position);
 			App->sceneIntro->octree.ReDoOctree(AABB(), true);
@@ -200,10 +200,10 @@ void Transform::Inspector(bool dragTransform)
 
 		if (ImGui::DragFloat3("Scale", &scale[0]) && App->gameObject->CanTransform(gameObject))
 		{
-			if (dragTransform)
+			if (App->gui->dragTransform)
 			{
 				App->sceneIntro->SaveLastTransform(prevTransformMat);
-				dragTransform = false;
+				App->gui->dragTransform = false;
 			}
 			SetScale(scale);
 			App->sceneIntro->octree.ReDoOctree(AABB(), true);
@@ -217,10 +217,10 @@ void Transform::Inspector(bool dragTransform)
 
 		if (ImGui::DragFloat3("Rotation", angles.ptr()) && App->gameObject->CanTransform(gameObject))
 		{
-			if (dragTransform)
+			if (App->gui->dragTransform)
 			{
 				App->sceneIntro->SaveLastTransform(prevTransformMat);
-				dragTransform = false;
+				App->gui->dragTransform = false;
 			}
 			angles.x = math::DegToRad(angles.x);
 			angles.y = math::DegToRad(angles.y);
@@ -230,7 +230,7 @@ void Transform::Inspector(bool dragTransform)
 			App->sceneIntro->octree.ReDoOctree(AABB(), true);
 		}
 		else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP)
-			dragTransform = true;
+			App->gui->dragTransform = true;
 
 		if (ImGui::Button("Reset", ImVec2(100, 20)))
 		{
