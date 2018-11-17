@@ -80,7 +80,7 @@ public:
 	void LogConsole(const char* consoleText);
 
 	//Panel Transform
-	void CreateTransform(float2 scale);
+	void CreateInspector(float2 scale);
 
 	//Panel Hierarchy
 	void CreateGameObjectHierarchy(float2 scale);
@@ -104,7 +104,7 @@ public:
 	bool aboutWindow = false;
 	bool configurationWindow = false;
 	bool consoleWindow = false;
-	bool transformWindow = false;
+	bool inspectorWindow = false;
 	bool hierarchyWindow = true;
 	bool exitOption = false;
 
