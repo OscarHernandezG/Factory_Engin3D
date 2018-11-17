@@ -88,6 +88,7 @@ public:
 	//Panel Hierarchy
 	void CreateGameObjectHierarchy(float2 scale);
 	void CreateGOTreeNode(GameObject * current);
+	void DragDropGO(GameObject *& childs);
 	void DeleteGO(GameObject * &object);
 
 	//PanelTime
@@ -168,6 +169,7 @@ public:
 	//Hierarchy Panel
 	bool popHierarchy = false;
 	GameObject* objectSelected = nullptr;
+	bool objectDrag = false;
 
 	//--------------------------
 	// Window position

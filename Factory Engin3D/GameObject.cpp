@@ -93,6 +93,9 @@ bool GameObject::SetParent(GameObject* parent)
 	bool ret = false;
 	if (parent != nullptr)
 	{
+		if(father)
+			father->childs.remove(this);
+
 		this->father = parent;
 		parent->childs.push_back(this);
 		ret = true;
