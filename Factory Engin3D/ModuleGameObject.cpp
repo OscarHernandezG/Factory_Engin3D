@@ -43,15 +43,13 @@ update_status ModuleGameObject::PostUpdate()
 	}
 	for (list<GameObject*>::iterator iterator = toDelete.begin(); iterator != toDelete.end(); ++iterator)
 	{
-		if (*iterator != nullptr)
-		{
-			GameObject* it = *iterator;
-			RemoveObjectsFromList(it, toDelete);
+		GameObject* it = *iterator;
+		RemoveObjectsFromList(it, toDelete);
 
-			gameObjectsAll.remove(it);
-			(*iterator)->RealDelete();
-			delete *iterator;
-		}
+		gameObjectsAll.remove(it);
+		(*iterator)->RealDelete();
+		delete *iterator;
+		(*iterator) = nullptr;
 	}
 	return UPDATE_CONTINUE;
 }
@@ -353,12 +351,16 @@ void ModuleGameObject::LoadAfterPlay()
 		{
 			(*listiterator)->SetTransform(iterator->second);//SET
 			playingObjects.erase((*listiterator)->UID);
+			if ((*listiterator)->toDeleteFake)
+			{
+				(*listiterator)->SetActive(true);//SET
+				App->sceneIntro->octree.Insert(*listiterator);
+			}
 		}
 		else//Remove objects that are created while playing
 		{
 			(*listiterator)->toDelete = true;
 			App->geometry->currentGameObject = nullptr;
-			App->sceneIntro->octree.ReDoOctree(AABB(), true);
 		}
 	}
 }

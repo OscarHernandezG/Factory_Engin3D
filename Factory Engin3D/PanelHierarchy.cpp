@@ -78,5 +78,9 @@ void ModuleImGui::DeleteGO(GameObject* &object)
 	if (App->time->gameState == GameState_NONE)
 		object->Delete();
 	else
+	{
+		object->toDeleteFake = object->GetActive();
 		object->SetActive(false);
+	}
+	App->sceneIntro->octree.ReDoOctree(AABB(), true);
 }
