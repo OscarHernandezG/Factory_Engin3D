@@ -142,7 +142,7 @@ void ModuleImGui::CreateMeshesHeader()
 				Mesh* mesh = (Mesh*)goGeometry;
 
 				ImGui::Text("Total vertex: %i", mesh->buffer->vertex.size);
-				ImGui::Text("Total faces: %i", App->geometry->numFaces);
+//				ImGui::Text("Total faces: %i", App->geometry->numFaces);
 				if (ImGui::Button("Remove Mesh", { 125,25 }))
 				{
 					Geometry* mesh = (Geometry*)App->geometry->currentGameObject->GetComponent(ComponentType::ComponentType_GEOMETRY);
@@ -151,10 +151,10 @@ void ModuleImGui::CreateMeshesHeader()
 			}
 		}
 		else
-			ImGui::TextWrapped("There aren't any meshes");
+			ImGui::TextWrapped("No GameObject selected");
 	}
 	else
-		ImGui::TextWrapped("There aren't any meshes");
+		ImGui::TextWrapped("No GameObject selected");
 
 }
 

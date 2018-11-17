@@ -165,8 +165,8 @@ void ModuleGameObject::LoadNewSceneMeshes(std::vector<uint> &meshesToLoad)
 	sort(meshesToLoad.begin(), meshesToLoad.end());
 	meshesToLoad.erase(unique(meshesToLoad.begin(), meshesToLoad.end()), meshesToLoad.end());
 
-	vector<ResourceMesh*> tempVec = App->geometry->LoadMeshImporterUUID(meshesToLoad);
-	App->geometry->currentMeshes.insert(App->geometry->currentMeshes.end(), tempVec.begin(), tempVec.end());
+	vector<ResourceMesh*> tempVec;
+	App->geometry->LoadMeshImporterUUID(meshesToLoad, App->geometry->currentMeshes);
 }
 
 void ModuleGameObject::LoadNewSceneGO(int numObjects, JSON_Array * objArray, std::vector<uint> &meshesToLoad, std::list<GameObject *> &sceneGameObjects)

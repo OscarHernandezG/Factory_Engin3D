@@ -41,7 +41,7 @@ void ModuleImporter::DistributeFile(char* file, bool needPath)
 	{
 		if (needPath)
 			GetFullPath(filePath, LlibraryType_TEXTURE);
-		App->geometry->UpdateTexture(filePath.data());
+	//	App->geometry->UpdateTexture(filePath.data());
 	}
 }
 

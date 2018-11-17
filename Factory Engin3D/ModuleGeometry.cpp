@@ -123,7 +123,7 @@ void ModuleGeometry::LoadMeshTextureCoords(ResourceMesh& buffer, aiMesh * newMes
 
 void ModuleGeometry::LoadMeshIndex(aiMesh * newMesh, ResourceMesh& buffer)
 {
-	numFaces += newMesh->mNumFaces;
+	//numFaces += newMesh->mNumFaces;
 	buffer.index.size = newMesh->mNumFaces * 3;
 	buffer.index.buffer = new uint[buffer.index.size];
 
@@ -291,10 +291,9 @@ void ModuleGeometry::LoadTextureImporter(vector<Textures>& texturesToLoad)
 	}
 }
 
-vector<ResourceMesh*> ModuleGeometry::LoadMeshImporterUUID(const vector<uint>& nodes)
+void ModuleGeometry::LoadMeshImporterUUID(const vector<uint>& nodes, vector<ResourceMesh*>& buffers)
 {
 	char* buffer = nullptr;
-	vector<ResourceMesh*> buffers;
 
 	for (vector<uint>::const_iterator iterator = nodes.begin(); iterator != nodes.end(); ++iterator)
 	{
@@ -306,8 +305,6 @@ vector<ResourceMesh*> ModuleGeometry::LoadMeshImporterUUID(const vector<uint>& n
 			buffers.push_back(curr);
 		}
 	}
-
-	return buffers;
 }
 
 //ResourceMesh* ModuleGeometry::LoadBufferGPU(char* buffer, int id)
@@ -471,15 +468,6 @@ void ModuleGeometry::UpdateMesh(const char* path)
 	nodes.clear();
 	MeshNode tempMesh = LoadMesh(path);
 
-	GameObject* tempGO = LoadEmptyGameObjectsFromMeshNode(tempMesh, App->gameObject->rootGameObject);
-
-
-	JSON_Value* rootValue = json_value_init_object();
-	JSON_Object* rootObject = json_value_get_object(rootValue);
-
-
-	tempGO->Delete();
-
 	sort(nodes.begin(), nodes.end());
 	nodes.erase(unique(nodes.begin(), nodes.end()), nodes.end());
 
@@ -498,64 +486,6 @@ void ModuleGeometry::UpdateMesh(const char* path)
 	texturesToLoad.clear();
 
 	currentGameObject = newGameObject;
-}
-
-void ModuleGeometry::SaveGameObjectJson(GameObject* object, JSON_Object* parent)
-{
-	JSON_Value* newValue = json_value_init_object();
-	JSON_Object* objGO = json_value_get_object(newValue);
-
-	json_object_set_value(parent, object->name.data() , newValue);
-
-	json_object_set_number(objGO, "UUID", object->GetUID());
-
-	// Position
-	//------------------------------------------------------------------------
-	JSON_Value* position = json_value_init_object();
-	JSON_Object* positionObj = json_value_get_object(position);
-
-	json_object_set_value(objGO, "Position", position);
-
-	float3 pos = object->GetPos();
-
-	json_object_set_number(positionObj, "X", pos.x);
-	json_object_set_number(positionObj, "Y", pos.y);
-	json_object_set_number(positionObj, "Z", pos.z);
-	
-	// Scale
-	//------------------------------------------------------------------------
-	JSON_Value* scale = json_value_init_object();
-	JSON_Object* scalenObj = json_value_get_object(scale);
-
-	json_object_set_value(objGO, "Scale", scale);
-
-	float3 size = object->GetScale();
-
-	json_object_set_number(scalenObj, "X", size.x);
-	json_object_set_number(scalenObj, "Y", size.y);
-	json_object_set_number(scalenObj, "Z", size.z);
-
-	// Rotation
-	//------------------------------------------------------------------------
-	JSON_Value* rotation = json_value_init_object();
-	JSON_Object* rotationObj = json_value_get_object(rotation);
-
-	json_object_set_value(objGO, "Rotation", rotation);
-
-	Quat rot = object->GetRotation();
-
-	json_object_set_number(rotationObj, "X", rot.x);
-	json_object_set_number(rotationObj, "Y", rot.y);
-	json_object_set_number(rotationObj, "Z", rot.z);
-	json_object_set_number(rotationObj, "W", rot.w);
-	//------------------------------------------------------------------------
-
-	json_object_set_number(objGO, "isActive", object->GetActive());
-
-	for (list<GameObject*>::iterator iterator = object->childs.begin(); iterator != object->childs.end(); ++iterator)
-	{
-		SaveGameObjectJson(*iterator, objGO);
-	}
 }
 
 AABB ModuleGeometry::LoadBoundingBox(Buffer<float> vertex)
@@ -609,16 +539,10 @@ float3 ModuleGeometry::CalcBBPos(math::AABB* boundingBox) const
 
 float3 ModuleGeometry::GetBBPos() const
 {
-	float3 distance{ 0,0,0 };
+	if (currentGameObject)
+		return currentGameObject->GetBBPos();
 
-	float3 size = currentMeshBB.Size();
-
-	float reScale = 1.25;
-	distance.x = (size.x / 2) / math::Tan(0.33333333333 * reScale);
-	distance.y = (size.y / 2) / math::Tan(0.33333333333 * reScale);
-	distance.z = (size.z / 2) / math::Tan(0.33333333333 * reScale);
-
-	return distance + currentGameObject->GetPos();
+	else return float3::zero;
 }
 
 float3 ModuleGeometry::GetCurrentMeshPivot() const
@@ -636,19 +560,6 @@ void ModuleGeometry::Higher(float& val1, float val2)
 void ModuleGeometry::Lower(float& val1, float val2)
 {
 	val1 = val1 < val2 ? val1 : val2;
-}
-
-void ModuleGeometry::UpdateTexture(const char* path)
-{
-	//uint tempTexture = App->resources->LoadTexture(path);
-	//if (tempTexture != 0)
-	{
-	//	if (textureID != 0)
-	//	{
-	//		glDeleteTextures(1, &textureID);
-	//	}
-	//	textureID = tempTexture;
-	}
 }
 
 Camera * ModuleGeometry::GetPlayingCamera() const
