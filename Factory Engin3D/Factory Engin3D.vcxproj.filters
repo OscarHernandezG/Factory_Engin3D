@@ -67,6 +67,9 @@
     <Filter Include="Sources\Modules\ImGui">
       <UniqueIdentifier>{14150202-2910-4bea-aead-295769e1a46c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Resources">
+      <UniqueIdentifier>{e22c8b64-62e6-490b-bc5c-d3a4cedfed9c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -393,6 +396,15 @@
     <ClInclude Include="ModuleResources.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="ResourceTexture.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceMesh.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -610,6 +622,15 @@
     </ClCompile>
     <ClCompile Include="PanelTime.cpp">
       <Filter>Sources\Modules\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceMesh.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceTexture.cpp">
+      <Filter>Sources\Resources</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
