@@ -76,7 +76,7 @@ public:
 // ====================================================================================
 
 
-// Create a float4x4 from a aiMat4x4
+// Create a float4x4 from an aiMat4x4
 	float4x4 AiNatrixToFloatMat(const aiMatrix4x4& aiMat);
 
 // Get the higher or lower value from 2 floats
@@ -115,9 +115,6 @@ public:
 
 	// Textures that have to be loaded
 	std::vector<Textures> texturesToLoad;	// Can this be temp?
-
-	// This has to be deleted
-
 
 private:
 	Camera* playingCamera = nullptr;
