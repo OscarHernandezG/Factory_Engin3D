@@ -53,11 +53,7 @@ update_status ModulePicking::Update()
 
 		if (nearObject != nullptr)
 			App->geometry->currentGameObject = nearObject;
-
-		rayDraw = RayLine(ray.a, ray.b);
-		rayDraw.gameObject = App->gameObject->rootGameObject;
 	}
-	rayDraw.Render();
 	return UPDATE_CONTINUE;
 }
 
