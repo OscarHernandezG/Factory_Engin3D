@@ -19,7 +19,7 @@ void ModuleImGui::CreateGameObjectHierarchy(float2 scale)
 	
 	if (popHierarchy = ImGui::BeginPopup("GameObjectsPop"))
 	{
-		if (ImGui::MenuItem("GO"))
+		if (ImGui::MenuItem("New  Game Object"))
 		{
 			if(objectSelected)
 				App->gameObject->CreateEmptyGameObject(objectSelected, "Empty Object");
@@ -28,9 +28,8 @@ void ModuleImGui::CreateGameObjectHierarchy(float2 scale)
 		}
 		if(objectSelected)
 			if (ImGui::MenuItem("Delete"))
-			{
-				DeleteGO(objectSelected);
-			}
+				objectSelected->Delete();
+			
 
 		ImGui::MenuItem("Close");
 		ImGui::EndPopup();
@@ -82,5 +81,6 @@ void ModuleImGui::DeleteGO(GameObject* &object)
 		object->toDeleteFake = object->GetActive();
 		object->SetActive(false);
 	}
+
 	App->sceneIntro->octree.ReDoOctree(AABB(), true);
 }

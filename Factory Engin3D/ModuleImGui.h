@@ -82,6 +82,8 @@ public:
 
 	//Panel Transform
 	void CreateTransform(float2 scale);
+	void SavePrevTransform(const math::float4x4 &prevTransformMat);
+	void GuizmosOptions();
 
 	//Panel Hierarchy
 	void CreateGameObjectHierarchy(float2 scale);
@@ -153,7 +155,9 @@ public:
 
 	bool warningDialoge = false;
 
+	//Transform Panel
 	bool dragTransform = false;
+	bool redoOc = false;
 
 	//Resource Panel
 	AssetsHierarchy assetsHierarchy;
