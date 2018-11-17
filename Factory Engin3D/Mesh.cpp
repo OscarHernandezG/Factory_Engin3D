@@ -79,6 +79,30 @@ void Mesh::ClearMesh()
 }
 
 
+void Mesh::Inspector()
+{
+	if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (buffer)
+		{
+			ImGui::Text("Vertices count: %u", buffer->vertex.size);
+			ImGui::Text("Faces count: %u", buffer->index.size / 3);
+
+			if (ImGui::Button("Remove Mesh", ImVec2(50, 25)))
+			{
+
+			}
+		}
+		else
+		{
+			ImGui::Text("Mesh component has no resource mesh");
+			if (ImGui::Button("Add new ResourceMesh", ImVec2(50, 25)))
+			{
+
+			}
+		}
+	}
+}
 
 
 // ------------------------------------------------------------------------------

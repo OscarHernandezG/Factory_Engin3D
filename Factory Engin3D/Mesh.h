@@ -22,6 +22,8 @@ public:
 
 	void ClearMesh();
 
+	void Inspector();
+
 public:
 	ResourceMesh* buffer = nullptr;
 
@@ -32,6 +34,7 @@ public:
 };
 
 
+//----------------------------------------------------------------------------------------------
 class MeshNode
 {
 public:
