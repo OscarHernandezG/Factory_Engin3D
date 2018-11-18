@@ -130,7 +130,7 @@ void ModuleGameObject::SaveScene(const char* sceneName)
 	}
 }
 
-void ModuleGameObject::LoadScene()
+void ModuleGameObject::LoadScene(const char * name)
 {
 //Clear previous
 	DeletePreviousScene();
@@ -139,7 +139,10 @@ void ModuleGameObject::LoadScene()
 	App->sceneIntro->octree.Create(AABB(float3::zero, float3::zero));
 
 	//Load new
-	JSON_Value* scene = json_parse_file("Llibrary/Scenes/scene.json");
+	string direction = "Llibrary/Scenes/";
+	direction.append(name);
+	direction.append(".json");
+	JSON_Value* scene = json_parse_file(direction.data());
 
 	if (json_value_get_type(scene) == JSONArray)
 	{
@@ -169,6 +172,7 @@ void ModuleGameObject::LoadScene()
 		}
 	}
 }
+
 void ModuleGameObject::SetGOMeshNewScene(Mesh * itMesh, std::list<GameObject *>::iterator &it)
 {
 	bool found = false;
@@ -215,7 +219,7 @@ void ModuleGameObject::DeletePreviousScene()
 
 	gameObjectsAll.clear();
 	App->geometry->currentGameObject = nullptr;
-	App->geometry->plane = nullptr;
+	//App->geometry->plane = nullptr;
 	App->sceneIntro->octree.Clear();
 }
 
@@ -333,36 +337,4 @@ void ModuleGameObject::RemoveDynamic(GameObject* object)
 bool ModuleGameObject::CanTransform(GameObject* object)
 {
 	return (object->GetObjectStatic() || App->time->gameState == GameState_NONE);
-}
-
-void ModuleGameObject::SaveBeforePlay()
-{
-	for (list<GameObject*>::iterator iterator = gameObjectsAll.begin(); iterator != gameObjectsAll.end(); ++iterator)
-	{
-		playingObjects[(*iterator)->UID] = (*iterator)->GetLocalMatrix();
-	}
-}
-
-
-void ModuleGameObject::LoadAfterPlay()
-{
-	for (list<GameObject*>::iterator listiterator = gameObjectsAll.begin(); listiterator != gameObjectsAll.end(); ++listiterator)
-	{
-		map<uint, float4x4>::iterator iterator = playingObjects.find((*listiterator)->UID);
-		if (iterator != playingObjects.end())//Set transform before playing
-		{
-			(*listiterator)->SetTransform(iterator->second);//SET
-			playingObjects.erase((*listiterator)->UID);
-			if ((*listiterator)->toDeleteFake)
-			{
-				(*listiterator)->SetActive(true);//SET
-				App->sceneIntro->octree.Insert(*listiterator);
-			}
-		}
-		else//Remove objects that are created while playing
-		{
-			(*listiterator)->toDelete = true;
-			App->geometry->currentGameObject = nullptr;
-		}
-	}
 }

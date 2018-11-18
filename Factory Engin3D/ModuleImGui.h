@@ -82,7 +82,6 @@ public:
 
 	//Panel Inspector
 	void CreateInspector(float2 scale);
-	void DeleteGO(GameObject *& object);
 
 	//Panel Hierarchy
 	void CreateGameObjectHierarchy(float2 scale);

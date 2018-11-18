@@ -27,8 +27,10 @@ void ModuleImGui::CreateGameManager(float2 scale)
 		ImGui::SameLine();
 
 		if (ImGui::Button("Tick", { 50,25 }))
-			App->time->gameState = GameState_TICK;
-
+		{
+			if (App->time->gameState != GameState_NONE)
+				App->time->gameState = GameState_TICK;
+		}
 
 		if (App->time->gameState != GameState_NONE)
 		{
@@ -55,11 +57,11 @@ void ModuleImGui::ChangePlayState(bool show, GameState state)
 	hierarchyWindow = show;
 	App->time->gameState = state;
 
+	std::string direction = "PlayingScene";
 	if (show)
-		App->gameObject->LoadAfterPlay();
-	
+		App->gameObject->LoadScene(direction.data());
+
 	else
-		App->gameObject->SaveBeforePlay();
-	
+		App->gameObject->SaveScene(direction.data());	
 }
 
