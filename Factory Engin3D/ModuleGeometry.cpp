@@ -551,14 +551,12 @@ float3 ModuleGeometry::GetBBPos() const
 float3 ModuleGeometry::GetCurrentMeshPivot() const
 {
 	if (currentGameObject)
-		return currentGameObject->GetPos();
+		return currentGameObject->GetGlobalPos();
 	else return float3::zero;
 }
 //----------------------------------------------------------------
-
 
 Camera* ModuleGeometry::GetPlayingCamera() const
 {
 	return playingCamera;
 }
-

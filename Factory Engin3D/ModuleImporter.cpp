@@ -26,7 +26,7 @@ bool ModuleImporter::Init()
 	return true;
 }
 
-void ModuleImporter::DistributeFile(char* file, bool needPath)
+void ModuleImporter::DistributeFile(const char* file, bool needPath)
 {
 	string filePath(file);
 	string extension = filePath.substr(filePath.find_last_of(".") + 1);

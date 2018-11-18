@@ -102,6 +102,8 @@ public:
 
 
 	void Inspector();
+	void SavePrevTransform(const float4x4 & prevTransformMat);
+	void GuizmosOptions();
 
 	void SaveComponent(JSON_Object* parent);
 
@@ -109,6 +111,8 @@ public:
 	AABB boundingBox;
 	AABB originalBoundingBox;
 
+	bool dragTransform = true;
+	bool needRedoOc = false;
 private:
 	float3 position = float3::zero;
 	Quat rotation = Quat::identity;

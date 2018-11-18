@@ -1,12 +1,10 @@
 #include "Application.h"
 #include "ModuleImGui.h"
-
+#include "imgui-1.65/imgui_dock.h"
 
 void ModuleImGui::CreateConsole(float2 scale)
 {
-	ImGui::Begin("Console", &consoleWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
-
-	SetWindowDim(consolePos, consoleSize, scale);
+	ImGui::BeginDock("Console", &consoleWindow);
 
 	if (ImGui::Button("Clear", ImVec2(400, 20)))
 		textBuff.clear();
@@ -17,9 +15,9 @@ void ModuleImGui::CreateConsole(float2 scale)
 		ImGui::SetScrollY(1.0f);
 	canScroll = false;
 
-	ImGui::End();
-}
 
+	ImGui::EndDock();
+}
 void ModuleImGui::LogConsole(const char * consoleText)
 {
 	textBuff.appendf(consoleText);

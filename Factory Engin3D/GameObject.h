@@ -157,6 +157,7 @@ public:
 	std::string name;
 
 	bool toDelete = false;
+	bool toDeleteFake = false;
 
 private:
 	bool isActive = true;

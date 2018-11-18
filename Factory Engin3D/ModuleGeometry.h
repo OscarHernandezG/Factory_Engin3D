@@ -109,6 +109,9 @@ public:
 	// The plane of the scene
 	GameObject* plane = nullptr;
 
+	//The current camera while playing
+	GameObject* cameraObject = nullptr;
+
 	// MeshNodes and Meshes loaded from a fbx
 	std::vector<MeshNode> nodes;	// Can this be temp?
 	std::vector<ResourceMesh*> currentMeshes;	// Can this be temp?

@@ -17,6 +17,7 @@ struct ImVec4;
 struct ExampleAppConsole;
 class GameObject;
 class Timer;
+enum GameState;
 
 struct AssetsHierarchy
 {
@@ -79,15 +80,19 @@ public:
 	void CreateConsole(float2 scale);
 	void LogConsole(const char* consoleText);
 
-	//Panel Transform
+	//Panel Inspector
 	void CreateInspector(float2 scale);
+	void DeleteGO(GameObject *& object);
 
 	//Panel Hierarchy
 	void CreateGameObjectHierarchy(float2 scale);
 	void CreateGOTreeNode(GameObject * current);
+	void DragDropGO(GameObject *& childs);
+
 
 	//PanelTime
 	void CreateGameManager(float2 scale);
+	void ChangePlayState(bool show, GameState state);
 
 	//Panel Resources
 	void CreateAssetsWindow(float2 scale);
@@ -106,6 +111,7 @@ public:
 	bool consoleWindow = false;
 	bool inspectorWindow = false;
 	bool hierarchyWindow = true;
+	bool assetsWindow = true;
 	bool exitOption = false;
 
 
@@ -148,17 +154,21 @@ public:
 
 	bool warningDialoge = false;
 
-	bool dragTransform = false;
-
 	//Resource Panel
 	AssetsHierarchy assetsHierarchy;
 	Timer contRefresh;
+	bool popRecource = false;
+	std::string pathClicked;
+
+	//Hierarchy Panel
+	bool popHierarchy = false;
+	GameObject* objectSelected = nullptr;
+	bool objectDrag = false;
 
 	//--------------------------
 	// Window position
 	float2 aboutPos = float2::zero;
 	float2 configurationPos = float2::zero;
-	float2 transformPos = float2::zero;
 	float2 consolePos = float2::zero;
 	float2 scenePos = float2::zero;
 	float2 playPos = float2::zero;
@@ -166,7 +176,6 @@ public:
 	// Window sizes
 	float2 aboutSize = float2::zero;
 	float2 configurationSize = float2::zero;
-	float2 transformSize = float2::zero;
 	float2 consoleSize = float2::zero;
 	float2 sceneSize = float2::zero;
 	float2 playSize = float2::zero;

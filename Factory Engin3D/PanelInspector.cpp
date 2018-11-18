@@ -8,8 +8,6 @@ void ModuleImGui::CreateInspector(float2 scale)
 {
 	ImGui::Begin("Inspector", &inspectorWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 
-	SetWindowDim(transformPos, transformSize, scale);
-
 	GameObject* currObject = App->geometry->currentGameObject;
 	if (currObject != nullptr)
 	{
@@ -21,7 +19,7 @@ void ModuleImGui::CreateInspector(float2 scale)
 			currObject->SetActive(currObject->GetActive());
 			if (currObject->GetActive())
 				App->sceneIntro->ReInsertOctree(currObject);
-			App->sceneIntro->octree.ReDoOctree(AABB(), true);
+			App->sceneIntro->redoOc = true;
 		}
 		ImGui::SameLine();
 		if (ImGui::Checkbox("Static Object", currObject->GetStaticReference()))
@@ -32,7 +30,7 @@ void ModuleImGui::CreateInspector(float2 scale)
 			else
 				App->gameObject->RemoveDynamic(currObject);
 
-			App->sceneIntro->octree.ReDoOctree(AABB(), true);
+			App->sceneIntro->redoOc = true;
 		}
 
 		for (std::list<Component*>::iterator comp = currObject->components.begin(); comp != currObject->components.end(); ++comp)
@@ -40,9 +38,29 @@ void ModuleImGui::CreateInspector(float2 scale)
 			(*comp)->Inspector();
 		}
 
+		if (ImGui::Button("Delete", ImVec2(100, 20)))
+		{
+			DeleteGO(currObject);
+			App->geometry->currentGameObject = nullptr;
+			App->sceneIntro->redoOc = true;
+		}
 	}
 	else {
 		ImGui::TextWrapped("There aren't any meshes");
 	}
 	ImGui::End();
+}
+
+void ModuleImGui::DeleteGO(GameObject *& object)
+{
+	if (App->time->gameState == GameState_NONE)
+		object->Delete();
+	else
+	{
+		object->toDeleteFake = object->GetActive();
+		object->SetActive(false);
+	}
+
+	App->sceneIntro->redoOc = true;
+
 }

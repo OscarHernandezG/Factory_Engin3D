@@ -21,7 +21,6 @@ public:
 	float3 SetTrianglePoint(Buffer<float> vertex, Buffer<uint> index, uint idIndex);
 
 public:
-	RayLine rayDraw;
 };
 
 #endif // !__ModulePicking_H__
