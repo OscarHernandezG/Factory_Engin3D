@@ -27,6 +27,21 @@ Camera::Camera(GameObject* gameObject) : Component(gameObject)
 	frustum.horizontalFov = 2.f * atan(tan(frustum.verticalFov * 0.5f) * (SCREEN_WIDTH / SCREEN_HEIGHT));
 }
 
+Camera::Camera(GameObject* gameObject, CameraInfo* info) : Component(gameObject)
+{
+	frustum.type = PerspectiveFrustum;
+
+	frustum.pos = info->position;
+
+	frustum.front = float3::unitZ;
+	frustum.up = float3::unitY;
+
+	frustum.nearPlaneDistance = info->nearPlaneDistance;
+	frustum.farPlaneDistance = info->farPlaneDistance;
+	frustum.verticalFov = info->verticalFov;
+	frustum.horizontalFov = info->horizontalFov;
+}
+
 void Camera::Inspector()
 {
 	if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
@@ -97,8 +112,16 @@ void Camera::SaveComponent(JSON_Object * parent)
 
 	SaveNumberArray(parent, "pos", frustum.pos.ptr(), 3);
 
-	SaveNumberArray(parent, "front", frustum.front.ptr(), 3);
-	SaveNumberArray(parent, "up", frustum.up.ptr(), 3);
+	//Pos
+	JSON_Value* position = json_value_init_object();
+	JSON_Object* positionObj = json_value_get_object(position);
+
+	json_object_set_value(parent, "Position", position);
+
+	json_object_set_number(positionObj, "X", frustum.pos.x);
+	json_object_set_number(positionObj, "Y", frustum.pos.y);
+	json_object_set_number(positionObj, "Z", frustum.pos.z);
+	//
 
 	json_object_set_number(parent, "nearPlaneDistance", frustum.nearPlaneDistance);
 	json_object_set_number(parent, "farPlaneDistance", frustum.farPlaneDistance);

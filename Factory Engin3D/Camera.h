@@ -7,11 +7,21 @@
 
 class GameObject;
 
+struct CameraInfo : ComponentInfo
+{
+	float nearPlaneDistance = 0.0f;
+	float farPlaneDistance = 0.0f;
+	float verticalFov = 0.0f;
+	float horizontalFov = 0.0f;
+
+	float3 position = float3::zero;
+};
+
 class Camera : public Component
 {
 public:
-
 	Camera(GameObject* gameObject);
+	Camera(GameObject* gameObject, CameraInfo * info);
 
 	void Inspector();
 

@@ -120,6 +120,12 @@ void GameObject::CreateFromJson(JSON_Object* info, vector<uint>& meshesToLoad)
 		{
 			ComponentInfo* compInfo = LoadComponentInfo(comp, type);
 			Component* newComponent = AddComponent(type, compInfo);
+
+			if (type == ComponentType_CAMERA)
+			{
+				App->geometry->cameraObject = this;
+				App->geometry->playingCamera = (Camera*)newComponent;
+			}
 			delete compInfo;
 		}
 		else if (type == ComponentType_GEOMETRY)
@@ -198,7 +204,24 @@ ComponentInfo* GameObject::LoadComponentInfo(JSON_Object* info, ComponentType ty
 	}
 		break;
 	case ComponentType_CAMERA:
-		// TODO
+	{
+		CameraInfo* camInfo = new CameraInfo();
+
+		camInfo->farPlaneDistance = json_object_get_number(info, "farPlaneDistance");
+		camInfo->nearPlaneDistance = json_object_get_number(info, "nearPlaneDistance");
+		camInfo->verticalFov = json_object_get_number(info, "verticalFov");
+		camInfo->horizontalFov = json_object_get_number(info, "horizontalFov");
+
+		JSON_Object* position = json_object_get_object(info, "Position");
+
+		float3 pos;
+		pos.x = json_object_get_number(position, "X");
+		pos.y = json_object_get_number(position, "Y");
+		pos.z = json_object_get_number(position, "Z");
+		camInfo->position = pos;
+
+		ret = (ComponentInfo*)camInfo;
+	}
 		break;
 	case ComponentType_TEXTURE:
 	{
@@ -258,6 +281,11 @@ Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
 			newComponent = (Component*)(((GeometryInfo*)info)->geometry);
 		break;
 	case ComponentType_CAMERA:
+		if (info)
+		{
+			newComponent = (Component*)new Camera(this, (CameraInfo*)info);
+		}
+		else
 		newComponent = (Component*)new Camera(this);
 		break;
 	case ComponentType_TEXTURE:
