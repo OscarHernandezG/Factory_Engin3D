@@ -56,6 +56,9 @@ update_status ModuleGameObject::PostUpdate()
 		delete *iterator;
 	}
 
+	if(rootGameObject)
+		rootGameObject->PostUpdate();
+
 	if (redoOc)
 	{
 		std::vector<GameObject*> objects;
@@ -70,8 +73,6 @@ update_status ModuleGameObject::PostUpdate()
 		redoOc = false;
 	}
 
-	if(rootGameObject)
-		rootGameObject->PostUpdate();
 
 	return UPDATE_CONTINUE;
 }
