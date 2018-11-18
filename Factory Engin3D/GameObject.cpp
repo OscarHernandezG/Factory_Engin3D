@@ -37,16 +37,14 @@ GameObject::GameObject(float3 position, Quat rotation, float3 scale, GameObject*
 GameObject::~GameObject()
 {
 	transform = nullptr;
-
-	RemoveComponents();
-
-	RemoveChilds();
 }
 
 void GameObject::RemoveChilds()
 {
 	for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
 	{
+		(*iterator)->RemoveComponents();
+		(*iterator)->RemoveChilds();
 		delete (*iterator);
 	}
 	childs.clear();
@@ -68,8 +66,11 @@ void GameObject::RealDelete()
 	if (father)
 		father->childs.remove(this);
 
+	RemoveComponents();
+
+	RemoveChilds();
+
 	father = nullptr;
-	//delete this;
 }
 
 void GameObject::Update(float dt)

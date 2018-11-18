@@ -187,7 +187,7 @@ void Transform::Inspector()
 {
 	if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		float4x4 prevTransformMat = GetMatrix();
+		float4x4 prevTransformMat = GetLocalMatrix();
 		if (ImGui::DragFloat3("Position", &position[0]) && App->gameObject->CanTransform(gameObject)) {
 			if (App->gui->dragTransform)
 			{
