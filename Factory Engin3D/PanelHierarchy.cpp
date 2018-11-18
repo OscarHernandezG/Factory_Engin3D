@@ -5,7 +5,6 @@ void ModuleImGui::CreateGameObjectHierarchy(float2 scale)
 {
 	if (ImGui::Begin("Scene", &hierarchyWindow, ImGuiWindowFlags_NoMove))
 
-		SetWindowDim(scenePos, sceneSize, scale);
 
 	//Options menu
 	if (ImGui::BeginMenu("Options"))
@@ -55,6 +54,10 @@ void ModuleImGui::CreateGameObjectHierarchy(float2 scale)
 		objectSelected = nullptr;
 	}
 
+	ImVec2 cacatua = ImGui::GetWindowSize();
+	sceneSize.x = cacatua.x;
+
+	SetWindowDim(scenePos, sceneSize, scale);
 	ImGui::End();
 }
 

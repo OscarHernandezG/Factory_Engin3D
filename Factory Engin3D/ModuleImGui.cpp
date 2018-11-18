@@ -346,23 +346,26 @@ void ModuleImGui::CreateRandomNumberWindow()
 
 void ModuleImGui::SetWindowDim(float2 &pos, float2 &size, float2 &scale, bool gameWindow)
 {
-
-
-	float2 realPos = pos.Mul(scale);
-	float2 realSize = size.Mul(scale);
+	//float2 realPos = pos.Mul(scale);
+	//float2 realSize = size.Mul(scale);
 
 	if (gameWindow)
 	{
+		float2 realSize = size;
+		float2 realPos = pos;
 		if (App->time->gameState != GameState_NONE)
 		{
-			realSize = size + playCountSize;
-			realPos += playCountPos.Mul(scale);
+			realSize += playCountSize;
+			realPos += playCountPos;
 		}
-		else 
-			realSize = size;
+		ImGui::SetWindowPos({ realPos.x, realPos.y });
+		ImGui::SetWindowSize({ realSize.x, realSize.y });
 	}
-	ImGui::SetWindowPos({ realPos.x, realPos.y });
-	ImGui::SetWindowSize({ realSize.x, realSize.y });
+	else
+	{		
+	ImGui::SetWindowPos({ pos.x, pos.y });
+	ImGui::SetWindowSize({ size.x, size.y });
+	}
 }
 
 update_status ModuleImGui::CreateMainMenuBar()

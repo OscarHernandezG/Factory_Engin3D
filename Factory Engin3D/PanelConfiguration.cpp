@@ -88,8 +88,9 @@ void ModuleImGui::CreateWindowHeader()
 {
 	if (ImGui::Checkbox("Fullscreen", &App->window->fullscreen))
 	{
-		App->window->fulldesktop = false;
-		App->window->SetFullscreen();
+		warningDialoge = true;
+		//App->window->fulldesktop = false;
+		//App->window->SetFullscreen();
 	}
 	ImGui::SameLine();
 	if (ImGui::Checkbox("Borderless", &App->window->borderless))
@@ -98,10 +99,10 @@ void ModuleImGui::CreateWindowHeader()
 	}
 	if (ImGui::Checkbox("Full Desktop", &App->window->fulldesktop))
 	{
-		App->window->fullscreen = false;
-		App->window->SetFullscreen(true);
+		//App->window->fullscreen = false;
+		//App->window->SetFullscreen(true);
 		//App->window->fulldesktop = false;
-		//warningDialoge = true;
+		warningDialoge = true;
 	}
 	if (ImGui::SliderFloat("Brightness", &brightnessPos, 0.0f, 1.0f))
 	{
