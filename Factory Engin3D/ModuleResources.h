@@ -25,7 +25,7 @@ public:
 	Resource* FindLoadedResource(const char* path, ResourceType type);
 
 	ResourceMesh* LoadMesh(uint name);
-	ResourceTexture* LoadTexture(char * path);
+	ResourceTexture* LoadTexture(const char * path);
 
 private:
 	bool RealLoadMesh(char * buffer, ResourceMesh*& mesh, const char* name);
@@ -33,7 +33,8 @@ private:
 	void LoadTextureUVGPU(char * &cursor, uint &bytes, ResourceMesh * bufferImporter);
 	void LoadVertexGPU(char * &cursor, uint &bytes, ResourceMesh * bufferImporter);
 	void LoadIndexGPU(char * &cursor, uint &bytes, ResourceMesh * bufferImporter);
-	bool RealLoadTexture(char* path, uint &opengGlTexture);
+
+	bool RealLoadTexture(const char* path, uint &opengGlTexture);
 
 public:
 	std::list<Resource*> resources;

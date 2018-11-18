@@ -117,8 +117,11 @@ void GameObject::CreateFromJson(JSON_Object* info, vector<uint>& meshesToLoad)
 
 		ComponentType type = (ComponentType)(int)json_object_get_number(comp, "Type");
 		if (type != ComponentType_GEOMETRY)
-			Component* newComponent = AddComponent(type, LoadComponentInfo(comp, type));
-
+		{
+			ComponentInfo* compInfo = LoadComponentInfo(comp, type);
+			Component* newComponent = AddComponent(type, compInfo);
+			delete compInfo;
+		}
 		else if (type == ComponentType_GEOMETRY)
 		{
 			uint compUUID = json_object_get_number(comp, "UUID");
@@ -198,8 +201,13 @@ ComponentInfo* GameObject::LoadComponentInfo(JSON_Object* info, ComponentType ty
 		// TODO
 		break;
 	case ComponentType_TEXTURE:
-		// TODO
-		break;
+	{
+		TextureInfo* textInfo = new TextureInfo();
+		textInfo->texture = App->resources->LoadTexture(json_object_get_string(info, "Name"));
+
+		ret = (ComponentInfo*)textInfo;
+	}
+	break;
 	case ComponentType_LIGHT:
 		// TODO
 		break;
