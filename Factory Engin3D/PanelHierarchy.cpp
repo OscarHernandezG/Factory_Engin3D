@@ -3,10 +3,10 @@
 
 void ModuleImGui::CreateGameObjectHierarchy(float2 scale)
 {
+	if (ImGui::Begin("Scene", &hierarchyWindow/*, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize*/))
 
-	ImGui::Begin("Scene", &hierarchyWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 
-	SetWindowDim(scenePos, sceneSize, scale);
+		SetWindowDim(scenePos, sceneSize, scale);
 
 	//Options menu
 	if (ImGui::BeginMenu("Options"))
@@ -28,7 +28,6 @@ void ModuleImGui::CreateGameObjectHierarchy(float2 scale)
 		if (objectDrag)
 			objectDrag = false; //put false for next frame
 	}
-	ImGui::End();
 	//Call only one time OpenPopup
 	if (popHierarchy)
 	{
@@ -50,10 +49,12 @@ void ModuleImGui::CreateGameObjectHierarchy(float2 scale)
 			objectSelected->Delete();
 		ImGui::EndPopup();
 	}
-	else if(objectSelected)
+	else if (objectSelected)
 	{
 		objectSelected = nullptr;
 	}
+
+	ImGui::End();
 }
 
 void ModuleImGui::CreateGOTreeNode(GameObject* current)
