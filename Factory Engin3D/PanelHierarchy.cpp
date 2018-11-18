@@ -107,12 +107,24 @@ void ModuleImGui::DragDropGO(GameObject* &object)
 		}
 	if (ImGui::BeginDragDropTarget())
 	{
-		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Change GO hierarchy"))
+		const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Change GO hierarchy");
+			if (payload)
 		{
 			GameObject* childObject = *(GameObject**)payload->Data;
 			if (childObject && !objectDrag)
 			{
 				objectDrag = true; //Enter one time, only the child
+
+				float4x4 global = childObject->GetGlobalMatrix();
+				float4x4 parentGlobal = object->GetGlobalMatrix();
+
+				parentGlobal.Inverse();
+
+				float4x4 local = parentGlobal.Mul(global);
+
+				childObject->SetTransform(local);
+
+
 				childObject->SetParent(object);
 			}
 		}
