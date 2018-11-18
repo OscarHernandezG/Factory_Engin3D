@@ -50,6 +50,20 @@ update_status ModuleGameObject::PostUpdate()
 		(*iterator)->RealDelete();
 		delete *iterator;
 	}
+
+	if (redoOc)
+	{
+		std::vector<GameObject*> objects;
+		//Get only valid object for octre
+		for (std::list<GameObject*>::iterator iterator = App->gameObject->gameObjectsAll.begin(); iterator != App->gameObject->gameObjectsAll.end(); ++iterator)
+		{
+			if ((*iterator)->HasComponent(ComponentType_GEOMETRY) && (*iterator)->transform->boundingBox.Size().Length() > 0)
+				objects.push_back(*iterator);
+		}
+
+		App->sceneIntro->octree.ReDoOctree(objects);
+		redoOc = false;
+	}
 	return UPDATE_CONTINUE;
 }
 

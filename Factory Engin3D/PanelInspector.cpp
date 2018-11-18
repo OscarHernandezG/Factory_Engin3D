@@ -19,7 +19,7 @@ void ModuleImGui::CreateInspector(float2 scale)
 			currObject->SetActive(currObject->GetActive());
 			if (currObject->GetActive())
 				App->sceneIntro->ReInsertOctree(currObject);
-			App->sceneIntro->redoOc = true;
+			App->gameObject->redoOc = true;
 		}
 		ImGui::SameLine();
 		if (ImGui::Checkbox("Static Object", currObject->GetStaticReference()))
@@ -30,7 +30,7 @@ void ModuleImGui::CreateInspector(float2 scale)
 			else
 				App->gameObject->RemoveDynamic(currObject);
 
-			App->sceneIntro->redoOc = true;
+			App->gameObject->redoOc = true;
 		}
 
 		for (std::list<Component*>::iterator comp = currObject->components.begin(); comp != currObject->components.end(); ++comp)
@@ -38,14 +38,13 @@ void ModuleImGui::CreateInspector(float2 scale)
 			(*comp)->Inspector();
 		}
 
+		ImGui::Separator();
 		if (ImGui::Button("Delete", ImVec2(100, 20)))
-		{
 			DeleteGO(currObject);
-			App->geometry->currentGameObject = nullptr;
-			App->sceneIntro->redoOc = true;
-		}
+		
 	}
-	else {
+	else 
+	{
 		ImGui::TextWrapped("Select a GameObject to view its components");
 	}
 	ImGui::End();
@@ -60,7 +59,6 @@ void ModuleImGui::DeleteGO(GameObject *& object)
 		object->toDeleteFake = object->GetActive();
 		object->SetActive(false);
 	}
-
-	App->sceneIntro->redoOc = true;
-
+	App->geometry->currentGameObject = nullptr;
+	App->gameObject->redoOc = true;
 }

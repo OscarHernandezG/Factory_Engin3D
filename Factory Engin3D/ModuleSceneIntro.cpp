@@ -82,7 +82,7 @@ update_status ModuleSceneIntro::PreUpdate()
 		if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
 		{
 			GetPreviousTransform();
-			redoOc = true;
+			App->gameObject->redoOc = true;
 		}
 		isSnap = true;
 	}
@@ -105,12 +105,6 @@ update_status ModuleSceneIntro::Update()
 
 update_status ModuleSceneIntro::PostUpdate()
 {
-	if (redoOc)
-	{
-		octree.ReDoOctree(AABB(), true);
-		redoOc = false;
-	}
-
 	return UPDATE_CONTINUE;
 }
 
@@ -138,7 +132,7 @@ void ModuleSceneIntro::GuizmoUpdate()
 			{
 				SaveLastTransform(lastMat);
 				saveTransform = false;
-				redoOc = true;
+				App->gameObject->redoOc = true;
 			}
 			lastMat = transformObject->GetLocalMatrix();
 		}

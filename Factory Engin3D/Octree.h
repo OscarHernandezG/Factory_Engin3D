@@ -44,7 +44,8 @@ public:
 	void Insert(GameObject* gameObject);
 	void GetBoxLimits(std::vector<const OctreeNode*>& nodes) const;
 	void GetGameObjects(std::vector<GameObject*>& object) const;
-	void ReDoOctree(const AABB & limits = AABB(float3::zero,float3::zero), bool external = false);
+	void ReDoOctree(std::vector<GameObject*> objects);  //External Redo
+	void ReDoOctree(const AABB& limits);				//Internal Redo
 	void ReDoLimits(GameObject * newObject);
 	void UniqueObjects(std::vector<GameObject *> & objects) const;
 	template<typename TYPE>
