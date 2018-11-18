@@ -29,6 +29,8 @@ public:
 	bool IsResourceLoaded(Resource* res);
 
 	ResourceMesh* LoadMesh(uint name);
+	ResourceMesh* LoadMesh(const MeshNode& mesh);
+
 	ResourceTexture* LoadTexture(const char * path);
 
 private:

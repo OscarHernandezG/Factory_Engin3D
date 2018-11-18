@@ -327,7 +327,7 @@ void ModuleGeometry::LoadMeshImporter(const char* path, const vector<MeshNode>& 
 	char* buffer = nullptr;
 	for (vector<MeshNode>::const_iterator iterator = nodes.begin(); iterator != nodes.end(); ++iterator)
 	{
-		ResourceMesh* curr = App->resources->LoadMesh((*iterator).componentUUID);
+		ResourceMesh* curr = App->resources->LoadMesh(*iterator);
 
 		if (curr)
 		{
