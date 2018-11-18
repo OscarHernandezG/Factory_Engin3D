@@ -199,11 +199,14 @@ void Octree::ReDoOctree(std::vector<GameObject*> objects) // External Redo
 	if (root != nullptr)
 	{
 		Clear();
-		Create((*objects.begin())->transform->boundingBox);
-
-		for (std::vector<GameObject*>::iterator iterator = objects.begin(); iterator != objects.end(); ++iterator)
+		if (!objects.empty())
 		{
-			Insert(*iterator);
+			Create((*objects.begin())->transform->boundingBox);
+
+			for (std::vector<GameObject*>::iterator iterator = objects.begin(); iterator != objects.end(); ++iterator)
+			{
+				Insert(*iterator);
+			}
 		}
 	}
 }
