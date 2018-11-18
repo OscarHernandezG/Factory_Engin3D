@@ -155,14 +155,15 @@ void ModuleGameObject::LoadScene()
 
 		for (list<GameObject*>::iterator it = sceneGameObjects.begin(); it != sceneGameObjects.end(); ++it)
 		{
+			if (!(*it)->SetParent(FindByID((*it)->parentUUID)))
+			{
+				rootGameObject = *it;
+			}
+
 			Mesh* itMesh = (Mesh*)(*it)->GetComponent(ComponentType_GEOMETRY);
 			if (itMesh)
 			{
 				SetGOMeshNewScene(itMesh, it);
-			}
-			if (!(*it)->SetParent(FindByID((*it)->parentUUID)))
-			{
-				rootGameObject = *it;
 			}
 		}
 	}
