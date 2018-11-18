@@ -638,8 +638,5 @@
     <ClCompile Include="imgui-1.65\imgui_dock.cpp">
       <Filter>Sources\Containers\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="PanelTransform.cpp">
-      <Filter>Sources\Modules\ImGui</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

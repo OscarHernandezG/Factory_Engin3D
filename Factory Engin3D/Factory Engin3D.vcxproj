@@ -254,7 +254,6 @@
     <ClCompile Include="PanelInspector.cpp" />
     <ClCompile Include="PanelTime.cpp" />
     <ClCompile Include="PanelResources.cpp" />
-    <ClCompile Include="PanelTransform.cpp" />
     <ClCompile Include="parson\parson.c" />
     <ClCompile Include="Geometry.cpp" />
     <ClCompile Include="pcg-c-basic-0.9\pcg_basic.c" />

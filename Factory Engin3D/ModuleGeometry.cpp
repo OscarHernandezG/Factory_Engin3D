@@ -556,18 +556,3 @@ Camera* ModuleGeometry::GetPlayingCamera() const
 {
 	return playingCamera;
 }
-
-void ModuleGeometry::LoadDefaultScene()
-{
-	App->importer->DistributeFile("assets\\textures\\Baker_house.png");
-	App->importer->DistributeFile("assets\\models\\Street.fbx");
-
-	cameraObject = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->rootGameObject, "Camera");
-	playingCamera = (Camera*)cameraObject->AddComponent(ComponentType_CAMERA, nullptr);
-	
-	plane = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->rootGameObject, "Ground");
-
-	GeometryInfo planeInfo(new PrimitivePlane());
-	plane->AddComponent(ComponentType_GEOMETRY, &planeInfo);
-}
-
