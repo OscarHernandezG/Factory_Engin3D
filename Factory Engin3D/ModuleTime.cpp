@@ -36,6 +36,8 @@ bool ModuleTime::CleanUp()
 
 update_status ModuleTime::PreUpdate()
 {
+	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
+
 	//Calculate dtReal
 	dtReal = (float)dtTimer.Read() / 1000.0f;
 
@@ -90,11 +92,15 @@ update_status ModuleTime::PreUpdate()
 
 update_status ModuleTime::Update()
 {
+	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
+
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleTime::PostUpdate()
 {
+	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
+
 
 	msLog.push_back(dtReal * 1000);
 

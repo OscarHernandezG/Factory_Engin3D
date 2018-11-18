@@ -66,6 +66,8 @@ void ModuleGeometry::LoadDefaultScene()
 
 update_status ModuleGeometry::PostUpdate()
 {
+	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
+
 	//TEMP
 	//----------------------------------------------------------------------------------------------
 	if (plane != nullptr && plane->GetActive())

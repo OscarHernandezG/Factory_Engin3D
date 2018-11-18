@@ -42,6 +42,8 @@ bool ModuleCamera3D::CleanUp()
 // -----------------------------------------------------------------
 update_status ModuleCamera3D::Update()
 {
+	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
+
 	float speed = cameraSpeed * App->time->Getdt();
 
 	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_DOWN)

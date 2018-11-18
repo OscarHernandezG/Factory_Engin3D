@@ -21,6 +21,8 @@ bool ModuleGameObject::Start()
 
 update_status ModuleGameObject::Update()
 {
+	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
+
 	rootGameObject->Update(App->time->Getdt());
 
 	//App->geometry->Draww(rootGameObject);
@@ -30,6 +32,8 @@ update_status ModuleGameObject::Update()
 
 update_status ModuleGameObject::PostUpdate()
 {
+	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
+
 	list<GameObject*> toDelete;
 
 	for (list<GameObject*>::iterator iterator = gameObjectsAll.begin(); iterator != gameObjectsAll.end(); ++iterator)

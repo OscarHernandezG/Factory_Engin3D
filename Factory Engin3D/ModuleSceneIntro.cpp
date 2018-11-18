@@ -38,6 +38,8 @@ bool ModuleSceneIntro::Start()
 
 update_status ModuleSceneIntro::PreUpdate()
 {
+	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
+
 	update_status status = UPDATE_CONTINUE;
 
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)//Debug Draw
@@ -98,6 +100,7 @@ update_status ModuleSceneIntro::PreUpdate()
 // Update
 update_status ModuleSceneIntro::Update()
 {
+	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
 
 	GuizmoUpdate();
 	return UPDATE_CONTINUE;

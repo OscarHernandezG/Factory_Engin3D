@@ -41,8 +41,6 @@ public:
 
 	~Transform() {}
 
-	void Update(float dt);
-
 	void UpdateBoundingBox();
 
 //Position

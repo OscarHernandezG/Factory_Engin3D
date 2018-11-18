@@ -8,6 +8,8 @@
 #include <vector>
 #include <algorithm>
 
+#include "Brofiler/Brofiler.h"
+
 #define MAX_NODE_ELEMENTS 10
 
 class GameObject;
@@ -60,6 +62,7 @@ public:
 template<typename TYPE>
 inline void Octree::GetIntersects(std::vector<GameObject*>& objects, const TYPE & primitive) const
 {
+	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
 	if (root != nullptr)
 	{
 		root->GetIntersects(objects, primitive);
@@ -70,6 +73,7 @@ inline void Octree::GetIntersects(std::vector<GameObject*>& objects, const TYPE 
 template<typename TYPE>
 inline void OctreeNode::GetIntersects(std::vector<GameObject*>& objects, const TYPE & primitive) const
 {
+	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
 	if (primitive.Intersects(limits))
 	{
 		for (std::list<GameObject*>::const_iterator iterator = objectsList.begin(); iterator != objectsList.end(); ++iterator)

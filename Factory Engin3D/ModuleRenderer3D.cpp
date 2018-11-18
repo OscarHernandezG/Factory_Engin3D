@@ -164,6 +164,7 @@ bool ModuleRenderer3D::Start()
 // PreUpdate: clear buffer
 update_status ModuleRenderer3D::PreUpdate()
 {
+	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	//glLoadIdentity();
@@ -193,6 +194,7 @@ update_status ModuleRenderer3D::PreUpdate()
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate()
 {
+	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
 
 	// 1. Draw geometry Camera Culling
 	std::vector<GameObject*> drawerGO;
@@ -386,6 +388,8 @@ math::float4x4 ModuleRenderer3D::Perspective(float fovy, float aspect, float n, 
 
 void ModuleRenderer3D::DebugDraw()
 {
+	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
+
 	std::vector<const OctreeNode*> aabb;
 	App->sceneIntro->octree.GetBoxLimits(aabb);
 	//Octree draw

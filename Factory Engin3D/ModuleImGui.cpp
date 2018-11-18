@@ -11,6 +11,7 @@
 #include "GameObject.h"
 #include "Geometries.h"
 
+
 //RAM and CPU usage
 #include "Windows.h"
 #include "Psapi.h"
@@ -57,6 +58,8 @@ bool ModuleImGui::Start()
 
 update_status ModuleImGui::PreUpdate()
 {
+	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
+
 	update_status status = UPDATE_CONTINUE;
 
 	// Calc windows scale
@@ -129,6 +132,8 @@ bool ModuleImGui::CleanUp()
 
 update_status ModuleImGui::PostUpdate()
 {
+	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
+
 
 	PROCESS_MEMORY_COUNTERS counters;
 	GetProcessMemoryInfo(GetCurrentProcess(), &counters, sizeof(counters));
@@ -148,6 +153,8 @@ update_status ModuleImGui::PostUpdate()
 
 void ModuleImGui::DrawUI()
 {
+	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
+
 	ImGui::Render();
 	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
 }

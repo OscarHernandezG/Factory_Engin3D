@@ -18,6 +18,9 @@
 #include "ModuleTime.h"
 #include "ModuleResources.h"
 
+#include "Brofiler\Brofiler.h"
+
+
 class Application
 {
 public:

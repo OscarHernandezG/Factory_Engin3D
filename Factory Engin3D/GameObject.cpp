@@ -346,7 +346,6 @@ void GameObject::SetPos(float3 pos)
 	if (transform)
 	{
 		transform->SetPos(pos);
-		transform->UpdateBoundingBox();
 	}
 }
 
@@ -428,7 +427,6 @@ void GameObject::SetTransform(float4x4 trans)
 	if (transform)
 	{
 		transform->SetTransform(trans);
-		transform->UpdateBoundingBox();
 	}
 }
 
@@ -439,7 +437,6 @@ void GameObject::SetScale(float3 scale)
 	if (transform)
 	{
 		transform->SetScale(scale);
-		transform->UpdateBoundingBox();
 	}
 }
 
@@ -448,7 +445,6 @@ void GameObject::Scale(float3 scale)
 	if (transform)
 	{
 		transform->Scale(scale);
-		transform->UpdateBoundingBox();
 	}
 }
 
@@ -457,7 +453,6 @@ void GameObject::SetRotation(Quat rotation)
 	if (transform)
 	{
 		transform->SetRotation(rotation);
-		transform->UpdateBoundingBox();
 	}
 }
 
@@ -466,7 +461,6 @@ void GameObject::Rotate(Quat rotation)
 	if (transform)
 	{
 		transform->Rotate(rotation);
-		transform->UpdateBoundingBox();
 	}
 }
 
@@ -475,7 +469,6 @@ void GameObject::SetIdentity()
 	if (transform)
 	{
 		transform->SetIdentity();
-		transform->UpdateBoundingBox();
 	}
 }
 

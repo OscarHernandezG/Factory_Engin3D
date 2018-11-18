@@ -27,6 +27,7 @@ bool ModulePicking::CleanUp()
 
 update_status ModulePicking::Update()
 {
+	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
 
 	if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_DOWN && !App->gui->IsAnyWindowHovered()
 		&& App->input->GetKey(SDL_SCANCODE_LALT) != KEY_REPEAT && App->input->GetKey(SDL_SCANCODE_RALT) != KEY_REPEAT)

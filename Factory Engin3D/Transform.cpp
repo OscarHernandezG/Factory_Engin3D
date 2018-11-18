@@ -24,17 +24,22 @@ Transform::Transform(GameObject * gameObject) : Component(gameObject, ComponentT
 	SetIdentity();
 }
 
-void Transform::Update(float dt)
-{
-	UpdateBoundingBox();
-}
-
 void Transform::UpdateBoundingBox()
 {
 	OBB obb = originalBoundingBox.ToOBB();
 	obb.Transform(GetMatrix());
 
 	boundingBox = obb.MinimalEnclosingAABB();
+
+	if (gameObject)
+		for (std::list<GameObject*>::iterator iterator = gameObject->childs.begin(); iterator != gameObject->childs.end(); ++iterator)
+		{
+			if ((*iterator)->transform)
+			{
+				(*iterator)->transform->UpdateBoundingBox();
+			}
+		}
+
 }
 
 //Position
@@ -48,12 +53,15 @@ void Transform::SetPos(float x, float y, float z)
 void Transform::SetPos(float3 position)
 {
 	this->position = position;
+	UpdateBoundingBox();
 }
 
 
 void Transform::Move(float3 position)
 {
 	this->position = this->position.Add(position);
+	UpdateBoundingBox();
+
 }
 //	Get
 float3 Transform::GetPos() const
@@ -78,17 +86,20 @@ float3 Transform::GetGlobalPos() const
 void Transform::SetScale(float x, float y, float z)
 {
 	scale = float3(x, y, z);
+	UpdateBoundingBox();
 }
 
 void Transform::SetScale(float3 scale)
 {
 	this->scale = scale;
+	UpdateBoundingBox();
 }
 
 
 void Transform::Scale(float3 scale)
 {
 	this->scale = this->scale.Mul(scale);
+	UpdateBoundingBox();
 }
 //	Get
 float3 Transform::GetScale() const
@@ -113,16 +124,19 @@ float3 Transform::GetGlobalScale() const
 void Transform::SetRotation(Quat rotation)
 {
 	this->rotation = rotation;
+	UpdateBoundingBox();
 }
 
 void Transform::SetRotation(float3 rotation)
 {
 	this->rotation = Quat::FromEulerXYZ(rotation.x, rotation.y, rotation.z);
+	UpdateBoundingBox();
 }
 
 void Transform::Rotate(Quat rotation)
 {
 	this->rotation = rotation.Mul(this->rotation).Normalized();
+	UpdateBoundingBox();
 }
 //	Get
 Quat Transform::GetRotation() const
@@ -146,6 +160,7 @@ Quat Transform::GetGlobalRotation() const
 void Transform::SetTransform(float4x4 trans)
 {
 	trans.Decompose(position, rotation, scale);
+	UpdateBoundingBox();
 }
 
 void Transform::SetIdentity()
@@ -153,6 +168,7 @@ void Transform::SetIdentity()
 	position = float3::zero;
 	rotation = Quat::identity;
 	scale = float3::one;
+	UpdateBoundingBox();
 }
 //-------------------------------------------------------------------------
 
