@@ -23,6 +23,8 @@ public:
 	Camera(GameObject* gameObject);
 	Camera(GameObject* gameObject, CameraInfo * info);
 
+	void UpdateFrust();
+
 	void Inspector();
 
 	float4x4 GetViewMatrix();

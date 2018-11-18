@@ -5,6 +5,19 @@ Factory engin3D is a 3D game engine createt by Òscar Hernàndez and Aleix Gabar
 - Aleix Gabarró [Github account](https://github.com/aleixgab)
 - Factory Engin3D [Github repository](https://github.com/OscarHernandezG/Factory_Engin3D)
 
+## Features
+
+We use an Octree to acelerate the drawing prosess of static GameObjects.
+You can Save and Load scenes from the options menu.
+You can use Ctrl+Z to un-do the movements of the GameObjects
+You can add new GameObjects (empy GameObject) from the scene window.
+You can add new Components from the Inspector window.
+You can edit the components of a GameObject from the Inspector window.
+You can remove components from the Inspector window.
+You can load assets from the Assets window.
+You can enter GameMode using the Play, Pause and Tick buttons.
+
+
 ## Inputs & Shortcuts
 
 #### Camera controls
@@ -19,6 +32,14 @@ Factory engin3D is a 3D game engine createt by Òscar Hernàndez and Aleix Gabar
 - Wheel: Zoom
 - Shift: Duplicate movement speed
 
+- Mouse wheel click: Select GameObject
+
+- 1: Debug draw
+- 3: Activate camera culling
+- 0: Create empty random GameObjct
+- C: Select camera component (To edit components from play mode)
+
+
 #### Save and load
 - Ctrl+S: Save
 - Ctrl+L: Load
@@ -30,9 +51,11 @@ Factory engin3D is a 3D game engine createt by Òscar Hernàndez and Aleix Gabar
 - Ctrl+E: Example window
 - Ctrl+M: MathGeoLib window
 - Ctrl+R: Random number window
-- Ctrl+T: Transform window
+- Ctrl+T: Inspector window
 - Ctrl+GRAVE: Console window
+- Ctrl+H: Hierarchy window
 - Ctrl+X: Close all windows
+
 
 ## External Libreries
 - ImGui

@@ -172,8 +172,10 @@ update_status ModuleRenderer3D::PreUpdate()
 	if (App->time->gameState == GameState_NONE)
 		currentCam = App->camera->GetEditorCamera();
 	else if (App->time->gameState != GameState_TICK)
+	{
 		currentCam = App->geometry->GetPlayingCamera();
-
+		currentCam->UpdateFrust();
+	}
 
 	if (currentCam)
 	{
