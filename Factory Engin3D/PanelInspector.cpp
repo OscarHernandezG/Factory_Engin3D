@@ -76,24 +76,15 @@ void ModuleImGui::CreateInspector(float2 scale)
 
 		ImGui::Separator();
 		if (ImGui::Button("Delete", ImVec2(100, 20)))
-			DeleteGO(currObject);
+		{
+			currObject->Delete();
+			App->geometry->currentGameObject = nullptr;
+			App->gameObject->redoOc = true;
+		}
 	}
 	else 
 	{
 		ImGui::TextWrapped("Select a GameObject to view its components");
 	}
 	ImGui::End();
-}
-
-void ModuleImGui::DeleteGO(GameObject *& object)
-{
-	if (App->time->gameState == GameState_NONE)
-		object->Delete();
-	else
-	{
-		object->toDeleteFake = object->GetActive();
-		object->SetActive(false);
-	}
-	App->geometry->currentGameObject = nullptr;
-	App->gameObject->redoOc = true;
 }

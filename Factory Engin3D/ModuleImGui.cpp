@@ -435,7 +435,7 @@ bool ModuleImGui::CreateOptions()
 			saveScenePopUp = true;
 
 		if (ImGui::MenuItem("Load Scene"))
-			App->gameObject->LoadScene();
+			App->gameObject->LoadScene("scene");
 
 		if (ImGui::MenuItem("Save", "Ctrl+S"))
 			App->canSave = true;
@@ -501,7 +501,7 @@ void ModuleImGui::CreateDebugMenu()
 		if (ImGui::MenuItem("AABB & quadtree", "1", App->renderer3D->debugQuad))
 			App->renderer3D->debugQuad = !App->renderer3D->debugQuad;
 
-		ImGui::MenuItem("Create random empty object", "2");
+		ImGui::MenuItem("Create random empty object", "0");
 
 		if (ImGui::MenuItem("Camera culling", "3", App->renderer3D->cameraCulling))
 			App->renderer3D->cameraCulling = !App->renderer3D->cameraCulling;

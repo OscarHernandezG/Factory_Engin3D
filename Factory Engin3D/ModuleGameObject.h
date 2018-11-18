@@ -28,7 +28,7 @@ public:
 
 	void SaveScene(const char* name);
 
-	void LoadScene();
+	void LoadScene(const char* name);
 
 	void SetGOMeshNewScene(Mesh * itMesh, std::list<GameObject *>::iterator &it);
 
@@ -49,9 +49,6 @@ public:
 
 	bool CanTransform(GameObject * object);
 
-	void SaveBeforePlay();
-	void LoadAfterPlay();
-
 	bool redoOc;
 public:
 	GameObject* rootGameObject;
@@ -59,7 +56,5 @@ public:
 	std::list<GameObject*> gameObjectsAll;
 
 	std::list<GameObject*> dynamicObjects;
-
-	std::map<uint, float4x4> playingObjects;
 };
 #endif // !__ModuleGameObjectManager_H__

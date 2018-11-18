@@ -58,7 +58,7 @@ void ModuleGeometry::LoadDefaultScene()
 	cameraObject = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->rootGameObject, "Camera");
 	playingCamera = (Camera*)cameraObject->AddComponent(ComponentType_CAMERA, nullptr);
 
-	plane = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->rootGameObject, "Ground");
+	plane = new GameObject(float3::zero, Quat::identity, float3::one, nullptr, "Ground");
 
 	GeometryInfo planeInfo(new PrimitivePlane());
 	plane->AddComponent(ComponentType_GEOMETRY, &planeInfo);
