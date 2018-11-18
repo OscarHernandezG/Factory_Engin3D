@@ -68,14 +68,16 @@ float3 Mesh::GetPos()
 
 void Mesh::ClearMesh()
 {
-	glDeleteBuffers(1, (GLuint*)&(buffer->index.id));
-	glDeleteBuffers(1, (GLuint*)&(buffer->vertex.id));
-	glDeleteBuffers(1, (GLuint*)&(buffer->texture.id));
+	if (buffer)
+	{
+		glDeleteBuffers(1, (GLuint*)&(buffer->index.id));
+		glDeleteBuffers(1, (GLuint*)&(buffer->vertex.id));
+		glDeleteBuffers(1, (GLuint*)&(buffer->texture.id));
 
-
-	delete buffer->index.buffer;
-	delete buffer->vertex.buffer;
-	delete buffer->texture.buffer;
+		delete buffer->index.buffer;
+		delete buffer->vertex.buffer;
+		delete buffer->texture.buffer;
+	}
 }
 
 
@@ -95,7 +97,14 @@ void Mesh::Inspector()
 
 			if (ImGui::Button("Remove Mesh", ImVec2(50, 25)))
 			{
+				App->resources->Remove(buffer);
 
+				buffer = nullptr;
+				
+				if (gameObject) 
+					gameObject->SetABB(AABB(float3::zero, float3::zero));
+
+				App->gameObject->redoOc = true;
 			}
 		}
 		else

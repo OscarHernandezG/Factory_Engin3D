@@ -37,7 +37,11 @@ void Texture::Inspector()
 
 			ImGui::Image((void*)(intptr_t)texture->GetID(), ImVec2(256, 256));
 
-			ImGui::Button("Remove", ImVec2(64, 64));
+			if (ImGui::Button("Remove", ImVec2(64, 64)))
+			{
+				App->resources->Remove(texture);
+				texture = nullptr;
+			}
 		}
 		else
 		{
