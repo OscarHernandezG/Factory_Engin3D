@@ -30,9 +30,11 @@ void ModuleImGui::CreateGameObjectHierarchy(float2 scale)
 	}
 	ImGui::End();
 	//Call only one time OpenPopup
-	if (ImGui::IsItemClicked(1))
+	if (popHierarchy)
+	{
 		ImGui::OpenPopup("GameObjectsPop");
-	
+		popHierarchy = false;
+	}
 	//Opened every frame if popup its opened
 	if (ImGui::BeginPopup("GameObjectsPop"))
 	{
@@ -82,7 +84,7 @@ void ModuleImGui::CreateGOTreeNode(GameObject* current)
 
 			DragDropGO(*childs);
 
-			if (ImGui::IsItemClicked(1))
+			if (ImGui::IsItemClicked(1) && objectSelected == nullptr)
 			{
 				objectSelected = *childs;
 				popHierarchy = true;

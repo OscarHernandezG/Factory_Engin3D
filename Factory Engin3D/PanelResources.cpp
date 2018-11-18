@@ -50,7 +50,7 @@ void ModuleImGui::DrawAssets(AssetsHierarchy& assets)
 			ImGui::TreePop();
 		}
 
-		if (ImGui::IsItemClicked(1))
+		if (ImGui::IsItemClicked(1) && !popRecource)
 		{
 			pathClicked = (*iter).file.data();
 			popRecource = true;
