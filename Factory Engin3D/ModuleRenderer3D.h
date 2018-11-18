@@ -27,6 +27,8 @@ public:
 
 	void OnResize(int width, int height);
 
+	void LoadProjectionMatrix();
+
 	void SetLightAmbient();
 
 

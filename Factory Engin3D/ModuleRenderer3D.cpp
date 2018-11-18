@@ -177,9 +177,14 @@ update_status ModuleRenderer3D::PreUpdate()
 		currentCam = App->geometry->GetPlayingCamera();
 		currentCam->UpdateFrustum();
 	}
-	glMatrixMode(GL_MODELVIEW);
+
+
 	if (currentCam)
-	glLoadMatrixf(currentCam->GetViewMatrix().ptr());
+	{
+		LoadProjectionMatrix();
+		glMatrixMode(GL_MODELVIEW);
+		glLoadMatrixf(currentCam->GetViewMatrix().ptr());
+	}
 
 	// Light 0 on cam pos
 	lights[0].SetPos(App->camera->GetPos());
@@ -326,15 +331,7 @@ void ModuleRenderer3D::OnResize(int width, int height)
 {
 	glViewport(0, 0, width, height);
 
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-
-	//ProjectionMatrix = Perspective(60.0f, (float)width / (float)height, 0.125f, 512.0f);
-	if (currentCam)
-	{
-		currentCam->frustum.horizontalFov = 2.f * atan(tan(currentCam->frustum.verticalFov * 0.5f) * (float(width) / height));
-		glLoadMatrixf(currentCam->GetProjectionMatrix().ptr());
-	}
+	LoadProjectionMatrix();
 
 
 	glMatrixMode(GL_MODELVIEW);
@@ -354,6 +351,17 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 	App->window->width = width;
 	App->window->height = height;
+}
+
+void ModuleRenderer3D::LoadProjectionMatrix()
+{
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	if (currentCam)
+	{
+		glLoadMatrixf(currentCam->GetProjectionMatrix().ptr());
+	}
 }
 
 void ModuleRenderer3D::SetLightAmbient()
