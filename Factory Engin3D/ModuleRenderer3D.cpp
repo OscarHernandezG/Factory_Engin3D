@@ -243,6 +243,7 @@ update_status ModuleRenderer3D::PostUpdate()
 		Camera* cam = App->geometry->GetPlayingCamera();
 		if ((Camera*)App->geometry->currentGameObject->GetComponent(ComponentType_CAMERA) == cam)
 		{
+			cam->UpdateFrust();
 			static float3 corners[8];
 			cam->frustum.GetCornerPoints(corners);
 
