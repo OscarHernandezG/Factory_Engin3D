@@ -129,10 +129,7 @@ void Mesh::Inspector()
 			ImGui::Separator();
 		}
 		if (ImGui::Button("Remove Component", ImVec2(150, 25)))
-		{
-			//gameObject->components.remove(this);
-			//delete this;
-		}
+			toDelete = true;
 	}
 }
 

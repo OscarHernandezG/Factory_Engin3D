@@ -63,8 +63,6 @@ void Texture::Inspector()
 			ImGui::Separator();
 		}
 		if (ImGui::Button("Remove Component", ImVec2(150, 25)))
-		{
-
-		}
+			toDelete = true;
 	}
 }

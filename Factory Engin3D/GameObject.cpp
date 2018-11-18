@@ -59,6 +59,7 @@ void GameObject::RemoveComponents()
 	components.clear();
 }
 
+
 void GameObject::RealDelete()
 {
 	transform = nullptr;
@@ -73,18 +74,47 @@ void GameObject::RealDelete()
 	father = nullptr;
 }
 
-void GameObject::Update(float dt)
+void GameObject::Update()
 {
 	if (isActive)
 	{
 		for (list<Component*>::iterator iterator = components.begin(); iterator != components.end(); ++iterator)
 		{
-			(*iterator)->Update(dt);
+			(*iterator)->Update();
 		}
 
 		for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
 		{
-			(*iterator)->Update(dt);
+			(*iterator)->Update();
+		}
+	}
+}
+
+void GameObject::PostUpdate()
+{
+	if (isActive)
+	{
+
+		list<Component*> toDelete;
+		for (list<Component*>::iterator iterator = components.begin(); iterator != components.end(); ++iterator)
+		{
+			if ((*iterator)->toDelete)
+			{
+				toDelete.push_back(*iterator);
+			}
+
+		}
+		for (list<Component*>::iterator iterator = toDelete.begin(); iterator != toDelete.end(); ++iterator)
+		{
+			Component* it = *iterator;
+
+			components.remove(it);
+			delete *iterator;
+		}
+
+		for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)
+		{
+			(*iterator)->PostUpdate();
 		}
 	}
 }
