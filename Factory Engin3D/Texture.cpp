@@ -8,6 +8,21 @@ Texture::Texture(GameObject* gameObject, TextureInfo* info) : Component(gameObje
 	this->texture = info->texture;
 }
 
+void Texture::SaveComponent(JSON_Object * parent)
+{
+	if (texture)
+	{
+		json_object_set_number(parent, "Type", type);
+
+		json_object_set_number(parent, "UUID", GetUUID());
+
+		json_object_set_number(parent, "Time Created", GetTime());
+
+		json_object_set_string(parent, "Name", texture->file.data());
+	}
+}
+
+
 void Texture::Inspector()
 {
 	if (ImGui::CollapsingHeader("Texture", ImGuiTreeNodeFlags_DefaultOpen))
