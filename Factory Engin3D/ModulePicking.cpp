@@ -73,25 +73,28 @@ void ModulePicking::CheckObjectPicking(GameObject* iterator, const LineSegment &
 	}
 }
 
-bool ModulePicking::CheckMeshTri(Geometry * geometry, LineSegment &ray, float &smallerDist)
+bool ModulePicking::CheckMeshTri(Geometry* geometry, LineSegment &ray, float &smallerDist)
 {
 	bool ret = false;
-	Triangle triangle;
-	Buffer<uint> index = ((Mesh*)geometry)->buffer->index;
-	for (int i = 0; i < index.size / 3; ++i)
+	if (geometry && ((Mesh*)geometry)->buffer)
 	{
-		triangle.a = SetTrianglePoint(((Mesh*)geometry)->buffer->vertex, index, (i * 3));
-		triangle.b = SetTrianglePoint(((Mesh*)geometry)->buffer->vertex, index, (i * 3) + 1);
-		triangle.c = SetTrianglePoint(((Mesh*)geometry)->buffer->vertex, index, (i * 3) + 2);
-
-		float distance;
-		float3 pos;
-		if (ray.Intersects(triangle, &distance, &pos))
+		Triangle triangle;
+		Buffer<uint> index = ((Mesh*)geometry)->buffer->index;
+		for (int i = 0; i < index.size / 3; ++i)
 		{
-			if (distance < smallerDist || smallerDist == 0.0f)
+			triangle.a = SetTrianglePoint(((Mesh*)geometry)->buffer->vertex, index, (i * 3));
+			triangle.b = SetTrianglePoint(((Mesh*)geometry)->buffer->vertex, index, (i * 3) + 1);
+			triangle.c = SetTrianglePoint(((Mesh*)geometry)->buffer->vertex, index, (i * 3) + 2);
+
+			float distance;
+			float3 pos;
+			if (ray.Intersects(triangle, &distance, &pos))
 			{
-				smallerDist = distance;
-				ret = true;
+				if (distance < smallerDist || smallerDist == 0.0f)
+				{
+					smallerDist = distance;
+					ret = true;
+				}
 			}
 		}
 	}
