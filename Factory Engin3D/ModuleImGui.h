@@ -114,6 +114,8 @@ public:
 	bool assetsWindow = true;
 	bool exitOption = false;
 
+	bool saveScenePopUp = false;
+	std::string sceneName = "scene";
 
 	bool spheresColliding = false;
 
@@ -164,6 +166,7 @@ public:
 	bool popHierarchy = false;
 	GameObject* objectSelected = nullptr;
 	bool objectDrag = false;
+
 
 	//--------------------------
 	// Window position

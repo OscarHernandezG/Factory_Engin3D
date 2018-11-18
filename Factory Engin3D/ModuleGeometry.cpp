@@ -519,9 +519,6 @@ AABB ModuleGeometry::LoadBoundingBox(Buffer<float> vertex)
 		}
 
 		boundingBox = AABB(min, max);
-		// TODO move camera at drop file
-		//App->camera->Position = CalcBBPos(boundingBox);
-		//App->camera->Look(CalcBBPos(boundingBox), mesh->GetPos(), false);
 	}
 	return boundingBox;
 }
