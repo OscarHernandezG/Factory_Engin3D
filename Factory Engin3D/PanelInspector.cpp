@@ -7,15 +7,17 @@
 
 void ModuleImGui::CreateInspector(float2 scale)
 {
-	ImGui::Begin("Inspector", &inspectorWindow);
+	ImGui::Begin("Inspector", &inspectorWindow,ImGuiWindowFlags_NoMove);
 
 	SetWindowDim(inspectorPos, inspectorSize, scale);
 
 	GameObject* currObject = App->geometry->currentGameObject;
 	if (currObject != nullptr)
 	{
-		std::string goName = currObject->name;
-		ImGui::Text(goName.data());
+		char name[50];
+		strcpy_s(name, 50, currObject->name.c_str());
+		if (ImGui::InputText("", name, 50, ImGuiInputTextFlags_EnterReturnsTrue))
+			currObject->name = name;
 
 		if (ImGui::Checkbox("Active", currObject->GetActiveReference()))
 		{

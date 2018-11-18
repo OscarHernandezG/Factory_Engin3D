@@ -39,7 +39,7 @@ bool ModuleImGui::Start()
 	scenePos = float2(0.0f, 18.0f);
 	playPos = float2(550.0f, 25.0f);
 	playCountPos = float2(-120.0f, 0.0f);
-	inspectorPos = float2(1026.0f, 18.0f);
+	inspectorPos = float2(1010.0f, 18.0f);
 	dockWindowPos = float2(0.0f, 592.0f);
 
 	// Window sizes
@@ -48,8 +48,8 @@ bool ModuleImGui::Start()
 	sceneSize = float2(254.0f, 575.0f);
 	playSize = float2(185.0f, 40.0f);
 	playCountSize = float2(205.0f, 0.0f);
-	inspectorSize = float2(254.0f, 852.0f);
-	dockWindowSize = float2(1026.0f, 270.0f);
+	inspectorSize = float2(270.0f, 852.0f);
+	dockWindowSize = float2(1010.0f, 270.0f);
 	//--------------------------
 
 	ImGui::InitDock();

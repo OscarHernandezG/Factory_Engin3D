@@ -33,6 +33,8 @@ public:
 
 	ResourceTexture* LoadTexture(const char * path);
 
+	void GetResources(std::vector<Resource*> &resource, ResourceType type);
+
 private:
 	bool RealLoadMesh(char * buffer, ResourceMesh*& mesh, const char* name);
 	void LoadColorGPU(char * &cursor, uint &bytes, ResourceMesh * bufferImporter);

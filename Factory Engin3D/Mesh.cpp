@@ -110,11 +110,26 @@ void Mesh::Inspector()
 		else
 		{
 			ImGui::Text("Mesh component has no resource mesh");
-			if (ImGui::Button("Add new ResourceMesh", ImVec2(50, 25)))
+			ImGui::Separator();
+			if (ImGui::BeginMenu("Add new ResourceMesh"))
 			{
-
+				std::vector<Resource*> resource;
+				App->resources->GetResources(resource, ResourceType::mesh);
+				
+				for (std::vector<Resource*>::iterator iterator = resource.begin(); iterator != resource.end() ; ++iterator)
+				{
+					if (ImGui::MenuItem((*iterator)->name.data()))
+					{
+						buffer = ((ResourceMesh*)(*iterator));
+						App->sceneIntro->octree.Insert(gameObject);
+					}
+				}
+			ImGui::End();
 			}
+			ImGui::Separator();
 		}
+		if (ImGui::Button("Remove Component", ImVec2(150, 25)))
+			toDelete = true;
 	}
 }
 

@@ -30,7 +30,7 @@ public:
 
 	~Component() {}
 
-	virtual void Update(float dt) {}
+	virtual void Update() {}
 
 	inline void SetActive(bool isActive) { this->isActive = isActive; }
 
@@ -51,6 +51,7 @@ public:
 
 	GameObject* gameObject = nullptr;
 
+	bool toDelete = false;
 private:
 
 	unsigned int UUID = 0;

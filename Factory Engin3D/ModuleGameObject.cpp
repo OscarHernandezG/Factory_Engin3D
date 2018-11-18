@@ -23,7 +23,8 @@ update_status ModuleGameObject::Update()
 {
 	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
 
-	rootGameObject->Update(App->time->Getdt());
+	if (rootGameObject)
+		rootGameObject->Update();
 
 	//App->geometry->Draww(rootGameObject);
 
@@ -68,6 +69,10 @@ update_status ModuleGameObject::PostUpdate()
 		App->sceneIntro->octree.ReDoOctree(objects);
 		redoOc = false;
 	}
+
+	if(rootGameObject)
+		rootGameObject->PostUpdate();
+
 	return UPDATE_CONTINUE;
 }
 

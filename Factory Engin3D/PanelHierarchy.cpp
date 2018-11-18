@@ -3,8 +3,7 @@
 
 void ModuleImGui::CreateGameObjectHierarchy(float2 scale)
 {
-	if (ImGui::Begin("Scene", &hierarchyWindow/*, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize*/))
-
+	if (ImGui::Begin("Scene", &hierarchyWindow, ImGuiWindowFlags_NoMove))
 
 		SetWindowDim(scenePos, sceneSize, scale);
 

@@ -37,7 +37,7 @@ void Texture::Inspector()
 
 			ImGui::Image((void*)(intptr_t)texture->GetID(), ImVec2(256, 256));
 
-			if (ImGui::Button("Remove", ImVec2(64, 64)))
+			if (ImGui::Button("Remove", ImVec2(50, 25)))
 			{
 				App->resources->Remove(texture);
 				texture = nullptr;
@@ -46,7 +46,23 @@ void Texture::Inspector()
 		else
 		{
 			ImGui::Text("No texture loaded");
-			ImGui::Button("Load", ImVec2(64, 64));
+			ImGui::Separator();
+			if (ImGui::BeginMenu("Add new ResourceTexture"))
+			{
+				std::vector<Resource*> resource;
+				App->resources->GetResources(resource, ResourceType::texture);
+
+				for (std::vector<Resource*>::iterator iterator = resource.begin(); iterator != resource.end(); ++iterator)
+				{
+					if (ImGui::MenuItem((*iterator)->name.data()))
+						texture = ((ResourceTexture*)(*iterator));
+					
+				}
+				ImGui::End();
+			}
+			ImGui::Separator();
 		}
+		if (ImGui::Button("Remove Component", ImVec2(150, 25)))
+			toDelete = true;
 	}
 }

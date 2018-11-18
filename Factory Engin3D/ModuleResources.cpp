@@ -361,3 +361,14 @@ bool ModuleResources::RealLoadTexture(const char* path, uint& opengGlTexture)
 
 	return ret;
 }
+
+void ModuleResources::GetResources(std::vector<Resource*> &resource, ResourceType type)
+{
+	for (std::list<Resource*>::iterator iterator = resources.begin(); iterator != resources.end(); ++iterator)
+	{
+		if ((*iterator)->type == type)
+		{
+			resource.push_back(*iterator);
+		}
+	}
+}

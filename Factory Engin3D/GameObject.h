@@ -29,7 +29,8 @@ public:
 	void RemoveChilds();
 	void RemoveComponents();
 
-	void Update(float dt);
+	void Update();
+	void PostUpdate();
 
 	inline void Delete() { toDelete = true;	}
 
