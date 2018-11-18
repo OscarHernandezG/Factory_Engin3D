@@ -8,6 +8,20 @@ void ModuleImGui::CreateGameObjectHierarchy(float2 scale)
 
 	SetWindowDim(scenePos, sceneSize, scale);
 
+	//Options menu
+	if (ImGui::BeginMenu("Options"))
+	{
+		if (ImGui::MenuItem("New Game Object"))
+		{
+			std::string str = "Random Object ";
+			str.append(std::to_string(rand() % 100));
+			App->gameObject->CreateEmptyGameObject(App->gameObject->rootGameObject, str.data());
+		}
+
+		ImGui::MenuItem("Close");
+		ImGui::EndMenu();
+	}
+	//Iterate all GO in sceene
 	if (App->gameObject->rootGameObject)
 	{
 		CreateGOTreeNode(App->gameObject->rootGameObject);
@@ -15,27 +29,25 @@ void ModuleImGui::CreateGameObjectHierarchy(float2 scale)
 			objectDrag = false; //put false for next frame
 	}
 	ImGui::End();
-
-	if (ImGui::IsMouseClicked(1) && !popHierarchy)
-		ImGui::OpenPopup("GameObjectsPop");
-	
-	popHierarchy = ImGui::BeginPopup("GameObjectsPop");
+	//Call only one time OpenPopup
 	if (popHierarchy)
 	{
-		if (ImGui::MenuItem("New Game Object"))
+		ImGui::OpenPopup("GameObjectsPop");
+		popHierarchy = false;
+	}
+	//Opened every frame if popup its opened
+	if (ImGui::BeginPopup("GameObjectsPop"))
+	{
+		std::string str = "New Game Object in ";
+		str.append(objectSelected->name);
+		if (ImGui::MenuItem(str.data()))
 		{
-			std::string str = std::to_string((rand() % 100));
-			if(objectSelected)
-				App->gameObject->CreateEmptyGameObject(objectSelected, str.data());
-			else
-				App->gameObject->CreateEmptyGameObject(App->gameObject->rootGameObject, str.data());
+			str = "Random Object ";
+			str.append(std::to_string(rand() % 100));
+			App->gameObject->CreateEmptyGameObject(objectSelected, str.data());
 		}
-		if(objectSelected)
-			if (ImGui::MenuItem("Delete"))
-				objectSelected->Delete();
-			
-
-		ImGui::MenuItem("Close");
+		if (ImGui::MenuItem("Delete"))
+			objectSelected->Delete();
 		ImGui::EndPopup();
 	}
 	else if(objectSelected)
@@ -72,8 +84,11 @@ void ModuleImGui::CreateGOTreeNode(GameObject* current)
 
 			DragDropGO(*childs);
 
-			if(ImGui::IsItemClicked(1))
+			if (ImGui::IsItemClicked(1) && objectSelected == nullptr)
+			{
 				objectSelected = *childs;
+				popHierarchy = true;
+			}
 		}
 		ImGui::TreePop();
 	}
