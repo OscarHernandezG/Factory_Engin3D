@@ -130,22 +130,32 @@ void ModuleGameObject::SaveScene(const char* sceneName)
 	}
 }
 
-void ModuleGameObject::LoadScene(const char * name)
+void ModuleGameObject::LoadScene(const char* name)
 {
 //Clear previous
-	DeletePreviousScene();
 
 //Prepare new
-	App->sceneIntro->octree.Create(AABB(float3::zero, float3::zero));
 
 	//Load new
-	string direction = "Llibrary/Scenes/";
-	direction.append(name);
-	direction.append(".json");
+	string fileName = name;
+	string direction = name;
+	if (fileName.find(".json") == string::npos)
+	{
+		fileName = fileName.substr(fileName.find_last_of("\\") + 1);
+
+		direction = "Llibrary/Scenes/";
+		direction.append(fileName);
+	//	direction.append(".json");
+	}
+
 	JSON_Value* scene = json_parse_file(direction.data());
 
 	if (json_value_get_type(scene) == JSONArray)
 	{
+	DeletePreviousScene();
+	App->sceneIntro->octree.Create(AABB(float3::zero, float3::zero));
+
+
 		JSON_Array* objArray = json_value_get_array(scene);
 
 		int numObjects = json_array_get_count(objArray);
@@ -170,6 +180,10 @@ void ModuleGameObject::LoadScene(const char * name)
 				SetGOMeshNewScene(itMesh, it);
 			}
 		}
+	}
+	else
+	{
+		LOG("Error loading scene %s, file not found", direction.data());
 	}
 }
 

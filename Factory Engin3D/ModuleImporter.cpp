@@ -43,6 +43,12 @@ void ModuleImporter::DistributeFile(const char* file, bool needPath)
 			GetFullPath(filePath, LlibraryType_TEXTURE);
 	//	App->geometry->UpdateTexture(filePath.data());
 	}
+	else if (!extension.compare("json") || !extension.compare("scene"))
+	{
+		if (needPath)
+			GetFullPath(filePath, LlibraryType_TEXTURE);
+		App->gameObject->LoadScene(filePath.data());
+	}
 }
 
 void ModuleImporter::GetFullPath(string& file, LlibraryType type)
