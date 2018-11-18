@@ -18,6 +18,7 @@ public:
 	bool operator==(Resource comp);
 
 public:
+	std::string name;
 	std::string file;
 	ResourceType type;
 

@@ -152,6 +152,33 @@ ResourceMesh* ModuleResources::LoadMesh(uint name)
 	}
 }
 
+ResourceMesh* ModuleResources::LoadMesh(const MeshNode& node)
+{
+	string assetName = std::to_string(node.componentUUID).data();
+	assetName += ".fty";
+
+	ResourceMesh* mesh = (ResourceMesh*)FindLoadedResource(assetName.data(), ResourceType::mesh);
+
+	if (mesh)
+	{
+		return mesh;
+	}
+	else
+	{
+		char* buffer = App->importer->LoadFile("", LlibraryType_MESH, node.componentUUID);
+		if (buffer)
+		{
+			if (RealLoadMesh(buffer, mesh, assetName.data()))
+			{
+				mesh->name = node.name;
+				mesh->uuid = node.componentUUID;
+				resources.push_back(mesh);
+			}
+		}
+		return mesh;
+	}
+}
+
 bool ModuleResources::RealLoadMesh(char* buffer, ResourceMesh*& mesh, const char* name)
 {
 	ResourceMesh* bufferImporter = new ResourceMesh(name);
@@ -260,6 +287,11 @@ ResourceTexture* ModuleResources::LoadTexture(const char* path)
 			texture = new ResourceTexture(path);
 			texture->SetID(opengGlTexture);
 
+			std::string name = path;
+			name = name = name.substr(name.find_last_of("\\") + 1);
+
+
+			texture->name = name;
 			resources.push_back((Resource*)texture);
 		}
 
