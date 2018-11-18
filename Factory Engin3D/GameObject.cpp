@@ -110,6 +110,7 @@ void GameObject::PostUpdate()
 
 			components.remove(it);
 			delete *iterator;
+			App->gameObject->redoOc = true;
 		}
 
 		for (list<GameObject*>::iterator iterator = childs.begin(); iterator != childs.end(); ++iterator)

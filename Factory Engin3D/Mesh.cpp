@@ -91,17 +91,17 @@ void Mesh::Inspector()
 			ImGui::Text("Faces count: %u", buffer->index.size / 3);
 
 			if (buffer->usage == 1)
-			ImGui::Text("Mesh used %i time", buffer->usage);
+				ImGui::Text("Mesh used %i time", buffer->usage);
 			else
-			ImGui::Text("Mesh used %i times", buffer->usage);
+				ImGui::Text("Mesh used %i times", buffer->usage);
 
 			if (ImGui::Button("Remove Mesh", ImVec2(50, 25)))
 			{
 				App->resources->Remove(buffer);
 
 				buffer = nullptr;
-				
-				if (gameObject) 
+
+				if (gameObject)
 					gameObject->SetABB(AABB(float3::zero, float3::zero));
 
 				App->gameObject->redoOc = true;
@@ -115,21 +115,25 @@ void Mesh::Inspector()
 			{
 				std::vector<Resource*> resource;
 				App->resources->GetResources(resource, ResourceType::mesh);
-				
-				for (std::vector<Resource*>::iterator iterator = resource.begin(); iterator != resource.end() ; ++iterator)
+
+				for (std::vector<Resource*>::iterator iterator = resource.begin(); iterator != resource.end(); ++iterator)
 				{
 					if (ImGui::MenuItem((*iterator)->name.data()))
 					{
 						buffer = ((ResourceMesh*)(*iterator));
+						App->geometry->LoadBoundingBox(buffer->vertex);
 						App->sceneIntro->octree.Insert(gameObject);
 					}
 				}
-			ImGui::End();
+				ImGui::End();
 			}
 			ImGui::Separator();
 		}
 		if (ImGui::Button("Remove Component", ImVec2(150, 25)))
+		{
 			toDelete = true;
+			gameObject->transform->boundingBox = AABB(float3::zero, float3::zero);
+		}
 	}
 }
 
