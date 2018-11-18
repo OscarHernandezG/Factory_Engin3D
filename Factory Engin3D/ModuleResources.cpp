@@ -213,7 +213,7 @@ void ModuleResources::LoadIndexGPU(char * &cursor, uint &bytes, ResourceMesh * b
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * bufferImporter->index.size, bufferImporter->index.buffer, GL_STATIC_DRAW);
 }
 
-ResourceTexture* ModuleResources::LoadTexture(char* path)
+ResourceTexture* ModuleResources::LoadTexture(const char* path)
 {
 	Resource* resourceLoaded = FindLoadedResource(path, ResourceType::texture);
 	if (resourceLoaded)
@@ -241,7 +241,7 @@ ResourceTexture* ModuleResources::LoadTexture(char* path)
 	}
 }
 
-bool ModuleResources::RealLoadTexture(char* path, uint& opengGlTexture)
+bool ModuleResources::RealLoadTexture(const char* path, uint& opengGlTexture)
 {
 	bool ret = true;
 

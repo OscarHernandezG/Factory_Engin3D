@@ -46,7 +46,7 @@ void ModuleImGui::CreateInspector(float2 scale)
 		}
 	}
 	else {
-		ImGui::TextWrapped("There aren't any meshes");
+		ImGui::TextWrapped("Select a GameObject to view its components");
 	}
 	ImGui::End();
 }

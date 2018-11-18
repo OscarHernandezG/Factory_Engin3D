@@ -109,14 +109,12 @@ void Geometry::WireframeRender() const
 
 void Geometry::SaveComponent(JSON_Object * parent)
 {
-
 	json_object_set_number(parent, "Type", type);
 	json_object_set_number(parent, "Geometry type", geoType);
 
 	json_object_set_number(parent, "UUID", GetUUID());
 
 	json_object_set_number(parent, "Time Created", GetTime());
-
 }
 
 // ------------------------------------------------------------
