@@ -3,6 +3,7 @@
 #include "ModuleImGui.h"
 #include "ModuleWindow.h"
 #include "ModuleResources.h"
+#include "Texture.h"
 
 void ModuleImGui::CreateInspector(float2 scale)
 {
@@ -43,9 +44,39 @@ void ModuleImGui::CreateInspector(float2 scale)
 		}
 
 		ImGui::Separator();
+
+		if (ImGui::BeginMenu("Add new component"))
+		{
+			
+			if (ImGui::MenuItem("Geometry", "", nullptr, !currObject->HasComponent(ComponentType_GEOMETRY)))
+			{
+				GeometryInfo info;
+				info.geometry = new Mesh();
+
+				currObject->AddComponent(ComponentType_GEOMETRY, &info);
+			}
+			
+			if (ImGui::MenuItem("Texture", "", nullptr, !currObject->HasComponent(ComponentType_TEXTURE)))
+			{
+				TextureInfo info;
+				info.texture = nullptr;
+				currObject->AddComponent(ComponentType_TEXTURE, &info);
+			}
+
+			if (ImGui::MenuItem("Camera", "", nullptr, !currObject->HasComponent(ComponentType_CAMERA)))
+			{
+				currObject->AddComponent(ComponentType_CAMERA, nullptr);
+			}
+
+			ImGui::MenuItem("Cancel");
+
+			ImGui::EndMenu();
+		}
+
+
+		ImGui::Separator();
 		if (ImGui::Button("Delete", ImVec2(100, 20)))
 			DeleteGO(currObject);
-		
 	}
 	else 
 	{

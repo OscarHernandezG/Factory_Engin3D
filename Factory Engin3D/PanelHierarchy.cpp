@@ -21,6 +21,8 @@ void ModuleImGui::CreateGameObjectHierarchy(float2 scale)
 		ImGui::MenuItem("Close");
 		ImGui::EndMenu();
 	}
+	ImGui::Separator();
+
 	//Iterate all GO in sceene
 	if (App->gameObject->rootGameObject)
 	{

@@ -309,12 +309,13 @@ Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
 	case ComponentType_GEOMETRY:
 		if (info)
 			newComponent = (Component*)(((GeometryInfo*)info)->geometry);
+		else
+			newComponent = nullptr;
 		break;
 	case ComponentType_CAMERA:
 		if (info)
-		{
 			newComponent = (Component*)new Camera(this, (CameraInfo*)info);
-		}
+		
 		else
 		newComponent = (Component*)new Camera(this);
 		break;
