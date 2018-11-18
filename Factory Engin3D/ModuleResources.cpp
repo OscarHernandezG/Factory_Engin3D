@@ -102,21 +102,28 @@ Resource* ModuleResources::FindLoadedResource(const char* path, ResourceType typ
 
 ResourceMesh* ModuleResources::LoadMesh(uint name)
 {
-	char* buffer = App->importer->LoadFile("", LlibraryType_MESH, name);
-	ResourceMesh* mesh = nullptr;
+	string assetName = std::to_string(name).data();
+	assetName += ".fty";
+	
+	ResourceMesh* mesh = (ResourceMesh*)FindLoadedResource(assetName.data(), ResourceType::mesh);
 
-	if (buffer)
+	if (mesh)
 	{
-		string assetName = std::to_string(name).data();
-		assetName += ".fty";
-
-		FindLoadedResource(assetName.data(), ResourceType::mesh);
-
-		if (RealLoadMesh(buffer, mesh, assetName.data()));
-			mesh->uuid = name;
+		return mesh;
 	}
-
-	return mesh;
+	else
+	{
+		char* buffer = App->importer->LoadFile("", LlibraryType_MESH, name);
+		if (buffer)
+		{
+			if (RealLoadMesh(buffer, mesh, assetName.data()))
+			{
+				mesh->uuid = name;
+				resources.push_back(mesh);
+			}
+		}
+		return mesh;
+	}
 }
 
 bool ModuleResources::RealLoadMesh(char* buffer, ResourceMesh*& mesh, const char* name)
@@ -211,7 +218,6 @@ ResourceTexture* ModuleResources::LoadTexture(char* path)
 	Resource* resourceLoaded = FindLoadedResource(path, ResourceType::texture);
 	if (resourceLoaded)
 	{
-		resourceLoaded->usage++;
 		ResourceTexture* texture = (ResourceTexture*)resourceLoaded;
 		return texture;
 	}
@@ -226,7 +232,6 @@ ResourceTexture* ModuleResources::LoadTexture(char* path)
 		else
 		{
 			texture = new ResourceTexture(path);
-			texture->usage = 1;
 			texture->SetID(opengGlTexture);
 
 			resources.push_back((Resource*)texture);

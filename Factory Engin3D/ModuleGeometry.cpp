@@ -375,6 +375,8 @@ GameObject* ModuleGeometry::LoadGameObjectsFromMeshNode(MeshNode node, GameObjec
 		if (node.id >= 0)
 			if ((*currentMeshBuffer)->id == node.id)
 			{
+				(*currentMeshBuffer)->usage++;
+
 				Mesh* currMesh = new Mesh(newGameObject);
 
 				currMesh->hasColor = node.hasColor;
@@ -397,6 +399,8 @@ GameObject* ModuleGeometry::LoadGameObjectsFromMeshNode(MeshNode node, GameObjec
 			{
 				TextureInfo textureInfo;
 				textureInfo.texture = (*currentTexture).textureResource;
+				if ((*currentTexture).textureResource)
+					(*currentTexture).textureResource->usage++;
 				newGameObject->AddComponent(ComponentType_TEXTURE, &textureInfo);
 			}
 		}
