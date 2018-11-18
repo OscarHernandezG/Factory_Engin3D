@@ -169,17 +169,20 @@ public:
 	// Window position
 	float2 aboutPos = float2::zero;
 	float2 configurationPos = float2::zero;
-	float2 consolePos = float2::zero;
 	float2 scenePos = float2::zero;
 	float2 playPos = float2::zero;
 	float2 playCountPos = float2::zero;
+	float2 inspectorPos = float2::zero;
+	float2 dockWindowPos = float2::zero;
 	// Window sizes
 	float2 aboutSize = float2::zero;
 	float2 configurationSize = float2::zero;
-	float2 consoleSize = float2::zero;
 	float2 sceneSize = float2::zero;
 	float2 playSize = float2::zero;
 	float2 playCountSize = float2::zero;
+	float2 inspectorSize = float2::zero;
+	float2 dockWindowSize = float2::zero;
+
 	//--------------------------
 };
 #endif // !__ModuleImGui_H__

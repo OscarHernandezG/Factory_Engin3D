@@ -6,8 +6,6 @@ void ModuleImGui::CreateAssetsWindow(float2 scale)
 {
 	ImGui::BeginDock("Assets");
 
-	//SetWindowDim(configurationPos, configurationSize, scale);
-
 	if (contRefresh.ReadSec() >= 1)
 	{
 		RefreshAssets(".\\Assets\\");
@@ -34,6 +32,7 @@ void ModuleImGui::CreateAssetsWindow(float2 scale)
 
 	if (ImGui::IsMouseClicked(1) || ImGui::IsMouseClicked(0))
 		ImGui::CloseCurrentPopup();
+
 }
 
 void ModuleImGui::DrawAssets(AssetsHierarchy& assets)

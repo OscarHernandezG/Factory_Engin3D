@@ -35,17 +35,20 @@ bool ModuleImGui::Start()
 	// Window position
 	aboutPos = float2(955.0f, 520.0f);
 	configurationPos = float2(355.0f, 575.0f);
-	consolePos = float2(0.0f, 575.0f);
 	scenePos = float2(0.0f, 18.0f);
 	playPos = float2(550.0f, 25.0f);
 	playCountPos = float2(-120.0f, 0.0f);
+	inspectorPos = float2(1026.0f, 18.0f);
+	dockWindowPos = float2(0.0f, 592.0f);
+
 	// Window sizes
 	aboutSize = float2(325.0f, 340.0f);
 	configurationSize = float2(600.0f, 287.0f);
-	consoleSize = float2(355.0f, 287.0f);
-	sceneSize = float2(311.0f, 525.0f);
+	sceneSize = float2(254.0f, 575.0f);
 	playSize = float2(185.0f, 40.0f);
 	playCountSize = float2(205.0f, 0.0f);
+	inspectorSize = float2(254.0f, 852.0f);
+	dockWindowSize = float2(1026.0f, 270.0f);
 	//--------------------------
 
 	ImGui::InitDock();
@@ -99,6 +102,7 @@ update_status ModuleImGui::PreUpdate()
 	{
 		if (ImGui::Begin("Dock windows", &assetsWindow, ImGuiWindowFlags_NoTitleBar))
 		{
+			SetWindowDim(dockWindowPos, dockWindowSize, scale);
 			ImGui::BeginDockspace();
 			if (consoleWindow)
 				CreateConsole(scale);
@@ -303,6 +307,8 @@ void ModuleImGui::CreateRandomNumberWindow()
 
 void ModuleImGui::SetWindowDim(float2 &pos, float2 &size, float2 &scale, bool gameWindow)
 {
+
+
 	float2 realPos = pos.Mul(scale);
 	float2 realSize = size.Mul(scale);
 

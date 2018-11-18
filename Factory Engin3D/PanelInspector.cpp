@@ -6,7 +6,9 @@
 
 void ModuleImGui::CreateInspector(float2 scale)
 {
-	ImGui::Begin("Inspector", &inspectorWindow, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+	ImGui::Begin("Inspector", &inspectorWindow);
+
+	SetWindowDim(inspectorPos, inspectorSize, scale);
 
 	GameObject* currObject = App->geometry->currentGameObject;
 	if (currObject != nullptr)
