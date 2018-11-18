@@ -152,10 +152,8 @@ bool ModuleRenderer3D::Start()
 	if (App->time->gameState == GameState_NONE)
 		currentCam = App->camera->GetEditorCamera();
 	else if (App->time->gameState != GameState_TICK)
-	{
 		currentCam = App->geometry->GetPlayingCamera();
-		currentCam->UpdateFrustum();
-	}
+	
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
@@ -173,10 +171,7 @@ update_status ModuleRenderer3D::PreUpdate()
 	if (App->time->gameState == GameState_NONE)
 		currentCam = App->camera->GetEditorCamera();
 	else if (App->time->gameState != GameState_TICK)
-	{
 		currentCam = App->geometry->GetPlayingCamera();
-		currentCam->UpdateFrustum();
-	}
 
 
 	if (currentCam)
@@ -237,7 +232,6 @@ update_status ModuleRenderer3D::PostUpdate()
 			}
 
 			Camera* cam = App->geometry->GetPlayingCamera();
-			cam->UpdateFrustum();
 			if((Camera*)App->geometry->currentGameObject->GetComponent(ComponentType_CAMERA) == cam)
 			{
 				static float3 corners[8];
