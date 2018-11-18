@@ -7,7 +7,7 @@
 
 void ModuleImGui::CreateInspector(float2 scale)
 {
-	ImGui::Begin("Inspector", &inspectorWindow);
+	ImGui::Begin("Inspector", &inspectorWindow,ImGuiWindowFlags_NoMove);
 
 	SetWindowDim(inspectorPos, inspectorSize, scale);
 
