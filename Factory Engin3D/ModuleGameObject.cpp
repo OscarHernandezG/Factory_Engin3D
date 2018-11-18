@@ -132,11 +132,8 @@ void ModuleGameObject::SaveScene(const char* sceneName)
 
 void ModuleGameObject::LoadScene(const char* name)
 {
-//Clear previous
 
-//Prepare new
 
-	//Load new
 	string fileName = name;
 	string direction = name;
 	if (fileName.find(".json") == string::npos)
@@ -145,17 +142,20 @@ void ModuleGameObject::LoadScene(const char* name)
 
 		direction = "Llibrary/Scenes/";
 		direction.append(fileName);
-	//	direction.append(".json");
+		direction.append(".json");
 	}
 
 	JSON_Value* scene = json_parse_file(direction.data());
 
 	if (json_value_get_type(scene) == JSONArray)
 	{
-	DeletePreviousScene();
-	App->sceneIntro->octree.Create(AABB(float3::zero, float3::zero));
+		//Clear previous
+		DeletePreviousScene();
+		//Prepare new
+		App->sceneIntro->octree.Create(AABB(float3::zero, float3::zero));
 
 
+		//Load new
 		JSON_Array* objArray = json_value_get_array(scene);
 
 		int numObjects = json_array_get_count(objArray);
