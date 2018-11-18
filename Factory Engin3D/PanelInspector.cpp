@@ -7,9 +7,8 @@
 
 void ModuleImGui::CreateInspector(float2 scale)
 {
-	ImGui::Begin("Inspector", &inspectorWindow,ImGuiWindowFlags_NoMove);
+	ImGui::Begin("Inspector", &inspectorWindow,ImGuiWindowFlags_NoMove | ImGuiWindowFlags_AlwaysHorizontalScrollbar);
 
-	SetWindowDim(inspectorPos, inspectorSize, scale);
 
 	GameObject* currObject = App->geometry->currentGameObject;
 	if (currObject != nullptr)
@@ -86,5 +85,11 @@ void ModuleImGui::CreateInspector(float2 scale)
 	{
 		ImGui::TextWrapped("Select a GameObject to view its components");
 	}
+
+	ImVec2 size = ImGui::GetWindowSize();
+	inspectorSize.x = size.x;
+
+	SetWindowDim(inspectorPos, inspectorSize, scale);
+
 	ImGui::End();
 }

@@ -54,8 +54,8 @@ void ModuleImGui::CreateGameObjectHierarchy(float2 scale)
 		objectSelected = nullptr;
 	}
 
-	ImVec2 cacatua = ImGui::GetWindowSize();
-	sceneSize.x = cacatua.x;
+	ImVec2 size = ImGui::GetWindowSize();
+	sceneSize.x = size.x;
 
 	SetWindowDim(scenePos, sceneSize, scale);
 	ImGui::End();
