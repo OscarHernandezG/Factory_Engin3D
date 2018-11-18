@@ -208,6 +208,8 @@ void Octree::ReDoOctree(std::vector<GameObject*> objects) // External Redo
 				Insert(*iterator);
 			}
 		}
+		else
+			Create(AABB(float3::zero,float3::zero));
 	}
 }
 void Octree::ReDoOctree(const AABB & limits) //Internal Redo
