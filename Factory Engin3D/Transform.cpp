@@ -195,26 +195,28 @@ void Transform::Inspector()
 		angles[1] = math::RadToDeg(angles.y);
 		angles[2] = math::RadToDeg(angles.z);
 
-		if (ImGui::DragFloat3("Position", &position[0]) && App->gameObject->CanTransform(gameObject)) {
+		if (ImGui::DragFloat3("Position", &position[0], 0.1f, 0.0f,0.0f, "%.2f") && App->gameObject->CanTransform(gameObject)) {
 			SavePrevTransform(prevTransformMat);
 			SetPos(position);
 			needRedoOc = true;
 			LOG("SAVED");
 		}
 
-		if (ImGui::DragFloat3("Scale", &scale[0]) && App->gameObject->CanTransform(gameObject))
+		if (ImGui::DragFloat3("Scale", &scale[0], 0.01f, 0.0f, 0.0f, "%.2f") && App->gameObject->CanTransform(gameObject))
 		{
 			SavePrevTransform(prevTransformMat);
 			SetScale(scale);
 			needRedoOc = true;
 		}
 
-		if (ImGui::DragFloat3("Rotation", &angles[0]) && App->gameObject->CanTransform(gameObject))
+		if (ImGui::DragFloat3("Rotation", &angles[0], 1, 0.0f, 0.0f, "%.2f") && App->gameObject->CanTransform(gameObject))
 		{
 			SavePrevTransform(prevTransformMat);
+
 			angles.x = math::DegToRad(angles.x);
 			angles.y = math::DegToRad(angles.y);
 			angles.z = math::DegToRad(angles.z);
+
 			SetRotation(Quat::FromEulerXYZ(angles.x, angles.y, angles.z));
 			needRedoOc = true;
 		}

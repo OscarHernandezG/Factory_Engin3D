@@ -83,8 +83,6 @@ void ModuleImGui::CreateGOTreeNode(GameObject* current)
 		{
 			CreateGOTreeNode(*childs);
 
-			//DragDropGO(*childs);
-
 			if (ImGui::IsItemClicked(1) && objectSelected == nullptr)
 			{
 				objectSelected = *childs;
