@@ -70,13 +70,7 @@ void Mesh::ClearMesh()
 {
 	if (buffer)
 	{
-		glDeleteBuffers(1, (GLuint*)&(buffer->index.id));
-		glDeleteBuffers(1, (GLuint*)&(buffer->vertex.id));
-		glDeleteBuffers(1, (GLuint*)&(buffer->texture.id));
-
-		delete buffer->index.buffer;
-		delete buffer->vertex.buffer;
-		delete buffer->texture.buffer;
+		App->resources->Remove(buffer);
 	}
 }
 

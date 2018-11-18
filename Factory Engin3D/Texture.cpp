@@ -8,6 +8,14 @@ Texture::Texture(GameObject* gameObject, TextureInfo* info) : Component(gameObje
 	this->texture = info->texture;
 }
 
+Texture::~Texture()
+{
+	if (texture)
+		App->resources->Remove(texture);
+
+	texture = nullptr;
+}
+
 void Texture::SaveComponent(JSON_Object * parent)
 {
 	if (texture)

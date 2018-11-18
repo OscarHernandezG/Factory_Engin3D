@@ -15,7 +15,8 @@ class Texture : Component
 {
 public:
 	Texture(GameObject* gameObject, TextureInfo* info);
-	~Texture() {}
+
+	~Texture();
 
 	void SaveComponent(JSON_Object * parent);
 	void Inspector();
