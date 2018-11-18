@@ -235,7 +235,7 @@ void ModuleGameObject::SaveGameObject(GameObject* object, JSON_Array*& parent)
 		JSON_Value* component = json_value_init_object();
 		JSON_Object* componentObj = json_value_get_object(component);
 
-		SaveComponent(*iterator, componentObj);
+		(*iterator)->SaveComponent(componentObj);
 
 		json_array_append_value(componentsObj, component);
 	}
@@ -246,30 +246,6 @@ void ModuleGameObject::SaveGameObject(GameObject* object, JSON_Array*& parent)
 	for (list<GameObject*>::iterator iterator = object->childs.begin(); iterator != object->childs.end(); ++iterator)
 	{
 		SaveGameObject(*iterator, parent);
-	}
-}
-
-void ModuleGameObject::SaveComponent(Component* object, JSON_Object* parent)
-{
-	switch (object->type)
-	{
-	case ComponentType_TRANSFORM: 
-		((Transform*)object)->SaveComponent(parent);
-		break;
-	case ComponentType_GEOMETRY: 
-		((Geometry*)object)->SaveComponent(parent);
-		break;
-	case ComponentType_CAMERA: 
-		((Camera*)object)->SaveComponent(parent);
-		break;
-	case ComponentType_TEXTURE:
-		//((Transform*)object)->SaveComponent(parent);
-		break;
-	case ComponentType_LIGHT:
-		//((Transform*)object)->SaveComponent(parent);
-		break;
-	default:
-		break;
 	}
 }
 

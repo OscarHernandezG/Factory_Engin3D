@@ -42,8 +42,6 @@ public:
 
 	void SaveGameObject(GameObject * object, JSON_Array*& parent);
 
-	void SaveComponent(Component * object, JSON_Object * parent);
-
 	GameObject* CreateGameObject(float3 position = float3::zero, Quat rotation = Quat::identity, float3 scale = float3::one, GameObject* father = nullptr, const char* name = nullptr);
 	GameObject* CreateEmptyGameObject(GameObject* father, const char* name);
 	void AddNewDynamic(GameObject * object);
