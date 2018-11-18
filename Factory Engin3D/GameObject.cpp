@@ -93,6 +93,9 @@ bool GameObject::SetParent(GameObject* parent)
 	bool ret = false;
 	if (parent != nullptr)
 	{
+		if(father)
+			father->childs.remove(this);
+
 		this->father = parent;
 		parent->childs.push_back(this);
 		ret = true;
@@ -334,6 +337,7 @@ void GameObject::SetPos(float3 pos)
 	if (transform)
 	{
 		transform->SetPos(pos);
+		transform->UpdateBoundingBox();
 	}
 }
 
@@ -415,6 +419,7 @@ void GameObject::SetTransform(float4x4 trans)
 	if (transform)
 	{
 		transform->SetTransform(trans);
+		transform->UpdateBoundingBox();
 	}
 }
 
@@ -423,25 +428,37 @@ void GameObject::SetTransform(float4x4 trans)
 void GameObject::SetScale(float3 scale)
 {
 	if (transform)
+	{
 		transform->SetScale(scale);
+		transform->UpdateBoundingBox();
+	}
 }
 
 void GameObject::Scale(float3 scale)
 {
 	if (transform)
+	{
 		transform->Scale(scale);
+		transform->UpdateBoundingBox();
+	}
 }
 
 void GameObject::SetRotation(Quat rotation)
 {
 	if (transform)
+	{
 		transform->SetRotation(rotation);
+		transform->UpdateBoundingBox();
+	}
 }
 
 void GameObject::Rotate(Quat rotation)
 {
 	if (transform)
+	{
 		transform->Rotate(rotation);
+		transform->UpdateBoundingBox();
+	}
 }
 
 void GameObject::SetIdentity()
@@ -475,7 +492,7 @@ float3 GameObject::GetBBPos()
 		distance.y = (size.y / 2) / math::Tan((0.3333333 * reScale.y));
 		distance.z = (size.z / 2) / math::Tan((0.3333333 * reScale.z));
 	}
-	return distance + GetPos();
+	return distance + GetGlobalPos();
 }
 
 AABB GameObject::GetGlobalAABB(AABB localAABB)

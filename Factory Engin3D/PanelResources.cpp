@@ -1,10 +1,12 @@
 #include "Application.h"
 #include "ModuleImGui.h"
+#include "imgui-1.65/imgui_dock.h"
 
 void ModuleImGui::CreateAssetsWindow(float2 scale)
 {
-	ImGui::Begin("Assets", &canScroll, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
-	SetWindowDim(configurationPos, configurationSize, scale);
+	ImGui::BeginDock("Assets");
+
+	//SetWindowDim(configurationPos, configurationSize, scale);
 
 	if (contRefresh.ReadSec() >= 1)
 	{
@@ -13,7 +15,25 @@ void ModuleImGui::CreateAssetsWindow(float2 scale)
 	}
 	DrawAssets(assetsHierarchy);
 
-	ImGui::End();
+	if (popRecource)
+	{
+		ImGui::OpenPopup("AssetsPopup");
+		popRecource = false;
+	}
+	if (ImGui::BeginPopup("AssetsPopup"))
+	{
+		if (ImGui::MenuItem("Load"))
+		{
+			App->importer->DistributeFile(pathClicked.data(), true);
+			pathClicked.clear();
+		}
+		ImGui::MenuItem("Close");
+		ImGui::EndPopup();
+	}
+	ImGui::EndDock();
+
+	if (ImGui::IsMouseClicked(1) || ImGui::IsMouseClicked(0))
+		ImGui::CloseCurrentPopup();
 }
 
 void ModuleImGui::DrawAssets(AssetsHierarchy& assets)
@@ -24,15 +44,16 @@ void ModuleImGui::DrawAssets(AssetsHierarchy& assets)
 		if ((*iter).childFiles.empty())
 			flag = ImGuiTreeNodeFlags_Leaf;
 
-		if (ImGui::TreeNodeEx((*iter).file.data(),flag))
+		if (ImGui::TreeNodeEx((*iter).file.data(), flag))
 		{
 			DrawAssets(*iter);
 			ImGui::TreePop();
 		}
 
-		if (ImGui::IsItemClicked(App->input->GetMouseButton(SDL_BUTTON_RIGHT)))
+		if (ImGui::IsItemClicked(1))
 		{
-			App->importer->DistributeFile((char*)((*iter).file.data()),true);
+			pathClicked = (*iter).file.data();
+			popRecource = true;
 		}
 	}
 }

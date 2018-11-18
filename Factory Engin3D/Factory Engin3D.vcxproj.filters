@@ -405,6 +405,9 @@
     <ClInclude Include="ResourceMesh.h">
       <Filter>Sources\Resources</Filter>
     </ClInclude>
+    <ClInclude Include="imgui-1.65\imgui_dock.h">
+      <Filter>Sources\Containers\ImGui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -630,6 +633,12 @@
       <Filter>Sources\Resources</Filter>
     </ClCompile>
     <ClCompile Include="PanelInspector.cpp">
+      <Filter>Sources\Modules\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui-1.65\imgui_dock.cpp">
+      <Filter>Sources\Containers\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="PanelTransform.cpp">
       <Filter>Sources\Modules\ImGui</Filter>
     </ClCompile>
   </ItemGroup>

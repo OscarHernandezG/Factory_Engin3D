@@ -17,6 +17,7 @@ struct ImVec4;
 struct ExampleAppConsole;
 class GameObject;
 class Timer;
+enum GameState;
 
 struct AssetsHierarchy
 {
@@ -79,15 +80,18 @@ public:
 	void CreateConsole(float2 scale);
 	void LogConsole(const char* consoleText);
 
-	//Panel Transform
+	//Panel Inspector
 	void CreateInspector(float2 scale);
 
 	//Panel Hierarchy
 	void CreateGameObjectHierarchy(float2 scale);
 	void CreateGOTreeNode(GameObject * current);
+	void DragDropGO(GameObject *& childs);
 
 	//PanelTime
 	void CreateGameManager(float2 scale);
+
+	void ChangePlayState(bool show, GameState state);
 
 	//Panel Resources
 	void CreateAssetsWindow(float2 scale);
@@ -106,6 +110,7 @@ public:
 	bool consoleWindow = false;
 	bool inspectorWindow = false;
 	bool hierarchyWindow = true;
+	bool assetsWindow = true;
 	bool exitOption = false;
 
 
@@ -148,11 +153,16 @@ public:
 
 	bool warningDialoge = false;
 
-	bool dragTransform = false;
-
 	//Resource Panel
 	AssetsHierarchy assetsHierarchy;
 	Timer contRefresh;
+	bool popRecource = false;
+	std::string pathClicked;
+
+	//Hierarchy Panel
+	bool popHierarchy = false;
+	GameObject* objectSelected = nullptr;
+	bool objectDrag = false;
 
 	//--------------------------
 	// Window position

@@ -225,9 +225,11 @@ update_status ModuleRenderer3D::PostUpdate()
 		if (App->geometry->currentGameObject != nullptr)
 		{
 			static float3 corners[8];
-			App->geometry->currentGameObject->transform->boundingBox.GetCornerPoints(corners);
-
-			DrawQuad(corners, Green);
+			if (App->geometry->currentGameObject->transform)
+			{
+				App->geometry->currentGameObject->transform->boundingBox.GetCornerPoints(corners);
+				DrawQuad(corners, Green);
+			}
 
 			Camera* cam = App->geometry->GetPlayingCamera();
 			cam->UpdateFrustum();
