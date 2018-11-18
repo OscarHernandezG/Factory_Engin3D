@@ -22,7 +22,11 @@ public:
 	bool ExistFile(const char* path);
 	void ReadFolder(const char * path, std::vector<AssetsHierarchy>& filesStr);
 
+	void Remove(Resource* resource);
+
 	Resource* FindLoadedResource(const char* path, ResourceType type);
+
+	bool IsResourceLoaded(Resource* res);
 
 	ResourceMesh* LoadMesh(uint name);
 	ResourceTexture* LoadTexture(const char * path);

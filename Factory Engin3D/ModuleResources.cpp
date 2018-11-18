@@ -87,6 +87,21 @@ void ModuleResources::ReadFolder(const char * path, std::vector<AssetsHierarchy>
 	}*/
 }
 
+void ModuleResources::Remove(Resource* resource)
+{
+	if (resource &&	IsResourceLoaded(resource))
+	{
+		resource->usage--;
+
+		if (resource->usage <= 0)
+		{
+			resources.remove(resource);
+			delete resource;
+		}
+	}
+}
+
+
 Resource* ModuleResources::FindLoadedResource(const char* path, ResourceType type)
 {
 	for (list<Resource*>::const_iterator iterator = resources.begin(); iterator != resources.end(); ++iterator)
@@ -98,6 +113,17 @@ Resource* ModuleResources::FindLoadedResource(const char* path, ResourceType typ
 			}
 	}
 	return nullptr;
+}
+
+bool ModuleResources::IsResourceLoaded(Resource* res)
+{
+	for (list<Resource*>::const_iterator iterator = resources.begin(); iterator != resources.end(); ++iterator)
+	{
+		if (*iterator == res)
+			return true;
+
+	}
+	return false;
 }
 
 ResourceMesh* ModuleResources::LoadMesh(uint name)
