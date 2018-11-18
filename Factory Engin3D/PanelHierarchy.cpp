@@ -73,6 +73,7 @@ void ModuleImGui::CreateGOTreeNode(GameObject* current)
 
 	if (ImGui::TreeNodeEx(name, flags))
 	{
+		DragDropGO(current);
 		if (ImGui::IsItemClicked(0))
 		{
 			App->geometry->currentGameObject = current;
@@ -82,7 +83,7 @@ void ModuleImGui::CreateGOTreeNode(GameObject* current)
 		{
 			CreateGOTreeNode(*childs);
 
-			DragDropGO(*childs);
+			//DragDropGO(*childs);
 
 			if (ImGui::IsItemClicked(1) && objectSelected == nullptr)
 			{
@@ -92,6 +93,8 @@ void ModuleImGui::CreateGOTreeNode(GameObject* current)
 		}
 		ImGui::TreePop();
 	}
+	else
+		DragDropGO(current);
 }
 
 void ModuleImGui::DragDropGO(GameObject* &object)
