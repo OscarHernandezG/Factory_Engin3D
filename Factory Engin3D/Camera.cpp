@@ -1,3 +1,5 @@
+#include "Application.h"
+
 #include "Camera.h"
 #include "GameObject.h"
 
@@ -23,6 +25,31 @@ Camera::Camera(GameObject* gameObject) : Component(gameObject)
 	frustum.farPlaneDistance = 1000.0f;
 	frustum.verticalFov = 60.0f * DEGTORAD;
 	frustum.horizontalFov = 2.f * atan(tan(frustum.verticalFov * 0.5f) * (SCREEN_WIDTH / SCREEN_HEIGHT));
+}
+
+void Camera::Inspector()
+{
+	if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (frustum.type != InvalidFrustum)
+		{
+			char* camType = frustum.type == PerspectiveFrustum ? "Perspective" : "Orthographic";
+ 			ImGui::Text("Camera type: ", camType);
+			ImGui::DragFloat("Far plane distance", &frustum.farPlaneDistance, 10, frustum.nearPlaneDistance, 2000.0f);
+			ImGui::DragFloat("Near plane distance", &frustum.nearPlaneDistance, 1, 0.1, frustum.farPlaneDistance);
+
+			float fov = frustum.verticalFov * RADTODEG;
+			if (ImGui::DragFloat("FOV", &fov, 1, 55, 120))
+			{
+				frustum.verticalFov = fov * DEGTORAD;
+				frustum.horizontalFov = 2.f * atan(tan(frustum.verticalFov * 0.5f) * (float(App->window->width) / App->window->height));
+			}
+		}
+		else
+		{
+			ImGui::Text("Invalid camera type");
+		}
+	}
 }
 
 

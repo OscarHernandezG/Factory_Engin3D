@@ -13,8 +13,9 @@ public:
 
 	Camera(GameObject* gameObject);
 
-	float4x4 GetViewMatrix();
+	void Inspector();
 
+	float4x4 GetViewMatrix();
 	float4x4 GetProjectionMatrix();
 
 	void UpdateFrustum();
