@@ -80,20 +80,18 @@ public:
 	void CreateConsole(float2 scale);
 	void LogConsole(const char* consoleText);
 
-	//Panel Transform
-	void CreateTransform(float2 scale);
-	void SavePrevTransform(const float4x4 &prevTransformMat);
-	void GuizmosOptions();
+	//Panel Inspector
+	void CreateInspector(float2 scale);
+	void DeleteGO(GameObject *& object);
 
 	//Panel Hierarchy
 	void CreateGameObjectHierarchy(float2 scale);
 	void CreateGOTreeNode(GameObject * current);
 	void DragDropGO(GameObject *& childs);
-	void DeleteGO(GameObject * &object);
+
 
 	//PanelTime
 	void CreateGameManager(float2 scale);
-
 	void ChangePlayState(bool show, GameState state);
 
 	//Panel Resources
@@ -111,7 +109,7 @@ public:
 	bool aboutWindow = false;
 	bool configurationWindow = false;
 	bool consoleWindow = false;
-	bool transformWindow = false;
+	bool inspectorWindow = false;
 	bool hierarchyWindow = true;
 	bool assetsWindow = true;
 	bool exitOption = false;
@@ -156,10 +154,6 @@ public:
 
 	bool warningDialoge = false;
 
-	//Transform Panel
-	bool dragTransform = true;
-	bool needRedoOc = false;
-
 	//Resource Panel
 	AssetsHierarchy assetsHierarchy;
 	Timer contRefresh;
@@ -175,7 +169,6 @@ public:
 	// Window position
 	float2 aboutPos = float2::zero;
 	float2 configurationPos = float2::zero;
-	float2 transformPos = float2::zero;
 	float2 consolePos = float2::zero;
 	float2 scenePos = float2::zero;
 	float2 playPos = float2::zero;
@@ -183,7 +176,6 @@ public:
 	// Window sizes
 	float2 aboutSize = float2::zero;
 	float2 configurationSize = float2::zero;
-	float2 transformSize = float2::zero;
 	float2 consoleSize = float2::zero;
 	float2 sceneSize = float2::zero;
 	float2 playSize = float2::zero;

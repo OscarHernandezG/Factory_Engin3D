@@ -10,6 +10,10 @@
 
 #include <vector>
 
+#include "Resource.h"
+#include "ResourceMesh.h"
+#include "ResourceTexture.h"
+
 struct aiMesh;
 struct aiScene;
 struct aiNode;
@@ -20,7 +24,7 @@ struct Textures
 	std::string path;
 	uint id = 0;
 
-	uint textureId = 0;
+	ResourceTexture* textureResource = nullptr;
 };
 
 class ModuleGeometry : public Module
@@ -33,84 +37,89 @@ public:
 	void LoadDefaultScene();
 	update_status PostUpdate();
 
-	void ClearLoadedMeshes();
-
-	void Draww(GameObject * object);
-
 	bool CleanUp();
 
-	MeshNode LoadMeshBuffer(const aiScene * scene, uint index);
 
-	void LoadMeshTextureCoords(MeshBuffer &buffer, aiMesh* newMesh);
-
-	void LoadMeshIndex(aiMesh* newMesh, MeshBuffer &buffer);
-
-	void LoadMeshVertex(MeshBuffer &buffer, aiMesh* newMesh);
-
-	MeshNode LoadMeshNode(const aiScene * scene, aiNode * node);
-
-	float4x4 AiNatrixToFloatMat(const aiMatrix4x4 &aiMat);
-
-	MeshNode LoadMesh(const char* path);
-
-	void SaveMeshImporter(MeshBuffer newCurrentBuffer, const char * path, uint uuid);
-
-	void LoadMeshImporter(const char * path, const std::vector<MeshNode>& nodes, std::vector<MeshBuffer*>& buffer);
-
-	void LoadTextureImporter(std::vector<Textures>& nodes, std::vector<Textures>& textures);
-
-	std::vector<MeshBuffer*> LoadMeshImporterUUID(const std::vector<uint>& nodes);
-
-	MeshBuffer* LoadBufferGPU(char * buffer, int id = 0);
-
-	GameObject* LoadGameObjectsFromMeshNode(MeshNode node, GameObject * father);
-
-	GameObject * LoadEmptyGameObjectsFromMeshNode(MeshNode node, GameObject * father);
-
+// Load New Mesh
+// Main method to load a new mesh, this method will load a fbx (loading all meshes and textures)
+// and create GameObjects for every mesh inside the fbx.
+// ====================================================================================
 	void UpdateMesh(const char * path);
 
-	void SaveGameObjectJson(GameObject* object, JSON_Object* parent);
+//--------------------------------------------------------------------------
+// Load mesh from path
+	MeshNode LoadMesh(const char* path);
+// Load a mesh node (recursive)
+	MeshNode LoadMeshNode(const aiScene * scene, aiNode * node);
+// Load a mesh buffer
+	MeshNode LoadMeshBuffer(const aiScene * scene, uint index);
 
-	AABB LoadBoundingBox(Buffer<float> vertex);
+// Mesthods to load a mesh buffer
+	void LoadMeshVertex(ResourceMesh& buffer, aiMesh* newMesh);
+	void LoadMeshIndex(aiMesh* newMesh, ResourceMesh& buffer);
+	void LoadMeshTextureCoords(ResourceMesh& buffer, aiMesh* newMesh);
 
-	float3 CalcBBPos(math::AABB* boundingBox) const;
+//--------------------------------------------------------------------------
+// Save Mesh in Importer
+	void SaveMeshImporter(ResourceMesh newCurrentBuffer, const char * path, uint uuid);
 
-	float3 GetBBPos() const;
+//--------------------------------------------------------------------------
+// Load Mesh from Importer
+	void LoadMeshImporter(const char * path, const std::vector<MeshNode>& nodes, std::vector<ResourceMesh*>& buffer);
+// Load textures from Importer
+	void LoadTextureImporter(std::vector<Textures>& texturesToLoad);
 
-	float3 GetCurrentMeshPivot() const;
+//--------------------------------------------------------------------------
+// Load the GameObject from a MeshNode (recursive)
+	GameObject* LoadGameObjectsFromMeshNode(MeshNode node, GameObject * father);
+	GameObject* LoadEmptyGameObjectsFromMeshNode(MeshNode node, GameObject * father);
+// ====================================================================================
 
+
+// Create a float4x4 from an aiMat4x4
+	float4x4 AiNatrixToFloatMat(const aiMatrix4x4& aiMat);
+
+// Get the higher or lower value from 2 floats
 	inline void Higher(float& val1, float val2);
-
 	inline void Lower(float& val1, float val2);
 
-	//Geometry* LoadPrimitive(PrimitiveTypes type);
 
-	uint LoadTexture(const char* path) const;
+// Load meshes from UUID
+	void LoadMeshImporterUUID(const std::vector<uint>& nodes, std::vector<ResourceMesh*>& buffers);
 
-	void UpdateTexture(const char* path);
 
+// Bounding Box
+//----------------------------------------------------------------
+// Load
+	AABB LoadBoundingBox(Buffer<float> vertex);
+// Calc
+	float3 CalcBBPos(math::AABB* boundingBox) const;
+//Get
+	float3 GetBBPos() const;
+	float3 GetCurrentMeshPivot() const;
+//----------------------------------------------------------------
+
+// Get the In-Game camera
 	Camera* GetPlayingCamera() const;
+
 public:
+	// The GameObject that is currently selectet
 	GameObject* currentGameObject = nullptr;
-	GameObject* bHouse = nullptr;
 
-	std::vector<MeshNode> nodes;
-	std::vector<MeshBuffer*> loadedMeshes;
-
-	std::vector<Textures> texturesToLoad;
-	std::vector<Textures> loadedTextures;
-
-	uint numFaces = 0u;
-
-	char* droppedFileDir = nullptr;
-
-	AABB currentMeshBB = AABB(float3::zero, float3::zero);
-
-	std::string destination;
-
+	// The plane of the scene
 	GameObject* plane = nullptr;
+
+	//The current camera while playing
 	GameObject* cameraObject = nullptr;
+
+	// MeshNodes and Meshes loaded from a fbx
+	std::vector<MeshNode> nodes;	// Can this be temp?
+	std::vector<ResourceMesh*> currentMeshes;	// Can this be temp?
+
+	// Textures that have to be loaded
+	std::vector<Textures> texturesToLoad;	// Can this be temp?
+
 private:
-	Camera * playingCamera = nullptr;
+	Camera* playingCamera = nullptr;
 };
 #endif // !__ModuleGeometryManager_H__

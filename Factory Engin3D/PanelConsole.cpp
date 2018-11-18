@@ -6,10 +6,8 @@ void ModuleImGui::CreateConsole(float2 scale)
 {
 	ImGui::BeginDock("Console", &consoleWindow);
 
-		//SetWindowDim(consolePos, consoleSize, scale);
-
-		if (ImGui::Button("Clear", ImVec2(400, 20)))
-			textBuff.clear();
+	if (ImGui::Button("Clear", ImVec2(400, 20)))
+		textBuff.clear();
 	ImGui::Separator();
 
 	ImGui::TextWrapped(textBuff.begin());

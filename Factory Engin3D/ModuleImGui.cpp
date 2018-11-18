@@ -35,7 +35,6 @@ bool ModuleImGui::Start()
 	// Window position
 	aboutPos = float2(955.0f, 520.0f);
 	configurationPos = float2(355.0f, 575.0f);
-	transformPos = float2(958.0f, 18.0f);
 	consolePos = float2(0.0f, 575.0f);
 	scenePos = float2(0.0f, 18.0f);
 	playPos = float2(550.0f, 25.0f);
@@ -43,7 +42,6 @@ bool ModuleImGui::Start()
 	// Window sizes
 	aboutSize = float2(325.0f, 340.0f);
 	configurationSize = float2(600.0f, 287.0f);
-	transformSize = float2(323.0f, 852.0f);
 	consoleSize = float2(355.0f, 287.0f);
 	sceneSize = float2(311.0f, 525.0f);
 	playSize = float2(185.0f, 40.0f);
@@ -89,8 +87,8 @@ update_status ModuleImGui::PreUpdate()
 	if (configurationWindow)
 		CreateConfigWindow(scale);
 
-	if (transformWindow)
-		CreateTransform(scale);
+	if (inspectorWindow)
+		CreateInspector(scale);
 
 	if (hierarchyWindow)
 		CreateGameObjectHierarchy(scale);
@@ -110,7 +108,7 @@ update_status ModuleImGui::PreUpdate()
 		ImGui::End();
 	}
 //------------------
-
+	
 		CreateGameManager(scale);
 
 	status = CreateMainMenuBar();
@@ -163,7 +161,7 @@ update_status ModuleImGui::Save(JSON_Object* object)
 	json_object_dotset_boolean(object, "editableValues.aboutWindow", aboutWindow);
 	json_object_dotset_boolean(object, "editableValues.configurationWindow", configurationWindow);
 	json_object_dotset_boolean(object, "editableValues.consoleWindow", consoleWindow);
-	json_object_dotset_boolean(object, "editableValues.transformWindow", transformWindow);
+	json_object_dotset_boolean(object, "editableValues.inspectorWindow", inspectorWindow);
 
 	json_object_dotset_number(object, "window.height", heightPos);
 	json_object_dotset_number(object, "window.width", widthPos);
@@ -180,7 +178,7 @@ update_status ModuleImGui::Load(JSON_Object * object)
 	aboutWindow = json_object_dotget_boolean(object, "editableValues.aboutWindow");
 	configurationWindow = json_object_dotget_boolean(object, "editableValues.configurationWindow");
 	consoleWindow = json_object_dotget_boolean(object, "editableValues.consoleWindow");
-	transformWindow = json_object_dotget_boolean(object, "editableValues.transformWindow");
+	inspectorWindow = json_object_dotget_boolean(object, "editableValues.inspectorWindow");
 
 
 	heightPos = json_object_dotget_number(object, "window.height");
@@ -367,8 +365,8 @@ void ModuleImGui::CreateMenu()
 		else if (ImGui::MenuItem("Random number window", "Ctrl+R", randomNumberWindow))
 			randomNumberWindow = !randomNumberWindow;
 
-		else if (ImGui::MenuItem("Transform window", "Ctrl+T", transformWindow))
-			transformWindow = !transformWindow;
+		else if (ImGui::MenuItem("Inspector window", "Ctrl+T", inspectorWindow))
+			inspectorWindow = !inspectorWindow;
 
 		else if (ImGui::MenuItem("Hierarchy", "Ctrl+H", hierarchyWindow))
 			hierarchyWindow = !hierarchyWindow;
@@ -377,7 +375,7 @@ void ModuleImGui::CreateMenu()
 			consoleWindow = !consoleWindow;
 
 		else if (ImGui::MenuItem("Close All", "Ctrl+X"))
-			showDemoWindow = exampleWindow = mathGeoLibWindow = randomNumberWindow = aboutWindow = configurationWindow = consoleWindow = transformWindow = hierarchyWindow = false;
+			showDemoWindow = exampleWindow = mathGeoLibWindow = randomNumberWindow = aboutWindow = configurationWindow = consoleWindow = inspectorWindow = hierarchyWindow = false;
 
 		ImGui::EndMenu();
 	}
@@ -436,7 +434,7 @@ void ModuleImGui::CheckShortCuts()
 			randomNumberWindow = !randomNumberWindow;
 
 		else if (App->input->GetKey(SDL_SCANCODE_T) == KEY_DOWN)
-			transformWindow = !transformWindow;
+			inspectorWindow = !inspectorWindow;
 
 		else if (App->input->GetKey(SDL_SCANCODE_H) == KEY_DOWN)
 			hierarchyWindow = !hierarchyWindow;
@@ -445,7 +443,7 @@ void ModuleImGui::CheckShortCuts()
 			consoleWindow = !consoleWindow;
 
 		else if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN)
-			showDemoWindow = exampleWindow = mathGeoLibWindow = randomNumberWindow = aboutWindow = configurationWindow = consoleWindow = transformWindow = hierarchyWindow = false;
+			showDemoWindow = exampleWindow = mathGeoLibWindow = randomNumberWindow = aboutWindow = configurationWindow = consoleWindow = inspectorWindow = hierarchyWindow = false;
 	}
 }
 

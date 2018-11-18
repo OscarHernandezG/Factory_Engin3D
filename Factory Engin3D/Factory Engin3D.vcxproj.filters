@@ -67,6 +67,9 @@
     <Filter Include="Sources\Modules\ImGui">
       <UniqueIdentifier>{14150202-2910-4bea-aead-295769e1a46c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Resources">
+      <UniqueIdentifier>{e22c8b64-62e6-490b-bc5c-d3a4cedfed9c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -393,6 +396,15 @@
     <ClInclude Include="ModuleResources.h">
       <Filter>Sources\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="ResourceTexture.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceMesh.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
     <ClInclude Include="imgui-1.65\imgui_dock.h">
       <Filter>Sources\Containers\ImGui</Filter>
     </ClInclude>
@@ -608,10 +620,19 @@
     <ClCompile Include="PanelResources.cpp">
       <Filter>Sources\Modules\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="PanelTransform.cpp">
+    <ClCompile Include="PanelTime.cpp">
       <Filter>Sources\Modules\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="PanelTime.cpp">
+    <ClCompile Include="Resource.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceMesh.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceTexture.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="PanelInspector.cpp">
       <Filter>Sources\Modules\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="imgui-1.65\imgui_dock.cpp">

@@ -104,7 +104,6 @@ public:
 	void Inspector();
 	void SavePrevTransform(const float4x4 & prevTransformMat);
 	void GuizmosOptions();
-	void DeleteGO(GameObject *& object);
 
 	void SaveComponent(JSON_Object* parent);
 

@@ -147,7 +147,7 @@ void ModuleGameObject::LoadScene()
 void ModuleGameObject::SetGOMeshNewScene(Mesh * itMesh, std::list<GameObject *>::iterator &it)
 {
 	bool found = false;
-	for (vector<MeshBuffer*>::iterator currentMeshBuffer = App->geometry->loadedMeshes.begin(); currentMeshBuffer != App->geometry->loadedMeshes.end(); ++currentMeshBuffer)
+	for (vector<ResourceMesh*>::iterator currentMeshBuffer = App->geometry->currentMeshes.begin(); currentMeshBuffer != App->geometry->currentMeshes.end(); ++currentMeshBuffer)
 	{
 		if (itMesh->GetUUID() == (*currentMeshBuffer)->uuid)
 		{
@@ -166,8 +166,8 @@ void ModuleGameObject::LoadNewSceneMeshes(std::vector<uint> &meshesToLoad)
 	sort(meshesToLoad.begin(), meshesToLoad.end());
 	meshesToLoad.erase(unique(meshesToLoad.begin(), meshesToLoad.end()), meshesToLoad.end());
 
-	vector<MeshBuffer*> tempVec = App->geometry->LoadMeshImporterUUID(meshesToLoad);
-	App->geometry->loadedMeshes.insert(App->geometry->loadedMeshes.end(), tempVec.begin(), tempVec.end());
+	vector<ResourceMesh*> tempVec;
+	App->geometry->LoadMeshImporterUUID(meshesToLoad, App->geometry->currentMeshes);
 }
 
 void ModuleGameObject::LoadNewSceneGO(int numObjects, JSON_Array * objArray, std::vector<uint> &meshesToLoad, std::list<GameObject *> &sceneGameObjects)
@@ -192,8 +192,6 @@ void ModuleGameObject::DeletePreviousScene()
 	App->geometry->currentGameObject = nullptr;
 	App->geometry->plane = nullptr;
 	App->sceneIntro->octree.Clear();
-
-	App->geometry->ClearLoadedMeshes();
 }
 
 GameObject* ModuleGameObject::FindByID(uint UUID)

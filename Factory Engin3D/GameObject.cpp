@@ -235,8 +235,11 @@ Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
 			newComponent = (Component*)new Transform((TransformInfo*)info);
 		if (newComponent)
 		{
-			components.remove(transform);
-			delete transform;
+			if (transform)
+			{
+				components.remove(transform);
+				delete transform;
+			}
 
 			transform = (Transform*)newComponent;
 		}
