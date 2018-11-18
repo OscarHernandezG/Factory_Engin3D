@@ -88,6 +88,11 @@ void Mesh::Inspector()
 			ImGui::Text("Vertices count: %u", buffer->vertex.size);
 			ImGui::Text("Faces count: %u", buffer->index.size / 3);
 
+			if (buffer->usage == 1)
+			ImGui::Text("Mesh used %i time", buffer->usage);
+			else
+			ImGui::Text("Mesh used %i times", buffer->usage);
+
 			if (ImGui::Button("Remove Mesh", ImVec2(50, 25)))
 			{
 
