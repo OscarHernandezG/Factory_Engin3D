@@ -231,7 +231,7 @@ void Transform::Inspector()
 		{
 			dragTransform = true;
 			needRedoOc = false;
-			App->sceneIntro->redoOc = true;
+			App->gameObject->redoOc = true;
 		}
 		GuizmosOptions();
 	}

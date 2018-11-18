@@ -105,12 +105,6 @@ update_status ModuleSceneIntro::Update()
 
 update_status ModuleSceneIntro::PostUpdate()
 {
-	if (redoOc)
-	{
-		octree.ReDoOctree(AABB(), true);
-		redoOc = false;
-	}
-
 	return UPDATE_CONTINUE;
 }
 

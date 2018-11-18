@@ -54,7 +54,7 @@ public:
 	void SaveBeforePlay();
 	void LoadAfterPlay();
 
-
+	bool redoOc;
 public:
 	GameObject* rootGameObject;
 

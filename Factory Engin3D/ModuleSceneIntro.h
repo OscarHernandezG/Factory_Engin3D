@@ -46,7 +46,6 @@ public:
 
 	char* droppedFileDir = nullptr;
 	Octree octree;
-	bool redoOc = false;
 
 	float4x4 lastMat;
 	std::stack<LastTransform> prevTransforms;

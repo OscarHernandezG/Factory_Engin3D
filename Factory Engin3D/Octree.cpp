@@ -194,22 +194,29 @@ void Octree::GetGameObjects(std::vector<GameObject*>& objects) const
 	}
 }
 
-void Octree::ReDoOctree(const AABB& limits, bool external)
+void Octree::ReDoOctree(std::vector<GameObject*> objects) // External Redo
+{
+	if (root != nullptr)
+	{
+		Clear();
+		Create((*objects.begin())->transform->boundingBox);
+
+		for (std::vector<GameObject*>::iterator iterator = objects.begin(); iterator != objects.end(); ++iterator)
+		{
+			Insert(*iterator);
+		}
+	}
+}
+void Octree::ReDoOctree(const AABB & limits) //Internal Redo
 {
 	if (root != nullptr)
 	{
 		std::vector<GameObject*> objects;
 		GetGameObjects(objects);
-		if (external)
-		{
-			Clear();
-			Create((*objects.begin())->transform->boundingBox);
-		}
-		else
-		{
-			Clear();
-			Create(limits);
-		}
+
+		Clear();
+		Create(limits);
+
 		for (std::vector<GameObject*>::iterator iterator = objects.begin(); iterator != objects.end(); ++iterator)
 		{
 			Insert(*iterator);
