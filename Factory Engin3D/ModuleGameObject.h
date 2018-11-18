@@ -26,7 +26,7 @@ public:
 
 	void CleanAllGameObjects();
 
-	void SaveScene();
+	void SaveScene(const char* name);
 
 	void LoadScene();
 

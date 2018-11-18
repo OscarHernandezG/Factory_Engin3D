@@ -100,6 +100,38 @@ update_status ModuleImGui::PreUpdate()
 	if (hierarchyWindow)
 		CreateGameObjectHierarchy(scale);
 
+	if (saveScenePopUp)
+	{
+		ImGui::OpenPopup("Save scene");
+		saveScenePopUp = false;
+	}
+
+	if (ImGui::BeginPopup("Save scene", ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
+	{
+		ImGui::SetWindowPos({ float(450.0f * scale.x), float(300.0f * scale.y) });
+		static char scene[64];
+		sprintf_s(scene, 64, sceneName.data());
+
+		ImGui::Text("Introduce the name of the scene");
+		if (ImGui::InputText("", scene, 64))
+		{
+			sceneName = scene;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Save", { 50,25 }) || App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+		{
+			App->gameObject->SaveScene(sceneName.data());
+			ImGui::CloseCurrentPopup();
+		}
+
+		if (ImGui::Button("Cancel", { 50,25 }))
+		{
+			sceneName = "scene";
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::EndPopup();
+	}
 //------------------
 	if (assetsWindow)
 	{
@@ -400,7 +432,7 @@ bool ModuleImGui::CreateOptions()
 	if (ImGui::BeginMenu("Options"))
 	{
 		if (ImGui::MenuItem("Save Scene"))
-			App->gameObject->SaveScene();
+			saveScenePopUp = true;
 
 		if (ImGui::MenuItem("Load Scene"))
 			App->gameObject->LoadScene();

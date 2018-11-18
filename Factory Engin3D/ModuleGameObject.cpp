@@ -103,7 +103,7 @@ void ModuleGameObject::CleanAllGameObjects()
 	}
 }
 
-void ModuleGameObject::SaveScene()
+void ModuleGameObject::SaveScene(const char* sceneName)
 {
 	if (rootGameObject != nullptr)
 	{
@@ -116,7 +116,7 @@ void ModuleGameObject::SaveScene()
 		int sizeBuf = json_serialization_size_pretty(rootValue);
 		char* buf = new char[sizeBuf];
 		json_serialize_to_buffer_pretty(rootValue, buf, sizeBuf);
-		App->importer->SaveFile("scene", sizeBuf, buf, LlibraryType::LlibraryType_SCENE);
+		App->importer->SaveFile(sceneName, sizeBuf, buf, LlibraryType::LlibraryType_SCENE);
 		delete[] buf;
 
 
