@@ -8,6 +8,20 @@ void ModuleImGui::CreateGameObjectHierarchy(float2 scale)
 
 	SetWindowDim(scenePos, sceneSize, scale);
 
+	//Options menu
+	if (ImGui::BeginMenu("Options"))
+	{
+		if (ImGui::MenuItem("New Game Object"))
+		{
+			std::string str = "Random Object ";
+			str.append(std::to_string(rand() % 100));
+			App->gameObject->CreateEmptyGameObject(App->gameObject->rootGameObject, str.data());
+		}
+
+		ImGui::MenuItem("Close");
+		ImGui::EndMenu();
+	}
+	//Iterate all GO in sceene
 	if (App->gameObject->rootGameObject)
 	{
 		CreateGOTreeNode(App->gameObject->rootGameObject);
@@ -15,27 +29,23 @@ void ModuleImGui::CreateGameObjectHierarchy(float2 scale)
 			objectDrag = false; //put false for next frame
 	}
 	ImGui::End();
-
-	if (ImGui::IsMouseClicked(1) && !popHierarchy)
+	//Call only one time OpenPopup
+	if (ImGui::IsItemClicked(1))
 		ImGui::OpenPopup("GameObjectsPop");
 	
-	popHierarchy = ImGui::BeginPopup("GameObjectsPop");
-	if (popHierarchy)
+	//Opened every frame if popup its opened
+	if (ImGui::BeginPopup("GameObjectsPop"))
 	{
-		if (ImGui::MenuItem("New Game Object"))
+		std::string str = "New Game Object in ";
+		str.append(objectSelected->name);
+		if (ImGui::MenuItem(str.data()))
 		{
-			std::string str = std::to_string((rand() % 100));
-			if(objectSelected)
-				App->gameObject->CreateEmptyGameObject(objectSelected, str.data());
-			else
-				App->gameObject->CreateEmptyGameObject(App->gameObject->rootGameObject, str.data());
+			str = "Random Object ";
+			str.append(std::to_string(rand() % 100));
+			App->gameObject->CreateEmptyGameObject(objectSelected, str.data());
 		}
-		if(objectSelected)
-			if (ImGui::MenuItem("Delete"))
-				objectSelected->Delete();
-			
-
-		ImGui::MenuItem("Close");
+		if (ImGui::MenuItem("Delete"))
+			objectSelected->Delete();
 		ImGui::EndPopup();
 	}
 	else if(objectSelected)
@@ -72,8 +82,11 @@ void ModuleImGui::CreateGOTreeNode(GameObject* current)
 
 			DragDropGO(*childs);
 
-			if(ImGui::IsItemClicked(1))
+			if (ImGui::IsItemClicked(1))
+			{
 				objectSelected = *childs;
+				popHierarchy = true;
+			}
 		}
 		ImGui::TreePop();
 	}
