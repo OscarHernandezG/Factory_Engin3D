@@ -36,6 +36,8 @@ public:
 
 	virtual void SaveComponent(JSON_Object* parent) {}
 
+	virtual void Inspector() {}
+
 	unsigned int GetUUID() const { return UUID; }
 	const void SetUUID(unsigned int newUUID) { UUID = newUUID; }	// This can only be used in load stage
 

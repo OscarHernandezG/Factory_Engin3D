@@ -23,13 +23,16 @@ void Mesh::InnerRender() const
 			if (buffer->texture.buffer != nullptr && buffer->texture.size > 0)
 			{
 				Texture* texture = (Texture*)gameObject->GetComponent(ComponentType_TEXTURE);
-				//Load Texture UV
-				glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-				glBindBuffer(GL_ARRAY_BUFFER, buffer->texture.id);
-				glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+				if (texture != nullptr)
+				{
+					//Load Texture UV
+					glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+					glBindBuffer(GL_ARRAY_BUFFER, buffer->texture.id);
+					glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
-				//Load texture
-				glBindTexture(GL_TEXTURE_2D, texture->GetID());
+					//Load texture
+					glBindTexture(GL_TEXTURE_2D, texture->GetID());
+				}
 			}
 		}
 
@@ -72,6 +75,50 @@ void Mesh::ClearMesh()
 
 	delete buffer->index.buffer;
 	delete buffer->vertex.buffer;
-	//		delete (*iterator).texture.buffer;
+	delete buffer->texture.buffer;
 }
 
+
+void Mesh::Inspector()
+{
+	if (ImGui::CollapsingHeader("Mesh", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (buffer)
+		{
+			ImGui::Text("Vertices count: %u", buffer->vertex.size);
+			ImGui::Text("Faces count: %u", buffer->index.size / 3);
+
+			if (ImGui::Button("Remove Mesh", ImVec2(50, 25)))
+			{
+
+			}
+		}
+		else
+		{
+			ImGui::Text("Mesh component has no resource mesh");
+			if (ImGui::Button("Add new ResourceMesh", ImVec2(50, 25)))
+			{
+
+			}
+		}
+	}
+}
+
+
+// ------------------------------------------------------------------------------
+// Mesh Node
+// ------------------------------------------------------------------------------
+bool MeshNode::operator==(const MeshNode& node2) const
+{
+	return (this->id == node2.id);
+}
+
+bool MeshNode::operator!=(const MeshNode& node2) const
+{
+	return !(this->id == node2.id);
+}
+
+bool MeshNode::operator<(const MeshNode& node2) const
+{
+	return (this->id < node2.id);
+}

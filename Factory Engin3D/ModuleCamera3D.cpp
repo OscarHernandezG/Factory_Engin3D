@@ -25,7 +25,6 @@ bool ModuleCamera3D::Start()
 	cameraComponent->frustum.pos = float3(5, 5, 5);
 
 	LookAt(float3(0, 0, 0));
-	Look(false);
 
 	return ret;
 }
@@ -44,6 +43,12 @@ bool ModuleCamera3D::CleanUp()
 update_status ModuleCamera3D::Update()
 {
 	float speed = cameraSpeed * App->time->Getdt();
+
+	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_DOWN)
+	{
+		isCameraFocused = true;
+		cameraMovementButton = MouseButton_Left;
+	}
 
 	if (!App->gui->IsAnyWindowHovered())
 	{
@@ -92,12 +97,6 @@ update_status ModuleCamera3D::Update()
 			cameraComponent->frustum.pos += cameraComponent->frustum.front * wheel * cameraSpeed;
 		}
 
-		if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_DOWN)
-		{
-			isCameraFocused = true;
-			cameraMovementButton = MouseButton_Left;
-		}
-
 
 		if (isCameraFocused)
 		{
@@ -105,7 +104,6 @@ update_status ModuleCamera3D::Update()
 
 			if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_UP)
 			{
-				Look(false);
 				isCameraFocused = false;
 				cameraMovementButton = MouseButton_Right;
 			}
@@ -212,42 +210,51 @@ void ModuleCamera3D::Look(const float3 &Position, const float3 &Reference, bool 
 	LookAt(Reference);
 }
 
-void ModuleCamera3D::Look(bool RotateAroundReference)
-{
-//	Look(camera->transform->position, Reference, RotateAroundReference);
-}
-
 // -----------------------------------------------------------------
-void ModuleCamera3D::LookAt( const float3 &spot)
+void ModuleCamera3D::LookAt(const float3 &spot)
 {
-	float3 direction = spot - cameraComponent->frustum.pos;
+	if (cameraComponent)
+	{
+		float3 direction = spot - cameraComponent->frustum.pos;
 
-	float3x3 lookMat = float3x3::LookAt(cameraComponent->frustum.front, direction.Normalized(), cameraComponent->frustum.up, float3::unitY);
+		float3x3 lookMat = float3x3::LookAt(cameraComponent->frustum.front, direction.Normalized(), cameraComponent->frustum.up, float3::unitY);
 
-	cameraComponent->frustum.front = lookMat.MulDir(cameraComponent->frustum.front).Normalized();
-	cameraComponent->frustum.up = lookMat.MulDir(cameraComponent->frustum.up).Normalized();
+		cameraComponent->frustum.front = lookMat.MulDir(cameraComponent->frustum.front).Normalized();
+		cameraComponent->frustum.up = lookMat.MulDir(cameraComponent->frustum.up).Normalized();
+	}
 }
 
 
 // -----------------------------------------------------------------
 void ModuleCamera3D::Move(const float3 &movement)
 {
-	cameraComponent->frustum.Translate(movement);
+	if (cameraComponent)
+		cameraComponent->frustum.Translate(movement);
+	else LOG("Editor camera component not loaded");
 }
 
 float3 ModuleCamera3D::GetPos() const
 {
-	return cameraComponent->GetPos();
+	if (cameraComponent)
+		return cameraComponent->GetPos();
+	else
+	{
+		LOG("Editor camera component not loaded");
+		return float3::zero;
+	}
 }
 
 void ModuleCamera3D::SetPos(float3 pos)
 {
-	cameraComponent->SetPos(pos);
+	if (cameraComponent)
+		cameraComponent->SetPos(pos);
+	else LOG("Editor camera component not loaded");
 }
+
 
 // -----------------------------------------------------------------
 
-Camera* ModuleCamera3D::SetEditorCamera() const
+Camera* ModuleCamera3D::GetEditorCamera() const
 {
 	return cameraComponent;
 }

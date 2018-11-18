@@ -30,14 +30,13 @@ public:
 	bool CleanUp();
 
 	void Look(const float3 &Position, const float3 &Reference, bool RotateAroundReference = false);
-	void Look(bool RotateAroundReference);
 	void LookAt(const float3 &Spot);
 	void Move(const float3 &Movement);
 
 	float3 GetPos() const;
 	void SetPos(float3 pos);
 
-	Camera * SetEditorCamera() const;
+	Camera* GetEditorCamera() const;
 
 
 public:
