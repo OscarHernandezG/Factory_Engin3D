@@ -23,6 +23,10 @@ public:
 
 	inline uint GetID() { if (texture) return texture->GetID(); else return 0u; }
 
+public:
+	float transparency = 0.0f;
+	bool haveTransparency = false;
+
 private:
 	ResourceTexture* texture = nullptr;
 

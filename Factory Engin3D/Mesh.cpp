@@ -30,6 +30,11 @@ void Mesh::InnerRender() const
 					glBindBuffer(GL_ARRAY_BUFFER, buffer->texture.id);
 					glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
+					if (texture->haveTransparency)
+					{
+						glEnable(GL_ALPHA_TEST);
+						glAlphaFunc(GL_GREATER, texture->transparency);
+					}
 					//Load texture
 					glBindTexture(GL_TEXTURE_2D, texture->GetID());
 				}
@@ -49,7 +54,7 @@ void Mesh::InnerRender() const
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-		//glColor4f(1, 1, 1, 1);
+		//glColor4f(1, 1, 1,);
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);

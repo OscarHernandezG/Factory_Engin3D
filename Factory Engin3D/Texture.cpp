@@ -50,6 +50,12 @@ void Texture::Inspector()
 				App->resources->Remove(texture);
 				texture = nullptr;
 			}
+
+			ImGui::Checkbox("Transparency", &haveTransparency);
+			if (haveTransparency)
+			{
+				ImGui::SliderFloat(" ", &transparency, 0.0f, 1.0f);
+			}
 		}
 		else
 		{
