@@ -24,6 +24,8 @@ public:
 
 	bool Init();
 
+	void ReceiveEvent(const Event & event);
+
 	void DistributeFile(const char * file, bool needPath = false);
 	void GetFullPath(std::string& file, LlibraryType type);
 
