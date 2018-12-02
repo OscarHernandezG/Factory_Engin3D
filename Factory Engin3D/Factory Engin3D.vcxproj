@@ -86,6 +86,7 @@
     <ClInclude Include="DevIL\includex86\IL\ilut_config.h" />
     <ClInclude Include="DevIL\includex86\IL\ilu_region.h" />
     <ClInclude Include="DevIL\includex86\IL\il_wrap.h" />
+    <ClInclude Include="Event.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="imgui-1.65\imgui_dock.h" />
     <ClInclude Include="ImGuizmo\ImGuizmo.h" />
@@ -191,6 +192,7 @@
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Color.cpp" />
+    <ClCompile Include="Event.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="imgui-1.65\imgui_dock.cpp" />
