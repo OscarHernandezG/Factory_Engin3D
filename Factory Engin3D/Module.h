@@ -3,6 +3,8 @@
 
 #include "parson/parson.h"
 
+#include "Event.h"
+
 class Application;
 struct PhysBody3D;
 
@@ -44,6 +46,9 @@ public:
 	{
 		return UPDATE_CONTINUE;
 	}
+
+	virtual void ReceiveEvent(const Event& event)
+	{}
 
 	virtual update_status Save(JSON_Object* object)
 	{

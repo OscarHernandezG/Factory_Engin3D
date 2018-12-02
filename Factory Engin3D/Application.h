@@ -18,6 +18,8 @@
 #include "ModuleTime.h"
 #include "ModuleResources.h"
 
+#include "Event.h"
+
 #include "Brofiler\Brofiler.h"
 
 
@@ -62,6 +64,8 @@ private:
 	void AddModule(Module* mod);
 	void PrepareUpdate();
 	void FinishUpdate();
+
+	void BroadCastEvent(const Event& event);
 
 public:
 

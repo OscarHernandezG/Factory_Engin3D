@@ -408,6 +408,9 @@
     <ClInclude Include="imgui-1.65\imgui_dock.h">
       <Filter>Sources\Containers\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -637,6 +640,9 @@
     </ClCompile>
     <ClCompile Include="imgui-1.65\imgui_dock.cpp">
       <Filter>Sources\Containers\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Event.cpp">
+      <Filter>Sources\Tools</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

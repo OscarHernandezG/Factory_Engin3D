@@ -26,28 +26,49 @@ bool ModuleImporter::Init()
 	return true;
 }
 
+void ModuleImporter::ReceiveEvent(const Event& event)
+{
+	switch (event.type)
+	{
+	case Event::type::none:
+		break;
+	case Event::type::gameObjectRemoved:
+		break;
+	case Event::type::componentRemoved:
+		break;
+	case Event::type::fileDropped:
+		DistributeFile(event.data.string.ptr);
+		break;
+	default:
+		break;
+	}
+}
+
 void ModuleImporter::DistributeFile(const char* file, bool needPath)
 {
-	string filePath(file);
-	string extension = filePath.substr(filePath.find_last_of(".") + 1);
+	if (file)
+	{
+		string filePath(file);
+		string extension = filePath.substr(filePath.find_last_of(".") + 1);
 
-	if (!extension.compare("fbx") || !extension.compare("obj"))
-	{
-		if (needPath)
-			GetFullPath(filePath, LlibraryType_MESH);
-		App->geometry->UpdateMesh(filePath.data());
-	}
-	else if (!extension.compare("png") || !extension.compare("dds") || !extension.compare("jpg") || !extension.compare("jpeg") || !extension.compare("tga"))
-	{
-		if (needPath)
-			GetFullPath(filePath, LlibraryType_TEXTURE);
-	//	App->geometry->UpdateTexture(filePath.data());
-	}
-	else if (!extension.compare("json") || !extension.compare("scene"))
-	{
-		if (needPath)
-			GetFullPath(filePath, LlibraryType_TEXTURE);
-		App->gameObject->LoadScene(filePath.data());
+		if (!extension.compare("fbx") || !extension.compare("obj"))
+		{
+			if (needPath)
+				GetFullPath(filePath, LlibraryType_MESH);
+			App->geometry->UpdateMesh(filePath.data());
+		}
+		else if (!extension.compare("png") || !extension.compare("dds") || !extension.compare("jpg") || !extension.compare("jpeg") || !extension.compare("tga"))
+		{
+			if (needPath)
+				GetFullPath(filePath, LlibraryType_TEXTURE);
+			//	App->geometry->UpdateTexture(filePath.data());
+		}
+		else if (!extension.compare("json") || !extension.compare("scene"))
+		{
+			if (needPath)
+				GetFullPath(filePath, LlibraryType_TEXTURE);
+			App->gameObject->LoadScene(filePath.data());
+		}
 	}
 }
 
