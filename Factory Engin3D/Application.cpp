@@ -112,11 +112,11 @@ void Application::BroadCastEvent(const Event & event)
 {
 	list<Module*>::const_iterator item = list_modules.begin();
 
-	while (item != list_modules.end())
-	{
-		ret = (*item)->PreUpdate();
-		item++;
-	}
+	//while (item != list_modules.end())
+//	{
+	//	ret = (*item)->PreUpdate();
+	//	item++;
+//	}
 }
 
 // Call PreUpdate, Update and PostUpdate on all modules

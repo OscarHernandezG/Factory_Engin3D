@@ -25,6 +25,13 @@ void Mesh::InnerRender() const
 				Texture* texture = (Texture*)gameObject->GetComponent(ComponentType_TEXTURE);
 				if (texture != nullptr)
 				{
+					//glDisable(GL_DEPTH_TEST);
+
+					//glDepthMask(GL_FALSE);
+
+					glEnable(GL_BLEND);
+					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 					//Load Texture UV
 					glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 					glBindBuffer(GL_ARRAY_BUFFER, buffer->texture.id);

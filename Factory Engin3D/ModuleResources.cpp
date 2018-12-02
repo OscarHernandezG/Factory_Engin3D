@@ -329,9 +329,9 @@ bool ModuleResources::RealLoadTexture(const char* path, uint& opengGlTexture)
 			iluFlipImage();
 		}
 
-		if (ilConvertImage(IL_RGB, IL_UNSIGNED_BYTE))
+		if (ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE))
 		{
-			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+			glPixelStorei(GL_RGBA , 1);
 
 			glGenTextures(1, &opengGlTexture);
 			glBindTexture(GL_TEXTURE_2D, opengGlTexture);
@@ -341,6 +341,8 @@ bool ModuleResources::RealLoadTexture(const char* path, uint& opengGlTexture)
 
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+			glTexParameteri(GL_TEXTURE_2D, GL_RGBA16, GL_NEAREST);
 
 			glTexImage2D(GL_TEXTURE_2D, 0, ilGetInteger(IL_IMAGE_FORMAT), ilGetInteger(IL_IMAGE_WIDTH), ilGetInteger(IL_IMAGE_HEIGHT),
 				0, ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE, ilGetData());

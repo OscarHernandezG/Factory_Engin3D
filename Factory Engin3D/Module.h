@@ -3,6 +3,8 @@
 
 #include "parson/parson.h"
 
+#include "Event.h"
+
 class Application;
 struct PhysBody3D;
 
