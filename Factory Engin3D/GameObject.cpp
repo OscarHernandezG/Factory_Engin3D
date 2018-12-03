@@ -78,25 +78,29 @@ void GameObject::Update()
 {
 	if (isActive)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_7) == KEY_DOWN && !HasComponent(ComponentType_CAMERA))
+		if (/*App->input->GetKey(SDL_SCANCODE_7) == KEY_DOWN &&*/ !HasComponent(ComponentType_CAMERA))
 		{
-			float3 camPos = App->geometry->GetPlayingCamera()->GetPos();
-			float3 obPos = GetGlobalPos();
+			if (father)
+			{
+				float3 camPos = App->geometry->GetPlayingCamera()->GetPos();
+				float3 obPos = GetGlobalPos();
 
-			float3 normal = float3(camPos - obPos).Normalized();
-			float3 UVec = normal.Perpendicular();
-			float3 RVec = normal.Cross(UVec);
+				float3 normal = float3(camPos - obPos).Normalized();
+				float3 UVec = normal.Perpendicular();
+				float3 RVec = normal.Cross(UVec);
 
-			float3x3 rot = float3x3(RVec, UVec, normal);
+				float3x3 rot = float3x3(RVec, UVec, normal);
 
-			float4x4 newOrient = float4x4::FromTRS(GetGlobalPos(), rot, GetGlobalScale());
+				float4x4 newOrient = float4x4::FromTRS(GetGlobalPos(), rot, GetGlobalScale());
 
-			float4x4 temp = GetGlobalMatrix();
-			temp.Inverse();
 
-			newOrient = temp.Mul(newOrient);
-			if (transform)
-				transform->SetTransform(newOrient);
+				float4x4 temp = father->GetGlobalMatrix();
+				temp.Inverse();
+
+				newOrient = temp.Mul(newOrient);
+				if (transform)
+					transform->SetTransform(newOrient);
+			}
 		}
 		for (list<Component*>::iterator iterator = components.begin(); iterator != components.end(); ++iterator)
 		{

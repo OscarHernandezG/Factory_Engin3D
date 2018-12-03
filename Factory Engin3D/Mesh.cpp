@@ -25,7 +25,6 @@ void Mesh::InnerRender() const
 				Texture* texture = (Texture*)gameObject->GetComponent(ComponentType_TEXTURE);
 				if (texture != nullptr)
 				{
-					glColor4f(1.0f, 1.0f, 1.0f, texture->transparency);
 
 					glEnable(GL_BLEND);
 					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -37,6 +36,7 @@ void Mesh::InnerRender() const
 
 					if (texture->haveTransparency)
 					{
+					glColor4f(1.0f, 1.0f, 1.0f, texture->transparency);
 						glEnable(GL_ALPHA_TEST);
 						//glAlphaFunc(GL_GREATER, texture->transparency);
 						
