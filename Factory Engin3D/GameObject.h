@@ -35,7 +35,11 @@ public:
 	inline void Delete() { toDelete = true;	}
 
 	bool SetParent(GameObject* parent);
-//Create from json
+
+	void AlignToScreen(Camera* camera);
+	void AlignToWorld(Camera* camera);
+
+	//Create from json
 //----------------------------------------------------------------
 	void CreateFromJson(JSON_Object* info, std::vector<uint>& meshesToLoad);
 	ComponentInfo* LoadComponentInfo(JSON_Object * info, ComponentType type);
@@ -158,7 +162,9 @@ public:
 	std::string name;
 
 	bool toDelete = false;
-	bool toDeleteFake = false;
+
+	bool screenAligned = false;
+	bool worldAligned = false;
 
 private:
 	bool isActive = true;

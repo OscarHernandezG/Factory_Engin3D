@@ -215,7 +215,6 @@ void Transform::Inspector()
 			SavePrevTransform(prevTransformMat);
 			SetPos(position);
 			needRedoOc = true;
-			LOG("SAVED");
 		}
 
 		if (ImGui::DragFloat3("Scale", &scale[0], 0.01f, 0.0f, 0.0f, "%.2f") && App->gameObject->CanTransform(gameObject))

@@ -78,30 +78,11 @@ void GameObject::Update()
 {
 	if (isActive)
 	{
-		if (/*App->input->GetKey(SDL_SCANCODE_7) == KEY_DOWN &&*/ !HasComponent(ComponentType_CAMERA))
-		{
-			if (father)
-			{
-				float3 camPos = App->geometry->GetPlayingCamera()->GetPos();
-				float3 obPos = GetGlobalPos();
+		if (screenAligned)
+			AlignToScreen(App->geometry->GetPlayingCamera());
+		else if (worldAligned)
+			AlignToWorld(App->geometry->GetPlayingCamera());
 
-				float3 normal = float3(camPos - obPos).Normalized();
-				float3 UVec = normal.Perpendicular();
-				float3 RVec = normal.Cross(UVec);
-
-				float3x3 rot = float3x3(RVec, UVec, normal);
-
-				float4x4 newOrient = float4x4::FromTRS(GetGlobalPos(), rot, GetGlobalScale());
-
-
-				float4x4 temp = father->GetGlobalMatrix();
-				temp.Inverse();
-
-				newOrient = temp.Mul(newOrient);
-				if (transform)
-					transform->SetTransform(newOrient);
-			}
-		}
 		for (list<Component*>::iterator iterator = components.begin(); iterator != components.end(); ++iterator)
 		{
 			(*iterator)->Update();
@@ -158,6 +139,58 @@ bool GameObject::SetParent(GameObject* parent)
 	}
 
 	return ret;
+}
+
+void GameObject::AlignToScreen(Camera* camera)
+{
+	if (father)
+	{
+		float3 camPos = camera->GetPos();
+		float3 obPos = GetGlobalPos();
+
+		float3 normal = float3(camPos - obPos).Normalized();
+		float3 UVec = normal.Perpendicular().Normalized();
+		float3 RVec = normal.Cross(UVec).Normalized();
+
+		float3x3 rot = float3x3(RVec, UVec, normal);
+
+		float4x4 newOrient = float4x4::FromTRS(GetGlobalPos(), rot, GetGlobalScale());
+
+
+		float4x4 temp = father->GetGlobalMatrix();
+		temp.Inverse();
+
+		newOrient = temp.Mul(newOrient);
+		if (transform)
+			transform->SetTransform(newOrient);
+	}
+}
+
+void GameObject::AlignToWorld(Camera* camera)
+{
+	if (father)
+	{
+		float3 camPos = camera->GetPos();
+		float3 obPos = GetGlobalPos();
+
+		float3 normal = float3(camPos - obPos).Normalized();
+		float3 UVec = camera->gameObject->GetRotation()*float3(0, 1, 0).Normalized();
+		float3 RVec = normal.Cross(UVec).Normalized();
+
+		UVec = normal.Cross(RVec).Normalized();
+
+		float3x3 rot = float3x3(RVec, UVec, normal);
+
+		float4x4 newOrient = float4x4::FromTRS(GetGlobalPos(), rot, GetGlobalScale());
+
+
+		float4x4 temp = father->GetGlobalMatrix();
+		temp.Inverse();
+
+		newOrient = temp.Mul(newOrient);
+		if (transform)
+			transform->SetTransform(newOrient);
+	}
 }
 
 void GameObject::CreateFromJson(JSON_Object* info, vector<uint>& meshesToLoad)
