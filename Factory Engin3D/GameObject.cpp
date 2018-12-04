@@ -150,7 +150,19 @@ void GameObject::AlignToScreen(Camera* camera)
 
 		float3 normal = float3(camPos - obPos).Normalized();
 		float3 UVec = normal.Perpendicular().Normalized();
+		if(App->input->GetKey(SDL_SCANCODE_7))
+			UVec = normal.Perpendicular(float3(0, -1, 0), float3(0, 0, 1)).Normalized();
+
 		float3 RVec = normal.Cross(UVec).Normalized();
+
+		RayLine ray(camPos, obPos);
+		ray.InnerRender();
+
+		RayLine ray2(obPos, UVec*10);
+		ray2.InnerRender();
+
+		RayLine ray3(obPos, RVec*10);
+		ray3.InnerRender();
 
 		float3x3 rot = float3x3(RVec, UVec, normal);
 
