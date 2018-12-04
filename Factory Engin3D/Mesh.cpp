@@ -36,10 +36,8 @@ void Mesh::InnerRender() const
 
 					if (texture->haveTransparency)
 					{
-					glColor4f(1.0f, 1.0f, 1.0f, texture->transparency);
+						glColor4f(1.0f, 1.0f, 1.0f, texture->transparency);
 						glEnable(GL_ALPHA_TEST);
-						//glAlphaFunc(GL_GREATER, texture->transparency);
-						
 					}
 					//Load texture
 					glBindTexture(GL_TEXTURE_2D, texture->GetID());

@@ -7,6 +7,8 @@
 #include "Light.h"
 #include "Camera.h"
 
+#include <map>
+
 #define MAX_LIGHTS 8
 
 class ModuleRenderer3D : public Module
@@ -17,12 +19,13 @@ public:
 
 	bool Init();
 	bool Start();
-	void DrawOctreeObjects(GameObject * iterator);
-	void DrawDynamicObjects(bool cameraCulling);
+	void DrawOctreeObjects(GameObject * iterator, std::map<GameObject*, float>& transparent);
+	void DrawDynamicObjects(bool cameraCulling, std::map<GameObject*, float>& transparent);
 	update_status PreUpdate();
 	update_status PostUpdate();
-	void DrawObject(Component * geometry);
+	float GetCamDistance(GameObject * object);
 	void DebugDraw();
+	void DrawObject(Component * geometry);
 	bool CleanUp();
 
 	void OnResize(int width, int height);
@@ -43,6 +46,10 @@ public:
 	update_status Save(JSON_Object * object);
 	update_status Load(JSON_Object * object);
 
+bool operator()(std::pair<GameObject*, float> a, std::pair<GameObject*, float> b) const
+{
+	return a.second < b.second;
+}
 
 public:
 
