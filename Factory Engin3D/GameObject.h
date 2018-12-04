@@ -8,9 +8,6 @@
 #include "Transform.h"
 #include "Camera.h"
 
-//class Component;
-//class Transform;
-
 enum ComponentType;
 
 struct TransformInfo;
@@ -68,6 +65,8 @@ public:
 	// Get
 	float3 GetPos() const;
 	float3 GetGlobalPos() const;
+
+	float GetCamDistance();
 //----------------------------------------------------------------
 
 // Scale

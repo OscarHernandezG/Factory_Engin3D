@@ -199,7 +199,6 @@ update_status ModuleRenderer3D::PostUpdate()
 {
 	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
 
-	std::map<GameObject*, float> transparent;
 	// 1. Draw geometry Camera Culling
 	std::vector<GameObject*> drawerGO;
 	if (cameraCulling)//Only draw camera View
@@ -207,28 +206,26 @@ update_status ModuleRenderer3D::PostUpdate()
 		App->sceneIntro->octree.GetIntersects(drawerGO, App->geometry->GetPlayingCamera()->frustum);
 
 		for (auto iterator : drawerGO)
-			DrawOctreeObjects(iterator, transparent);
+			DrawOctreeObjects(iterator);
 	}
 	else
 	{//Draw all
 		App->sceneIntro->octree.GetGameObjects(drawerGO);
 		for (auto iterator : drawerGO)
-			DrawOctreeObjects(iterator, transparent);
+			DrawOctreeObjects(iterator);
 	}
 
 	//Draw Dynamic objects (there aren't in octree)
 	if(!App->gameObject->dynamicObjects.empty())
-		DrawDynamicObjects(cameraCulling, transparent);
+		DrawDynamicObjects(cameraCulling);
 
 	//draw objects with transparence in order
-	if (!transparent.empty())
+	while (!transparentObjects.empty())
 	{
-		//std::sort(transparent.begin(), transparent.end(), sortDist);
-		for (std::map<GameObject*, float>::iterator iter = transparent.begin(); iter != transparent.end(); ++iter)
-		{
-			DrawObject((Geometry*)(iter->first)->GetComponent(ComponentType_GEOMETRY));
-		}
+		DrawObject((Geometry*)(transparentObjects.top())->GetComponent(ComponentType_GEOMETRY));
+		transparentObjects.pop();
 	}
+
 	// 2. Debug geometry
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glDisable(GL_CULL_FACE);
@@ -279,7 +276,7 @@ update_status ModuleRenderer3D::PostUpdate()
 
 	return UPDATE_CONTINUE;
 }
-void ModuleRenderer3D::DrawOctreeObjects(GameObject * iterator, std::map<GameObject*,float>& transparent)
+void ModuleRenderer3D::DrawOctreeObjects(GameObject * iterator)
 {
 	if (iterator->GetActive())
 	{
@@ -287,13 +284,13 @@ void ModuleRenderer3D::DrawOctreeObjects(GameObject * iterator, std::map<GameObj
 		if (currentGeometry)
 		{
 			if ((iterator)->HasComponent(ComponentType_TEXTURE) && ((Texture*)(iterator)->GetComponent(ComponentType_TEXTURE))->haveTransparency)
-				transparent.insert(std::pair<GameObject*, float>(iterator, GetCamDistance(iterator)));		//Get only the objects with alpha < 1 that we will paint it;
+				transparentObjects.push(iterator);		//Get only the objects with alpha < 1 that we will paint it;
 			else
 				DrawObject(currentGeometry);
 		}
 	}
 }
-void ModuleRenderer3D::DrawDynamicObjects(bool cameraCulling, std::map<GameObject*,float>& transparent)
+void ModuleRenderer3D::DrawDynamicObjects(bool cameraCulling)
 {
 	for (std::list<GameObject*>::iterator it = App->gameObject->dynamicObjects.begin(); it != App->gameObject->dynamicObjects.end(); ++it)
 	{
@@ -302,7 +299,7 @@ void ModuleRenderer3D::DrawDynamicObjects(bool cameraCulling, std::map<GameObjec
 		{
 			if (!cameraCulling || currentCam->frustum.Intersects(*(*it)->GetAABB()))
 				if ((*it)->HasComponent(ComponentType_TEXTURE) && ((Texture*)(*it)->GetComponent(ComponentType_TEXTURE))->haveTransparency)
-					transparent.insert(std::pair<GameObject*, float>((*it), GetCamDistance(*it)));		//Get only the objects with alpha < 1 that we will paint it;
+					transparentObjects.push(*it);		//Get only the objects with alpha < 1 that we will paint it;
 				else
 					DrawObject(currentGeometry);
 		}
@@ -340,11 +337,6 @@ void ModuleRenderer3D::DrawObject(Component * geometry)
 	default:
 		break;
 	}
-}
-
-float ModuleRenderer3D::GetCamDistance(GameObject* object)
-{
-	return App->geometry->GetPlayingCamera()->GetPos().DistanceSq(object->GetPos());
 }
 
 // Called before quitting

@@ -7,9 +7,16 @@
 #include "Light.h"
 #include "Camera.h"
 
-#include <map>
+#include <queue>
 
 #define MAX_LIGHTS 8
+
+struct compare {
+	bool operator()(GameObject* infoA, GameObject* infoB)
+	{
+		return infoA->GetCamDistance() < infoB->GetCamDistance();
+	}
+};
 
 class ModuleRenderer3D : public Module
 {
@@ -19,11 +26,10 @@ public:
 
 	bool Init();
 	bool Start();
-	void DrawOctreeObjects(GameObject * iterator, std::map<GameObject*, float>& transparent);
-	void DrawDynamicObjects(bool cameraCulling, std::map<GameObject*, float>& transparent);
+	void DrawOctreeObjects(GameObject * iterator);
+	void DrawDynamicObjects(bool cameraCulling);
 	update_status PreUpdate();
 	update_status PostUpdate();
-	float GetCamDistance(GameObject * object);
 	void DebugDraw();
 	void DrawObject(Component * geometry);
 	bool CleanUp();
@@ -45,11 +51,6 @@ public:
 
 	update_status Save(JSON_Object * object);
 	update_status Load(JSON_Object * object);
-
-bool operator()(std::pair<GameObject*, float> a, std::pair<GameObject*, float> b) const
-{
-	return a.second < b.second;
-}
 
 public:
 
@@ -74,5 +75,7 @@ public:
 	bool cameraCulling = false;
 
 	Camera* currentCam = nullptr;
+
+	std::priority_queue<GameObject*, std::vector<GameObject*>, compare> transparentObjects;
 };
 #endif // !__ModuleRender_H__

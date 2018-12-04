@@ -487,6 +487,11 @@ float3 GameObject::GetGlobalPos() const
 
 	return float3::zero;
 }
+float GameObject::GetCamDistance()
+{
+	float ret = App->geometry->GetPlayingCamera()->GetPos().DistanceSq(GetGlobalPos());
+	return ret;
+}
 //-------------------------------------------------------------------------
 
 float3 GameObject::GetScale() const
