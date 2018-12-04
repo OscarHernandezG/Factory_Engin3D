@@ -223,7 +223,7 @@ update_status ModuleRenderer3D::PostUpdate()
 	//draw objects with transparence in order
 	if (!transparent.empty())
 	{
-		std::sort(transparent.begin(), transparent.end(), sortDist);
+		//std::sort(transparent.begin(), transparent.end(), sortDist);
 		for (std::map<GameObject*, float>::iterator iter = transparent.begin(); iter != transparent.end(); ++iter)
 		{
 			DrawObject((Geometry*)(iter->first)->GetComponent(ComponentType_GEOMETRY));

@@ -175,7 +175,7 @@ void GameObject::AlignToWorld(Camera* camera)
 
 		float3 normal = float3(camPos - obPos).Normalized();
 		float3 UVec = camera->gameObject->GetRotation()*float3(0, 1, 0).Normalized();
-		float3 RVec = normal.Cross(UVec).Normalized();
+		float3 RVec = UVec.Cross(normal).Normalized();
 
 		UVec = normal.Cross(RVec).Normalized();
 
