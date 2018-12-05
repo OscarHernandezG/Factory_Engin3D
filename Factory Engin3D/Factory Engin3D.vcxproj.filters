@@ -411,6 +411,9 @@
     <ClInclude Include="Event.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
+    <ClInclude Include="Billboard.h">
+      <Filter>Sources\GameObject\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -641,8 +644,8 @@
     <ClCompile Include="imgui-1.65\imgui_dock.cpp">
       <Filter>Sources\Containers\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Event.cpp">
-      <Filter>Sources\Tools</Filter>
+    <ClCompile Include="Billboard.cpp">
+      <Filter>Sources\GameObject\Component</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -37,15 +37,6 @@ void ModuleImGui::CreateInspector(float2 scale)
 			App->gameObject->redoOc = true;
 		}
 
-		if (ImGui::Checkbox("Screen", &currObject->screenAligned))
-		{
-			currObject->worldAligned = false;
-		}
-		ImGui::SameLine();
-		if (ImGui::Checkbox("World", &currObject->worldAligned))
-		{
-			currObject->screenAligned = false;
-		}
 		for (std::list<Component*>::iterator comp = currObject->components.begin(); comp != currObject->components.end(); ++comp)
 		{
 			(*comp)->Inspector();
@@ -76,6 +67,10 @@ void ModuleImGui::CreateInspector(float2 scale)
 				currObject->AddComponent(ComponentType_CAMERA, nullptr);
 			}
 
+			if (ImGui::MenuItem("Billboard", "", nullptr, !currObject->HasComponent(ComponentType_BILLBOARD)))
+			{
+				currObject->AddComponent(ComponentType_BILLBOARD, nullptr);
+			}
 			ImGui::MenuItem("Cancel");
 
 			ImGui::EndMenu();

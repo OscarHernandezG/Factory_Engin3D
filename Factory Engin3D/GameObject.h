@@ -2,9 +2,9 @@
 #define __GameObject_H__
 
 #include "Globals.h"
-#include "Component.h"
-#include "Mesh.h"
 #include <list>
+#include "Mesh.h"
+#include "Component.h"
 #include "Transform.h"
 #include "Camera.h"
 
@@ -32,9 +32,6 @@ public:
 	inline void Delete() { toDelete = true;	}
 
 	bool SetParent(GameObject* parent);
-
-	void AlignToScreen(Camera* camera);
-	void AlignToWorld(Camera* camera);
 
 	//Create from json
 //----------------------------------------------------------------
@@ -161,9 +158,6 @@ public:
 	std::string name;
 
 	bool toDelete = false;
-
-	bool screenAligned = false;
-	bool worldAligned = false;
 
 private:
 	bool isActive = true;
