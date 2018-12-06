@@ -12,10 +12,11 @@ struct StartValues
 {
 	// Start values
 	float life = 5.0f;
-	float speed = 5.0f;
+	float speed = 3.0f;
 	float size = 1.0f;
-	float rotation = 0.0f;
+	//float rotation = 0.0f;
 	float4 color = float4::one;
+	AABB colision = AABB(float3(-0.5f, -0.5f, -0.5f), float3(0.5f, 0.5f, 0.5f));
 };
 
 class ComponentEmitter : Component
@@ -25,6 +26,7 @@ public:
 	~ComponentEmitter();
 
 	void Update();
+	float3 RandPos();
 	void Inspector();
 
 public:
@@ -38,14 +40,17 @@ public:
 	// General info
 	//---------------------------------------
 	// Duration of the particle emitter
-	float duration = 5.0f;
+	float duration = 1.0f;
 	
 	// Loop the particle (if true the particle emitter will never stop)
 	bool loop = true;
+	Timer loopTimer;
 	// Warm up the particle emiter (if true the particle emitter will be already started at play-time)
 	bool preWarm = true;
 
 	float gravity = 0.0f;
+
+	AABB creation = AABB(float3(-0.5f, -0.5f, -0.5f), float3(0.5f, 0.5f, 0.5f));
 
 	StartValues startValues;
 	//---------------------------------------
@@ -53,7 +58,7 @@ public:
 	// Emission info
 	//---------------------------------------
 	// Number of particles created per second
-	uint rateOverTime = 10;
+	int rateOverTime = 10;
 	//---------------------------------------
 
 	

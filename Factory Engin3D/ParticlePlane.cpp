@@ -86,6 +86,7 @@ void ParticlePlane::Render(float4x4 matrix, Texture* texture, float4 color) cons
 		glBindTexture(GL_TEXTURE_2D, texture->GetID());
 	}
 
+	glColor4f(color.x, color.y, color.z, color.w);
 	//Draw mesh
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
 

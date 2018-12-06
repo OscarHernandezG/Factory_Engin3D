@@ -12,6 +12,7 @@ struct ParticleTrans
 	Quat rotation = Quat::identity;
 	float3 scale = float3::one;
 
+	//AABB colision = AABB(-float3::one,float3::one);
 	float4x4 GetMatrix() const;
 };
 

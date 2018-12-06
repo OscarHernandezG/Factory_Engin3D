@@ -18,12 +18,14 @@ ComponentEmitter::~ComponentEmitter()
 
 void ComponentEmitter::Update()
 {
-	if (timer.ReadSec() >  1 / rateOverTime && (App->particle->particleList.size() < MAX_PARTICLES))
+
+	if (timer.ReadSec() >  1 / rateOverTime && (App->particle->particleList.size() < MAX_PARTICLES) && (loop || loopTimer.ReadSec() < duration) )
 	{
-		Particle* newParticle = new Particle(gameObject->transform->GetGlobalPos(), startValues, &texture);
+		Particle* newParticle = new Particle(RandPos(), startValues, &texture);
 
 		particles.push_back(newParticle);
 		App->particle->particleList.push_back(newParticle);
+		timer.Start();
 	}
 
 	std::vector<Particle*> toDelete;
@@ -43,11 +45,21 @@ void ComponentEmitter::Update()
 
 }
 
+float3 ComponentEmitter::RandPos()
+{
+
+	//TODO: create random pos from AABB creation
+	return gameObject->transform->GetGlobalPos();
+}
+
 void ComponentEmitter::Inspector()
 {
 	if (ImGui::CollapsingHeader("Particle System", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-
+		ImGui::DragFloat("Speed", &startValues.speed, 0.25f, 0.25f, 20.0f);
+		ImGui::DragInt("Particles per Second", &rateOverTime, 1.0f, 1, 50);
+		if (ImGui::Checkbox("Loop", &loop))
+			loopTimer.Start();
 	}
 }
 

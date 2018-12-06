@@ -8,16 +8,16 @@ Particle::Particle(float3 pos, StartValues data, Texture** texture)
 	plane = new ParticlePlane(pos);
 
 	lifeTime = data.life;
-	speed = float3::unitX * data.speed;
+	speed = float3::unitY * data.speed;
 
 	transform.position = pos;
 	transform.rotation = Quat::FromEulerXYZ(0, 0, 0); //data.rotation;
 	transform.scale = float3::one * data.size;
+	//transform.colision = data.colision;
 
 	color = data.color;
 
-	this->texture = texture;
-	
+	this->texture = texture;	
 }
 
 Particle::~Particle()
@@ -54,7 +54,7 @@ void Particle::Draw() const
 float4x4 ParticleTrans::GetMatrix() const
 {
 	float4x4 transform = float4x4::FromTRS(position, rotation, scale);
-	transform.Transposed();
+	transform.Transpose();
 
 	return transform;
 }
