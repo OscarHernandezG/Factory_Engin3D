@@ -22,7 +22,7 @@ public:
 	Particle(float3 pos);
 	~Particle();
 
-	void Update() {/*TODO*/};
+	bool Update(float dt);
 
 	float GetCamDistance() const;
 	void Draw() const;

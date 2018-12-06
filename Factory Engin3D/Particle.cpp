@@ -13,6 +13,19 @@ Particle::~Particle()
 	delete(plane);
 }
 
+bool Particle::Update(float dt)
+{
+	bool ret = true;
+	transform.position += speed * dt;
+
+	life += dt;
+	if (life >= lifeTime)
+	{
+		ret = false;
+	}
+	return ret;
+}
+
 float Particle::GetCamDistance() const
 {
 	return App->geometry->GetPlayingCamera()->GetPos().DistanceSq(transform.position);
