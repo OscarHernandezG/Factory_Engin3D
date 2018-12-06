@@ -1,17 +1,17 @@
 #ifndef __ParticlePlane_H__
 #define __ParticlePlane_H__
 
-#include "Geometry.h"
+#include "Globals.h"
+#include "MathGeoLib/Math/float3.h"
 
-class ParticlePlane : public Geometry
+class ParticlePlane
 {
-
 public:
 
-	ParticlePlane();
 	ParticlePlane(float3 position);
 	void LoadPlaneBuffers(float3 position);
-	void InnerRender() const;
+	void Render(float4x4 matrix, Texture * texture, float4 color);
+
 public:
 	uint myIndices = 0u;
 	uint myVertices = 0u;

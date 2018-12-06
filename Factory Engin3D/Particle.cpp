@@ -3,12 +3,14 @@
 #include "Geometry.h"
 
 
-Particle::Particle()
+Particle::Particle(float3 pos)
 {
+	plane = new ParticlePlane(pos);
 }
 
 Particle::~Particle()
 {
+	delete(plane);
 }
 
 float Particle::GetCamDistance() const
@@ -18,5 +20,15 @@ float Particle::GetCamDistance() const
 
 void Particle::Draw() const
 {
-	plane->Render();
+	plane->Render(transform.GetMatrix(),texture,color);
+}
+
+
+//Particle transform
+float4x4 ParticleTrans::GetMatrix() const
+{
+	float4x4 transform = float4x4::FromTRS(position, rotation, scale);
+	transform.Transposed();
+
+	return transform;
 }

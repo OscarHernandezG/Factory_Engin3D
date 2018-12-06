@@ -4,16 +4,9 @@
 #include "Texture.h"
 
 // PARTICLE PLANE ==================================================
-ParticlePlane::ParticlePlane() : Geometry()
-{
-	LoadPlaneBuffers(float3::zero);
-	geoType = PrimitiveTypes::Primitive_Plane;
-}
-
-ParticlePlane::ParticlePlane(float3 position) : Geometry()
+ParticlePlane::ParticlePlane(float3 position)
 {
 	LoadPlaneBuffers(position);
-	geoType = PrimitiveTypes::Primitive_Plane;
 }
 
 void ParticlePlane::LoadPlaneBuffers(float3 position)
@@ -61,9 +54,12 @@ void ParticlePlane::LoadPlaneBuffers(float3 position)
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void ParticlePlane::InnerRender() const
+void ParticlePlane::Render(float4x4 matrix, Texture* texture, float4 color)
 {
-	bool hasTexture = gameObject->HasComponent(ComponentType_TEXTURE);
+	glPushMatrix();
+	float4x4 mat = matrix;
+
+	glMultMatrixf(mat.ptr());
 
 	//Load vertex and index
 	glEnableClientState(GL_VERTEX_ARRAY);
@@ -73,28 +69,21 @@ void ParticlePlane::InnerRender() const
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 
 
-	if (hasTexture)
+	if (texture != nullptr)
 	{
-		Texture* texture = (Texture*)gameObject->GetComponent(ComponentType_TEXTURE);
-		if (texture != nullptr)
-		{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		//Load Texture UV
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		glBindBuffer(GL_ARRAY_BUFFER, myTexture);
+		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
-			//Load Texture UV
-			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-			glBindBuffer(GL_ARRAY_BUFFER, myTexture);
-			glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+		glColor4f(color.x, color.y, color.z, color.w);
+		glEnable(GL_ALPHA_TEST);
 
-			if (texture->haveTransparency)
-			{
-				glColor4f(1.0f, 1.0f, 1.0f, texture->transparency);
-				glEnable(GL_ALPHA_TEST);
-			}
-			//Load texture
-			glBindTexture(GL_TEXTURE_2D, texture->GetID());
-		}
+		//Load texture
+		glBindTexture(GL_TEXTURE_2D, texture->GetID());
 	}
 
 	//Draw mesh
@@ -107,4 +96,6 @@ void ParticlePlane::InnerRender() const
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY);
+
+	glPopMatrix();
 }
