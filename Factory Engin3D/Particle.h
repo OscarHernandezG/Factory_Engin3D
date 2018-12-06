@@ -12,12 +12,14 @@ struct ParticleTrans
 	float3 position = float3::zero;
 	Quat rotation = Quat::identity;
 	float3 scale = float3::one;
+
+	float4x4 GetMatrix() const;
 };
 
 class Particle
 {
 public:
-	Particle();
+	Particle(float3 pos);
 	~Particle();
 
 	void Update() {/*TODO*/};
@@ -30,7 +32,7 @@ public:
 	float3 speed = float3::zero;
 	float rotationSpeed = 0.0f;
 
-	float3 color = float3::one;
+	float4 color = float4::one;
 
 	ParticleTrans transform;
 
