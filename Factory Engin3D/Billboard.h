@@ -9,7 +9,7 @@ enum Billboard_TYPE
 	Billboard_NONE,
 	Billboard_SCREEN,
 	Billboard_WORLD,
-	Billboard_AXIS,
+	Billboard_AXIALY,
 };
 class Billboard : Component
 {
@@ -25,6 +25,8 @@ public:
 	Billboard_TYPE typeBoard = Billboard_NONE;
 private:
 	std::string currentType = "NONE";
-
+	bool xAxisRot = false;
+	bool yAxisRot = true; 
+	bool zAxisRot = false;
 };
 #endif // !__Billboard_H__

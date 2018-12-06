@@ -20,7 +20,7 @@ void Billboard::Update() {
 		float3 xAxis, yAxis, zAxis;
 		float3 obPos = gameObject->GetGlobalPos();
 		Camera* camera = App->geometry->GetPlayingCamera();
-		
+
 		switch (typeBoard)
 		{
 		case Billboard_NONE:
@@ -28,9 +28,10 @@ void Billboard::Update() {
 		case Billboard_SCREEN:
 
 			zAxis = -camera->frustum.front;
+			//gameObject->GetGlobalMatrix().Float3x3Part() * float3(0,1,0);
 			yAxis = camera->frustum.up;
 
-			xAxis = zAxis.Cross(yAxis).Normalized();
+			xAxis = yAxis.Cross(zAxis).Normalized();
 
 			break;
 		case Billboard_WORLD:
@@ -42,11 +43,40 @@ void Billboard::Update() {
 			yAxis = zAxis.Cross(xAxis).Normalized();
 
 			break;
-		case Billboard_AXIS:
+		case Billboard_AXIALY:
+
+			if (xAxisRot)
+			{
+				zAxis = float3(camera->GetPos() - obPos).Normalized();
+				xAxis = gameObject->GetGlobalRotation() * float3(1, 0, 0);
+				yAxis = zAxis.Cross(xAxis).Normalized();
+
+				zAxis = xAxis.Cross(yAxis).Normalized();
+
+			}
+			else if (yAxisRot)
+			{
+				zAxis = float3(camera->GetPos() - obPos).Normalized();
+				yAxis = gameObject->GetGlobalRotation() * float3(0, 1, 0);
+				xAxis = yAxis.Cross(zAxis).Normalized();
+
+				zAxis = xAxis.Cross(yAxis).Normalized();
+
+			}
+
+			else if (zAxisRot)
+			{
+				xAxis = float3(camera->GetPos() - obPos).Normalized();
+				zAxis = gameObject->GetGlobalRotation() * float3(0, 0, 1);
+				yAxis = zAxis.Cross(xAxis).Normalized();
+
+				xAxis = yAxis.Cross(zAxis).Normalized();
+			}
 			break;
 		default:
 			break;
 		}
+
 
 		RayLine ray(obPos, xAxis * 10);
 		ray.InnerRender();
@@ -80,6 +110,29 @@ void Billboard::Inspector()
 		ImGui::SameLine();
 		ImGui::Text(currentType.data());
 
+		if (typeBoard == Billboard_AXIALY)
+		{
+			if (ImGui::RadioButton("X", xAxisRot))
+			{
+				xAxisRot = true;
+				yAxisRot = false;
+				zAxisRot = false;
+			}
+			ImGui::SameLine();
+			if (ImGui::RadioButton("Y", yAxisRot))
+			{
+				xAxisRot = false;
+				yAxisRot = true;
+				zAxisRot = false;
+			}
+			ImGui::SameLine();
+			if (ImGui::RadioButton("Z", zAxisRot))
+			{
+				xAxisRot = false;
+				yAxisRot = false;
+				zAxisRot = true;
+			}
+		}
 		if (ImGui::BeginMenu("Change your billboard"))
 		{
 			if (ImGui::MenuItem("Screen"))
@@ -93,10 +146,10 @@ void Billboard::Inspector()
 				currentType = "World Billboard";
 			}
 
-			else if (ImGui::MenuItem("Axis"))
+			else if (ImGui::MenuItem("Axialy"))
 			{
-				typeBoard = Billboard_AXIS;
-				currentType = "Axis Billboard";
+				typeBoard = Billboard_AXIALY;
+				currentType = "Axialy Billboard";
 			}
 
 			else if (ImGui::MenuItem("NONE"))
@@ -107,5 +160,7 @@ void Billboard::Inspector()
 
 			ImGui::End();
 		}
+		if (ImGui::Button("Remove Billboard", ImVec2(150, 25)))
+			toDelete = true;
 	}
 }
