@@ -1,8 +1,8 @@
 #include "Application.h"
 
 #include "GameObject.h"
-#include "Texture.h"
-#include "Billboard.h"
+#include "ComponentTexture.h"
+#include "ComponentBillboard.h"
 #include "pcg-c-basic-0.9/pcg_basic.h"
 
 using namespace std;

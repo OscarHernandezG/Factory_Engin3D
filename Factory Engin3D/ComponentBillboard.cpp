@@ -1,6 +1,6 @@
 #include "Application.h"
 
-#include "Billboard.h"
+#include "ComponentBillboard.h"
  
 
 Billboard::Billboard(GameObject* gameObject) : Component(gameObject)

@@ -1,6 +1,6 @@
 #include "Application.h"
 
-#include "Camera.h"
+#include "ComponentCamera.h"
 #include "GameObject.h"
 
 

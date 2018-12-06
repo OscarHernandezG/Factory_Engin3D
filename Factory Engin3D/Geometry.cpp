@@ -7,7 +7,7 @@
 
 #include "Component.h"
 #include "GameObject.h"
-#include "Transform.h"
+#include "ComponentTransform.h"
 
 // ------------------------------------------------------------
 Geometry::Geometry() : Component(nullptr), color(White), wire(false), axis(false), fill(true), geoType(PrimitiveTypes::Primitive_Point)

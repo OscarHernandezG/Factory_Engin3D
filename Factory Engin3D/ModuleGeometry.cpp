@@ -18,7 +18,7 @@
 #include <fstream>
 
 #include "GameObject.h"
-#include "Texture.h"
+#include "ComponentTexture.h"
 #include "ParticlePlane.h"
 
 #include "pcg-c-basic-0.9/pcg_basic.h"

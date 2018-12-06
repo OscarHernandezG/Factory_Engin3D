@@ -5,8 +5,8 @@
 #include <list>
 #include "Mesh.h"
 #include "Component.h"
-#include "Transform.h"
-#include "Camera.h"
+#include "ComponentTransform.h"
+#include "ComponentCamera.h"
 
 enum ComponentType;
 

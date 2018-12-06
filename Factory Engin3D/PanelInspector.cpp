@@ -3,7 +3,7 @@
 #include "ModuleImGui.h"
 #include "ModuleWindow.h"
 #include "ModuleResources.h"
-#include "Texture.h"
+#include "ComponentTexture.h"
 
 void ModuleImGui::CreateInspector(float2 scale)
 {

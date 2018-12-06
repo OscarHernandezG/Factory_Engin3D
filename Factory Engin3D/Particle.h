@@ -5,7 +5,7 @@
 #include "MathGeoLib/Math/Quat.h"
 
 #include "ParticlePlane.h"
-#include "Texture.h"
+#include "ComponentTexture.h"
 
 struct ParticleTrans
 {

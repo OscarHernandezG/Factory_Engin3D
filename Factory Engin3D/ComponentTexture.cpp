@@ -1,6 +1,6 @@
 #include "Application.h"
 
-#include "Texture.h"
+#include "ComponentTexture.h"
  
 
 Texture::Texture(GameObject* gameObject, TextureInfo* info) : Component(gameObject)

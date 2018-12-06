@@ -3,7 +3,7 @@
 
 #include "Module.h"
 
-#include "Transform.h"
+#include "ComponentTransform.h"
 #include "GameObject.h"
 
 #include <map>

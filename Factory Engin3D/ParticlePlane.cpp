@@ -1,7 +1,7 @@
 #include "ParticlePlane.h"
 #include "glew-2.1.0/include/GL/glew.h"
 #include "GameObject.h"
-#include "Texture.h"
+#include "ComponentTexture.h"
 
 // PARTICLE PLANE ==================================================
 ParticlePlane::ParticlePlane(float3 position)

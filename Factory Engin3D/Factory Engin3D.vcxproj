@@ -75,8 +75,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
-    <ClInclude Include="Billboard.h" />
-    <ClInclude Include="Camera.h" />
+    <ClInclude Include="ComponentBillboard.h" />
+    <ClInclude Include="ComponentCamera.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentEmitter.h" />
@@ -108,7 +108,7 @@
     <ClInclude Include="imgui-1.65\imstb_textedit.h" />
     <ClInclude Include="imgui-1.65\imstb_truetype.h" />
     <ClInclude Include="ModuleImporter.h" />
-    <ClInclude Include="Light.h" />
+    <ClInclude Include="ComponentLight.h" />
     <ClInclude Include="MathGeoLib\Algorithm\Random\LCG.h" />
     <ClInclude Include="MathGeoLib\Geometry\AABB.h" />
     <ClInclude Include="MathGeoLib\Geometry\AABB2D.h" />
@@ -188,14 +188,14 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ResourceMesh.h" />
     <ClInclude Include="ResourceTexture.h" />
-    <ClInclude Include="Texture.h" />
+    <ClInclude Include="ComponentTexture.h" />
     <ClInclude Include="Timer.h" />
-    <ClInclude Include="Transform.h" />
+    <ClInclude Include="ComponentTransform.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
-    <ClCompile Include="Billboard.cpp" />
-    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="ComponentBillboard.cpp" />
+    <ClCompile Include="ComponentCamera.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="ComponentEmitter.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -210,7 +210,7 @@
     <ClCompile Include="imgui-1.65\imgui_impl_opengl2.cpp" />
     <ClCompile Include="imgui-1.65\imgui_impl_sdl.cpp" />
     <ClCompile Include="imgui-1.65\imgui_widgets.cpp" />
-    <ClCompile Include="Light.cpp" />
+    <ClCompile Include="ComponentLight.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MathGeoLib\Algorithm\Random\LCG.cpp" />
@@ -271,9 +271,9 @@
     <ClCompile Include="Resource.cpp" />
     <ClCompile Include="ResourceMesh.cpp" />
     <ClCompile Include="ResourceTexture.cpp" />
-    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="ComponentTexture.cpp" />
     <ClCompile Include="Timer.cpp" />
-    <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="ComponentTransform.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

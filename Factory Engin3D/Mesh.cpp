@@ -2,7 +2,7 @@
 #include "glew-2.1.0/include/GL/glew.h"
 #include "Application.h"
 #include "ModuleGeometry.h"
-#include "Texture.h"
+#include "ComponentTexture.h"
 
 #include "GameObject.h"
 

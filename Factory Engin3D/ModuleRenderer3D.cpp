@@ -1,7 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
-#include "Texture.h"
+#include "ComponentTexture.h"
 
 #include "glew-2.1.0/include/GL/glew.h"
 #include <gl/GL.h>

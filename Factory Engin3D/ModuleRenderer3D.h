@@ -4,8 +4,8 @@
 #include "Globals.h"
 #include "MathGeoLib/Math/float3x3.h"
 #include "MathGeoLib/Math/float4x4.h"
-#include "Light.h"
-#include "Camera.h"
+#include "ComponentLight.h"
+#include "ComponentCamera.h"
 
 #include <queue>
 

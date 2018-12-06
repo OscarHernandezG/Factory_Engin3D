@@ -2,8 +2,8 @@
 #define __ModuleGeometry_H__
 #include "Module.h"
 
-#include "Transform.h"
-#include "Camera.h"
+#include "ComponentTransform.h"
+#include "ComponentCamera.h"
 
 #include "Assimp/include/matrix4x4.h"
 

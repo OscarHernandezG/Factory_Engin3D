@@ -1,6 +1,6 @@
 #include "Application.h"
 
-#include "Transform.h"
+#include "ComponentTransform.h"
 #include "GameObject.h"
 
 
