@@ -7,6 +7,8 @@
 #include "ParticlePlane.h"
 #include "ComponentTexture.h"
 
+#include "ComponentEmitter.h"
+
 struct ParticleTrans
 {
 	float3 position = float3::zero;
@@ -19,7 +21,7 @@ struct ParticleTrans
 class Particle
 {
 public:
-	Particle(float3 pos);
+	Particle(float3 pos, StartValues data, Texture** texture);
 	~Particle();
 
 	void Update() {/*TODO*/};
@@ -29,8 +31,8 @@ public:
 public:
 	float lifeTime = 0.0f;
 	float life = 0.0f;
-	float3 speed = float3::zero;
-	float rotationSpeed = 0.0f;
+	float3 speed = float3::zero; 
+	float rotationSpeed = 0.0f; // Todo
 
 	float4 color = float4::one;
 
@@ -38,7 +40,7 @@ public:
 
 private:
 	ParticlePlane* plane = nullptr;
-	Texture* texture = nullptr;
+	Texture** texture = nullptr;
 
 };
 
