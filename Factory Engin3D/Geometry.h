@@ -103,6 +103,7 @@ public:
 	int faces;
 };
 
+// ============================================
 class RayLine : public Geometry
 {
 public:

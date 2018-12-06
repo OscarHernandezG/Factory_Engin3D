@@ -420,7 +420,6 @@ void PrimitivePlane::InnerRender() const
 	glEnd();
 }
 
-
 // Frustum ================================================
 PrimitiveFrustum::PrimitiveFrustum() : Geometry()
 {

@@ -180,6 +180,7 @@
     <ClInclude Include="ModuleWindow.h" />
     <ClInclude Include="parson\parson.h" />
     <ClInclude Include="Geometry.h" />
+    <ClInclude Include="ParticlePlane.h" />
     <ClInclude Include="pcg-c-basic-0.9\pcg_basic.h" />
     <ClInclude Include="Octree.h" />
     <ClInclude Include="Resource.h" />
@@ -259,6 +260,7 @@
     <ClCompile Include="PanelResources.cpp" />
     <ClCompile Include="parson\parson.c" />
     <ClCompile Include="Geometry.cpp" />
+    <ClCompile Include="ParticlePlane.cpp" />
     <ClCompile Include="pcg-c-basic-0.9\pcg_basic.c" />
     <ClCompile Include="Octree.cpp" />
     <ClCompile Include="Resource.cpp" />

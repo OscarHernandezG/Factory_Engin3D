@@ -414,6 +414,9 @@
     <ClInclude Include="Billboard.h">
       <Filter>Sources\GameObject\Component</Filter>
     </ClInclude>
+    <ClInclude Include="ParticlePlane.h">
+      <Filter>Sources\GameObject\Geometries</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -646,6 +649,9 @@
     </ClCompile>
     <ClCompile Include="Billboard.cpp">
       <Filter>Sources\GameObject\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticlePlane.cpp">
+      <Filter>Sources\GameObject\Geometries</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

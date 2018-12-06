@@ -118,7 +118,7 @@ public:
 
 	// Textures that have to be loaded
 	std::vector<Textures> texturesToLoad;	// Can this be temp?
-
+	GameObject* particlePlane = nullptr;
 	Camera* playingCamera = nullptr;
 };
 #endif // !__ModuleGeometryManager_H__

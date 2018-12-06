@@ -19,6 +19,7 @@
 
 #include "GameObject.h"
 #include "Texture.h"
+#include "ParticlePlane.h"
 
 #include "pcg-c-basic-0.9/pcg_basic.h"
 
@@ -62,6 +63,10 @@ void ModuleGeometry::LoadDefaultScene()
 
 	GeometryInfo planeInfo(new PrimitivePlane());
 	plane->AddComponent(ComponentType_GEOMETRY, &planeInfo);
+
+	particlePlane = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->rootGameObject, "ParticlePlane");
+	GeometryInfo particleInfo(new ParticlePlane());
+	particlePlane->AddComponent(ComponentType_GEOMETRY, &particleInfo);
 }
 
 update_status ModuleGeometry::PostUpdate()
@@ -78,6 +83,10 @@ update_status ModuleGeometry::PostUpdate()
 		ground->axis = true;
 		ground->Render();
 	}
+
+	ParticlePlane* particle = (ParticlePlane*)particlePlane->GetComponent(ComponentType_GEOMETRY);
+	particle->Render();
+
 	return UPDATE_CONTINUE;
 }
 

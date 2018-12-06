@@ -28,7 +28,6 @@ void Billboard::Update() {
 		case Billboard_SCREEN:
 
 			zAxis = -camera->frustum.front;
-			//gameObject->GetGlobalMatrix().Float3x3Part() * float3(0,1,0);
 			yAxis = camera->frustum.up;
 
 			xAxis = yAxis.Cross(zAxis).Normalized();
