@@ -91,6 +91,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="imgui-1.65\imgui_dock.h" />
     <ClInclude Include="ImGuizmo\ImGuizmo.h" />
+    <ClInclude Include="ManagerParticle.h" />
     <ClInclude Include="ModuleGameObject.h" />
     <ClInclude Include="Geometries.h" />
     <ClInclude Include="glew-2.1.0\include\GL\eglew.h" />
@@ -199,6 +200,7 @@
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="imgui-1.65\imgui_dock.cpp" />
     <ClCompile Include="ImGuizmo\ImGuizmo.cpp" />
+    <ClCompile Include="ManagerParticle.cpp" />
     <ClCompile Include="ModuleGameObject.cpp" />
     <ClCompile Include="imgui-1.65\imgui.cpp" />
     <ClCompile Include="imgui-1.65\imgui_demo.cpp" />

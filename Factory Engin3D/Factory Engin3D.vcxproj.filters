@@ -70,6 +70,9 @@
     <Filter Include="Sources\Resources">
       <UniqueIdentifier>{e22c8b64-62e6-490b-bc5c-d3a4cedfed9c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Manager">
+      <UniqueIdentifier>{8c27a2c8-bf40-40df-970f-e793994ba1dc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -417,6 +420,7 @@
     <ClInclude Include="ParticlePlane.h">
       <Filter>Sources\GameObject\Geometries</Filter>
     </ClInclude>
+    <ClInclude Include="ManagerParticle.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -653,5 +657,6 @@
     <ClCompile Include="ParticlePlane.cpp">
       <Filter>Sources\GameObject\Geometries</Filter>
     </ClCompile>
+    <ClCompile Include="ManagerParticle.cpp" />
   </ItemGroup>
 </Project>
