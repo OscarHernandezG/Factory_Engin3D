@@ -23,7 +23,7 @@ public:
 	float3 speed;
 	float rotationSpeed;
 
-
+	ParticleTrans transform;
 
 };
 #endif // !__Particle_H__

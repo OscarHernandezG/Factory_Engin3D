@@ -73,6 +73,9 @@
     <Filter Include="Sources\Manager">
       <UniqueIdentifier>{8c27a2c8-bf40-40df-970f-e793994ba1dc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\GameObject\Particles">
+      <UniqueIdentifier>{cdeeb3e0-4cb2-464b-8c47-fe4726ea0e66}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Module.h">
@@ -423,6 +426,9 @@
     <ClInclude Include="ManagerParticle.h">
       <Filter>Sources\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="Particle.h">
+      <Filter>Sources\GameObject\Particles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -661,6 +667,9 @@
     </ClCompile>
     <ClCompile Include="ManagerParticle.cpp">
       <Filter>Sources\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Particle.cpp">
+      <Filter>Sources\GameObject\Particles</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
