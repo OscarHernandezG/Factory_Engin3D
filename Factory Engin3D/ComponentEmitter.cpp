@@ -2,7 +2,7 @@
 
 
 
-ComponentEmitter::ComponentEmitter()
+ComponentEmitter::ComponentEmitter(GameObject* gameObject) : Component(gameObject, ComponentType_EMITTER)
 {
 }
 

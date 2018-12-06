@@ -13,7 +13,7 @@
 class ComponentEmitter : Component
 {
 public:
-	ComponentEmitter();
+	ComponentEmitter(GameObject* gameObject);
 	~ComponentEmitter();
 
 	void Update();

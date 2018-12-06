@@ -13,7 +13,8 @@ enum ComponentType
 	ComponentType_CAMERA,
 	ComponentType_TEXTURE,
 	ComponentType_LIGHT,
-	ComponentType_BILLBOARD
+	ComponentType_BILLBOARD,
+	ComponentType_EMITTER
 };
 
 struct ComponentInfo
