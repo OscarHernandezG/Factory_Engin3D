@@ -1,7 +1,7 @@
 #ifndef __ManagerParticle_H__
 #define __ManagerParticle_H__
 
-#define MAX_PARTICLES 5000;
+#define MAX_PARTICLES 5000
 
 #include <list>
 #include "Particle.h"

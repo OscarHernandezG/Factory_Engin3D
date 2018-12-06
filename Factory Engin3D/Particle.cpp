@@ -1,11 +1,23 @@
 #include "Application.h"
 #include "Particle.h"
 #include "Geometry.h"
+#include "ComponentEmitter.h"
 
-
-Particle::Particle(float3 pos)
+Particle::Particle(float3 pos, StartValues data, Texture** texture)
 {
 	plane = new ParticlePlane(pos);
+
+	lifeTime = data.life;
+	speed = float3::unitX * data.speed;
+
+	transform.position = pos;
+	transform.rotation = Quat::FromEulerXYZ(0, 0, 0); //data.rotation;
+	transform.scale = float3::one * data.size;
+
+	color = data.color;
+
+	this->texture = texture;
+	
 }
 
 Particle::~Particle()
@@ -33,7 +45,7 @@ float Particle::GetCamDistance() const
 
 void Particle::Draw() const
 {
-	plane->Render(transform.GetMatrix(),texture,color);
+	plane->Render(transform.GetMatrix(),*texture,color);
 }
 
 

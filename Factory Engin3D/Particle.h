@@ -1,12 +1,11 @@
 #ifndef __Particle_H__
 #define __Particle_H__
 
-#include "MathGeoLib/Math/float3.h"
-#include "MathGeoLib/Math/Quat.h"
+#include "MathGeoLib/Math/MathAll.h"
 
 #include "ParticlePlane.h"
-#include "ComponentTexture.h"
 
+struct StartValues;
 struct ParticleTrans
 {
 	float3 position = float3::zero;
@@ -19,7 +18,7 @@ struct ParticleTrans
 class Particle
 {
 public:
-	Particle(float3 pos);
+	Particle(float3 pos, StartValues data, Texture** texture);
 	~Particle();
 
 	bool Update(float dt);
@@ -29,8 +28,8 @@ public:
 public:
 	float lifeTime = 0.0f;
 	float life = 0.0f;
-	float3 speed = float3::zero;
-	float rotationSpeed = 0.0f;
+	float3 speed = float3::zero; 
+	float rotationSpeed = 0.0f; // Todo
 
 	float4 color = float4::one;
 
@@ -38,7 +37,7 @@ public:
 
 private:
 	ParticlePlane* plane = nullptr;
-	Texture* texture = nullptr;
+	Texture** texture = nullptr;
 
 };
 

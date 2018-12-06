@@ -4,11 +4,19 @@
 #include "Component.h"
 #include "GameObject.h"
 
-#include "Particle.h"
-
-
+#include "Timer.h"
 
 #include <list>
+
+struct StartValues
+{
+	// Start values
+	float life = 5.0f;
+	float speed = 5.0f;
+	float size = 1.0f;
+	float rotation = 0.0f;
+	float4 color = float4::one;
+};
 
 class ComponentEmitter : Component
 {
@@ -20,8 +28,12 @@ public:
 	void Inspector();
 
 public:
+	Timer timer;
 
 	std::list<Particle*> particles;
+
+	// Particle texture
+	Texture* texture;
 
 	// General info
 	//---------------------------------------
@@ -35,12 +47,7 @@ public:
 
 	float gravity = 0.0f;
 
-	// Start values
-	float startLife = 5.0f;
-	float startSpeed = 5.0f;
-	float startSize = 1.0f;
-	float startRotation = 0.0f;
-	float4 startColor = float4::one;
+	StartValues startValues;
 	//---------------------------------------
 
 	// Emission info
