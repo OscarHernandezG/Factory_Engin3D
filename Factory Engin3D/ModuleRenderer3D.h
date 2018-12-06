@@ -18,11 +18,17 @@ struct compare {
 	}
 };
 
+union toOrder
+{
+	GameObject* gameobject;
+	Component* component;
+};
+
 class ModuleRenderer3D : public Module
 {
 public:
 	ModuleRenderer3D(Application* app, bool start_enabled = true);
-	~ModuleRenderer3D();
+	~ModuleRenderer3D(); 
 
 	bool Init();
 	bool Start();

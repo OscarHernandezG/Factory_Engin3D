@@ -20,29 +20,31 @@ void ParticlePlane::LoadPlaneBuffers(float3 position)
 {
 	float indicesQuad[]
 	{
-	position.x + -0.5f, position.y, position.z + -0.5f, //a
-	position.x +  0.5f, position.y, position.z + -0.5f, //b
-	position.x +  0.5f, position.y, position.z +  0.5f, //c
-	position.x + -0.5f, position.y, position.z +  0.5f, //d
+	position.x + -0.5f,position.y + -0.5f,position.z,//a
+	position.x +  0.5f,position.y + -0.5f,position.z,//b
+	position.x + -0.5f,position.y +  0.5f,position.z,//c
+	position.x +  0.5f,position.y +  0.5f,position.z,//d
 	};
 
 	glGenBuffers(1, (GLuint*)&(myIndices));
 	glBindBuffer(GL_ARRAY_BUFFER, myIndices);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, indicesQuad, GL_STATIC_DRAW);
-	// 24 = All vertex positions (4 * 3) 4 = posibleVertex and 3 = pos x-y-z
+	// 12 = All vertex positions (4 * 3) 4 = posibleVertex and 3 = pos x-y-z
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 
 	uint vertices[]
 	{
+		// Front
 		0, 1, 2, // ABC
-		1, 2, 3, // BCD
+		1, 3, 2, // BDC
 	};
 
 	glGenBuffers(1, (GLuint*)&(myVertices));
 	glBindBuffer(GL_ARRAY_BUFFER, myVertices);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * 8, vertices, GL_STATIC_DRAW);
-	// 6 = All vertex positions (2 * 3) 2 = vertices and 3 = pos x-y-z
+	glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * 6, vertices, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 
 	float texture[]
 	{
@@ -59,7 +61,7 @@ void ParticlePlane::LoadPlaneBuffers(float3 position)
 	glGenBuffers(1, (GLuint*)&(myTexture));
 	glBindBuffer(GL_ARRAY_BUFFER, myTexture);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, texture, GL_STATIC_DRAW);
-	// 12 = All vertex positions (2 * 6) 2 = vertices and 6 = pos x-y-z
+	//12 = All vertex positions (2 * 6) 2 = vertices and 6 = pos x-y
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 }
@@ -70,9 +72,11 @@ void ParticlePlane::InnerRender() const
 
 	//Load vertex and index
 	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, myVertices);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, myIndices);
+
+	glBindBuffer(GL_ARRAY_BUFFER, myIndices);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, myVertices);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
+
 
 	if (hasTexture)
 	{
@@ -99,7 +103,7 @@ void ParticlePlane::InnerRender() const
 	}
 
 	//Draw mesh
-	glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, NULL); //12 = number of indices
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
 
 	//Free buffers
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
