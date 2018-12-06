@@ -5,6 +5,7 @@
 #include "MathGeoLib/Math/Quat.h"
 
 #include "ParticlePlane.h"
+#include "Texture.h"
 
 struct ParticleTrans
 {
@@ -22,15 +23,19 @@ public:
 	float GetCamDistance() const;
 	void Draw() const;
 public:
-	float lifeTime;
-	float life;
-	float3 speed;
-	float rotationSpeed;
+	float lifeTime = 0.0f;
+	float life = 0.0f;
+	float3 speed = float3::zero;
+	float rotationSpeed = 0.0f;
+
+	float3 color = float3::one;
 
 	ParticleTrans transform;
 
-//private:
+private:
 	ParticlePlane* plane = nullptr;
+	Texture* texture = nullptr;
+
 };
 
 struct particleCompare
