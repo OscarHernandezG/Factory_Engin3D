@@ -20,6 +20,8 @@ public:
 	Particle();
 	~Particle();
 
+	void Update() {/*TODO*/};
+
 	float GetCamDistance() const;
 	void Draw() const;
 public:
