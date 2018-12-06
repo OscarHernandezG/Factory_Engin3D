@@ -426,6 +426,7 @@
     <ClInclude Include="Particle.h">
       <Filter>Sources\GameObject\Particles</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentEmitter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -668,5 +669,6 @@
     <ClCompile Include="Particle.cpp">
       <Filter>Sources\GameObject\Particles</Filter>
     </ClCompile>
+    <ClCompile Include="ComponentEmitter.cpp" />
   </ItemGroup>
 </Project>
