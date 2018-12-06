@@ -11,6 +11,7 @@ public:
 	ManagerParticle();
 	~ManagerParticle();
 
+
 public:
 	std::list<Particle*> particleList;
 };
