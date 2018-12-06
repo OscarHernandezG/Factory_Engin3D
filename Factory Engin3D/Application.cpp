@@ -20,6 +20,7 @@ Application::Application()
 	time = new ModuleTime(this);
 	resources = new ModuleResources(this);
 
+	particle = new ManagerParticle();
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order

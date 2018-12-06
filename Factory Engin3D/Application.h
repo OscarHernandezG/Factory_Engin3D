@@ -17,6 +17,7 @@
 #include "ModulePicking.h"
 #include "ModuleTime.h"
 #include "ModuleResources.h"
+#include "ManagerParticle.h"
 
 #include "Event.h"
 
@@ -39,6 +40,7 @@ public:
 	ModuleTime* time;
 	ModuleResources* resources;
 
+	ManagerParticle* particle;//Is not a module. It haven't Updates
 private:
 	std::list<Module*> list_modules;
 

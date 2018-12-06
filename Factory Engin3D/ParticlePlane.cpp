@@ -54,7 +54,7 @@ void ParticlePlane::LoadPlaneBuffers(float3 position)
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void ParticlePlane::Render(float4x4 matrix, Texture* texture, float4 color)
+void ParticlePlane::Render(float4x4 matrix, Texture* texture, float4 color) const
 {
 	glPushMatrix();
 	float4x4 mat = matrix;
