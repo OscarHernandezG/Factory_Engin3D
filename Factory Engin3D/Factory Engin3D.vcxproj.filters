@@ -327,9 +327,6 @@
     <ClInclude Include="Mesh.h">
       <Filter>Sources\GameObject\Geometries</Filter>
     </ClInclude>
-    <ClInclude Include="Geometries.h">
-      <Filter>Sources\GameObject\Geometries</Filter>
-    </ClInclude>
     <ClInclude Include="Geometry.h">
       <Filter>Sources\GameObject\Geometries</Filter>
     </ClInclude>

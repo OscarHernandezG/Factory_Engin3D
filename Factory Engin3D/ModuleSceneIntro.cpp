@@ -1,9 +1,6 @@
 #include "Application.h"
 #include "ModuleSceneIntro.h"
 #include "ModuleImGui.h"
-//#include "ModuleGeometry.h"
-
-#include "Geometries.h"
 
 #include "glew-2.1.0/include/GL/glew.h"
 

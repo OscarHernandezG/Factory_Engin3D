@@ -3,7 +3,6 @@
 #include "Module.h"
 
 #include "Transform.h"
-#include "Geometries.h"
 #include "Camera.h"
 
 #include "Assimp/include/matrix4x4.h"

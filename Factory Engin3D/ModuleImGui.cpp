@@ -9,8 +9,6 @@
 #include "MathGeoLib/Geometry/GeometryAll.h"
 
 #include "GameObject.h"
-#include "Geometries.h"
-
 
 //RAM and CPU usage
 #include "Windows.h"
