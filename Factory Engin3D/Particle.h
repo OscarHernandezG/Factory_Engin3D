@@ -4,6 +4,8 @@
 #include "MathGeoLib/Math/float3.h"
 #include "MathGeoLib/Math/Quat.h"
 
+#include "ParticlePlane.h"
+
 struct ParticleTrans
 {
 	float3 position = float3::zero;
@@ -17,6 +19,8 @@ public:
 	Particle();
 	~Particle();
 
+	float GetCamDistance() const;
+	void Draw() const;
 public:
 	float lifeTime;
 	float life;
@@ -25,6 +29,16 @@ public:
 
 	ParticleTrans transform;
 
+//private:
+	ParticlePlane* plane = nullptr;
+};
+
+struct particleCompare
+{
+	bool operator()(const Particle* particle1, const Particle* particle2) const
+	{
+		return particle1->GetCamDistance() < particle2->GetCamDistance();
+	}
 };
 #endif // !__Particle_H__
 
