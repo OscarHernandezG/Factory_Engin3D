@@ -21,7 +21,7 @@ Camera::Camera(GameObject* gameObject) : Component(gameObject)
 		frustum.up = float3::unitY;
 	}
 
-	frustum.nearPlaneDistance = 0.1f;
+	frustum.nearPlaneDistance = 1.0f;
 	frustum.farPlaneDistance = 1000.0f;
 	frustum.verticalFov = 60.0f * DEGTORAD;
 	frustum.horizontalFov = 2.f * atan(tan(frustum.verticalFov * 0.5f) * (SCREEN_WIDTH / SCREEN_HEIGHT));

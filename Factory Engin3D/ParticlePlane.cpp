@@ -48,14 +48,10 @@ void ParticlePlane::LoadPlaneBuffers(float3 position)
 
 	float texture[]
 	{
-
 		0.0f, 0.0f,
 		1.0f, 0.0f,
 		0.0f, 1.0f,
-
-		1.0f, 0.0f,
 		1.0f, 1.0f,
-		0.0f, 1.0f
 	};
 
 	glGenBuffers(1, (GLuint*)&(myTexture));
@@ -63,7 +59,6 @@ void ParticlePlane::LoadPlaneBuffers(float3 position)
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, texture, GL_STATIC_DRAW);
 	//12 = All vertex positions (2 * 6) 2 = vertices and 6 = pos x-y
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
 }
 
 void ParticlePlane::InnerRender() const
