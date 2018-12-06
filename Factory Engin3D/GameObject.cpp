@@ -5,6 +5,8 @@
 #include "ComponentBillboard.h"
 #include "pcg-c-basic-0.9/pcg_basic.h"
 
+#include "ComponentEmitter.h"
+
 using namespace std;
 
 GameObject::GameObject(GameObject* father, const char * name)
@@ -328,6 +330,9 @@ Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
 		break;
 	case ComponentType_BILLBOARD:
 		newComponent = (Component*)new Billboard(this);
+		break;
+	case ComponentType_EMITTER:
+		newComponent = (Component*)new ComponentEmitter(this);
 		break;
 	default:
 		break;

@@ -13,7 +13,7 @@ void ModuleImGui::CreateGameObjectHierarchy(float2 scale)
 		{
 			std::string str = "Random Object ";
 			str.append(std::to_string(rand() % 100));
-			App->gameObject->CreateEmptyGameObject(App->gameObject->rootGameObject, str.data());
+			App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, App->gameObject->rootGameObject, str.data());
 		}
 
 		ImGui::MenuItem("Close");

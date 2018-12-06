@@ -45,9 +45,10 @@ void ComponentEmitter::Update()
 
 void ComponentEmitter::Inspector()
 {
+	if (ImGui::CollapsingHeader("Particle System", ImGuiTreeNodeFlags_DefaultOpen))
+	{
 
-
-
+	}
 }
 
 

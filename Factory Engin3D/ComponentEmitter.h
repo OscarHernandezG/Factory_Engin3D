@@ -33,7 +33,7 @@ public:
 	std::list<Particle*> particles;
 
 	// Particle texture
-	Texture* texture;
+	Texture* texture = nullptr;
 
 	// General info
 	//---------------------------------------

@@ -45,6 +45,7 @@ float Particle::GetCamDistance() const
 
 void Particle::Draw() const
 {
+	if (texture)
 	plane->Render(transform.GetMatrix(),*texture,color);
 }
 

@@ -70,6 +70,11 @@ void ModuleImGui::CreateInspector(float2 scale)
 			if (ImGui::MenuItem("Billboard", "", nullptr, !currObject->HasComponent(ComponentType_BILLBOARD)))
 			{
 				currObject->AddComponent(ComponentType_BILLBOARD, nullptr);
+			}	
+			
+			if (ImGui::MenuItem("Particle System", "", nullptr, !currObject->HasComponent(ComponentType_EMITTER)))
+			{
+				currObject->AddComponent(ComponentType_EMITTER, nullptr);
 			}
 			ImGui::MenuItem("Cancel");
 
