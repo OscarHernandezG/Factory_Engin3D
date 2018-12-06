@@ -79,6 +79,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="ComponentEmitter.h" />
     <ClInclude Include="DevIL\includex86\IL\devil_cpp_wrapper.hpp" />
     <ClInclude Include="DevIL\includex86\IL\devil_internal_exports.h" />
     <ClInclude Include="DevIL\includex86\IL\il.h" />
@@ -196,6 +197,7 @@
     <ClCompile Include="Billboard.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Color.cpp" />
+    <ClCompile Include="ComponentEmitter.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="imgui-1.65\imgui_dock.cpp" />
