@@ -15,6 +15,8 @@
 #include "Assimp/include/postprocess.h"
 #include "Assimp/include/cfileio.h"
 
+#include "ManagerParticle.h"
+
 #include <vector>
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
@@ -232,16 +234,13 @@ update_status ModuleRenderer3D::PostUpdate()
 	if (debugQuad)
 		DebugDraw();
 
-	else
+	else if (App->geometry->currentGameObject != nullptr)
 	{
-		if (App->geometry->currentGameObject != nullptr)
+		static float3 corners[8];
+		if (App->geometry->currentGameObject->transform)
 		{
-			static float3 corners[8];
-			if (App->geometry->currentGameObject->transform)
-			{
-				App->geometry->currentGameObject->transform->boundingBox.GetCornerPoints(corners);
-				DrawQuad(corners, Green);
-			}
+			App->geometry->currentGameObject->transform->boundingBox.GetCornerPoints(corners);
+			DrawQuad(corners, Green);
 		}
 	}
 
@@ -262,6 +261,8 @@ update_status ModuleRenderer3D::PostUpdate()
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glEnable(GL_CULL_FACE);
 
+	//Draw All particles
+	App->particle->Draw();
 
 	// 3. Draw UI
 	App->gui->DrawUI();
