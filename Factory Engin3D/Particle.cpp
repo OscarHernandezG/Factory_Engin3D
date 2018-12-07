@@ -5,7 +5,7 @@
 
 Particle::Particle(float3 pos, StartValues data, Texture** texture)
 {
-	plane = new ParticlePlane(pos);
+	plane = new ParticlePlane();
 
 	lifeTime = data.life;
 	speed = float3::unitY * data.speed;
@@ -46,15 +46,13 @@ float Particle::GetCamDistance() const
 void Particle::Draw() const
 {
 	if (texture)
-	plane->Render(transform.GetMatrix(),*texture,color);
+		plane->Render(transform.GetMatrix(), *texture, color);
+	
 }
 
 
 //Particle transform
 float4x4 ParticleTrans::GetMatrix() const
 {
-	float4x4 transform = float4x4::FromTRS(position, rotation, scale);
-	transform.Transpose();
-
-	return transform;
+	return  float4x4::FromTRS(position, rotation, scale *2).Transposed();
 }

@@ -21,6 +21,8 @@
 
 #include "Event.h"
 
+#include "MathGeoLib/MathGeoLib.h"
+
 #include "Brofiler\Brofiler.h"
 
 
@@ -60,6 +62,8 @@ public:
 	void LogString(const char* texLog) const;
 
 	void ChangeAppName(char* newName);
+
+	math::LCG randomMath;
 
 private:
 
