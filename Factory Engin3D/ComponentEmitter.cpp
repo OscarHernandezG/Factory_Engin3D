@@ -56,9 +56,13 @@ void ComponentEmitter::Inspector()
 {
 	if (ImGui::CollapsingHeader("Particle System", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ImGui::PushItemWidth(100.0f);
+		ImGui::PushItemWidth(150.0f);
 		ImGui::DragFloat("Speed", &startValues.speed, 0.25f, 0.25f, 20.0f);
-		ImGui::DragInt("Particles per Second", &rateOverTime, 1.0f, 1, 50);
+		ImGui::DragInt("Emition", &rateOverTime, 1.0f, 1, 50);
+		ImGui::DragFloat("Lifetime", &startValues.life, 0.5f, 1.0f, 20.0f);
+		ImGui::DragFloat("Size", &startValues.size, 0.1f, 0.1f, 5.0f);
+
+		ImGui::DragFloat("Duration", &duration, 0.5f, 0.5f, 20.0f);
 		if (ImGui::Checkbox("Loop", &loop))
 			loopTimer.Start();
 
