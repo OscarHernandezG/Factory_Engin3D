@@ -40,6 +40,9 @@ private:
 	ParticlePlane* plane = nullptr;
 	ResourceTexture** texture = nullptr;
 
+	float rotation = 0.0f;
+	float angle = 0.0f;
+
 };
 
 struct particleCompare
