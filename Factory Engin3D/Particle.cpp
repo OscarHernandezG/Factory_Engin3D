@@ -8,7 +8,7 @@ Particle::Particle(float3 pos, StartValues data, Texture** texture)
 	plane = new ParticlePlane();
 
 	lifeTime = data.life;
-	speed = float3::unitY * data.speed;
+	speed = data.particleDirection * data.speed;
 
 	transform.position = pos;
 	transform.rotation = Quat::FromEulerXYZ(0, 0, 0); //data.rotation;

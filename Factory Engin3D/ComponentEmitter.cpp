@@ -21,7 +21,8 @@ void ComponentEmitter::Update()
 
 	if (timer.ReadSec() >  1.0f / rateOverTime && (App->particle->particleList.size() < MAX_PARTICLES) && (loop || loopTimer.ReadSec() < duration) )
 	{
-		Particle* newParticle = new Particle(RandPos(), startValues, &texture);
+		float3 pos = RandPos();
+		Particle* newParticle = new Particle(pos, startValues, &texture);
 
 		particles.push_back(newParticle);
 		App->particle->particleList.push_back(newParticle);
@@ -46,14 +47,29 @@ void ComponentEmitter::Update()
 }
 
 float3 ComponentEmitter::RandPos()
-{
-	float3 spawn = creation.RandomPointInside(App->randomMath);
-	float3 global = float3::zero;
+{	
+	// Cube
+	//float3 spawn = creation.RandomPointInside(App->randomMath);
+	//float3 global = float3::zero;
 
-	if (gameObject)
-		global = gameObject->GetGlobalPos();
+	//if (gameObject)
+	//	global = gameObject->GetGlobalPos();
 
-	return spawn + global;
+	//return spawn + global;
+
+
+	//Sphere
+		if (gameObject)
+	{
+		// Sphere pos (gameObject) and sphere size (tbd)
+		float3 global = gameObject->GetGlobalPos();
+		Sphere sphere(global, 10.0f);
+		float3 spawn = sphere.RandomPointInside(App->randomMath);
+
+		startValues.particleDirection = (spawn - global).Normalized();
+
+		return spawn;
+	}
 }
 
 void ComponentEmitter::Inspector()
