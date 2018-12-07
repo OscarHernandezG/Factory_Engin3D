@@ -17,6 +17,7 @@ Particle::Particle(float3 pos, StartValues data, ResourceTexture** texture)
 
 	color = data.color;
 
+	oneColor = data.timeColor;
 	this->texture = texture;	
 }
 
@@ -37,13 +38,25 @@ bool Particle::Update(float dt)
 	{
 		transform.position += speed * dt;
 
-		float3 zAxis = -App->renderer3D->currentCam->frustum.front;
-		float3 yAxis = App->renderer3D->currentCam->frustum.up;
-		float3 xAxis = yAxis.Cross(zAxis).Normalized();
+		LookAtCamera();
 
-		transform.rotation.Set(float3x3(xAxis, yAxis, zAxis));
+		if (color.size() == 1 || oneColor)
+			currentColor = color.front().color;
+		else
+		{
+
+		}
 	}
 	return ret;
+}
+
+void Particle::LookAtCamera()
+{
+	float3 zAxis = -App->renderer3D->currentCam->frustum.front;
+	float3 yAxis = App->renderer3D->currentCam->frustum.up;
+	float3 xAxis = yAxis.Cross(zAxis).Normalized();
+
+	transform.rotation.Set(float3x3(xAxis, yAxis, zAxis));
 }
 
 float Particle::GetCamDistance() const
@@ -54,7 +67,7 @@ float Particle::GetCamDistance() const
 void Particle::Draw() const
 {
 	if (texture)
-		plane->Render(transform.GetMatrix(), *texture, color);
+		plane->Render(transform.GetMatrix(), *texture, currentColor);
 	
 }
 
