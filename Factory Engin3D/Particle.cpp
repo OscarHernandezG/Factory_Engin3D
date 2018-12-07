@@ -54,5 +54,5 @@ void Particle::Draw() const
 //Particle transform
 float4x4 ParticleTrans::GetMatrix() const
 {
-	return  float4x4::FromTRS(position, rotation, scale *2).Transposed();
+	return  float4x4::FromTRS(position, rotation, scale).Transposed();
 }
