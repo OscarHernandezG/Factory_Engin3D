@@ -22,7 +22,7 @@ Particle::Particle(float3 pos, StartValues data, ResourceTexture** texture)
 
 Particle::~Particle()
 {
-	delete(plane);
+	delete plane;
 }
 
 bool Particle::Update(float dt)

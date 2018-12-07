@@ -9,6 +9,15 @@ ParticlePlane::ParticlePlane()
 	LoadPlaneBuffers();
 }
 
+ParticlePlane::~ParticlePlane()
+{
+	glDeleteBuffers(1, (GLuint*)&(myIndices));
+	glDeleteBuffers(1, (GLuint*)&(myVertices));
+	glDeleteBuffers(1, (GLuint*)&(myTexture));
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
 void ParticlePlane::LoadPlaneBuffers()
 {
 	float indicesQuad[]
@@ -67,9 +76,9 @@ void ParticlePlane::Render(float4x4 matrix, ResourceTexture* texture, float4 col
 
 void ParticlePlane::DrawPlane(ResourceTexture* texture, math::float4 &color) const
 {
-	//Load vertex and index
 	glEnableClientState(GL_VERTEX_ARRAY);
 
+	//Load vertex and index
 	glBindBuffer(GL_ARRAY_BUFFER, myIndices);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, myVertices);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
@@ -90,6 +99,7 @@ void ParticlePlane::DrawPlane(ResourceTexture* texture, math::float4 &color) con
 		//Load texture
 		glBindTexture(GL_TEXTURE_2D, texture->GetID());
 	}
+
 
 	glColor4f(color.x, color.y, color.z, color.w);
 	//Draw mesh
