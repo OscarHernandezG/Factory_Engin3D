@@ -47,9 +47,20 @@ void ComponentEmitter::Update()
 
 float3 ComponentEmitter::RandPos()
 {
-	float3 spawn = creation.RandomPointInside(App->randomMath);
-	float3 global = float3::zero;
+	float3 spawn = float3::zero;
+	switch (shapeType)
+	{
+	case ShapeType_BOX:
+		spawn = boxCreation.RandomPointInside(App->randomMath);
+		break;
+	case ShapeType_SPHERE:
+		spawn = SphereCreation.RandomPointInside(App->randomMath);
+		break;
+	default:
+		break;
+	}
 
+	float3 global = float3::zero;
 	if (gameObject)
 		global = gameObject->GetGlobalPos();
 
@@ -87,18 +98,15 @@ void ComponentEmitter::Inspector()
 		{
 		case ShapeType_BOX:
 			ImGui::Text("Box");
-			pos = creation.Size();
+			pos = boxCreation.Size();
 			ImGui::DragFloat3("Box Size", &pos.x, 0.1f, 0.1f, 20.0f, "%.2f");
 
-			creation.SetFromCenterAndSize(creation.CenterPoint(), pos);
+			boxCreation.SetFromCenterAndSize(boxCreation.CenterPoint(), pos);
 
 			break;
 		case ShapeType_SPHERE:
 			ImGui::Text("Sphere");
-			pos = creation.Size();
-			ImGui::DragFloat3("Box Size", &pos.x, 0.1f, 0.1f, 20.0f, "%.2f");
-
-			creation.SetFromCenterAndSize(creation.CenterPoint(), pos);
+			ImGui::DragFloat("Box Size", &SphereCreation.r, 0.25f, 1.0f, 20.0f, "%.2f");
 
 			break;
 		default:

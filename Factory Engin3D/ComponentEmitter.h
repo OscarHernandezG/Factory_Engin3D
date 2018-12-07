@@ -59,7 +59,9 @@ private:
 	float gravity = 0.0f;
 
 	//Posibility space where particle is created
-	AABB creation = AABB(float3(-0.5f, -0.5f, -0.5f), float3(0.5f, 0.5f, 0.5f));
+	AABB boxCreation = AABB(float3(-0.5f, -0.5f, -0.5f), float3(0.5f, 0.5f, 0.5f));
+	Sphere SphereCreation = Sphere(float3::zero, 1.0f);
+
 	ShapeType shapeType = ShapeType_BOX;
 
 	//open window for change particle color
