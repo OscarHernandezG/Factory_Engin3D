@@ -14,7 +14,7 @@ struct StartValues
 	float life = 5.0f;
 	float speed = 3.0f;
 	float size = 1.0f;
-	//float rotation = 0.0f;
+	float rotation = 0.0f;
 	float4 color = float4::one;
 	AABB colision = AABB(float3(-0.5f, -0.5f, -0.5f), float3(0.5f, 0.5f, 0.5f));
 
