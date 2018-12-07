@@ -18,9 +18,10 @@ Particle::Particle(float3 pos, StartValues data, ResourceTexture** texture)
 	transform.rotation = Quat::FromEulerXYZ(0, 0, 0); //Start rotation
 	transform.scale = float3::one * data.size;
 
-	color = data.color;
+	for (std::list<ColorTime>::iterator iter = data.color.begin(); iter != data.color.end(); ++iter)
+		color.push_back(*iter);
 
-	oneColor = data.timeColor;
+	multicolor = data.timeColor;
 	this->texture = texture;	
 }
 
@@ -43,12 +44,26 @@ bool Particle::Update(float dt)
 
 		LookAtCamera();
 
-		if (color.size() == 1 || oneColor)
+		if (color.size() == 1 || !multicolor)
 			currentColor = color.front().color;
-		else
+
+		else if (index + 1 < color.size())
 		{
-			//LERP Color
+			float lifeNormalized = life / lifeTime;
+			if (color[index + 1].position > lifeNormalized)
+			{
+				float timeNormalized = lifeNormalized / color[index + 1].position;
+				if (color[index + 1].position == 0)
+					timeNormalized = 0;
+
+				currentColor = color[index].color.Lerp(color[index + 1].color,timeNormalized);
+				//LERP Color
+			}
+			else
+				index++;
 		}
+		else
+			currentColor = color[index].color;
 
 		angle += rotation * dt;
 		transform.rotation = transform.rotation.Mul(Quat::RotateZ(angle));

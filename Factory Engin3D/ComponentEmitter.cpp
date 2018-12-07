@@ -147,14 +147,26 @@ void ComponentEmitter::Inspector()
 		ImGui::Separator();
 		ImGui::PopItemWidth();
 		ImGui::Text("Particle Color");
-		for (std::list<ColorTime>::iterator iter = startValues.color.begin(); iter != startValues.color.end(); ++iter)
+
+		std::vector<ColorTime> deleteColor;
+		std::list<ColorTime>::iterator iter = startValues.color.begin();
+		while (iter != startValues.color.end())
 		{
 			//TODO: they must be able to change color 
-			EditColor(*iter);
-			if (!startValues.timeColor)
-				break;
+			if ((iter) == startValues.color.begin())
+			{//Cant delete 1st color
+				if (!EditColor(*iter))
+					break;
+				iter++;
+			}
+			else
+			{
+				if (!EditColor(*iter, false))
+					startValues.color.erase(iter++);
+				else
+					iter++;
+			}
 		}
-
 		ImGui::Separator();
 		ImGui::Checkbox("Color time", &startValues.timeColor);
 		if (startValues.timeColor)
@@ -218,8 +230,9 @@ void ComponentEmitter::Inspector()
 	}
 }
 
-void ComponentEmitter::EditColor(ColorTime &colorTime)
+bool ComponentEmitter::EditColor(ColorTime &colorTime, bool first)
 {
+	bool ret = true;
 	ImVec4 color = EqualsFloat4(colorTime.color);
 	if (ImGui::ColorButton(colorTime.name.data(), color, ImGuiColorEditFlags_None, ImVec2(100, 20)))
 		colorTime.changingColor = !colorTime.changingColor;
@@ -228,9 +241,18 @@ void ComponentEmitter::EditColor(ColorTime &colorTime)
 	{
 		ImGui::SameLine();
 		ImGui::TextUnformatted(colorTime.name.data());
+		if (!first)
+		{
+			ImGui::SameLine();
+			if (ImGui::Button("Remove Color", ImVec2(75, 25)))
+				ret = false;
+		}
+		else if (!startValues.timeColor)
+			ret = false;
 	}
 	else
 		ImGui::ColorEdit4(colorTime.name.data(), &colorTime.color.x, ImGuiColorEditFlags_AlphaBar);
+	return ret;
 }
 
 ImVec4 ComponentEmitter::EqualsFloat4(const float4 float4D)

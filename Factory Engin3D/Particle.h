@@ -29,24 +29,25 @@ public:
 
 	float GetCamDistance() const;
 	void Draw() const;
-public:
+private:
 	float lifeTime = 0.0f;
 	float life = 0.0f;
 	float3 speed = float3::zero; 
 	float rotationSpeed = 0.0f; // Todo
 
-	std::list<ColorTime> color;
-	bool oneColor = false;
+	std::vector<ColorTime> color;
+	int index = 0;
+	bool multicolor = false;
 	float4 currentColor = float4::one;
 
 	ParticleTrans transform;
 
-private:
 	ParticlePlane* plane = nullptr;
 	ResourceTexture** texture = nullptr;
 
 	float rotation = 0.0f;
 	float angle = 0.0f;
+
 
 };
 
