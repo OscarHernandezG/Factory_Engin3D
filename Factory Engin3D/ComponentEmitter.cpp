@@ -18,14 +18,26 @@ ComponentEmitter::~ComponentEmitter()
 
 void ComponentEmitter::Update()
 {
-
-	if (timer.ReadSec() >  1.0f / rateOverTime && (App->particle->particleList.size() < MAX_PARTICLES) && (loop || loopTimer.ReadSec() < duration) )
+	float time = timer.ReadSec();
+	if (time >  (1.0f / rateOverTime) && (loop || loopTimer.ReadSec() < duration) )
 	{
+		int particlesToCreate = (time / (1.0f / rateOverTime));
+		for (int i = 0; i < particlesToCreate; ++i)
+		{
+			if (App->particle->particleList.size() < MAX_PARTICLES)
+			{
 		float3 pos = RandPos();
 		Particle* newParticle = new Particle(pos, startValues, &texture);
 
 		particles.push_back(newParticle);
 		App->particle->particleList.push_back(newParticle);
+			}
+			else
+				break;
+		LOG("Particles to create  %i", particlesToCreate);
+		}
+
+		LOG("Particles %i", App->particle->particleList.size());
 		timer.Start();
 	}
 
@@ -91,7 +103,7 @@ void ComponentEmitter::Inspector()
 		ImGui::DragFloat("Rotation", &startValues.rotation, 0.25f, -720.0f, 720.0f, "%.2f");
 		ImGui::DragFloat("Angular acceleration", &startValues.angularAcceleration, 0.25f, -45.0f, 45.0f, "%.2f");
 
-		ImGui::DragInt("Emition", &rateOverTime, 1.0f, 1, 50, "%.2f");
+		ImGui::DragInt("Emition", &rateOverTime, 1.0f, 0.0f, 0.0f, "%.2f");
 		ImGui::DragFloat("Lifetime", &startValues.life, 0.5f, 1.0f, 20.0f, "%.2f");
 		ImGui::DragFloat("Size", &startValues.size, 0.1f, 0.1f, 5.0f, "%.2f");
 
