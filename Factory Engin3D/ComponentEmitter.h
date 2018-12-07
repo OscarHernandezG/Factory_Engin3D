@@ -50,7 +50,13 @@ public:
 
 	float gravity = 0.0f;
 
+	//Posibility space where particle is created
 	AABB creation = AABB(float3(-0.5f, -0.5f, -0.5f), float3(0.5f, 0.5f, 0.5f));
+
+	//open window for change particle color
+	bool changingColor = false;
+	//float4 color in ImGui
+	ImVec4 color = ImVec4(1.0f,1.0f,1.0f,1.0f);
 
 	StartValues startValues;
 	//---------------------------------------

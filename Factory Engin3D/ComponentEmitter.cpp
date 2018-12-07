@@ -19,7 +19,7 @@ ComponentEmitter::~ComponentEmitter()
 void ComponentEmitter::Update()
 {
 
-	if (timer.ReadSec() >  1 / rateOverTime && (App->particle->particleList.size() < MAX_PARTICLES) && (loop || loopTimer.ReadSec() < duration) )
+	if (timer.ReadSec() >  1.0f / rateOverTime && (App->particle->particleList.size() < MAX_PARTICLES) && (loop || loopTimer.ReadSec() < duration) )
 	{
 		Particle* newParticle = new Particle(RandPos(), startValues, &texture);
 
@@ -56,10 +56,30 @@ void ComponentEmitter::Inspector()
 {
 	if (ImGui::CollapsingHeader("Particle System", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		ImGui::PushItemWidth(100.0f);
 		ImGui::DragFloat("Speed", &startValues.speed, 0.25f, 0.25f, 20.0f);
 		ImGui::DragInt("Particles per Second", &rateOverTime, 1.0f, 1, 50);
 		if (ImGui::Checkbox("Loop", &loop))
 			loopTimer.Start();
+
+		ImGui::Separator();
+		ImGui::PopItemWidth();
+		ImGui::Text("Particle Color");
+
+		if (ImGui::ColorButton("Start color", color, 0, ImVec2(100, 20)))
+			changingColor = !changingColor;
+
+		if(changingColor){
+			changingColor = true;
+			ImGui::ColorEdit4("Start Color", &color.x);
+			
+			startValues.color.x = color.x;
+			startValues.color.y = color.y;
+			startValues.color.z = color.z;
+			startValues.color.w = color.w;
+
+		}
+
 	}
 }
 
