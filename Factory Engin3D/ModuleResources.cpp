@@ -95,8 +95,8 @@ void ModuleResources::Remove(Resource* resource)
 
 		if (resource->usage <= 0)
 		{
-			resources.remove(resource);
-			delete resource;
+			//resources.remove(resource);
+			//delete resource;
 		}
 	}
 }

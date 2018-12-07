@@ -270,11 +270,6 @@ update_status ModuleRenderer3D::PostUpdate()
 	// 4. Swap buffers
 	SDL_GL_SwapWindow(App->window->window);
 
-	SDL_DisplayMode DM;
-	SDL_GetCurrentDisplayMode(0, &DM);
-	auto Width = DM.w;
-	auto Height = DM.h;
-
 	return UPDATE_CONTINUE;
 }
 void ModuleRenderer3D::DrawOctreeObjects(GameObject * iterator)

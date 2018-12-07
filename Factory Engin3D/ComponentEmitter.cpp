@@ -47,9 +47,13 @@ void ComponentEmitter::Update()
 
 float3 ComponentEmitter::RandPos()
 {
+	float3 spawn = creation.RandomPointInside(App->randomMath);
+	float3 global = float3::zero;
 
-	//TODO: create random pos from AABB creation
-	return gameObject->transform->GetGlobalPos();
+	if (gameObject)
+		global = gameObject->GetGlobalPos();
+
+	return spawn + global;
 }
 
 void ComponentEmitter::Inspector()

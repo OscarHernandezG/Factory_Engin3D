@@ -4,19 +4,19 @@
 #include "ComponentTexture.h"
 
 // PARTICLE PLANE ==================================================
-ParticlePlane::ParticlePlane(float3 position)
+ParticlePlane::ParticlePlane()
 {
-	LoadPlaneBuffers(position);
+	LoadPlaneBuffers();
 }
 
-void ParticlePlane::LoadPlaneBuffers(float3 position)
+void ParticlePlane::LoadPlaneBuffers()
 {
 	float indicesQuad[]
 	{
-	position.x + -0.5f,position.y + -0.5f,position.z,//a
-	position.x +  0.5f,position.y + -0.5f,position.z,//b
-	position.x + -0.5f,position.y +  0.5f,position.z,//c
-	position.x +  0.5f,position.y +  0.5f,position.z,//d
+	-0.5f, -0.5f, 0.0f,//a
+	 0.5f, -0.5f, 0.0f,//b
+	-0.5f,  0.5f, 0.0f,//c
+	 0.5f,  0.5f, 0.0f,//d
 	};
 
 	glGenBuffers(1, (GLuint*)&(myIndices));
@@ -57,17 +57,22 @@ void ParticlePlane::LoadPlaneBuffers(float3 position)
 void ParticlePlane::Render(float4x4 matrix, Texture* texture, float4 color) const
 {
 	glPushMatrix();
-	float4x4 mat = matrix;
+	
+	glMultMatrixf(matrix.ptr());
 
-	glMultMatrixf(mat.ptr());
+	DrawPlane(texture, color);
 
+	glPopMatrix();
+}
+
+void ParticlePlane::DrawPlane(Texture* texture, math::float4 &color) const
+{
 	//Load vertex and index
 	glEnableClientState(GL_VERTEX_ARRAY);
 
 	glBindBuffer(GL_ARRAY_BUFFER, myIndices);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, myVertices);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
-
 
 	if (texture != nullptr)
 	{
@@ -79,7 +84,7 @@ void ParticlePlane::Render(float4x4 matrix, Texture* texture, float4 color) cons
 		glBindBuffer(GL_ARRAY_BUFFER, myTexture);
 		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
-		glColor4f(color.x, color.y, color.z, color.w);
+		//glColor4f(color.x, color.y, color.z, color.w);
 		glEnable(GL_ALPHA_TEST);
 
 		//Load texture
@@ -97,6 +102,4 @@ void ParticlePlane::Render(float4x4 matrix, Texture* texture, float4 color) cons
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY);
-
-	glPopMatrix();
 }

@@ -9,10 +9,12 @@ class Texture;
 class ParticlePlane
 {
 public:
+	ParticlePlane();
+	void LoadPlaneBuffers();
+	void Render(float4x4 matrix, Texture* texture, float4 color) const;
 
-	ParticlePlane(float3 position);
-	void LoadPlaneBuffers(float3 position);
-	void Render(float4x4 matrix, Texture * texture, float4 color) const;
+private:
+	void DrawPlane(Texture* texture, float4 &color) const;
 
 public:
 	uint myIndices = 0u;
