@@ -86,7 +86,7 @@ void ComponentEmitter::Inspector()
 	{
 		ImGui::PushItemWidth(150.0f);
 		ImGui::DragFloat("Speed", &startValues.speed, 0.25f, 0.25f, 20.0f, "%.2f");
-		ImGui::DragFloat("Rotation", &startValues.rotation, 0.25f, 0.0f, 0.0f, "%.2f");
+		ImGui::DragFloat("Rotation", &startValues.rotation, 0.25f, 0.0f, 720.0f, "%.2f");
 		ImGui::DragInt("Emition", &rateOverTime, 1.0f, 1, 50, "%.2f");
 		ImGui::DragFloat("Lifetime", &startValues.life, 0.5f, 1.0f, 20.0f, "%.2f");
 		ImGui::DragFloat("Size", &startValues.size, 0.1f, 0.1f, 5.0f, "%.2f");
@@ -152,9 +152,9 @@ void ComponentEmitter::Inspector()
 		if (ImGui::ColorButton("Start color", color, ImGuiColorEditFlags_None, ImVec2(100, 20)))
 			changingColor = !changingColor;
 
-		if(changingColor)
+		if (changingColor)
 			ImGui::ColorEdit4("Start Color", &startValues.color.x, ImGuiColorEditFlags_AlphaBar);
-		
+
 		if (texture)
 		{
 			std::string name = texture->file;
@@ -165,16 +165,34 @@ void ComponentEmitter::Inspector()
 
 			ImGui::Image((void*)(intptr_t)texture->GetID(), ImVec2(256, 256));
 
+			if (ImGui::BeginMenu("Change Texture"))
+			{
+				std::vector<Resource*> resource;
+				App->resources->GetResources(resource, ResourceType::texture);
+
+				for (std::vector<Resource*>::iterator iterator = resource.begin(); iterator != resource.end(); ++iterator)
+				{
+					if (ImGui::MenuItem((*iterator)->name.data()))
+					{
+						App->resources->Remove(texture);
+						texture = nullptr;
+
+						texture = ((ResourceTexture*)(*iterator));
+						texture->usage++;
+					}
+				}
+				ImGui::End();
+			}
 			if (ImGui::Button("Remove", ImVec2(50, 25)))
 			{
 				App->resources->Remove(texture);
 				texture = nullptr;
 			}
+
 		}
 		else
 		{
 			ImGui::Text("No texture loaded");
-			ImGui::Separator();
 			if (ImGui::BeginMenu("Add new Texture"))
 			{
 				std::vector<Resource*> resource;
