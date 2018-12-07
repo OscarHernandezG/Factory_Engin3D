@@ -86,6 +86,7 @@ void ComponentEmitter::Inspector()
 	{
 		ImGui::PushItemWidth(150.0f);
 		ImGui::DragFloat("Speed", &startValues.speed, 0.25f, 0.25f, 20.0f, "%.2f");
+		ImGui::DragFloat("Rotation", &startValues.rotation, 0.25f, 0.0f, 0.0f, "%.2f");
 		ImGui::DragInt("Emition", &rateOverTime, 1.0f, 1, 50, "%.2f");
 		ImGui::DragFloat("Lifetime", &startValues.life, 0.5f, 1.0f, 20.0f, "%.2f");
 		ImGui::DragFloat("Size", &startValues.size, 0.1f, 0.1f, 5.0f, "%.2f");

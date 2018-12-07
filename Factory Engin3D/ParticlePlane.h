@@ -10,6 +10,7 @@ class ParticlePlane
 {
 public:
 	ParticlePlane();
+	~ParticlePlane();
 	void LoadPlaneBuffers();
 	void Render(float4x4 matrix, ResourceTexture* texture, float4 color) const;
 

@@ -258,11 +258,15 @@ update_status ModuleRenderer3D::PostUpdate()
 		}
 	}
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glPolygonMode(GL_FRONT, GL_FILL);
 	glEnable(GL_CULL_FACE);
 
 	//Draw All particles
+
+	// Not sure if correct
+	glDepthMask(GL_FALSE);
 	App->particle->Draw();
+	glDepthMask(GL_TRUE);
 
 	// 3. Draw UI
 	App->gui->DrawUI();

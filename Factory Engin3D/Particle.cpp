@@ -10,10 +10,13 @@ Particle::Particle(float3 pos, StartValues data, ResourceTexture** texture)
 	lifeTime = data.life;
 	speed = data.particleDirection * data.speed;
 
+	rotation = data.rotation;
+
+	rotation *= DEGTORAD;
+
 	transform.position = pos;
-	transform.rotation = Quat::FromEulerXYZ(0, 0, 0); //data.rotation;
+	transform.rotation = Quat::FromEulerXYZ(0, 0, 0); //Start rotation
 	transform.scale = float3::one * data.size;
-	//transform.colision = data.colision;
 
 	color = data.color;
 
@@ -23,7 +26,7 @@ Particle::Particle(float3 pos, StartValues data, ResourceTexture** texture)
 
 Particle::~Particle()
 {
-	delete(plane);
+	delete plane;
 }
 
 bool Particle::Update(float dt)
@@ -44,9 +47,14 @@ bool Particle::Update(float dt)
 			currentColor = color.front().color;
 		else
 		{
-
+			//LERP Color
 		}
+
+		angle += rotation * dt;
+		transform.rotation = transform.rotation.Mul(Quat::RotateZ(angle));
 	}
+
+
 	return ret;
 }
 

@@ -28,9 +28,10 @@ struct StartValues
 	float life = 5.0f;
 	float speed = 3.0f;
 	float size = 1.0f;
-	//float rotation = 0.0f;
+	float rotation = 0.0f;
 	std::list<ColorTime> color;
 	bool timeColor = false;
+
 	AABB colision = AABB(float3(-0.5f, -0.5f, -0.5f), float3(0.5f, 0.5f, 0.5f));
 
 	float3 particleDirection = float3::unitY;
