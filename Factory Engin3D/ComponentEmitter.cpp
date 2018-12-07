@@ -19,7 +19,7 @@ ComponentEmitter::~ComponentEmitter()
 void ComponentEmitter::Update()
 {
 
-	if (timer.ReadSec() >  1 / rateOverTime && (App->particle->particleList.size() < MAX_PARTICLES) && (loop || loopTimer.ReadSec() < duration) )
+	if (timer.ReadSec() >  1.0f / rateOverTime && (App->particle->particleList.size() < MAX_PARTICLES) && (loop || loopTimer.ReadSec() < duration) )
 	{
 		Particle* newParticle = new Particle(RandPos(), startValues, &texture);
 
@@ -47,9 +47,13 @@ void ComponentEmitter::Update()
 
 float3 ComponentEmitter::RandPos()
 {
+	float3 spawn = creation.RandomPointInside(App->randomMath);
+	float3 global = float3::zero;
 
-	//TODO: create random pos from AABB creation
-	return gameObject->transform->GetGlobalPos();
+	if (gameObject)
+		global = gameObject->GetGlobalPos();
+
+	return spawn + global;
 }
 
 void ComponentEmitter::Inspector()
