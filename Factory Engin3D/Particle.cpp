@@ -5,7 +5,7 @@
 
 Particle::Particle(float3 pos, StartValues data, ResourceTexture** texture)
 {
-	plane = new ParticlePlane();
+	plane = App->particle->plane;
 
 	lifeTime = data.life;
 
@@ -29,7 +29,7 @@ Particle::Particle(float3 pos, StartValues data, ResourceTexture** texture)
 
 Particle::~Particle()
 {
-	delete plane;
+	//delete plane;
 }
 
 bool Particle::Update(float dt)
@@ -93,7 +93,7 @@ float Particle::GetCamDistance() const
 
 void Particle::Draw() const
 {
-	if (texture)
+	if (plane && texture)
 		plane->Render(transform.GetMatrix(), *texture, currentColor);
 	
 }

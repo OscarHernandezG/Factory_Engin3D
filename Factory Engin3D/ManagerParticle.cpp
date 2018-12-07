@@ -14,11 +14,14 @@ ManagerParticle::~ManagerParticle()
 
 void ManagerParticle::Draw()
 {
-	BROFILER_CATEGORY("__FUNCTION__", Profiler::Color::PapayaWhip);
+	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
 
+	if (plane == nullptr)
+		plane = new ParticlePlane();
+	
 	if (!particleList.empty())
 	{
-		particleList.sort(particleCompare());
+		//particleList.sort(particleCompare());
 		for (std::list<Particle*>::iterator iterator = particleList.begin(); iterator != particleList.end(); ++iterator)
 		{
 			(*iterator)->Draw();
