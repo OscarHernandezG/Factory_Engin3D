@@ -69,8 +69,10 @@ void Texture::Inspector()
 				for (std::vector<Resource*>::iterator iterator = resource.begin(); iterator != resource.end(); ++iterator)
 				{
 					if (ImGui::MenuItem((*iterator)->name.data()))
+					{
 						texture = ((ResourceTexture*)(*iterator));
-					
+						texture->usage++;
+					}
 				}
 				ImGui::End();
 			}
