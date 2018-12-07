@@ -29,6 +29,9 @@ public:
 	float3 RandPos();
 	void Inspector();
 
+
+	ImVec4 EqualsFloat4(const float4 float4D);
+
 public:
 	Timer timer;
 
@@ -40,6 +43,7 @@ public:
 	// General info
 	//---------------------------------------
 	// Duration of the particle emitter
+private:
 	float duration = 1.0f;
 	
 	// Loop the particle (if true the particle emitter will never stop)
@@ -55,8 +59,6 @@ public:
 
 	//open window for change particle color
 	bool changingColor = false;
-	//float4 color in ImGui
-	ImVec4 color = ImVec4(1.0f,1.0f,1.0f,1.0f);
 
 	StartValues startValues;
 	//---------------------------------------

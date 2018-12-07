@@ -66,21 +66,25 @@ void ComponentEmitter::Inspector()
 		ImGui::PopItemWidth();
 		ImGui::Text("Particle Color");
 
-		if (ImGui::ColorButton("Start color", color, 0, ImVec2(100, 20)))
+		ImVec4 color = EqualsFloat4(startValues.color);
+		if (ImGui::ColorButton("Start color", color, ImGuiColorEditFlags_None, ImVec2(100, 20)))
 			changingColor = !changingColor;
 
-		if(changingColor){
-			changingColor = true;
-			ImGui::ColorEdit4("Start Color", &color.x);
-			
-			startValues.color.x = color.x;
-			startValues.color.y = color.y;
-			startValues.color.z = color.z;
-			startValues.color.w = color.w;
-
-		}
+		if(changingColor)
+			ImGui::ColorEdit4("Start Color", &startValues.color.x, ImGuiColorEditFlags_AlphaBar);
+		
 
 	}
+}
+
+ImVec4 ComponentEmitter::EqualsFloat4(const float4 float4D)
+{
+	ImVec4 vec;
+	vec.x = float4D.x;
+	vec.y = float4D.y;
+	vec.z = float4D.z;
+	vec.w = float4D.w;
+	return vec;
 }
 
 
