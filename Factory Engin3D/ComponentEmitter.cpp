@@ -21,21 +21,22 @@ void ComponentEmitter::Update()
 
 	if (timer.ReadSec() >  1.0f / rateOverTime && (App->particle->particleList.size() < MAX_PARTICLES) && (loop || loopTimer.ReadSec() < duration) )
 	{
-		Particle* newParticle = new Particle(RandPos(), startValues, &texture);
+		float3 pos = RandPos();
+		Particle* newParticle = new Particle(pos, startValues, &texture);
 
 		particles.push_back(newParticle);
 		App->particle->particleList.push_back(newParticle);
 		timer.Start();
 	}
 
-	std::vector<Particle*> toDelete;
+	std::vector<Particle*> particleDelete;
 	for (std::list<Particle*>::iterator iterator = particles.begin(); iterator != particles.end(); ++iterator)
 	{
-		if (!(*iterator)->Update(App->time->GetdtGame()))
-			toDelete.push_back(*iterator);
+		if (!(*iterator)->Update(App->time->GetdtGame()) || toDelete)
+			particleDelete.push_back(*iterator);
 	}
 
-	for (std::vector<Particle*>::iterator iterator = toDelete.begin(); iterator != toDelete.end(); ++iterator)
+	for (std::vector<Particle*>::iterator iterator = particleDelete.begin(); iterator != particleDelete.end(); ++iterator)
 	{
 		particles.remove(*iterator);
 		App->particle->particleList.remove(*iterator);
@@ -53,9 +54,21 @@ float3 ComponentEmitter::RandPos()
 	case ShapeType_BOX:
 		spawn = boxCreation.RandomPointInside(App->randomMath);
 		break;
+
 	case ShapeType_SPHERE:
 		spawn = SphereCreation.RandomPointInside(App->randomMath);
+		startValues.particleDirection = spawn.Normalized();
 		break;
+
+	case ShapeType_SPHERE_CENTER:
+		startValues.particleDirection = SphereCreation.RandomPointInside(App->randomMath).Normalized();
+		break;
+
+		case ShapeType_SPHERE_BORDER:
+		spawn = SphereCreation.RandomPointOnSurface(App->randomMath);
+		startValues.particleDirection = spawn.Normalized();
+		break;
+
 	default:
 		break;
 	}
@@ -86,7 +99,10 @@ void ComponentEmitter::Inspector()
 		if (ImGui::BeginMenu("Change Shape"))
 		{
 			if (ImGui::MenuItem("Box"))
+			{
 				shapeType = ShapeType_BOX;
+				startValues.particleDirection = float3::unitY;
+			}
 			else if (ImGui::MenuItem("Sphere"))
 				shapeType = ShapeType_SPHERE;
 			ImGui::End();
@@ -105,8 +121,22 @@ void ComponentEmitter::Inspector()
 
 			break;
 		case ShapeType_SPHERE:
+		case ShapeType_SPHERE_BORDER:
+		case ShapeType_SPHERE_CENTER:
 			ImGui::Text("Sphere");
-			ImGui::DragFloat("Box Size", &SphereCreation.r, 0.25f, 1.0f, 20.0f, "%.2f");
+
+			ImGui::Text("Particle emision from:");
+
+			if (ImGui::RadioButton("Random", shapeType == ShapeType_SPHERE))
+				shapeType = ShapeType_SPHERE;
+			ImGui::SameLine();
+			if (ImGui::RadioButton("Center", shapeType == ShapeType_SPHERE_CENTER))
+				shapeType = ShapeType_SPHERE_CENTER;
+			ImGui::SameLine();
+			if (ImGui::RadioButton("Border", shapeType == ShapeType_SPHERE_BORDER))
+				shapeType = ShapeType_SPHERE_BORDER;
+
+			ImGui::DragFloat("Sphere Size", &SphereCreation.r, 0.25f, 1.0f, 20.0f, "%.2f");
 
 			break;
 		default:
@@ -124,7 +154,8 @@ void ComponentEmitter::Inspector()
 		if(changingColor)
 			ImGui::ColorEdit4("Start Color", &startValues.color.x, ImGuiColorEditFlags_AlphaBar);
 		
-
+		if (ImGui::Button("Remove Particles", ImVec2(150, 25)))
+			toDelete = true;
 	}
 }
 

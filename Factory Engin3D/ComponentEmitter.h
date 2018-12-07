@@ -17,11 +17,15 @@ struct StartValues
 	//float rotation = 0.0f;
 	float4 color = float4::one;
 	AABB colision = AABB(float3(-0.5f, -0.5f, -0.5f), float3(0.5f, 0.5f, 0.5f));
+
+	float3 particleDirection = float3::unitY;
 };
 
 enum ShapeType {
 	ShapeType_BOX,
-	ShapeType_SPHERE
+	ShapeType_SPHERE,
+	ShapeType_SPHERE_CENTER,
+	ShapeType_SPHERE_BORDER
 };
 class ComponentEmitter : Component
 {
@@ -44,10 +48,10 @@ public:
 	// Particle texture
 	Texture* texture = nullptr;
 
+private:
 	// General info
 	//---------------------------------------
 	// Duration of the particle emitter
-private:
 	float duration = 1.0f;
 	
 	// Loop the particle (if true the particle emitter will never stop)
