@@ -19,7 +19,7 @@ struct ParticleTrans
 class Particle
 {
 public:
-	Particle(float3 pos, StartValues data, Texture** texture);
+	Particle(float3 pos, StartValues data, ResourceTexture** texture);
 	~Particle();
 
 	bool Update(float dt);
@@ -38,7 +38,7 @@ public:
 
 private:
 	ParticlePlane* plane = nullptr;
-	Texture** texture = nullptr;
+	ResourceTexture** texture = nullptr;
 
 };
 
@@ -46,7 +46,7 @@ struct particleCompare
 {
 	bool operator()(const Particle* particle1, const Particle* particle2) const
 	{
-		return particle1->GetCamDistance() < particle2->GetCamDistance();
+		return particle1->GetCamDistance() > particle2->GetCamDistance();
 	}
 };
 #endif // !__Particle_H__

@@ -4,17 +4,17 @@
 #include "Globals.h"
 #include "MathGeoLib/Math/float3.h"
 
-class Texture;
+class ResourceTexture;
 
 class ParticlePlane
 {
 public:
 	ParticlePlane();
 	void LoadPlaneBuffers();
-	void Render(float4x4 matrix, Texture* texture, float4 color) const;
+	void Render(float4x4 matrix, ResourceTexture* texture, float4 color) const;
 
 private:
-	void DrawPlane(Texture* texture, float4 &color) const;
+	void DrawPlane(ResourceTexture* texture, float4 &color) const;
 
 public:
 	uint myIndices = 0u;

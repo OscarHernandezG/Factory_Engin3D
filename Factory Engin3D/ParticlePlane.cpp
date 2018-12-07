@@ -1,7 +1,7 @@
 #include "ParticlePlane.h"
 #include "glew-2.1.0/include/GL/glew.h"
 #include "GameObject.h"
-#include "ComponentTexture.h"
+#include "ResourceTexture.h"
 
 // PARTICLE PLANE ==================================================
 ParticlePlane::ParticlePlane()
@@ -54,7 +54,7 @@ void ParticlePlane::LoadPlaneBuffers()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void ParticlePlane::Render(float4x4 matrix, Texture* texture, float4 color) const
+void ParticlePlane::Render(float4x4 matrix, ResourceTexture* texture, float4 color) const
 {
 	glPushMatrix();
 	
@@ -65,7 +65,7 @@ void ParticlePlane::Render(float4x4 matrix, Texture* texture, float4 color) cons
 	glPopMatrix();
 }
 
-void ParticlePlane::DrawPlane(Texture* texture, math::float4 &color) const
+void ParticlePlane::DrawPlane(ResourceTexture* texture, math::float4 &color) const
 {
 	//Load vertex and index
 	glEnableClientState(GL_VERTEX_ARRAY);

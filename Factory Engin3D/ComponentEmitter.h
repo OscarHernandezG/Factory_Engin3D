@@ -46,7 +46,7 @@ public:
 	std::list<Particle*> particles;
 
 	// Particle texture
-	Texture* texture = nullptr;
+	ResourceTexture* texture = nullptr;
 
 private:
 	// General info

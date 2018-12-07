@@ -64,7 +64,7 @@ float3 ComponentEmitter::RandPos()
 		startValues.particleDirection = SphereCreation.RandomPointInside(App->randomMath).Normalized();
 		break;
 
-		case ShapeType_SPHERE_BORDER:
+	case ShapeType_SPHERE_BORDER:
 		spawn = SphereCreation.RandomPointOnSurface(App->randomMath);
 		startValues.particleDirection = spawn.Normalized();
 		break;
@@ -154,6 +154,44 @@ void ComponentEmitter::Inspector()
 		if(changingColor)
 			ImGui::ColorEdit4("Start Color", &startValues.color.x, ImGuiColorEditFlags_AlphaBar);
 		
+		if (texture)
+		{
+			std::string name = texture->file;
+			name = name.substr(name.find_last_of("\\") + 1);
+
+			ImGui::Text("Loaded texture '%s'", name.data());
+			ImGui::Text("Texture used %i times", texture->usage);
+
+			ImGui::Image((void*)(intptr_t)texture->GetID(), ImVec2(256, 256));
+
+			if (ImGui::Button("Remove", ImVec2(50, 25)))
+			{
+				App->resources->Remove(texture);
+				texture = nullptr;
+			}
+		}
+		else
+		{
+			ImGui::Text("No texture loaded");
+			ImGui::Separator();
+			if (ImGui::BeginMenu("Add new Texture"))
+			{
+				std::vector<Resource*> resource;
+				App->resources->GetResources(resource, ResourceType::texture);
+
+				for (std::vector<Resource*>::iterator iterator = resource.begin(); iterator != resource.end(); ++iterator)
+				{
+					if (ImGui::MenuItem((*iterator)->name.data()))
+					{
+						texture = ((ResourceTexture*)(*iterator));
+						texture->usage++;
+					}
+				}
+				ImGui::End();
+			}
+			ImGui::Separator();
+		}
+
 		if (ImGui::Button("Remove Particles", ImVec2(150, 25)))
 			toDelete = true;
 	}

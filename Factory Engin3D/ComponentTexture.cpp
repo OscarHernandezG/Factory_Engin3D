@@ -61,7 +61,7 @@ void Texture::Inspector()
 		{
 			ImGui::Text("No texture loaded");
 			ImGui::Separator();
-			if (ImGui::BeginMenu("Add new ResourceTexture"))
+			if (ImGui::BeginMenu("Add new Texture"))
 			{
 				std::vector<Resource*> resource;
 				App->resources->GetResources(resource, ResourceType::texture);

@@ -3,7 +3,7 @@
 #include "Geometry.h"
 #include "ComponentEmitter.h"
 
-Particle::Particle(float3 pos, StartValues data, Texture** texture)
+Particle::Particle(float3 pos, StartValues data, ResourceTexture** texture)
 {
 	plane = new ParticlePlane();
 
@@ -40,7 +40,7 @@ bool Particle::Update(float dt)
 
 float Particle::GetCamDistance() const
 {
-	return App->geometry->GetPlayingCamera()->GetPos().DistanceSq(transform.position);
+	return App->renderer3D->currentCam->GetPos().Distance(transform.position);
 }
 
 void Particle::Draw() const
