@@ -29,6 +29,9 @@ public:
 	float3 RandPos();
 	void Inspector();
 
+
+	ImVec4 EqualsFloat4(const float4 float4D);
+
 public:
 	Timer timer;
 
@@ -40,6 +43,7 @@ public:
 	// General info
 	//---------------------------------------
 	// Duration of the particle emitter
+private:
 	float duration = 1.0f;
 	
 	// Loop the particle (if true the particle emitter will never stop)
@@ -50,7 +54,11 @@ public:
 
 	float gravity = 0.0f;
 
+	//Posibility space where particle is created
 	AABB creation = AABB(float3(-0.5f, -0.5f, -0.5f), float3(0.5f, 0.5f, 0.5f));
+
+	//open window for change particle color
+	bool changingColor = false;
 
 	StartValues startValues;
 	//---------------------------------------
