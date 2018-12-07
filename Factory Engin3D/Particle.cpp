@@ -28,12 +28,20 @@ Particle::~Particle()
 bool Particle::Update(float dt)
 {
 	bool ret = true;
-	transform.position += speed * dt;
-
 	life += dt;
 	if (life >= lifeTime)
 	{
 		ret = false;
+	}
+	else
+	{
+		transform.position += speed * dt;
+
+		float3 zAxis = -App->renderer3D->currentCam->frustum.front;
+		float3 yAxis = App->renderer3D->currentCam->frustum.up;
+		float3 xAxis = yAxis.Cross(zAxis).Normalized();
+
+		transform.rotation.Set(float3x3(xAxis, yAxis, zAxis));
 	}
 	return ret;
 }
