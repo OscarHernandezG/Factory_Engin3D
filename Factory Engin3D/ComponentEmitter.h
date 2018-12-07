@@ -8,17 +8,42 @@
 
 #include <list>
 
+struct ColorTime
+{
+	float4 color = float4::one;
+	float position = 0.0f;
+	std::string name = " ";
+	//open window for change particle color
+	bool changingColor = false;
+
+	bool operator<(const ColorTime &color) const
+	{
+		return position < color.position;
+	}
+};
+
 struct StartValues
 {
 	// Start values
 	float life = 5.0f;
 	float speed = 3.0f;
+	float acceleration = 3.0f;
 	float size = 1.0f;
 	float rotation = 0.0f;
-	float4 color = float4::one;
+	float angularAcceleration = 0.0f;
+	std::list<ColorTime> color;
+	bool timeColor = false;
+
 	AABB colision = AABB(float3(-0.5f, -0.5f, -0.5f), float3(0.5f, 0.5f, 0.5f));
 
 	float3 particleDirection = float3::unitY;
+
+	StartValues()
+	{
+		ColorTime colorTime;
+		colorTime.name = "Start Color";
+		color.push_back(colorTime);
+	}
 };
 
 enum ShapeType {
@@ -37,6 +62,7 @@ public:
 	float3 RandPos();
 	void Inspector();
 
+	void EditColor(ColorTime & colorTime);
 
 	ImVec4 EqualsFloat4(const float4 float4D);
 
@@ -68,8 +94,8 @@ private:
 
 	ShapeType shapeType = ShapeType_BOX;
 
-	//open window for change particle color
-	bool changingColor = false;
+	float nextPos = 0.0f;
+	float4 nextColor = float4::zero;
 
 	StartValues startValues;
 	//---------------------------------------

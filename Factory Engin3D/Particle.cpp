@@ -8,11 +8,13 @@ Particle::Particle(float3 pos, StartValues data, ResourceTexture** texture)
 	plane = new ParticlePlane();
 
 	lifeTime = data.life;
-	speed = data.particleDirection * data.speed;
 
-	rotation = data.rotation;
+	speed = data.speed;
+	acceleration = data.acceleration;
+	direction = data.particleDirection;
 
-	rotation *= DEGTORAD;
+	rotation = data.rotation * DEGTORAD;
+	angularAcceleration = data.angularAcceleration * DEGTORAD;
 
 	transform.position = pos;
 	transform.rotation = Quat::FromEulerXYZ(0, 0, 0); //Start rotation
@@ -20,6 +22,7 @@ Particle::Particle(float3 pos, StartValues data, ResourceTexture** texture)
 
 	color = data.color;
 
+	oneColor = data.timeColor;
 	this->texture = texture;	
 }
 
@@ -38,20 +41,34 @@ bool Particle::Update(float dt)
 	}
 	else
 	{
-		transform.position += speed * dt;
+		speed += acceleration * dt;
+		transform.position += direction * (speed * dt);
 
-		float3 zAxis = -App->renderer3D->currentCam->frustum.front;
-		float3 yAxis = App->renderer3D->currentCam->frustum.up;
-		float3 xAxis = yAxis.Cross(zAxis).Normalized();
-		
-		transform.rotation.Set(float3x3(xAxis, yAxis, zAxis));
+		LookAtCamera();
 
+		if (color.size() == 1 || oneColor)
+			currentColor = color.front().color;
+		else
+		{
+			//LERP Color
+		}
+
+		rotation += angularAcceleration *dt;
 		angle += rotation * dt;
 		transform.rotation = transform.rotation.Mul(Quat::RotateZ(angle));
 	}
 
 
 	return ret;
+}
+
+void Particle::LookAtCamera()
+{
+	float3 zAxis = -App->renderer3D->currentCam->frustum.front;
+	float3 yAxis = App->renderer3D->currentCam->frustum.up;
+	float3 xAxis = yAxis.Cross(zAxis).Normalized();
+
+	transform.rotation.Set(float3x3(xAxis, yAxis, zAxis));
 }
 
 float Particle::GetCamDistance() const
@@ -62,7 +79,7 @@ float Particle::GetCamDistance() const
 void Particle::Draw() const
 {
 	if (texture)
-		plane->Render(transform.GetMatrix(), *texture, color);
+		plane->Render(transform.GetMatrix(), *texture, currentColor);
 	
 }
 

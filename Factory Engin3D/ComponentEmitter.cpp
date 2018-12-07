@@ -86,7 +86,11 @@ void ComponentEmitter::Inspector()
 	{
 		ImGui::PushItemWidth(150.0f);
 		ImGui::DragFloat("Speed", &startValues.speed, 0.25f, 0.25f, 20.0f, "%.2f");
-		ImGui::DragFloat("Rotation", &startValues.rotation, 0.25f, 0.0f, 720.0f, "%.2f");
+		ImGui::DragFloat("Acceleration", &startValues.acceleration, 0.25f, -5.0f, 5.0f, "%.2f");
+
+		ImGui::DragFloat("Rotation", &startValues.rotation, 0.25f, -720.0f, 720.0f, "%.2f");
+		ImGui::DragFloat("Angular acceleration", &startValues.angularAcceleration, 0.25f, -45.0f, 45.0f, "%.2f");
+
 		ImGui::DragInt("Emition", &rateOverTime, 1.0f, 1, 50, "%.2f");
 		ImGui::DragFloat("Lifetime", &startValues.life, 0.5f, 1.0f, 20.0f, "%.2f");
 		ImGui::DragFloat("Size", &startValues.size, 0.1f, 0.1f, 5.0f, "%.2f");
@@ -147,14 +151,34 @@ void ComponentEmitter::Inspector()
 		ImGui::Separator();
 		ImGui::PopItemWidth();
 		ImGui::Text("Particle Color");
+		for (std::list<ColorTime>::iterator iter = startValues.color.begin(); iter != startValues.color.end(); ++iter)
+		{
+			//TODO: they must be able to change color 
+			EditColor(*iter);
+			if (!startValues.timeColor)
+				break;
+		}
 
-		ImVec4 color = EqualsFloat4(startValues.color);
-		if (ImGui::ColorButton("Start color", color, ImGuiColorEditFlags_None, ImVec2(100, 20)))
-			changingColor = !changingColor;
+		ImGui::Separator();
+		ImGui::Checkbox("Color time", &startValues.timeColor);
+		if (startValues.timeColor)
+		{
 
-		if (changingColor)
-			ImGui::ColorEdit4("Start Color", &startValues.color.x, ImGuiColorEditFlags_AlphaBar);
+			ImGui::DragFloat("Position", &nextPos, 1.0f, 1.0f, 100.0f, "%.2f");
+			ImGui::ColorPicker4("", &nextColor.x, ImGuiColorEditFlags_AlphaBar);
+			if (ImGui::Button("Add Color", ImVec2(125, 25)))
+			{
+				ColorTime colorTime;
+				colorTime.color = nextColor;
+				colorTime.position = nextPos / 100;
+				colorTime.name = std::to_string((int)nextPos) + "%";
+				startValues.color.push_back(colorTime);
+				startValues.color.sort();
+			}
+			ImGui::Separator();
+		}
 
+		//Particle Texture
 		if (texture)
 		{
 			std::string name = texture->file;
@@ -214,6 +238,21 @@ void ComponentEmitter::Inspector()
 		if (ImGui::Button("Remove Particles", ImVec2(150, 25)))
 			toDelete = true;
 	}
+}
+
+void ComponentEmitter::EditColor(ColorTime &colorTime)
+{
+	ImVec4 color = EqualsFloat4(colorTime.color);
+	if (ImGui::ColorButton(colorTime.name.data(), color, ImGuiColorEditFlags_None, ImVec2(100, 20)))
+		colorTime.changingColor = !colorTime.changingColor;
+
+	if (!colorTime.changingColor)
+	{
+		ImGui::SameLine();
+		ImGui::TextUnformatted(colorTime.name.data());
+	}
+	else
+		ImGui::ColorEdit4(colorTime.name.data(), &colorTime.color.x, ImGuiColorEditFlags_AlphaBar);
 }
 
 ImVec4 ComponentEmitter::EqualsFloat4(const float4 float4D)

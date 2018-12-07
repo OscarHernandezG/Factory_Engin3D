@@ -6,6 +6,7 @@
 #include "ParticlePlane.h"
 
 struct StartValues;
+struct ColorTime;
 struct ParticleTrans
 {
 	float3 position = float3::zero;
@@ -24,15 +25,26 @@ public:
 
 	bool Update(float dt);
 
+	void LookAtCamera();
+
 	float GetCamDistance() const;
 	void Draw() const;
 public:
 	float lifeTime = 0.0f;
 	float life = 0.0f;
-	float3 speed = float3::zero; 
-	float rotationSpeed = 0.0f; // Todo
 
-	float4 color = float4::one;
+	float speed = 0.0f;
+	float acceleration = 0.0f;
+	float3 direction = float3::zero; 
+
+
+	float rotationSpeed = 0.0f;
+	float angularAcceleration = 0.0f;
+
+
+	std::list<ColorTime> color;
+	bool oneColor = false;
+	float4 currentColor = float4::one;
 
 	ParticleTrans transform;
 
