@@ -77,14 +77,49 @@ void ComponentEmitter::Inspector()
 	if (ImGui::CollapsingHeader("Particle System", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::PushItemWidth(150.0f);
-		ImGui::DragFloat("Speed", &startValues.speed, 0.25f, 0.25f, 20.0f);
-		ImGui::DragInt("Emition", &rateOverTime, 1.0f, 1, 50);
-		ImGui::DragFloat("Lifetime", &startValues.life, 0.5f, 1.0f, 20.0f);
-		ImGui::DragFloat("Size", &startValues.size, 0.1f, 0.1f, 5.0f);
+		ImGui::DragFloat("Speed", &startValues.speed, 0.25f, 0.25f, 20.0f, "%.2f");
+		ImGui::DragInt("Emition", &rateOverTime, 1.0f, 1, 50, "%.2f");
+		ImGui::DragFloat("Lifetime", &startValues.life, 0.5f, 1.0f, 20.0f, "%.2f");
+		ImGui::DragFloat("Size", &startValues.size, 0.1f, 0.1f, 5.0f, "%.2f");
 
-		ImGui::DragFloat("Duration", &duration, 0.5f, 0.5f, 20.0f);
+		ImGui::Separator();
 		if (ImGui::Checkbox("Loop", &loop))
 			loopTimer.Start();
+		ImGui::DragFloat("Duration", &duration, 0.5f, 0.5f, 20.0f, "%.2f");
+
+		ImGui::Separator();
+		if (ImGui::BeginMenu("Change Shape"))
+		{
+			if (ImGui::MenuItem("Box"))
+				shapeType = ShapeType_BOX;
+			else if (ImGui::MenuItem("Sphere"))
+				shapeType = ShapeType_SPHERE;
+			ImGui::End();
+		}
+
+
+		float3 pos;
+		switch (shapeType)
+		{
+		case ShapeType_BOX:
+			ImGui::Text("Box");
+			pos = creation.Size();
+			ImGui::DragFloat3("Box Size", &pos.x, 0.1f, 0.1f, 20.0f, "%.2f");
+
+			creation.SetFromCenterAndSize(creation.CenterPoint(), pos);
+
+			break;
+		case ShapeType_SPHERE:
+			ImGui::Text("Sphere");
+			pos = creation.Size();
+			ImGui::DragFloat3("Box Size", &pos.x, 0.1f, 0.1f, 20.0f, "%.2f");
+
+			creation.SetFromCenterAndSize(creation.CenterPoint(), pos);
+
+			break;
+		default:
+			break;
+		}
 
 		ImGui::Separator();
 		ImGui::PopItemWidth();

@@ -21,6 +21,10 @@ struct StartValues
 	float3 particleDirection = float3::unitY;
 };
 
+enum ShapeType {
+	ShapeType_BOX,
+	ShapeType_SPHERE
+};
 class ComponentEmitter : Component
 {
 public:
@@ -58,6 +62,7 @@ private:
 
 	//Posibility space where particle is created
 	AABB creation = AABB(float3(-0.5f, -0.5f, -0.5f), float3(0.5f, 0.5f, 0.5f));
+	ShapeType shapeType = ShapeType_BOX;
 
 	//open window for change particle color
 	bool changingColor = false;
