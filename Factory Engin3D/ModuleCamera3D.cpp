@@ -46,11 +46,7 @@ update_status ModuleCamera3D::Update()
 
 	float speed = cameraSpeed * App->time->Getdt();
 
-	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_DOWN)
-	{
-		isCameraFocused = true;
-		cameraMovementButton = MouseButton_Left;
-	}
+	CheckCameraFocused();
 
 	if (!App->gui->IsAnyWindowHovered())
 	{
@@ -59,33 +55,10 @@ update_status ModuleCamera3D::Update()
 
 		if (App->input->GetMouseButton(SDL_BUTTON_RIGHT))
 		{
-			float3 forward = cameraComponent->frustum.front * speed;
-			float3 right = cameraComponent->frustum.WorldRight() * speed;
-			float3 movement = float3::zero;
-
-			if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT)
-				movement += float3::unitY * speed;
-
-			if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT)
-				movement -= float3::unitY * speed;
-
-			if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
-				movement += forward;
-
-			if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
-				movement -= forward;
-
-			if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
-				movement -= right;
-
-			if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
-				movement += right;
-
-			cameraComponent->frustum.Translate(movement);
+			MoveCamera(speed);
 		}
 
-
-
+		// Focus gameObject
 		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
 			Look(App->geometry->currentGameObject->GetBBPos(), App->geometry->GetCurrentMeshPivot(), false);
 
@@ -99,18 +72,9 @@ update_status ModuleCamera3D::Update()
 			cameraComponent->frustum.pos += cameraComponent->frustum.front * wheel * cameraSpeed;
 		}
 
-
 		if (isCameraFocused)
 		{
-			//LookAt(App->geometry->GetCurrentMeshPivot());
-
-			if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_UP)
-			{
-				isCameraFocused = false;
-				cameraMovementButton = MouseButton_Right;
-			}
-
-			else if (App->input->GetMouseButton(MouseButton_Right) == KEY_REPEAT)
+			if (App->input->GetMouseButton(MouseButton_Right) == KEY_REPEAT)
 			{
 				float motion = App->input->GetMouseXMotion() + App->input->GetMouseYMotion();
 				if (motion != 0)
@@ -121,8 +85,6 @@ update_status ModuleCamera3D::Update()
 		}
 
 		//Mouse motion ----------------
-
-	   //if(App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT || App->input->GetKey(SDL_SCANCODE_RALT) == KEY_REPEAT)
 		if (App->input->GetMouseButton(cameraMovementButton) == KEY_REPEAT)
 		{
 			float sensitivity = 0.01f;
@@ -140,6 +102,48 @@ update_status ModuleCamera3D::Update()
 		}
 	}
 	return UPDATE_CONTINUE;
+}
+
+void ModuleCamera3D::MoveCamera(float speed)
+{
+	float3 forward = cameraComponent->frustum.front * speed;
+	float3 right = cameraComponent->frustum.WorldRight() * speed;
+	float3 movement = float3::zero;
+
+	if (App->input->GetKey(SDL_SCANCODE_E) == KEY_REPEAT)
+		movement += float3::unitY * speed;
+
+	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_REPEAT)
+		movement -= float3::unitY * speed;
+
+	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
+		movement += forward;
+
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
+		movement -= forward;
+
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+		movement -= right;
+
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
+		movement += right;
+
+	cameraComponent->frustum.Translate(movement);
+}
+
+void ModuleCamera3D::CheckCameraFocused()
+{
+	if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_DOWN)
+	{
+		isCameraFocused = true;
+		cameraMovementButton = MouseButton_Left;
+	}
+
+	else if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_UP)
+	{
+		isCameraFocused = false;
+		cameraMovementButton = MouseButton_Right;
+	}
 }
 
 void ModuleCamera3D::OrbitArroundReference(float dx, float dy, float3 reference)

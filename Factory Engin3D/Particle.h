@@ -32,8 +32,15 @@ public:
 private:
 	float lifeTime = 0.0f;
 	float life = 0.0f;
-	float3 speed = float3::zero; 
-	float rotationSpeed = 0.0f; // Todo
+
+	float speed = 0.0f;
+	float acceleration = 0.0f;
+	float3 direction = float3::zero; 
+
+
+	float rotationSpeed = 0.0f;
+	float angularAcceleration = 0.0f;
+
 
 	std::vector<ColorTime> color;
 	int index = 0;

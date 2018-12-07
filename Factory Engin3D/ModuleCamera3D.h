@@ -24,6 +24,8 @@ public:
 
 	bool Start();
 	update_status Update();
+	void MoveCamera(float speed);
+	void CheckCameraFocused();
 	void OrbitArroundReference(float dx, float dy, float3 reference);
 	bool CanMove(float3 originalPosition, float3 newPosition, float3 reference);
 	void FreeLook(float dx, float dy);

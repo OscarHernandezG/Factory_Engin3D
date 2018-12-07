@@ -8,11 +8,13 @@ Particle::Particle(float3 pos, StartValues data, ResourceTexture** texture)
 	plane = new ParticlePlane();
 
 	lifeTime = data.life;
-	speed = data.particleDirection * data.speed;
 
-	rotation = data.rotation;
+	speed = data.speed;
+	acceleration = data.acceleration;
+	direction = data.particleDirection;
 
-	rotation *= DEGTORAD;
+	rotation = data.rotation * DEGTORAD;
+	angularAcceleration = data.angularAcceleration * DEGTORAD;
 
 	transform.position = pos;
 	transform.rotation = Quat::FromEulerXYZ(0, 0, 0); //Start rotation
@@ -40,7 +42,8 @@ bool Particle::Update(float dt)
 	}
 	else
 	{
-		transform.position += speed * dt;
+		speed += acceleration * dt;
+		transform.position += direction * (speed * dt);
 
 		LookAtCamera();
 
@@ -65,6 +68,7 @@ bool Particle::Update(float dt)
 		else
 			currentColor = color[index].color;
 
+		rotation += angularAcceleration *dt;
 		angle += rotation * dt;
 		transform.rotation = transform.rotation.Mul(Quat::RotateZ(angle));
 	}

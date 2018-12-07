@@ -45,22 +45,40 @@ void Texture::Inspector()
 
 			ImGui::Image((void*)(intptr_t)texture->GetID(), ImVec2(256, 256));
 
-			if (ImGui::Button("Remove", ImVec2(50, 25)))
-			{
-				App->resources->Remove(texture);
-				texture = nullptr;
-			}
-
 			ImGui::Checkbox("Transparency", &haveTransparency);
 			if (haveTransparency)
 			{
 				ImGui::SliderFloat(" ", &transparency, 0.0f, 1.0f);
 			}
+
+			if (ImGui::BeginMenu("Change Texture"))
+			{
+				std::vector<Resource*> resource;
+				App->resources->GetResources(resource, ResourceType::texture);
+
+				for (std::vector<Resource*>::iterator iterator = resource.begin(); iterator != resource.end(); ++iterator)
+				{
+					if (ImGui::MenuItem((*iterator)->name.data()))
+					{
+						App->resources->Remove(texture);
+						texture = nullptr;
+
+						texture = ((ResourceTexture*)(*iterator));
+						texture->usage++;
+					}
+				}
+				ImGui::End();
+			}
+
+			if (ImGui::Button("Remove", ImVec2(50, 25)))
+			{
+				App->resources->Remove(texture);
+				texture = nullptr;
+			}
 		}
 		else
 		{
 			ImGui::Text("No texture loaded");
-			ImGui::Separator();
 			if (ImGui::BeginMenu("Add new Texture"))
 			{
 				std::vector<Resource*> resource;

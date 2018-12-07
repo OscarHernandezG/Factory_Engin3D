@@ -27,8 +27,10 @@ struct StartValues
 	// Start values
 	float life = 5.0f;
 	float speed = 3.0f;
+	float acceleration = 3.0f;
 	float size = 1.0f;
 	float rotation = 0.0f;
+	float angularAcceleration = 0.0f;
 	std::list<ColorTime> color;
 	bool timeColor = false;
 
