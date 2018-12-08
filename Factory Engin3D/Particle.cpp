@@ -55,7 +55,7 @@ bool Particle::Update(float dt)
 			float lifeNormalized = life / lifeTime;
 			if (color[index + 1].position > lifeNormalized)
 			{
-				float timeNormalized = lifeNormalized / color[index + 1].position;
+				float timeNormalized = (lifeNormalized - color[index].position) / (color[index + 1].position - color[index].position);
 				if (color[index + 1].position == 0)
 					timeNormalized = 0;
 
