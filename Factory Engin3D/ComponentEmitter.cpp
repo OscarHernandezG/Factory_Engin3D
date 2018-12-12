@@ -34,10 +34,10 @@ void ComponentEmitter::Update()
 			}
 			else
 				break;
-		LOG("Particles to create  %i", particlesToCreate);
+	//	LOG("Particles to create  %i", particlesToCreate);
 		}
 
-		LOG("Particles %i", App->particle->particleList.size());
+//		LOG("Particles %i", App->particle->particleList.size());
 		timer.Start();
 	}
 
@@ -163,7 +163,8 @@ void ComponentEmitter::Inspector()
 		ImGui::Separator();
 		ImGui::PopItemWidth();
 		ImGui::Text("Particle Color");
-
+		ImGui::SameLine(); 
+		ImGui::ShowHelpMarker("Click color square for change it");
 		std::vector<ColorTime> deleteColor;
 		std::list<ColorTime>::iterator iter = startValues.color.begin();
 		while (iter != startValues.color.end())
@@ -188,13 +189,13 @@ void ComponentEmitter::Inspector()
 		if (startValues.timeColor)
 		{
 
-			ImGui::DragFloat("Position", &nextPos, 1.0f, 1.0f, 100.0f, "%.2f");
+			ImGui::DragInt("Position", &nextPos, 1.0f, 1, 100);
 			ImGui::ColorPicker4("", &nextColor.x, ImGuiColorEditFlags_AlphaBar);
 			if (ImGui::Button("Add Color", ImVec2(125, 25)))
 			{
 				ColorTime colorTime;
 				colorTime.color = nextColor;
-				colorTime.position = nextPos / 100;
+				colorTime.position = (float)nextPos / 100;
 				colorTime.name = std::to_string((int)nextPos) + "%";
 				startValues.color.push_back(colorTime);
 				startValues.color.sort();
@@ -278,7 +279,7 @@ bool ComponentEmitter::EditColor(ColorTime &colorTime, bool first)
 		if (!first)
 		{
 			ImGui::SameLine();
-			if (ImGui::Button("Remove Color", ImVec2(75, 25)))
+			if (ImGui::Button("Remove Color", ImVec2(100, 25)))
 				ret = false;
 		}
 		else if (!startValues.timeColor)

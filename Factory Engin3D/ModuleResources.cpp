@@ -204,7 +204,7 @@ bool ModuleResources::RealLoadMesh(char* buffer, ResourceMesh*& mesh, const char
 	LoadTextureUVGPU(cursor, bytes, bufferImporter);
 
 	// Color
-	LoadColorGPU(cursor, bytes, bufferImporter);
+	//LoadColorGPU(cursor, bytes, bufferImporter);
 
 
 	// Clear buffers

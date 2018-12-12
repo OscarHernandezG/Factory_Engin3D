@@ -58,7 +58,7 @@ bool Particle::Update(float dt)
 				float timeNormalized = (lifeNormalized - color[index].position) / (color[index + 1].position - color[index].position);
 				if (color[index + 1].position == 0)
 					timeNormalized = 0;
-
+				LOG("%i", index);
 				currentColor = color[index].color.Lerp(color[index + 1].color,timeNormalized);
 				//LERP Color
 			}

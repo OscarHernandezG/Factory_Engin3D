@@ -94,7 +94,7 @@ private:
 
 	ShapeType shapeType = ShapeType_BOX;
 
-	float nextPos = 0.0f;
+	int nextPos = 100;
 	float4 nextColor = float4::zero;
 
 	StartValues startValues;
