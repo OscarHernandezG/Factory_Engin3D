@@ -6,6 +6,8 @@
 
 #include <vector>
 
+#include "ModuleParticles.h"
+
 ComponentEmitter::ComponentEmitter(GameObject* gameObject) : Component(gameObject, ComponentType_EMITTER)
 {
 	timer.Start();
@@ -24,13 +26,11 @@ void ComponentEmitter::Update()
 		int particlesToCreate = (time / (1.0f / rateOverTime));
 		for (int i = 0; i < particlesToCreate; ++i)
 		{
-			if (App->particle->particleList.size() < MAX_PARTICLES)
+			int particleId = 0;
+			if (App->particle->GetParticle(particleId))
 			{
-		float3 pos = RandPos();
-		Particle* newParticle = new Particle(pos, startValues, &texture);
-
-		particles.push_back(newParticle);
-		App->particle->particleList.push_back(newParticle);
+				float3 pos = RandPos();
+				App->particle->allParticles[particleId].SetActive(pos, startValues, &texture);
 			}
 			else
 				break;
@@ -41,20 +41,20 @@ void ComponentEmitter::Update()
 		timer.Start();
 	}
 
-	std::vector<Particle*> particleDelete;
-	for (std::list<Particle*>::iterator iterator = particles.begin(); iterator != particles.end(); ++iterator)
-	{
-		if (!(*iterator)->Update(App->time->GetdtGame()) || toDelete)
-			particleDelete.push_back(*iterator);
-	}
+	//std::vector<Particle*> particleDelete;
+	//for (std::list<Particle*>::iterator iterator = particles.begin(); iterator != particles.end(); ++iterator)
+	//{
+	//	if (!(*iterator)->Update(App->time->GetdtGame()) || toDelete)
+	//		particleDelete.push_back(*iterator);
+	//}
 
-	for (std::vector<Particle*>::iterator iterator = particleDelete.begin(); iterator != particleDelete.end(); ++iterator)
-	{
-		particles.remove(*iterator);
-		App->particle->particleList.remove(*iterator);
+	//for (std::vector<Particle*>::iterator iterator = particleDelete.begin(); iterator != particleDelete.end(); ++iterator)
+	//{
+	//	particles.remove(*iterator);
+	//	App->particle->particleList.remove(*iterator);
 
-		delete *iterator;
-	}
+	//	delete *iterator;
+	//}
 
 }
 

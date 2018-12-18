@@ -2,6 +2,7 @@
 #include "Particle.h"
 #include "Geometry.h"
 #include "ComponentEmitter.h"
+#include "ModuleParticles.h"
 
 Particle::Particle(float3 pos, StartValues data, ResourceTexture** texture)
 {
@@ -27,20 +28,48 @@ Particle::Particle(float3 pos, StartValues data, ResourceTexture** texture)
 	this->texture = texture;	
 }
 
+Particle::Particle()
+{
+}
+
 Particle::~Particle()
 {
 	//delete plane;
+}
+
+void Particle::SetActive(float3 pos, StartValues data, ResourceTexture ** texture)
+{
+	plane = App->particle->plane;
+
+	lifeTime = data.life;
+
+	life = 0.0f;
+
+	speed = data.speed;
+	acceleration = data.acceleration;
+	direction = data.particleDirection;
+
+	rotation = data.rotation * DEGTORAD;
+	angularAcceleration = data.angularAcceleration * DEGTORAD;
+
+	transform.position = pos;
+	transform.rotation = Quat::FromEulerXYZ(0, 0, 0); //Start rotation
+	transform.scale = float3::one * data.size;
+
+	for (std::list<ColorTime>::iterator iter = data.color.begin(); iter != data.color.end(); ++iter)
+		color.push_back(*iter);
+
+	multicolor = data.timeColor;
+	this->texture = texture;
+
+	active = true;
 }
 
 bool Particle::Update(float dt)
 {
 	bool ret = true;
 	life += dt;
-	if (life >= lifeTime)
-	{
-		ret = false;
-	}
-	else
+	if (life < lifeTime)
 	{
 		speed += acceleration * dt;
 		transform.position += direction * (speed * dt);
@@ -59,7 +88,7 @@ bool Particle::Update(float dt)
 				if (color[index + 1].position == 0)
 					timeNormalized = 0;
 				LOG("%i", index);
-				currentColor = color[index].color.Lerp(color[index + 1].color,timeNormalized);
+				currentColor = color[index].color.Lerp(color[index + 1].color, timeNormalized);
 				//LERP Color
 			}
 			else
@@ -68,9 +97,14 @@ bool Particle::Update(float dt)
 		else
 			currentColor = color[index].color;
 
-		rotation += angularAcceleration *dt;
+		rotation += angularAcceleration * dt;
 		angle += rotation * dt;
 		transform.rotation = transform.rotation.Mul(Quat::RotateZ(angle));
+	}
+	else
+	{
+		active = false;
+		ret = false;
 	}
 
 
@@ -88,7 +122,12 @@ void Particle::LookAtCamera()
 
 float Particle::GetCamDistance() const
 {
-	return App->renderer3D->currentCam->GetPos().Distance(transform.position);
+	return App->renderer3D->currentCam->GetPos().DistanceSq(transform.position);
+}
+
+void Particle::SetCamDistance()
+{
+	 camDistance = App->renderer3D->currentCam->GetPos().DistanceSq(transform.position);
 }
 
 void Particle::Draw() const

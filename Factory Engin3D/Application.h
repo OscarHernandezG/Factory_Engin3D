@@ -17,7 +17,6 @@
 #include "ModulePicking.h"
 #include "ModuleTime.h"
 #include "ModuleResources.h"
-#include "ModuleParticles.h"
 
 #include "Event.h"
 

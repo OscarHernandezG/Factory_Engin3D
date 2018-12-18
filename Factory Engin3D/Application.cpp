@@ -3,6 +3,8 @@
 #include "pcg-c-basic-0.9/pcg_basic.h"
 #include <time.h>
 
+#include "ModuleParticles.h"
+
 
 using namespace std;
 Application::Application()

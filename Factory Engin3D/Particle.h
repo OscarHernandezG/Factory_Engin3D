@@ -21,14 +21,27 @@ class Particle
 {
 public:
 	Particle(float3 pos, StartValues data, ResourceTexture** texture);
+	Particle();
 	~Particle();
+
+	void SetActive(float3 pos, StartValues data, ResourceTexture** texture);
 
 	bool Update(float dt);
 
 	void LookAtCamera();
 
 	float GetCamDistance() const;
+	void SetCamDistance();
 	void Draw() const;
+
+	bool operator<(const Particle& particle2) const
+	{
+		return camDistance > particle2.camDistance;
+	}
+
+public:
+	bool active = false;
+
 private:
 	float lifeTime = 0.0f;
 	float life = 0.0f;
@@ -55,14 +68,16 @@ private:
 	float rotation = 0.0f;
 	float angle = 0.0f;
 
+	float camDistance = 0.0f;
+
 
 };
 
 struct particleCompare
 {
-	bool operator()(const Particle* particle1, const Particle* particle2) const
+	bool operator()(const Particle& particle1, const Particle& particle2) const
 	{
-		return particle1->GetCamDistance() > particle2->GetCamDistance();
+		return particle1.GetCamDistance() > particle2.GetCamDistance();
 	}
 };
 #endif // !__Particle_H__

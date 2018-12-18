@@ -6,7 +6,10 @@
 
 #include "Timer.h"
 
+#include "Particle.h"
+
 #include <list>
+
 
 struct ColorTime
 {
@@ -21,6 +24,7 @@ struct ColorTime
 		return position < color.position;
 	}
 };
+
 
 struct StartValues
 {
