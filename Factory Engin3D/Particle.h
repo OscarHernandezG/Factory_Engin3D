@@ -24,6 +24,11 @@ public:
 	Particle();
 	~Particle();
 
+	bool operator<(const Particle& particle2) const
+	{
+		return camDistance > particle2.camDistance;
+	}
+
 	void SetActive(float3 pos, StartValues data, ResourceTexture** texture);
 
 	bool Update(float dt);
@@ -34,12 +39,9 @@ public:
 	void SetCamDistance();
 	void Draw() const;
 
-	bool operator<(const Particle& particle2) const
-	{
-		return camDistance > particle2.camDistance;
-	}
 
 public:
+	float camDistance = 0.0f;
 	bool active = false;
 
 private:
@@ -67,10 +69,6 @@ private:
 
 	float rotation = 0.0f;
 	float angle = 0.0f;
-
-	float camDistance = 0.0f;
-
-
 };
 
 struct particleCompare

@@ -24,8 +24,12 @@ update_status ModuleParticle::Update()
 		{
 			allParticles[i].Update(App->time->GetdtGame());
 			++count;
+			allParticles[i].SetCamDistance();
 		}
-		allParticles[i].SetCamDistance();
+		else
+		{
+			allParticles[i].camDistance = -1;
+		}
 	}
 		LOG("Active particles %i", count);
 	return UPDATE_CONTINUE;
@@ -49,8 +53,13 @@ void ModuleParticle::DrawParticles()
 
 	for (int i = 0; i < MAX_PARTICLES; ++i)
 	{
-		if (allParticles[i].active)
+		if (allParticles[i].camDistance > 0)
+		{
 			allParticles[i].Draw();
+			allParticles[i].SetCamDistance();
+		}
+		else
+			break;
 	}
 }
 
@@ -58,8 +67,7 @@ void ModuleParticle::SortParticles()
 {
 	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
 
-
-	std::sort(&allParticles[0], &allParticles[MAX_PARTICLES]);
+	std::sort(&allParticles[0], &allParticles[MAX_PARTICLES - 1]);
 }
 
 bool ModuleParticle::GetParticle(int& id)
