@@ -26,18 +26,15 @@ void ComponentEmitter::Update()
 		{
 			if (App->particle->particleList.size() < MAX_PARTICLES)
 			{
-		float3 pos = RandPos();
-		Particle* newParticle = new Particle(pos, startValues, &texture);
+				float3 pos = RandPos();
+				Particle* newParticle = new Particle(pos, startValues, &texture);
 
-		particles.push_back(newParticle);
-		App->particle->particleList.push_back(newParticle);
+				particles.push_back(newParticle);
+				App->particle->particleList.push_back(newParticle);
 			}
 			else
 				break;
-	//	LOG("Particles to create  %i", particlesToCreate);
 		}
-
-//		LOG("Particles %i", App->particle->particleList.size());
 		timer.Start();
 	}
 
@@ -169,7 +166,7 @@ void ComponentEmitter::Inspector()
 		std::list<ColorTime>::iterator iter = startValues.color.begin();
 		while (iter != startValues.color.end())
 		{
-			//TODO: they must be able to change color 
+			//TODO: they must be able to change position
 			if ((iter) == startValues.color.begin())
 			{//Cant delete 1st color
 				if (!EditColor(*iter))
@@ -200,7 +197,19 @@ void ComponentEmitter::Inspector()
 				startValues.color.push_back(colorTime);
 				startValues.color.sort();
 			}
-			ImGui::Separator();
+		}
+		ImGui::Separator();
+
+		ImGui::Checkbox("Burst", &burst);
+		if (burst)
+		{
+			ImGui::DragInt("Min particles", &minPart, 1.0f, 0, 100);
+			if (minPart > maxPart)
+				maxPart = minPart;
+			ImGui::DragInt("Max Particles", &maxPart, 1.0f, 0, 100);
+			if (maxPart < minPart)
+				minPart = maxPart;
+			ImGui::DragFloat("Repeat Time", &repeatTime, 0.5f, 0.0f, 0.0f, "%.1f");
 		}
 
 		//Particle Texture

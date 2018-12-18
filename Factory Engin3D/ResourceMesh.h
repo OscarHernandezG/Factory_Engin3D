@@ -35,7 +35,7 @@ public:
 	Buffer<float> texture;
 	Buffer<float> color;
 
-	AABB boundingBox;
+	AABB boundingBox = AABB(-float3::one / 2, float3::one / 2);
 
 	int id = -1;
 
