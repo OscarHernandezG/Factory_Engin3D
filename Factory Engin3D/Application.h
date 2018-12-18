@@ -17,13 +17,15 @@
 #include "ModulePicking.h"
 #include "ModuleTime.h"
 #include "ModuleResources.h"
-#include "ManagerParticle.h"
+#include "ModuleParticles.h"
 
 #include "Event.h"
 
 #include "MathGeoLib/MathGeoLib.h"
 
 #include "Brofiler\Brofiler.h"
+
+class ModuleParticle;
 
 
 class Application
@@ -41,8 +43,8 @@ public:
 	ModulePicking* picking;
 	ModuleTime* time;
 	ModuleResources* resources;
+	ModuleParticle* particle;
 
-	ManagerParticle* particle;//Is not a module. It haven't Updates
 private:
 	std::list<Module*> list_modules;
 

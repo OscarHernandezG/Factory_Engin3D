@@ -15,7 +15,7 @@
 #include "Assimp/include/postprocess.h"
 #include "Assimp/include/cfileio.h"
 
-#include "ManagerParticle.h"
+#include "ModuleParticles.h"
 
 #include <vector>
 

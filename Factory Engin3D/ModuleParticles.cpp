@@ -1,19 +1,18 @@
-#include "ManagerParticle.h"
+#include "ModuleParticles.h"
 #include <algorithm>
 
 #include "Brofiler/Brofiler.h"
 
-ManagerParticle::ManagerParticle()
+ModuleParticle::ModuleParticle(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
 }
 
-
-ManagerParticle::~ManagerParticle()
+ModuleParticle::~ModuleParticle()
 {
 	delete plane;
 }
 
-void ManagerParticle::Draw()
+void ModuleParticle::Draw()
 {
 	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
 
