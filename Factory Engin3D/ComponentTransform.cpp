@@ -12,6 +12,8 @@ Transform::Transform(TransformInfo* info) : Component(info->gameObject, Componen
 		position = info->position;
 		rotation = info->rotation;
 		scale = info->scale;
+		boundingBox.SetFromCenterAndSize(position, float3::one);
+		originalBoundingBox = boundingBox;
 		break;
 	default:
 		break;
