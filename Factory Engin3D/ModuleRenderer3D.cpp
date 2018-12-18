@@ -16,6 +16,7 @@
 #include "Assimp/include/cfileio.h"
 
 #include "ModuleParticles.h"
+#include "ComponentEmitter.h"
 
 #include <vector>
 
@@ -237,14 +238,17 @@ update_status ModuleRenderer3D::PostUpdate()
 
 	else if (currGO != nullptr)
 	{
-		//if()
-		static float3 corners[8];
-		if (currGO->transform)
+		ComponentEmitter* comp = (ComponentEmitter*)currGO->GetComponent(ComponentType_EMITTER);
+
+		if (currGO->HasComponent(ComponentType_GEOMETRY) || (comp != nullptr && comp->drawAABB))
 		{
-			currGO->transform->boundingBox.GetCornerPoints(corners);
-			DrawQuad(corners, Green);
+			static float3 corners[8];
+			if (currGO->transform)
+			{
+				currGO->transform->boundingBox.GetCornerPoints(corners);
+				DrawQuad(corners, Green);
+			}
 		}
-	
 
 		//Draw camera frustrum always when its selected
 		Camera* cam = App->geometry->GetPlayingCamera();

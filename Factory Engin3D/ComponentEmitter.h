@@ -74,6 +74,7 @@ public:
 	// Particle texture
 	ResourceTexture* texture = nullptr;
 
+	bool drawAABB = false;
 private:
 	// General info
 	//---------------------------------------
