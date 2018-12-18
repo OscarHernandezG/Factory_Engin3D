@@ -58,6 +58,7 @@ void ModuleGeometry::LoadDefaultScene()
 
 	cameraObject = App->gameObject->CreateGameObject(float3(0,3,-10), Quat::identity, float3::one, App->gameObject->rootGameObject, "Camera");
 	playingCamera = (Camera*)cameraObject->AddComponent(ComponentType_CAMERA, nullptr);
+	cameraObject->transform->UpdateBoundingBox();
 
 	plane = new GameObject(float3::zero, Quat::identity, float3::one, nullptr, "Ground");
 
@@ -413,9 +414,6 @@ GameObject* ModuleGeometry::LoadGameObjectsFromMeshNode(MeshNode node, GameObjec
 	{
 		LoadGameObjectsFromMeshNode(*childs, newGameObject);
 	}
-
-	if (node.id == -1)
-		newGameObject->SetABB(AABB(-float3::one / 2, float3::one / 2));//Empty AABB
 
 	return newGameObject;
 }

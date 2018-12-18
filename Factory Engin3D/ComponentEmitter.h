@@ -78,6 +78,7 @@ public:
 	// Particle texture
 	ResourceTexture* texture = nullptr;
 
+	bool drawAABB = false;
 private:
 	// General info
 	//---------------------------------------
@@ -90,6 +91,12 @@ private:
 	// Warm up the particle emiter (if true the particle emitter will be already started at play-time)
 	bool preWarm = true;
 
+	bool burst = false;
+	int minPart = 0;
+	int maxPart = 10;
+	float repeatTime = 1.0f;
+
+	float3 posDifAABB = float3::zero;
 	float gravity = 0.0f;
 
 	//Posibility space where particle is created

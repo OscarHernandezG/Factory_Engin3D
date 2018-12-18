@@ -16,6 +16,7 @@
 #include "Assimp/include/cfileio.h"
 
 #include "ModuleParticles.h"
+#include "ComponentEmitter.h"
 
 #include <vector>
 
@@ -231,22 +232,25 @@ update_status ModuleRenderer3D::PostUpdate()
 	// 2. Debug geometry
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glDisable(GL_CULL_FACE);
+	GameObject* currGO = App->geometry->currentGameObject;
 	if (debugQuad)
 		DebugDraw();
 
-	else if (App->geometry->currentGameObject != nullptr)
+	else if (currGO != nullptr)
 	{
-		static float3 corners[8];
-		if (App->geometry->currentGameObject->transform)
-		{
-			App->geometry->currentGameObject->transform->boundingBox.GetCornerPoints(corners);
-			DrawQuad(corners, Green);
-		}
-	}
+		ComponentEmitter* comp = (ComponentEmitter*)currGO->GetComponent(ComponentType_EMITTER);
 
-	//Draw camera frustrum always when its selected
-	if (App->geometry->currentGameObject != nullptr)
-	{
+		if (currGO->HasComponent(ComponentType_GEOMETRY) || (comp != nullptr && comp->drawAABB))
+		{
+			static float3 corners[8];
+			if (currGO->transform)
+			{
+				currGO->transform->boundingBox.GetCornerPoints(corners);
+				DrawQuad(corners, Green);
+			}
+		}
+
+		//Draw camera frustrum always when its selected
 		Camera* cam = App->geometry->GetPlayingCamera();
 		if ((Camera*)App->geometry->currentGameObject->GetComponent(ComponentType_CAMERA) == cam)
 		{

@@ -203,8 +203,7 @@ void ModuleSceneIntro::ReInsertOctree(GameObject* object)
 {
 	for (std::list<GameObject*>::iterator iterator = object->childs.begin(); iterator != object->childs.end(); ++iterator)
 	{
-		Geometry* currentGeometry = (Geometry*)(*iterator)->GetComponent(ComponentType_GEOMETRY);
-		if (currentGeometry)
+		if ((*iterator)->HasComponent(ComponentType_GEOMETRY) || (*iterator)->HasComponent(ComponentType_EMITTER))
 			ReInsertOctree(*iterator);
 	}
 	octree.Insert(object);
