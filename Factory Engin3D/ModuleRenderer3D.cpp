@@ -153,7 +153,7 @@ bool ModuleRenderer3D::Start()
 	stream.callback = myCallback;
 	aiAttachLogStream(&stream);
 
-	if (App->time->gameState == GameState_NONE)
+	if (App->time->gameState == GameState_NONE || App->gui->gameTimeWindow)
 		currentCam = App->camera->GetEditorCamera();
 	else if (App->time->gameState != GameState_TICK)
 		currentCam = App->geometry->GetPlayingCamera();
@@ -173,7 +173,7 @@ update_status ModuleRenderer3D::PreUpdate()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	//glLoadIdentity();
 
-	if (App->time->gameState == GameState_NONE)
+	if (App->time->gameState == GameState_NONE || App->gui->gameTimeWindow)
 		currentCam = App->camera->GetEditorCamera();
 	else if (App->time->gameState != GameState_TICK)
 	{

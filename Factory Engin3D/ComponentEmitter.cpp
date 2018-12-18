@@ -22,19 +22,23 @@ ComponentEmitter::~ComponentEmitter()
 void ComponentEmitter::Update()
 {
 	float time = timer.ReadSec();
-	if (time >  (1.0f / rateOverTime) && (loop || loopTimer.ReadSec() < duration) )
+	if (time >  (1.0f / rateOverTime) && (loop || loopTimer.ReadSec() < duration))
 	{
-		int particlesToCreate = (time / (1.0f / rateOverTime));
-		for (int i = 0; i < particlesToCreate; ++i)
+		if (App->time->gameState == GameState_PLAYING)
 		{
-			int particleId = 0;
-			if (App->particle->GetParticle(particleId))
+			int particlesToCreate = (time / (1.0f / rateOverTime));
+			for (int i = 0; i < particlesToCreate; ++i)
 			{
-				float3 pos = RandPos();
-				App->particle->allParticles[particleId].SetActive(pos, startValues, &texture);
+				int particleId = 0;
+				if (App->particle->GetParticle(particleId))
+				{
+					float3 pos = RandPos();
+					App->particle->allParticles[particleId].SetActive(pos, startValues, &texture);
+				}
+				else
+					break;
 			}
-			else
-				break;
+
 		}
 		timer.Start();
 	}

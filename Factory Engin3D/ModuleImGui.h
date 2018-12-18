@@ -93,6 +93,10 @@ public:
 	void CreateGameManager(float2 scale);
 	void ChangePlayState(bool show, GameState state);
 
+	//Panel Game Time Simulation
+	void CreateGameTime();
+
+
 	//Panel Resources
 	void CreateAssetsWindow(float2 scale);
 	void DrawAssets(AssetsHierarchy& assets);
@@ -111,6 +115,7 @@ public:
 	bool inspectorWindow = false;
 	bool hierarchyWindow = true;
 	bool assetsWindow = true;
+	bool gameTimeWindow = false;
 	bool exitOption = false;
 
 	bool saveScenePopUp = false;

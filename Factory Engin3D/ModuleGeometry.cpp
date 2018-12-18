@@ -81,6 +81,10 @@ update_status ModuleGeometry::PostUpdate()
 		ground->Render();
 	}
 
+	if(currentGameObject != nullptr)
+		if (currentGameObject->HasComponent(ComponentType_EMITTER) && !App->gui->gameTimeWindow)
+			App->gui->gameTimeWindow = true;
+
 	return UPDATE_CONTINUE;
 }
 

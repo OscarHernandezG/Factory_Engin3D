@@ -3,7 +3,7 @@
 
 void ModuleImGui::CreateGameManager(float2 scale)
 {
-	if (ImGui::Begin("", &canScroll, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize))
+	if (ImGui::Begin("PlayingButtons", &canScroll, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize))
 	{
 		SetWindowDim(playPos, playSize, scale, true);
 
@@ -32,7 +32,7 @@ void ModuleImGui::CreateGameManager(float2 scale)
 				App->time->gameState = GameState_TICK;
 		}
 
-		if (App->time->gameState != GameState_NONE)
+		if (App->time->gameState != GameState_NONE && !gameTimeWindow)
 		{
 			float scale = App->time->GetGameScale();
 			ImGui::SameLine();
@@ -56,6 +56,7 @@ void ModuleImGui::ChangePlayState(bool show, GameState state)
 	assetsWindow = show;
 	hierarchyWindow = show;
 	App->time->gameState = state;
+	gameTimeWindow = false;
 
 	std::string direction = "PlayingScene";
 	if (show)

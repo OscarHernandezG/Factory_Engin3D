@@ -42,13 +42,15 @@ update_status ModuleTime::PreUpdate()
 	dtReal = (float)dtTimer.Read() / 1000.0f;
 
 	//Calculate dtGame
-	dtGame = (float)dtTimer.Read() / 1000.0f;
-	if (dtGameScale != 1)
+	if (gameState == GameState_PLAYING || gameState == GameState_TICK)
 	{
-		dtGame *= dtGameScale;
+		dtGame = (float)dtTimer.Read() / 1000.0f;
+		if (dtGameScale != 1)
+		{
+			dtGame *= dtGameScale;
+		}
 	}
-	dtTimer.Start();
-
+		dtTimer.Start();
 	//frames since start
 	frameCount++;
 
@@ -60,9 +62,11 @@ update_status ModuleTime::PreUpdate()
 		gameTimer += dtGame;
 		break;
 	case GameState_PAUSE:
+		dtGame = 0;
 		break;
 	case GameState_STOP:
 		gameTimer = 0.0f;
+		dtGame = 0;
 		gameState = GameState_NONE;
 		break;
 	case GameState_TICK:
@@ -141,7 +145,6 @@ float ModuleTime::GetGameTimer() const
 {
 	return gameTimer;
 }
-
 
 update_status ModuleTime::Save(JSON_Object* object)
 {

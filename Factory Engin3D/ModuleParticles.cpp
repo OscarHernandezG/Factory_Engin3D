@@ -22,7 +22,7 @@ update_status ModuleParticle::Update()
 	{
 		if (allParticles[i].active)
 		{
-			allParticles[i].Update(App->time->Getdt());
+			allParticles[i].Update(App->time->GetdtGame());
 			++count;
 		}
 		allParticles[i].SetCamDistance();

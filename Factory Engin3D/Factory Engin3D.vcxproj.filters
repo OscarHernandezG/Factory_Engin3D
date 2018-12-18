@@ -674,5 +674,8 @@
     <ClCompile Include="ModuleParticles.cpp">
       <Filter>Sources\Modules\Particle</Filter>
     </ClCompile>
+    <ClCompile Include="PanelGameTime.cpp">
+      <Filter>Sources\Modules\ImGui</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
