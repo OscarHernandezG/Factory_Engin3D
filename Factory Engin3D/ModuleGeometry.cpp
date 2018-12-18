@@ -413,6 +413,10 @@ GameObject* ModuleGeometry::LoadGameObjectsFromMeshNode(MeshNode node, GameObjec
 	{
 		LoadGameObjectsFromMeshNode(*childs, newGameObject);
 	}
+
+	if (node.id == -1)
+		newGameObject->SetABB(AABB(-float3::one / 2, float3::one / 2));//Empty AABB
+
 	return newGameObject;
 }
 
