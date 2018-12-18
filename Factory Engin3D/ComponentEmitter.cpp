@@ -9,6 +9,7 @@
 ComponentEmitter::ComponentEmitter(GameObject* gameObject) : Component(gameObject, ComponentType_EMITTER)
 {
 	timer.Start();
+	App->sceneIntro->octree.Insert(gameObject);
 }
 
 
@@ -220,13 +221,13 @@ void ComponentEmitter::Inspector()
 			float3 size = gameObject->transform->originalBoundingBox.Size();
 			if (ImGui::DragFloat3("Dimensions", &size.x, 1.0f, 0.0f, 0.0f, "%.0f"))
 			{
-				gameObject->transform->originalBoundingBox.SetFromCenterAndSize(gameObject->transform->GetPos() + posDifAABB, size);
+				gameObject->transform->originalBoundingBox.SetFromCenterAndSize(posDifAABB, size);
 				gameObject->transform->UpdateBoundingBox();
 			}
 
 			if(ImGui::DragFloat3("Pos", &posDifAABB.x, 1.0f, 0.0f, 0.0f, "%.0f"))
 			{
-				gameObject->transform->originalBoundingBox.SetFromCenterAndSize(gameObject->transform->GetPos() + posDifAABB, size);
+				gameObject->transform->originalBoundingBox.SetFromCenterAndSize(posDifAABB, size);
 				gameObject->transform->UpdateBoundingBox();
 			}
 		}

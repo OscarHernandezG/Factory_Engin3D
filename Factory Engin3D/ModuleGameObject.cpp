@@ -65,7 +65,7 @@ update_status ModuleGameObject::PostUpdate()
 		//Get only valid object for octre
 		for (std::list<GameObject*>::iterator iterator = App->gameObject->gameObjectsAll.begin(); iterator != App->gameObject->gameObjectsAll.end(); ++iterator)
 		{
-			if ((*iterator)->HasComponent(ComponentType_GEOMETRY) && (*iterator)->transform->boundingBox.Size().Length() > 0)
+			if (((*iterator)->HasComponent(ComponentType_GEOMETRY) || (*iterator)->HasComponent(ComponentType_EMITTER)) && (*iterator)->transform->boundingBox.Size().Length() > 0)
 				objects.push_back(*iterator);
 		}
 
