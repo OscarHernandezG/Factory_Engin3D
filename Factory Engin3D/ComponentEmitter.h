@@ -92,6 +92,7 @@ private:
 	int maxPart = 10;
 	float repeatTime = 1.0f;
 
+	float3 posDifAABB = float3::zero;
 	float gravity = 0.0f;
 
 	//Posibility space where particle is created
