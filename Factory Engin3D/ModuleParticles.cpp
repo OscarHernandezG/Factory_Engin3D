@@ -18,11 +18,12 @@ update_status ModuleParticle::Update()
 	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
 
 	int count = 0;
+	float dt = App->time->GetdtGame();
 	for (int i = 0; i < MAX_PARTICLES; ++i)
 	{
 		if (allParticles[i].active)
 		{
-			allParticles[i].Update(App->time->GetdtGame());
+			allParticles[i].Update(dt);
 			++count;
 			allParticles[i].SetCamDistance();
 			partQueue.push(&allParticles[i]);
@@ -32,7 +33,7 @@ update_status ModuleParticle::Update()
 			allParticles[i].camDistance = -1;
 		}
 	}
-		//LOG("Active particles %i", count);
+		LOG("Active particles %i", count);
 	return UPDATE_CONTINUE;
 }
 
@@ -56,7 +57,7 @@ void ModuleParticle::DrawParticles()
 
 		if (currPart->owner->gameObject->canDraw)
 			currPart->Draw();
-		
+
 		partQueue.pop();
 	}
 }

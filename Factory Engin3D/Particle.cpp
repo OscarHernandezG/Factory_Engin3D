@@ -59,7 +59,7 @@ void Particle::SetActive(float3 pos, StartValues data, ResourceTexture ** textur
 	transform.position = pos;
 	transform.rotation = Quat::FromEulerXYZ(0, 0, 0); //Start rotation
 	transform.scale = float3::one * CreateRandomNum(data.size);
-	LOG("life %f", lifeTime);
+	//LOG("life %f", lifeTime);
 
 	for (std::list<ColorTime>::iterator iter = data.color.begin(); iter != data.color.end(); ++iter)
 		color.push_back(*iter);
