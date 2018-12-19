@@ -5,6 +5,8 @@
 
 #include "ParticlePlane.h"
 
+class ComponentEmitter;
+
 struct StartValues;
 struct ColorTime;
 struct ParticleTrans
@@ -43,6 +45,8 @@ public:
 public:
 	float camDistance = 0.0f;
 	bool active = false;
+
+	ComponentEmitter* owner = nullptr;
 
 private:
 	float lifeTime = 0.0f;

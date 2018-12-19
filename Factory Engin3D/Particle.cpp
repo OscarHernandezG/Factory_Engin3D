@@ -105,6 +105,8 @@ bool Particle::Update(float dt)
 	{
 		active = false;
 		ret = false;
+
+		owner->particles.remove(this);
 	}
 
 

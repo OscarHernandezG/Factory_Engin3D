@@ -74,12 +74,17 @@ public:
 public:
 	Timer timer;
 	Timer burstTime;
-	std::list<Particle*> particles;
 
 	// Particle texture
 	ResourceTexture* texture = nullptr;
 
 	bool drawAABB = false;
+
+	// Emitter particles
+	std::list<Particle*> particles;
+
+	bool emitterActive = true;
+
 private:
 	// General info
 	//---------------------------------------
@@ -117,7 +122,6 @@ private:
 	// Number of particles created per second
 	int rateOverTime = 10;
 	//---------------------------------------
-
 	
 };
 #endif // !__Emitter_H__
