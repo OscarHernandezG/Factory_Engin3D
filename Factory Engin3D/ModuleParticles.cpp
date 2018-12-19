@@ -56,10 +56,10 @@ void ModuleParticle::DrawParticles()
 		if (allParticles[i].camDistance > 0)
 		{
 			allParticles[i].Draw();
-			allParticles[i].SetCamDistance();
+			//allParticles[i].SetCamDistance();
 		}
-		else
-			break;
+	//	else
+		//	break;
 	}
 }
 
@@ -67,7 +67,7 @@ void ModuleParticle::SortParticles()
 {
 	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
 
-	std::sort(&allParticles[0], &allParticles[MAX_PARTICLES - 1]);
+	std::sort(&allParticles[0], &allParticles[MAX_PARTICLES]);
 }
 
 bool ModuleParticle::GetParticle(int& id)

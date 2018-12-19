@@ -257,7 +257,7 @@ void Octree::ReDoLimits(GameObject* newObject)
 	}
 }
 
-void Octree::UniqueObjects(std::vector<GameObject *> & objects) const
+void Octree::UniqueObjects(std::vector<GameObject*>& objects) const
 {
 	if (!objects.empty())
 	{
