@@ -3,23 +3,24 @@
 #include "Geometry.h"
 #include "ComponentEmitter.h"
 #include "ModuleParticles.h"
+#include "pcg-c-basic-0.9/pcg_basic.h"
 
 Particle::Particle(float3 pos, StartValues data, ResourceTexture** texture)
 {
 	plane = App->particle->plane;
 
-	lifeTime = data.life;
+	lifeTime = CreateRandomNum(data.life);
 
-	speed = data.speed;
-	acceleration = data.acceleration;
+	speed = CreateRandomNum(data.speed);
+	acceleration = CreateRandomNum(data.acceleration);
 	direction = data.particleDirection;
 
-	rotation = data.rotation * DEGTORAD;
-	angularAcceleration = data.angularAcceleration * DEGTORAD;
+	rotation = CreateRandomNum(data.rotation) * DEGTORAD;
+	angularAcceleration = CreateRandomNum(data.angularAcceleration) * DEGTORAD;
 
 	transform.position = pos;
 	transform.rotation = Quat::FromEulerXYZ(0, 0, 0); //Start rotation
-	transform.scale = float3::one * data.size;
+	transform.scale = float3::one * CreateRandomNum(data.size);
 
 	for (std::list<ColorTime>::iterator iter = data.color.begin(); iter != data.color.end(); ++iter)
 		color.push_back(*iter);
@@ -41,20 +42,20 @@ void Particle::SetActive(float3 pos, StartValues data, ResourceTexture ** textur
 {
 	plane = App->particle->plane;
 
-	lifeTime = data.life;
+	lifeTime = CreateRandomNum(data.life);
 
 	life = 0.0f;
 
-	speed = data.speed;
-	acceleration = data.acceleration;
+	speed = CreateRandomNum(data.speed);
+	acceleration = CreateRandomNum(data.acceleration);
 	direction = data.particleDirection;
 
-	rotation = data.rotation * DEGTORAD;
-	angularAcceleration = data.angularAcceleration * DEGTORAD;
+	rotation = CreateRandomNum(data.rotation) * DEGTORAD;
+	angularAcceleration = CreateRandomNum(data.angularAcceleration) * DEGTORAD;
 
 	transform.position = pos;
 	transform.rotation = Quat::FromEulerXYZ(0, 0, 0); //Start rotation
-	transform.scale = float3::one * data.size;
+	transform.scale = float3::one * CreateRandomNum(data.size);
 
 	for (std::list<ColorTime>::iterator iter = data.color.begin(); iter != data.color.end(); ++iter)
 		color.push_back(*iter);
@@ -87,7 +88,7 @@ bool Particle::Update(float dt)
 				float timeNormalized = (lifeNormalized - color[index].position) / (color[index + 1].position - color[index].position);
 				if (color[index + 1].position == 0)
 					timeNormalized = 0;
-				LOG("%i", index);
+				//LOG("%i", index);
 				currentColor = color[index].color.Lerp(color[index + 1].color, timeNormalized);
 				//LERP Color
 			}
@@ -139,6 +140,19 @@ void Particle::Draw() const
 	
 }
 
+
+float Particle::CreateRandomNum(float2 edges)//.x = minPoint & .y = maxPoint
+{
+	float num = edges.x;
+	if (edges.x < edges.y)
+	{
+		//pcg32_random_r
+		float random = (float)pcg32_random() / float(MAXINT);
+		num = edges.y * random / 2;
+		LOG("num %f", num)
+	}
+	return num;
+}
 
 //Particle transform
 float4x4 ParticleTrans::GetMatrix() const

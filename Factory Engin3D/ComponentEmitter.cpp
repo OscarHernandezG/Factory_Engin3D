@@ -40,7 +40,7 @@ void ComponentEmitter::Update()
 		{
 			int particlesToCreate = (rand() % (maxPart - minPart)) + minPart ;
 			CreateParticles(particlesToCreate);
-			LOG("%i", particlesToCreate);
+			//LOG("%i", particlesToCreate);
 		}
 		burstTime.Start();
 	}
@@ -131,15 +131,19 @@ void ComponentEmitter::Inspector()
 	if (ImGui::CollapsingHeader("Particle System", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::PushItemWidth(150.0f);
-		ImGui::DragFloat("Speed", &startValues.speed, 0.25f, 0.25f, 20.0f, "%.2f");
-		ImGui::DragFloat("Acceleration", &startValues.acceleration, 0.25f, -5.0f, 5.0f, "%.2f");
+		if (ImGui::DragFloat2("Speed", &startValues.speed.x, 0.25f, 0.25f, 20.0f, "%.2f"))
+		{
+			if (startValues.speed.x > startValues.speed.y)
+				startValues.speed.y = startValues.speed.x;
+		}
+		ImGui::DragFloat2("Acceleration", &startValues.acceleration.x, 0.25f, -5.0f, 5.0f, "%.2f");
 
-		ImGui::DragFloat("Rotation", &startValues.rotation, 0.25f, -720.0f, 720.0f, "%.2f");
-		ImGui::DragFloat("Angular acceleration", &startValues.angularAcceleration, 0.25f, -45.0f, 45.0f, "%.2f");
+		ImGui::DragFloat2("Rotation", &startValues.rotation.x, 0.25f, -720.0f, 720.0f, "%.2f");
+		ImGui::DragFloat2("Angular acceleration", &startValues.angularAcceleration.x, 0.25f, -45.0f, 45.0f, "%.2f");
 
 		ImGui::DragInt("Emition", &rateOverTime, 1.0f, 0.0f, 0.0f, "%.2f");
-		ImGui::DragFloat("Lifetime", &startValues.life, 0.5f, 1.0f, 20.0f, "%.2f");
-		ImGui::DragFloat("Size", &startValues.size, 0.1f, 0.1f, 5.0f, "%.2f");
+		ImGui::DragFloat2("Lifetime", &startValues.life.x, 0.5f, 1.0f, 20.0f, "%.2f");
+		ImGui::DragFloat2("Size", &startValues.size.x, 0.1f, 0.1f, 5.0f, "%.2f");
 
 		ImGui::Separator();
 		if (ImGui::Checkbox("Loop", &loop))

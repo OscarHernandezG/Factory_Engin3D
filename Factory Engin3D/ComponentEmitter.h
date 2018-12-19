@@ -29,12 +29,12 @@ struct ColorTime
 struct StartValues
 {
 	// Start values
-	float life = 5.0f;
-	float speed = 3.0f;
-	float acceleration = 0.0f;
-	float size = 1.0f;
-	float rotation = 0.0f;
-	float angularAcceleration = 0.0f;
+	float2 life = float2(0.0f, 5.0f);
+	float2 speed = float2(1.5f, 3.0f);
+	float2 acceleration = float2(0.0f,0.0f);
+	float2 size = float2(1.0f, 2.0f);
+	float2 rotation = float2(0.0f, 1.0f);
+	float2 angularAcceleration = float2(0.0f,0.0f);
 	std::list<ColorTime> color;
 	bool timeColor = false;
 

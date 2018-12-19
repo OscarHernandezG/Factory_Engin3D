@@ -41,6 +41,8 @@ public:
 	void SetCamDistance();
 	void Draw() const;
 
+	float CreateRandomNum(float2 edges);
+
 
 public:
 	float camDistance = 0.0f;
