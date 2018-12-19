@@ -31,7 +31,7 @@ struct StartValues
 	// Start values
 	float life = 5.0f;
 	float speed = 3.0f;
-	float acceleration = 3.0f;
+	float acceleration = 0.0f;
 	float size = 1.0f;
 	float rotation = 0.0f;
 	float angularAcceleration = 0.0f;
@@ -56,7 +56,7 @@ enum ShapeType {
 	ShapeType_SPHERE_CENTER,
 	ShapeType_SPHERE_BORDER
 };
-class ComponentEmitter : Component
+class ComponentEmitter: public Component
 {
 public:
 	ComponentEmitter(GameObject* gameObject);

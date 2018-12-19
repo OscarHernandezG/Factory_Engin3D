@@ -77,9 +77,9 @@ private:
 
 struct particleCompare
 {
-	bool operator()(const Particle& particle1, const Particle& particle2) const
+	bool operator()(const Particle* particle1, const Particle* particle2) const
 	{
-		return particle1.GetCamDistance() > particle2.GetCamDistance();
+		return particle1->camDistance < particle2->camDistance;
 	}
 };
 #endif // !__Particle_H__

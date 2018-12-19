@@ -5,11 +5,10 @@
 
 #include "Application.h"
 
-#include <list>
+#include <queue>
 #include "Particle.h"
 
 #include "ComponentEmitter.h"
-
 
 class ModuleParticle : public Module
 {
@@ -34,7 +33,8 @@ public:
 	ParticlePlane* plane = nullptr;
 
 private:
-
+	
+	std::priority_queue<Particle*, std::vector<Particle*>,particleCompare> partQueue;
 	int lastUsedParticle = 0;
 };
 

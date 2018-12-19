@@ -158,6 +158,7 @@ public:
 	std::string name;
 
 	bool toDelete = false;
+	bool canDraw = false;
 
 private:
 	bool isActive = true;

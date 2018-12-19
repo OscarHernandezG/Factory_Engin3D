@@ -121,6 +121,9 @@ void GameObject::PostUpdate()
 			(*iterator)->PostUpdate();
 		}
 	}
+
+	//Can draw is calculated in renderer using the octree
+	canDraw = false;
 }
 
 bool GameObject::SetParent(GameObject* parent)

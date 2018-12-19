@@ -292,6 +292,8 @@ void ModuleRenderer3D::DrawOctreeObjects(GameObject * iterator)
 			else
 				DrawObject(currentGeometry);
 		}
+
+		iterator->canDraw = true;
 	}
 }
 void ModuleRenderer3D::DrawDynamicObjects(bool cameraCulling)
@@ -307,6 +309,7 @@ void ModuleRenderer3D::DrawDynamicObjects(bool cameraCulling)
 				else
 					DrawObject(currentGeometry);
 		}
+		(*it)->canDraw = true;
 	}
 }
 

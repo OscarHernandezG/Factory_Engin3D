@@ -25,6 +25,7 @@ update_status ModuleParticle::Update()
 			allParticles[i].Update(App->time->GetdtGame());
 			++count;
 			allParticles[i].SetCamDistance();
+			partQueue.push(&allParticles[i]);
 		}
 		else
 		{
@@ -42,7 +43,7 @@ void ModuleParticle::Draw()
 	if (plane == nullptr)
 		plane = new ParticlePlane();
 
-	SortParticles();
+	//SortParticles();
 
 	DrawParticles();
 }
@@ -51,15 +52,14 @@ void ModuleParticle::DrawParticles()
 {
 	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
 
-	for (int i = 0; i < MAX_PARTICLES; ++i)
+	while (!partQueue.empty())
 	{
-		if (allParticles[i].camDistance > 0)
-		{
-			allParticles[i].Draw();
-			//allParticles[i].SetCamDistance();
-		}
-	//	else
-		//	break;
+		Particle* currPart = partQueue.top();
+
+		if (currPart->owner->gameObject->canDraw)
+			currPart->Draw();
+		
+		partQueue.pop();
 	}
 }
 
