@@ -63,6 +63,7 @@ public:
 	~ComponentEmitter();
 
 	void Update();
+	void CreateParticles(int particlesToCreate);
 	float3 RandPos();
 	void Inspector();
 
@@ -72,7 +73,7 @@ public:
 
 public:
 	Timer timer;
-
+	Timer burstTime;
 	std::list<Particle*> particles;
 
 	// Particle texture

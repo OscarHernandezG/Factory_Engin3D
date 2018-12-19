@@ -11,6 +11,7 @@
 ComponentEmitter::ComponentEmitter(GameObject* gameObject) : Component(gameObject, ComponentType_EMITTER)
 {
 	timer.Start();
+	burstTime.Start();
 	App->sceneIntro->octree.Insert(gameObject);
 }
 
@@ -27,21 +28,23 @@ void ComponentEmitter::Update()
 		if (App->time->gameState == GameState_PLAYING)
 		{
 			int particlesToCreate = (time / (1.0f / rateOverTime));
-			for (int i = 0; i < particlesToCreate; ++i)
-			{
-				int particleId = 0;
-				if (App->particle->GetParticle(particleId))
-				{
-					float3 pos = RandPos();
-					App->particle->allParticles[particleId].SetActive(pos, startValues, &texture);
-				}
-				else
-					break;
-			}
-
+			CreateParticles(particlesToCreate);
 		}
 		timer.Start();
 	}
+
+	float burstT = burstTime.ReadSec();
+	if ((burst && burstT > repeatTime))
+	{
+		if (App->time->gameState == GameState_PLAYING)
+		{
+			int particlesToCreate = (rand() % (maxPart - minPart)) + minPart ;
+			CreateParticles(particlesToCreate);
+			LOG("%i", particlesToCreate);
+		}
+		burstTime.Start();
+	}
+
 
 	//std::vector<Particle*> particleDelete;
 	//for (std::list<Particle*>::iterator iterator = particles.begin(); iterator != particles.end(); ++iterator)
@@ -58,6 +61,21 @@ void ComponentEmitter::Update()
 	//	delete *iterator;
 	//}
 
+}
+
+void ComponentEmitter::CreateParticles(int particlesToCreate)
+{
+	for (int i = 0; i < particlesToCreate; ++i)
+	{
+		int particleId = 0;
+		if (App->particle->GetParticle(particleId))
+		{
+			float3 pos = RandPos();
+			App->particle->allParticles[particleId].SetActive(pos, startValues, &texture);
+		}
+		else
+			break;
+	}
 }
 
 float3 ComponentEmitter::RandPos()
