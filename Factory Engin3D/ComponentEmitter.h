@@ -37,6 +37,7 @@ struct StartValues
 	float2 angularAcceleration = float2(0.0f,0.0f);
 	std::list<ColorTime> color;
 	bool timeColor = false;
+	bool revive = false;
 
 	AABB colision = AABB(float3(-0.5f, -0.5f, -0.5f), float3(0.5f, 0.5f, 0.5f));
 
@@ -63,12 +64,12 @@ public:
 	~ComponentEmitter();
 
 	void Update();
-	void CreateParticles(int particlesToCreate);
 	float3 RandPos();
 	void Inspector();
 
 	void CheckMinMax(float2 & value);
-
+	void Revive(float3 pos);
+	void CreateParticles(int particlesToCreate, float3 pos = float3::zero);
 	bool EditColor(ColorTime & colorTime, bool first = true);
 
 	ImVec4 EqualsFloat4(const float4 float4D);
@@ -99,6 +100,7 @@ private:
 	// Warm up the particle emiter (if true the particle emitter will be already started at play-time)
 	bool preWarm = true;
 
+	//Burst options
 	bool burst = false;
 	int minPart = 0;
 	int maxPart = 10;

@@ -43,8 +43,6 @@ void ModuleParticle::Draw()
 	if (plane == nullptr)
 		plane = new ParticlePlane();
 
-	//SortParticles();
-
 	DrawParticles();
 }
 
@@ -63,13 +61,13 @@ void ModuleParticle::DrawParticles()
 	}
 }
 
-void ModuleParticle::SortParticles()
+/*void ModuleParticle::SortParticles()
 {
 	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
 
 	std::sort(&allParticles[0], &allParticles[MAX_PARTICLES]);
 }
-
+*/
 bool ModuleParticle::GetParticle(int& id)
 {
 	for (int i = lastUsedParticle; i < MAX_PARTICLES; i++) 

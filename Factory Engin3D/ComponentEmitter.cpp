@@ -34,13 +34,13 @@ void ComponentEmitter::Update()
 	}
 
 	float burstT = burstTime.ReadSec();
-	if ((burst && burstT > repeatTime))
+	if (burst && burstT > repeatTime)
 	{
 		if (App->time->gameState == GameState_PLAYING)
 		{
 			int particlesToCreate = minPart;
-			if(minPart != maxPart)
-				particlesToCreate = (rand() % (maxPart - minPart)) + minPart ;
+			if (minPart != maxPart)
+				particlesToCreate = (rand() % (maxPart - minPart)) + minPart;
 			CreateParticles(particlesToCreate);
 			//LOG("%i", particlesToCreate);
 		}
@@ -76,14 +76,26 @@ void ComponentEmitter::Update()
 
 }
 
-void ComponentEmitter::CreateParticles(int particlesToCreate)
+void ComponentEmitter::Revive(float3 pos)
+{
+	startValues.revive = false;
+	int particlesToCreate = minPart;
+	if (minPart != maxPart)
+		particlesToCreate = (rand() % (maxPart - minPart)) + minPart;
+	CreateParticles(particlesToCreate, pos);
+
+}
+
+void ComponentEmitter::CreateParticles(int particlesToCreate, float3 pos)
 {
 	for (int i = 0; i < particlesToCreate; ++i)
 	{
 		int particleId = 0;
 		if (App->particle->GetParticle(particleId))
 		{
-			float3 pos = RandPos();
+			if(pos.x == float3::zero.x && pos.y == float3::zero.y && pos.z == float3::zero.z)
+				pos = RandPos();
+
 			App->particle->allParticles[particleId].SetActive(pos, startValues, &texture);
 
 			App->particle->allParticles[particleId].owner = this;
@@ -245,8 +257,9 @@ void ComponentEmitter::Inspector()
 		}
 		ImGui::Separator();
 
+		ImGui::Checkbox("Revive", &startValues.revive);
 		ImGui::Checkbox("Burst", &burst);
-		if (burst)
+		if (burst || startValues.revive)
 		{
 			ImGui::DragInt("Min particles", &minPart, 1.0f, 0, 100);
 			if (minPart > maxPart)
@@ -259,6 +272,7 @@ void ComponentEmitter::Inspector()
 		ImGui::Separator();
 
 
+		ImGui::Separator();
 		ImGui::Checkbox("Bounding Box", &drawAABB);
 		if (drawAABB)
 		{

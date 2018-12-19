@@ -20,7 +20,7 @@ public:
 
 	void Draw();
 	void DrawParticles();
-	void SortParticles();
+	//void SortParticles();
 	bool GetParticle(int& id);
 public:
 
