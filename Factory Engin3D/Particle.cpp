@@ -21,7 +21,7 @@ Particle::Particle(float3 pos, StartValues data, ResourceTexture** texture)
 	transform.position = pos;
 	transform.rotation = Quat::FromEulerXYZ(0, 0, 0); //Start rotation
 	transform.scale = float3::one * CreateRandomNum(data.size);
-	LOG("life %f", lifeTime);
+	LOG("size %f", transform.scale.x);
 
 	for (std::list<ColorTime>::iterator iter = data.color.begin(); iter != data.color.end(); ++iter)
 		color.push_back(*iter);
@@ -59,7 +59,9 @@ void Particle::SetActive(float3 pos, StartValues data, ResourceTexture ** textur
 	transform.position = pos;
 	transform.rotation = Quat::FromEulerXYZ(0, 0, 0); //Start rotation
 	transform.scale = float3::one * CreateRandomNum(data.size);
+
 	//LOG("life %f", lifeTime);
+	//LOG("size %f", transform.scale.x);
 
 	for (std::list<ColorTime>::iterator iter = data.color.begin(); iter != data.color.end(); ++iter)
 		color.push_back(*iter);
@@ -153,10 +155,8 @@ float Particle::CreateRandomNum(float2 edges)//.x = minPoint & .y = maxPoint
 	float num = edges.x;
 	if (edges.x < edges.y)
 	{
-		/*float random = (float)pcg32_random();
-		num = (edges.y / float(MAXINT)) * random;*/
-		int random = (rand() % 99) + 1;
-		num = ((edges.y - edges.x) * (float)random / 100) + edges.x;
+		float random = (float)pcg32_random();	
+		num = ((edges.y - edges.x) * random / (float)MAXUINT) + edges.x;
 	}
 	return num;
 }
