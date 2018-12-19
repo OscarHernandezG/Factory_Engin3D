@@ -45,6 +45,17 @@ void ComponentEmitter::Update()
 		burstTime.Start();
 	}
 
+	// Use this condition to remove all particles from the component Emitter
+	if (!emitterActive)
+	{
+		for (std::list<Particle*>::iterator iterator = particles.begin(); iterator != particles.end(); ++iterator)
+		{
+			(*iterator)->active = false;
+		}
+
+		particles.clear();
+	}
+
 
 	//std::vector<Particle*> particleDelete;
 	//for (std::list<Particle*>::iterator iterator = particles.begin(); iterator != particles.end(); ++iterator)
@@ -72,6 +83,9 @@ void ComponentEmitter::CreateParticles(int particlesToCreate)
 		{
 			float3 pos = RandPos();
 			App->particle->allParticles[particleId].SetActive(pos, startValues, &texture);
+
+			App->particle->allParticles[particleId].owner = this;
+			particles.push_back(&App->particle->allParticles[particleId]);
 		}
 		else
 			break;
