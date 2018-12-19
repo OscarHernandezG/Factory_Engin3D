@@ -38,7 +38,9 @@ void ComponentEmitter::Update()
 	{
 		if (App->time->gameState == GameState_PLAYING)
 		{
-			int particlesToCreate = (rand() % (maxPart - minPart)) + minPart ;
+			int particlesToCreate = minPart;
+			if(minPart != maxPart)
+				particlesToCreate = (rand() % (maxPart - minPart)) + minPart ;
 			CreateParticles(particlesToCreate);
 			//LOG("%i", particlesToCreate);
 		}
@@ -132,18 +134,20 @@ void ComponentEmitter::Inspector()
 	{
 		ImGui::PushItemWidth(150.0f);
 		if (ImGui::DragFloat2("Speed", &startValues.speed.x, 0.25f, 0.25f, 20.0f, "%.2f"))
-		{
-			if (startValues.speed.x > startValues.speed.y)
-				startValues.speed.y = startValues.speed.x;
-		}
-		ImGui::DragFloat2("Acceleration", &startValues.acceleration.x, 0.25f, -5.0f, 5.0f, "%.2f");
+			CheckMinMax(startValues.speed);
+		if(ImGui::DragFloat2("Acceleration", &startValues.acceleration.x, 0.25f, -5.0f, 5.0f, "%.2f"))
+			CheckMinMax(startValues.acceleration);
 
-		ImGui::DragFloat2("Rotation", &startValues.rotation.x, 0.25f, -720.0f, 720.0f, "%.2f");
-		ImGui::DragFloat2("Angular acceleration", &startValues.angularAcceleration.x, 0.25f, -45.0f, 45.0f, "%.2f");
+		if(ImGui::DragFloat2("Rotation", &startValues.rotation.x, 0.25f, -720.0f, 720.0f, "%.2f"))
+			CheckMinMax(startValues.rotation);
+		if(ImGui::DragFloat2("Angular acceleration", &startValues.angularAcceleration.x, 0.25f, -45.0f, 45.0f, "%.2f"))
+			CheckMinMax(startValues.angularAcceleration);
 
-		ImGui::DragInt("Emition", &rateOverTime, 1.0f, 0.0f, 0.0f, "%.2f");
-		ImGui::DragFloat2("Lifetime", &startValues.life.x, 0.5f, 1.0f, 20.0f, "%.2f");
-		ImGui::DragFloat2("Size", &startValues.size.x, 0.1f, 0.1f, 5.0f, "%.2f");
+		if(ImGui::DragFloat2("Lifetime", &startValues.life.x, 0.5f, 1.0f, 20.0f, "%.2f"))
+			CheckMinMax(startValues.life);
+		if(ImGui::DragFloat2("Size", &startValues.size.x, 0.1f, 0.1f, 5.0f, "%.2f"))
+			CheckMinMax(startValues.size);
+		ImGui::DragInt("Emition", &rateOverTime, 1.0f, 0.0f, 300.0f, "%.2f");
 
 		ImGui::Separator();
 		if (ImGui::Checkbox("Loop", &loop))
@@ -333,6 +337,12 @@ void ComponentEmitter::Inspector()
 		if (ImGui::Button("Remove Particles", ImVec2(150, 25)))
 			toDelete = true;
 	}
+}
+
+void ComponentEmitter::CheckMinMax(float2& value)
+{
+	if (value.x > value.y)
+		value.y = value.x;
 }
 
 bool ComponentEmitter::EditColor(ColorTime &colorTime, bool first)

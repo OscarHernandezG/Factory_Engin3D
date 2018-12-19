@@ -67,6 +67,8 @@ public:
 	float3 RandPos();
 	void Inspector();
 
+	void CheckMinMax(float2 & value);
+
 	bool EditColor(ColorTime & colorTime, bool first = true);
 
 	ImVec4 EqualsFloat4(const float4 float4D);

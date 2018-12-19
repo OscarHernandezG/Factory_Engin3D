@@ -11,7 +11,7 @@ Particle::Particle(float3 pos, StartValues data, ResourceTexture** texture)
 
 	lifeTime = CreateRandomNum(data.life);
 
-	speed = CreateRandomNum(data.speed);//data.speed.x;
+	speed = CreateRandomNum(data.speed);
 	acceleration = CreateRandomNum(data.acceleration);
 	direction = data.particleDirection;
 
@@ -21,7 +21,7 @@ Particle::Particle(float3 pos, StartValues data, ResourceTexture** texture)
 	transform.position = pos;
 	transform.rotation = Quat::FromEulerXYZ(0, 0, 0); //Start rotation
 	transform.scale = float3::one * CreateRandomNum(data.size);
-	LOG("size %f", transform.scale.x);
+	LOG("life %f", lifeTime);
 
 	for (std::list<ColorTime>::iterator iter = data.color.begin(); iter != data.color.end(); ++iter)
 		color.push_back(*iter);
@@ -47,7 +47,7 @@ void Particle::SetActive(float3 pos, StartValues data, ResourceTexture ** textur
 
 	life = 0.0f;
 
-	speed = CreateRandomNum(data.speed);//data.speed.x;
+	speed = CreateRandomNum(data.speed);
 	acceleration = CreateRandomNum(data.acceleration);
 	direction = data.particleDirection;
 
@@ -57,7 +57,7 @@ void Particle::SetActive(float3 pos, StartValues data, ResourceTexture ** textur
 	transform.position = pos;
 	transform.rotation = Quat::FromEulerXYZ(0, 0, 0); //Start rotation
 	transform.scale = float3::one * CreateRandomNum(data.size);
-	LOG("size %f", transform.scale.x);
+	LOG("life %f", lifeTime);
 
 	for (std::list<ColorTime>::iterator iter = data.color.begin(); iter != data.color.end(); ++iter)
 		color.push_back(*iter);
