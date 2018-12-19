@@ -11,7 +11,7 @@ Particle::Particle(float3 pos, StartValues data, ResourceTexture** texture)
 
 	lifeTime = CreateRandomNum(data.life);
 
-	speed = CreateRandomNum(data.speed);
+	speed = CreateRandomNum(data.speed);//data.speed.x;
 	acceleration = CreateRandomNum(data.acceleration);
 	direction = data.particleDirection;
 
@@ -21,6 +21,7 @@ Particle::Particle(float3 pos, StartValues data, ResourceTexture** texture)
 	transform.position = pos;
 	transform.rotation = Quat::FromEulerXYZ(0, 0, 0); //Start rotation
 	transform.scale = float3::one * CreateRandomNum(data.size);
+	LOG("size %f", transform.scale.x);
 
 	for (std::list<ColorTime>::iterator iter = data.color.begin(); iter != data.color.end(); ++iter)
 		color.push_back(*iter);
@@ -46,7 +47,7 @@ void Particle::SetActive(float3 pos, StartValues data, ResourceTexture ** textur
 
 	life = 0.0f;
 
-	speed = CreateRandomNum(data.speed);
+	speed = CreateRandomNum(data.speed);//data.speed.x;
 	acceleration = CreateRandomNum(data.acceleration);
 	direction = data.particleDirection;
 
@@ -56,6 +57,7 @@ void Particle::SetActive(float3 pos, StartValues data, ResourceTexture ** textur
 	transform.position = pos;
 	transform.rotation = Quat::FromEulerXYZ(0, 0, 0); //Start rotation
 	transform.scale = float3::one * CreateRandomNum(data.size);
+	LOG("size %f", transform.scale.x);
 
 	for (std::list<ColorTime>::iterator iter = data.color.begin(); iter != data.color.end(); ++iter)
 		color.push_back(*iter);
@@ -146,10 +148,10 @@ float Particle::CreateRandomNum(float2 edges)//.x = minPoint & .y = maxPoint
 	float num = edges.x;
 	if (edges.x < edges.y)
 	{
-		//pcg32_random_r
-		float random = (float)pcg32_random() / float(MAXINT);
-		num = edges.y * random / 2;
-		LOG("num %f", num)
+		/*float random = (float)pcg32_random();
+		num = (edges.y / float(MAXINT)) * random;*/
+		int random = (rand() % 99) + 1;
+		num = ((edges.y - edges.x) * (float)random / 100) + edges.x;
 	}
 	return num;
 }
