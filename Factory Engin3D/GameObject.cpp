@@ -6,6 +6,7 @@
 #include "pcg-c-basic-0.9/pcg_basic.h"
 
 #include "ComponentEmitter.h"
+#include "ModuleParticles.h"
 
 using namespace std;
 
@@ -335,7 +336,9 @@ Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
 		newComponent = (Component*)new Billboard(this);
 		break;
 	case ComponentType_EMITTER:
-		newComponent = (Component*)new ComponentEmitter(this);
+		newComponent = /*(Component*)*/new ComponentEmitter(this);
+
+		App->particle->emitters.push_back((ComponentEmitter*)newComponent);
 		break;
 	default:
 		break;

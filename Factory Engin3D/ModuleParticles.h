@@ -24,7 +24,7 @@ public:
 	bool GetParticle(int& id);
 public:
 
-	ComponentEmitter* emitter = nullptr;
+	std::list<ComponentEmitter*> emitters;
 
 	Particle allParticles[MAX_PARTICLES];
 
