@@ -32,7 +32,7 @@ void ModuleImGui::CreateGameManager(float2 scale)
 				App->time->gameState = GameState_TICK;
 		}
 
-		if (App->time->gameState != GameState_NONE && !gameTimeWindow)
+		if (App->time->gameState != GameState_NONE)
 		{
 			float scale = App->time->GetGameScale();
 			ImGui::SameLine();
@@ -56,7 +56,6 @@ void ModuleImGui::ChangePlayState(bool show, GameState state)
 	assetsWindow = show;
 	hierarchyWindow = show;
 	App->time->gameState = state;
-	gameTimeWindow = false;
 
 	std::string direction = "PlayingScene";
 	if (show)

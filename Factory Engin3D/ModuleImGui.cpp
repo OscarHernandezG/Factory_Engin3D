@@ -95,7 +95,7 @@ update_status ModuleImGui::PreUpdate()
 	if (inspectorWindow)
 		CreateInspector(scale);
 
-	if (gameTimeWindow)
+	if (App->geometry->currentGameObject && App->geometry->currentGameObject->HasComponent(ComponentType_EMITTER))
 		CreateGameTime();
 
 	if (hierarchyWindow)
@@ -355,7 +355,7 @@ void ModuleImGui::SetWindowDim(float2 &pos, float2 &size, float2 &scale, bool ga
 	{
 		float2 realSize = size;
 		float2 realPos = pos;
-		if (App->time->gameState != GameState_NONE && !gameTimeWindow)
+		if (App->time->gameState != GameState_NONE)
 		{
 			realSize += playCountSize;
 			realPos += playCountPos;

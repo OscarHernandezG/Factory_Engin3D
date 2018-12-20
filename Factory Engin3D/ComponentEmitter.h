@@ -5,11 +5,11 @@
 #include "GameObject.h"
 
 #include "Timer.h"
+#include "GameTimer.h"
 
 #include "Particle.h"
 
 #include <list>
-
 
 struct ColorTime
 {
@@ -89,6 +89,9 @@ public:
 	std::list<Particle*> particles;
 
 	bool emitterActive = true;
+
+	GameState simulatedGame = GameState_NONE;
+	GameTimer timeSimulating;
 
 private:
 	// General info

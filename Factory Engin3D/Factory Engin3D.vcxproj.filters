@@ -429,6 +429,9 @@
     <ClInclude Include="ModuleParticles.h">
       <Filter>Sources\Modules\Particle</Filter>
     </ClInclude>
+    <ClInclude Include="GameTimer.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -676,6 +679,9 @@
     </ClCompile>
     <ClCompile Include="PanelGameTime.cpp">
       <Filter>Sources\Modules\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="GameTimer.cpp">
+      <Filter>Sources\Tools</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
