@@ -1,6 +1,7 @@
 #include "Application.h"
 
 #include "ModuleGameObject.h"
+#include "ModuleParticles.h"
 
 using namespace std;
 ModuleGameObject::ModuleGameObject(Application * app, bool start_enabled) : Module(app, start_enabled)
@@ -21,8 +22,6 @@ bool ModuleGameObject::Start()
 
 update_status ModuleGameObject::Update()
 {
-	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
-
 	//if (rootGameObject)
 	//	rootGameObject->Update();
 
@@ -235,6 +234,9 @@ void ModuleGameObject::DeletePreviousScene()
 	App->geometry->currentGameObject = nullptr;
 	//App->geometry->plane = nullptr;
 	App->sceneIntro->octree.Clear();
+
+	// Clear all emitters from module particles
+	App->particle->ClearEmitters();
 }
 
 GameObject* ModuleGameObject::FindByID(uint UUID)

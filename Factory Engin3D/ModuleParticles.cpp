@@ -98,3 +98,16 @@ bool ModuleParticle::GetParticle(int& id)
 
 	return false;
 }
+
+void ModuleParticle::ClearEmitters()
+{
+	emitters.clear();
+
+	for (int i = 0; i < MAX_PARTICLES; ++i)
+	{
+		allParticles[i].active = false;
+		allParticles[i].owner = nullptr;		
+	}
+
+	lastUsedParticle = 0;
+}
