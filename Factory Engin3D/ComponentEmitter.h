@@ -63,6 +63,8 @@ public:
 	ComponentEmitter(GameObject* gameObject);
 	~ComponentEmitter();
 
+	void StartEmitter();
+
 	void Update();
 	float3 RandPos();
 	void Inspector();
@@ -125,6 +127,7 @@ private:
 	//---------------------------------------
 	// Number of particles created per second
 	int rateOverTime = 10;
+	float timeToParticle = 0.0f;
 	//---------------------------------------
 	
 };

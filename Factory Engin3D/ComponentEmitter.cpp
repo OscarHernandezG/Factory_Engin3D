@@ -20,19 +20,35 @@ ComponentEmitter::~ComponentEmitter()
 {
 }
 
+void ComponentEmitter::StartEmitter()
+{
+	timer.Start();
+	burstTime.Start();
+	loopTimer.Start();
+
+	timeToParticle = 0.0f;
+}
+
+
 void ComponentEmitter::Update()
 {
-	float time = timer.ReadSec();
-	if (time >  (1.0f / rateOverTime) && (loop || loopTimer.ReadSec() < duration))
+	if (rateOverTime > 0)
 	{
-		if (App->time->gameState == GameState_PLAYING)
+		float time = timer.ReadSec();
+		if (time > timeToParticle && (loop || loopTimer.ReadSec() < duration))
 		{
-			int particlesToCreate = (time / (1.0f / rateOverTime));
-			CreateParticles(particlesToCreate);
-		}
-		timer.Start();
-	}
+			if (App->time->gameState == GameState_PLAYING)
+			{
+				int particlesToCreate = (time / (1.0f / rateOverTime));
+				CreateParticles(particlesToCreate);
 
+				timeToParticle = (1.0f / rateOverTime);
+
+				timer.Start();
+			}
+
+		}
+	}
 	float burstT = burstTime.ReadSec();
 	if (burst && burstT > repeatTime)
 	{
@@ -88,6 +104,9 @@ void ComponentEmitter::Revive(float3 pos)
 
 void ComponentEmitter::CreateParticles(int particlesToCreate, float3 pos)
 {
+	if (particlesToCreate == 0)
+		++particlesToCreate;
+
 	for (int i = 0; i < particlesToCreate; ++i)
 	{
 		int particleId = 0;
