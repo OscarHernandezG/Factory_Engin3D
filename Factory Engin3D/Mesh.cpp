@@ -124,7 +124,8 @@ void Mesh::Inspector()
 					if (ImGui::MenuItem((*iterator)->name.data()))
 					{
 						buffer = ((ResourceMesh*)(*iterator));
-						App->geometry->LoadBoundingBox(buffer->vertex);
+						gameObject->transform->originalBoundingBox = buffer->boundingBox;
+						gameObject->transform->UpdateBoundingBox();
 						App->sceneIntro->octree.Insert(gameObject);
 					}
 				}
