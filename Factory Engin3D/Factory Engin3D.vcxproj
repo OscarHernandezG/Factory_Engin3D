@@ -90,6 +90,7 @@
     <ClInclude Include="DevIL\includex86\IL\il_wrap.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GameTimer.h" />
     <ClInclude Include="imgui-1.65\imgui_dock.h" />
     <ClInclude Include="ImGuizmo\ImGuizmo.h" />
     <ClInclude Include="ModuleParticles.h" />
@@ -199,6 +200,7 @@
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="ComponentEmitter.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GameTimer.cpp" />
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="imgui-1.65\imgui_dock.cpp" />
     <ClCompile Include="ImGuizmo\ImGuizmo.cpp" />

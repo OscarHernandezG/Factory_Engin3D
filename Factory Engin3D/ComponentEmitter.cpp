@@ -64,7 +64,7 @@ void ComponentEmitter::Update()
 		float time = timer.ReadSec();
 		if (time > timeToParticle && (loop || loopTimer.ReadSec() < duration))
 		{
-			if (App->time->gameState == GameState_PLAYING)
+			if (App->time->gameState == GameState_PLAYING || simulatedGame == GameState_PLAYING)
 			{
 				int particlesToCreate = (time / (1.0f / rateOverTime));
 				CreateParticles(particlesToCreate);
@@ -79,7 +79,7 @@ void ComponentEmitter::Update()
 	float burstT = burstTime.ReadSec();
 	if (burst && burstT > repeatTime)
 	{
-		if (App->time->gameState == GameState_PLAYING)
+		if (App->time->gameState == GameState_PLAYING || simulatedGame == GameState_PLAYING)
 		{
 			int particlesToCreate = minPart;
 			if (minPart != maxPart)

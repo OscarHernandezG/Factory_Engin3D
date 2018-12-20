@@ -98,6 +98,14 @@ update_status ModuleTime::Update()
 {
 	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
 
+	for (std::list<GameTimer*>::iterator it = gameTimerList.begin(); it != gameTimerList.end() ; ++it)
+	{
+		if (gameState == GameState_NONE)
+			(*it)->Update(dtReal);
+		else
+			(*it)->Update(dtGame);
+	}
+
 	return UPDATE_CONTINUE;
 }
 

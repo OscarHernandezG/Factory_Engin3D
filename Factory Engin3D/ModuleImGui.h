@@ -115,7 +115,7 @@ public:
 	bool inspectorWindow = false;
 	bool hierarchyWindow = true;
 	bool assetsWindow = true;
-	bool gameTimeWindow = false;
+	bool gameTimeWindow = true;
 	bool exitOption = false;
 
 	bool saveScenePopUp = false;
@@ -170,7 +170,6 @@ public:
 	bool popHierarchy = false;
 	GameObject* objectSelected = nullptr;
 	bool objectDrag = false;
-
 
 	//--------------------------
 	// Window position
