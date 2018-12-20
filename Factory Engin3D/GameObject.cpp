@@ -291,6 +291,52 @@ ComponentInfo* GameObject::LoadComponentInfo(JSON_Object* info, ComponentType ty
 		emitterInfo->shapeType = (ShapeType)(int)json_object_get_number(info, "shapeType");
 		emitterInfo->texture = App->resources->LoadTexture(json_object_get_string(info, "texture"));
 
+		StartValues* startValues = &emitterInfo->startValues;
+
+		startValues->life.x = json_object_get_number(info, "lifeMin");
+		startValues->life.y = json_object_get_number(info, "lifeMax");
+
+		startValues->speed.x = json_object_get_number(info, "speedMin");
+		startValues->speed.y = json_object_get_number(info, "speedMax");
+
+		startValues->acceleration.x = json_object_get_number(info, "accelerationMin");
+		startValues->acceleration.y = json_object_get_number(info, "accelerationMax");
+
+		startValues->size.x = json_object_get_number(info, "sizeMin");
+		startValues->size.y = json_object_get_number(info, "sizeMax");
+
+		startValues->rotation.x = json_object_get_number(info, "rotationMin");
+		startValues->rotation.y = json_object_get_number(info, "rotationMax");
+
+		startValues->angularAcceleration.x = json_object_get_number(info, "angularAccelerationMin");
+		startValues->angularAcceleration.y = json_object_get_number(info, "angularAccelerationMax");
+
+
+		startValues->angularAcceleration.y = json_object_get_number(info, "angularAccelerationMax");
+
+		// TODO: Load colors
+
+		startValues->timeColor = json_object_get_number(info, "timeColor");
+
+		startValues->revive = json_object_get_number(info, "revive");
+
+		float3 colMin = float3(
+			json_object_get_number(info, "colisionMinX"),
+			json_object_get_number(info, "colisionMinY"),
+			json_object_get_number(info, "colisionMinZ"));
+
+		float3 colMax = float3(
+			json_object_get_number(info, "colisionMaxX"),
+			json_object_get_number(info, "colisionMaxY"),
+			json_object_get_number(info, "colisionMaxZ"));
+
+		startValues->colision = AABB(colMin, colMax);
+
+
+		startValues->particleDirection.x = json_object_get_number(info, "particleDirectionX");
+		startValues->particleDirection.y = json_object_get_number(info, "particleDirectionY");
+		startValues->particleDirection.x = json_object_get_number(info, "particleDirectionZ");
+
 		ret = emitterInfo;
 	}
 		break;

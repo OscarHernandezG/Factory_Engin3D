@@ -18,6 +18,45 @@ enum ShapeType {
 	ShapeType_SPHERE_BORDER
 };
 
+struct ColorTime
+{
+	float4 color = float4::one;
+	float position = 0.0f;
+	std::string name = " ";
+	//open window for change particle color
+	bool changingColor = false;
+
+	bool operator<(const ColorTime &color) const
+	{
+		return position < color.position;
+	}
+};
+
+struct StartValues
+{
+	// Start values
+	float2 life = float2(0.0f, 5.0f);
+	float2 speed = float2(1.5f, 3.0f);
+	float2 acceleration = float2(0.0f, 0.0f);
+	float2 size = float2(1.0f, 2.0f);
+	float2 rotation = float2(0.0f, 1.0f);
+	float2 angularAcceleration = float2(0.0f, 0.0f);
+	std::list<ColorTime> color;
+	bool timeColor = false;
+	bool revive = false;
+
+	AABB colision = AABB(float3(-0.5f, -0.5f, -0.5f), float3(0.5f, 0.5f, 0.5f));
+
+	float3 particleDirection = float3::unitY;
+
+	StartValues()
+	{
+		ColorTime colorTime;
+		colorTime.name = "Start Color";
+		color.push_back(colorTime);
+	}
+};
+
 struct EmitterInfo : ComponentInfo
 {
 
@@ -40,45 +79,8 @@ struct EmitterInfo : ComponentInfo
 	ShapeType shapeType = ShapeType_BOX;
 
 	ResourceTexture* texture = nullptr;
-};
 
-struct ColorTime
-{
-	float4 color = float4::one;
-	float position = 0.0f;
-	std::string name = " ";
-	//open window for change particle color
-	bool changingColor = false;
-
-	bool operator<(const ColorTime &color) const
-	{
-		return position < color.position;
-	}
-};
-
-struct StartValues
-{
-	// Start values
-	float2 life = float2(0.0f, 5.0f);
-	float2 speed = float2(1.5f, 3.0f);
-	float2 acceleration = float2(0.0f,0.0f);
-	float2 size = float2(1.0f, 2.0f);
-	float2 rotation = float2(0.0f, 1.0f);
-	float2 angularAcceleration = float2(0.0f,0.0f);
-	std::list<ColorTime> color;
-	bool timeColor = false;
-	bool revive = false;
-
-	AABB colision = AABB(float3(-0.5f, -0.5f, -0.5f), float3(0.5f, 0.5f, 0.5f));
-
-	float3 particleDirection = float3::unitY;
-
-	StartValues()
-	{
-		ColorTime colorTime;
-		colorTime.name = "Start Color";
-		color.push_back(colorTime);
-	}
+	StartValues startValues;
 };
 
 class ComponentEmitter: public Component

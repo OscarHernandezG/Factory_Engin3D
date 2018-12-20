@@ -36,6 +36,8 @@ ComponentEmitter::ComponentEmitter(GameObject* gameObject, EmitterInfo* info) : 
 
 		shapeType = info->shapeType;
 		texture = info->texture;
+
+		startValues = info->startValues;
 	}
 	App->sceneIntro->octree.Insert(gameObject);
 }
@@ -444,6 +446,45 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 	json_object_set_number(parent, "UUID", GetUUID());
 
 	json_object_set_number(parent, "Time Created", GetTime());
+
+
+	json_object_set_number(parent, "lifeMin", startValues.life.x);
+	json_object_set_number(parent, "lifeMax", startValues.life.y);
+
+	json_object_set_number(parent, "speedMin", startValues.speed.x);
+	json_object_set_number(parent, "speedMax", startValues.speed.y);
+
+	json_object_set_number(parent, "accelerationMin", startValues.acceleration.x);
+	json_object_set_number(parent, "accelerationMax", startValues.acceleration.y);
+
+	json_object_set_number(parent, "sizeMin", startValues.size.x);
+	json_object_set_number(parent, "sizeMax", startValues.size.y);
+
+	json_object_set_number(parent, "rotationMin", startValues.rotation.x);
+	json_object_set_number(parent, "rotationMax", startValues.rotation.y);
+
+	json_object_set_number(parent, "angularAccelerationMin", startValues.angularAcceleration.x);
+	json_object_set_number(parent, "angularAccelerationMax", startValues.angularAcceleration.y);
+
+	// TODO: save colors
+	json_object_set_number(parent, "timeColor", startValues.timeColor);
+
+	json_object_set_number(parent, "revive", startValues.revive);
+
+
+	json_object_set_number(parent, "colisionMinX", startValues.colision.minPoint.x);
+	json_object_set_number(parent, "colisionMinY", startValues.colision.minPoint.y);
+	json_object_set_number(parent, "colisionMinZ", startValues.colision.minPoint.z);
+	
+	json_object_set_number(parent, "colisionMaxX", startValues.colision.maxPoint.x);
+	json_object_set_number(parent, "colisionMaxY", startValues.colision.maxPoint.y);
+	json_object_set_number(parent, "colisionMaxZ", startValues.colision.maxPoint.z);
+
+	json_object_set_number(parent, "particleDirectionX", startValues.particleDirection.x);
+	json_object_set_number(parent, "particleDirectionY", startValues.particleDirection.y);
+	json_object_set_number(parent, "particleDirectionZ", startValues.particleDirection.z);
+
+
 
 
 	json_object_set_number(parent, "duration", duration);
