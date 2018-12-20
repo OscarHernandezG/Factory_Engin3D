@@ -98,6 +98,8 @@ public:
 
 	void CheckMinMax(float2 & value);
 	void Revive(float3 pos);
+	void ClearEmitter();
+	void SoftClearEmitter();
 	void CreateParticles(int particlesToCreate, float3 pos = float3::zero);
 	bool EditColor(ColorTime & colorTime, bool first = true);
 

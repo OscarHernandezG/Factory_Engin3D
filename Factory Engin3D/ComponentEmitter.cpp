@@ -45,6 +45,7 @@ ComponentEmitter::ComponentEmitter(GameObject* gameObject, EmitterInfo* info) : 
 
 ComponentEmitter::~ComponentEmitter()
 {
+	ClearEmitter();
 }
 
 void ComponentEmitter::StartEmitter()
@@ -128,6 +129,23 @@ void ComponentEmitter::Revive(float3 pos)
 	CreateParticles(particlesToCreate, pos);
 
 }
+
+void ComponentEmitter::ClearEmitter()
+{
+	for (std::list<Particle*>::iterator iterator = particles.begin(); iterator != particles.end(); ++iterator)
+	{
+		(*iterator)->active = false;
+		(*iterator)->owner = nullptr;
+	}
+
+	particles.clear();
+}
+
+void ComponentEmitter::SoftClearEmitter()
+{
+	particles.clear();
+}
+
 
 void ComponentEmitter::CreateParticles(int particlesToCreate, float3 pos)
 {

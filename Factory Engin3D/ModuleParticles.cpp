@@ -65,7 +65,7 @@ void ModuleParticle::DrawParticles()
 	{
 		Particle* currPart = partQueue.top();
 
-		if (currPart->owner->gameObject->canDraw)
+		if (currPart->owner && currPart->owner->gameObject->canDraw)
 			currPart->Draw();
 
 		partQueue.pop();
@@ -106,6 +106,10 @@ bool ModuleParticle::GetParticle(int& id)
 
 void ModuleParticle::ClearEmitters()
 {
+	for (std::list<ComponentEmitter*>::iterator emitter = emitters.begin(); emitter != emitters.end(); ++emitter)
+	{
+		(*emitter)->SoftClearEmitter();
+	}
 	emitters.clear();
 
 	for (int i = 0; i < MAX_PARTICLES; ++i)

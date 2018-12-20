@@ -110,10 +110,8 @@ void GameObject::PostUpdate()
 		}
 		for (list<Component*>::iterator iterator = toDelete.begin(); iterator != toDelete.end(); ++iterator)
 		{
-			Component* it = *iterator;
+			RemoveComponent(*iterator);
 
-			components.remove(it);
-			delete *iterator;
 			App->gameObject->redoOc = true;
 		}
 
@@ -427,6 +425,12 @@ void GameObject::RemoveComponent(Component* component)
 {
 	if (component != nullptr)
 	{
+		if (component->type == ComponentType_EMITTER)
+		{
+			((ComponentEmitter*)component)->ClearEmitter();
+			App->particle->emitters.remove((ComponentEmitter*)component);
+			LOG("Emitter removed");
+		}
 		components.remove(component);
 		delete component;
 		component = nullptr;
