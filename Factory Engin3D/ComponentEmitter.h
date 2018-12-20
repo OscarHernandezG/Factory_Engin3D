@@ -11,6 +11,37 @@
 #include <list>
 
 
+enum ShapeType {
+	ShapeType_BOX,
+	ShapeType_SPHERE,
+	ShapeType_SPHERE_CENTER,
+	ShapeType_SPHERE_BORDER
+};
+
+struct EmitterInfo : ComponentInfo
+{
+
+	float duration = 1.0f;
+
+	bool loop = true;
+
+
+	bool burst = false;
+	int minPart = 0;
+	int maxPart = 10;
+	float repeatTime = 1.0f;
+
+	float3 posDifAABB = float3::zero;
+	float gravity = 0.0f;
+
+	AABB boxCreation = AABB(float3(-0.5f, -0.5f, -0.5f), float3(0.5f, 0.5f, 0.5f));
+	Sphere SphereCreation = Sphere(float3::zero, 1.0f);
+
+	ShapeType shapeType = ShapeType_BOX;
+
+	ResourceTexture* texture = nullptr;
+};
+
 struct ColorTime
 {
 	float4 color = float4::one;
@@ -24,7 +55,6 @@ struct ColorTime
 		return position < color.position;
 	}
 };
-
 
 struct StartValues
 {
@@ -51,16 +81,11 @@ struct StartValues
 	}
 };
 
-enum ShapeType {
-	ShapeType_BOX,
-	ShapeType_SPHERE,
-	ShapeType_SPHERE_CENTER,
-	ShapeType_SPHERE_BORDER
-};
 class ComponentEmitter: public Component
 {
 public:
 	ComponentEmitter(GameObject* gameObject);
+	ComponentEmitter(GameObject* gameObject, EmitterInfo* info);
 	~ComponentEmitter();
 
 	void StartEmitter();
@@ -75,6 +100,8 @@ public:
 	bool EditColor(ColorTime & colorTime, bool first = true);
 
 	ImVec4 EqualsFloat4(const float4 float4D);
+
+	void SaveComponent(JSON_Object * parent);
 
 public:
 	Timer timer;

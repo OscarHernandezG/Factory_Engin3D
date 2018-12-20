@@ -15,6 +15,31 @@ ComponentEmitter::ComponentEmitter(GameObject* gameObject) : Component(gameObjec
 	App->sceneIntro->octree.Insert(gameObject);
 }
 
+ComponentEmitter::ComponentEmitter(GameObject* gameObject, EmitterInfo* info) : Component(gameObject, ComponentType_EMITTER)
+{
+	if (info)
+	{
+		duration = info->duration;
+
+		loop = info->loop;
+
+		burst = info->burst;
+		minPart = info->minPart;
+		maxPart = info->maxPart;
+		repeatTime = info->repeatTime;
+
+		// posDifAABB
+		gravity = info->gravity;
+
+		// boxCreation
+		// SphereCreation
+
+		shapeType = info->shapeType;
+		texture = info->texture;
+	}
+	App->sceneIntro->octree.Insert(gameObject);
+}
+
 
 ComponentEmitter::~ComponentEmitter()
 {
@@ -112,8 +137,7 @@ void ComponentEmitter::CreateParticles(int particlesToCreate, float3 pos)
 		int particleId = 0;
 		if (App->particle->GetParticle(particleId))
 		{
-			if(pos.x == float3::zero.x && pos.y == float3::zero.y && pos.z == float3::zero.z)
-				pos = RandPos();
+			pos = RandPos();
 
 			App->particle->allParticles[particleId].SetActive(pos, startValues, &texture);
 
@@ -413,5 +437,40 @@ ImVec4 ComponentEmitter::EqualsFloat4(const float4 float4D)
 	return vec;
 }
 
+void ComponentEmitter::SaveComponent(JSON_Object* parent)
+{
+	json_object_set_number(parent, "Type", this->type);
+
+	json_object_set_number(parent, "UUID", GetUUID());
+
+	json_object_set_number(parent, "Time Created", GetTime());
+
+
+	json_object_set_number(parent, "duration", duration);
+
+	json_object_set_number(parent, "loop", loop);
+
+	json_object_set_number(parent, "burst", burst);
+	json_object_set_number(parent, "minPart", minPart);
+	json_object_set_number(parent, "maxPart", maxPart);
+	json_object_set_number(parent, "repeatTime", repeatTime);
+
+	SaveNumberArray(parent, "posDifAABB", posDifAABB.ptr(), 3);
+
+	json_object_set_number(parent, "gravity", gravity);
+
+	SaveNumberArray(parent, "boxCreationMin", boxCreation.minPoint.ptr(), 3);
+	SaveNumberArray(parent, "boxCreationMax", boxCreation.maxPoint.ptr(), 3);
+
+	json_object_set_number(parent, "SphereCreation", SphereCreation.r);
+
+	json_object_set_number(parent, "shapeType", shapeType);
+
+	if (texture)
+	json_object_set_string(parent, "texture", texture->file.data());
+	else
+	json_object_set_string(parent, "texture", "noTexture");
+
+}
 
 // todo event system to delete texture

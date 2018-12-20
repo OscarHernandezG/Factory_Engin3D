@@ -22,6 +22,7 @@ public:
 	void DrawParticles();
 	//void SortParticles();
 	bool GetParticle(int& id);
+	void ClearEmitters();
 public:
 
 	std::list<ComponentEmitter*> emitters;

@@ -268,6 +268,9 @@ void ModuleResources::LoadIndexGPU(char * &cursor, uint &bytes, ResourceMesh * b
 
 ResourceTexture* ModuleResources::LoadTexture(const char* path)
 {
+	if (path == "noTexture")
+		return nullptr;
+
 	Resource* resourceLoaded = FindLoadedResource(path, ResourceType::texture);
 	if (resourceLoaded)
 	{

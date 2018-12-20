@@ -269,8 +269,30 @@ ComponentInfo* GameObject::LoadComponentInfo(JSON_Object* info, ComponentType ty
 		ret = (ComponentInfo*)textInfo;
 	}
 	break;
-	case ComponentType_LIGHT:
-		// TODO
+	case ComponentType_EMITTER:
+	{
+		EmitterInfo* emitterInfo = new EmitterInfo();
+
+		emitterInfo->duration = json_object_get_number(info, "duration");
+
+		emitterInfo->loop = json_object_get_number(info, "loop");
+
+		emitterInfo->burst = json_object_get_number(info, "burst");
+		emitterInfo->minPart = json_object_get_number(info, "minPart");
+		emitterInfo->maxPart = json_object_get_number(info, "maxPart");
+		emitterInfo->repeatTime = json_object_get_number(info, "repeatTime");
+
+		// posDifAABB
+		emitterInfo->gravity = json_object_get_number(info, "gravity");
+
+		// boxCreation
+		// SphereCreation
+
+		emitterInfo->shapeType = (ShapeType)(int)json_object_get_number(info, "shapeType");
+		emitterInfo->texture = App->resources->LoadTexture(json_object_get_string(info, "texture"));
+
+		ret = emitterInfo;
+	}
 		break;
 	default:
 		break;
@@ -336,7 +358,7 @@ Component* GameObject::AddComponent(ComponentType type, ComponentInfo* info)
 		newComponent = (Component*)new Billboard(this);
 		break;
 	case ComponentType_EMITTER:
-		newComponent = /*(Component*)*/new ComponentEmitter(this);
+		newComponent = /*(Component*)*/new ComponentEmitter(this, (EmitterInfo*)info);
 
 		App->particle->emitters.push_back((ComponentEmitter*)newComponent);
 		break;
