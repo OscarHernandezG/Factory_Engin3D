@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "SDL/include/SDL.h"
 
+#include "GameTimer.h"
 class Application;
 
 enum GameState
@@ -50,6 +51,7 @@ public:
 	std::vector<float> fpsLog;
 	std::vector<float> msLog;
 
+	std::list<GameTimer*> gameTimerList;
 	bool oneFrame = false;
 private:
 	Timer	dtTimer;

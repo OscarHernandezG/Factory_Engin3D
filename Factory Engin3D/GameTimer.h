@@ -10,22 +10,24 @@ public:
 
 	// Constructor
 	GameTimer();
+	~GameTimer();
+
+	void Update(float dt);
 
 	void Start();
 	void Continue();
 	void Stop();
+	void Pause();
 
-	Uint32 Read();
-	float ReadSec();
+
+	Uint32 Read() const;
+	float ReadSec() const;
 
 private:
 
 	bool	running = false;
-	bool	paused = false;
-	Uint32	started_at = 0u;
-	Uint32	stopped_at = 0u;
-	Uint32  paused_at = 0u;
-	Uint32	restarted_at = 0u;
+	float	time = 0.0f;
+
 };
 
 #endif //__Game_TIMER_H__

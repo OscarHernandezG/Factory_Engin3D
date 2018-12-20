@@ -77,6 +77,8 @@ void Particle::SetActive(float3 pos, StartValues data, ResourceTexture ** textur
 bool Particle::Update(float dt)
 {
 	bool ret = true;
+	if (owner->simulatedGame == GameState_PAUSE)
+		dt = 0;
 	life += dt;
 	if (life < lifeTime)
 	{

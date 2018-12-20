@@ -23,7 +23,12 @@ update_status ModuleParticle::Update()
 	}
 
 	int count = 0;
-	float dt = App->time->GetdtGame();
+
+	float dt;
+	if(App->time->gameState == GameState_NONE)
+		dt = App->time->Getdt();
+	else
+		dt = App->time->GetdtGame();
 	for (int i = 0; i < MAX_PARTICLES; ++i)
 	{
 		if (allParticles[i].active)

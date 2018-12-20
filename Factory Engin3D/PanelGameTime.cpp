@@ -10,6 +10,7 @@ void ModuleImGui::CreateGameTime()
 
 		if (ImGui::Button("Play", { 50,25 }))
 		{
+			emitter->emitterActive = true;
 			if(emitter->simulatedGame == GameState_PAUSE)
 				emitter->timeSimulating.Continue();
 			else
@@ -24,7 +25,7 @@ void ModuleImGui::CreateGameTime()
 		if (ImGui::Button("Pause", { 50,25 }))
 		{
 			emitter->simulatedGame = GameState_PAUSE;
-			emitter->timeSimulating.Stop();
+			emitter->timeSimulating.Pause();
 		}
 		ImGui::SameLine();
 
@@ -32,13 +33,13 @@ void ModuleImGui::CreateGameTime()
 		{
 			emitter->simulatedGame = GameState_STOP;
 			emitter->emitterActive = false;
+			emitter->timeSimulating.Stop();
 		}
 
 		ImGui::Text("Game timer: ");
 
 		ImGui::SameLine();
-		std::string gameCount = std::to_string(emitter->timeSimulating.ReadSec());
-		ImGui::Text(gameCount.data());
+		ImGui::Text("%.3f", emitter->timeSimulating.ReadSec());
 
 	}
 	

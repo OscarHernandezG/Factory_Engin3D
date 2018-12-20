@@ -4,66 +4,55 @@
 // ----------------------------------------------------
 
 #include "GameTimer.h"
-
+#include "Application.h"
 // ---------------------------------------------
 GameTimer::GameTimer()
 {
+	App->time->gameTimerList.push_back(this);
+}
 
+GameTimer::~GameTimer()
+{
+	App->time->gameTimerList.remove(this);
+}
+
+void GameTimer::Update(float dt)
+{
+	if(running)
+		time += dt;
 }
 
 // ---------------------------------------------
 void GameTimer::Start()
 {
 	running = true;
-	paused = false;
-	started_at = SDL_GetTicks();
+	time = 0;
 }
 // ---------------------------------------------
 void GameTimer::Continue()
 {
 	running = true;
-	restarted_at = SDL_GetTicks();
 }
 
 // ---------------------------------------------
 void GameTimer::Stop()
 {
 	running = false;
-	stopped_at = SDL_GetTicks();
-	if (paused)
-		stopped_at += (restarted_at - stopped_at);
-	paused = true;
+	time = 0;
 }
 
 // ---------------------------------------------
-Uint32 GameTimer::Read()
+void GameTimer::Pause()
 {
-	if (running && paused)
-	{
-		return SDL_GetTicks() - started_at - (restarted_at - stopped_at);
-	}
-	else if (running)
-	{
-		return SDL_GetTicks() - started_at;
-	}
-	else
-	{
-		return stopped_at - started_at;
-	}
+	running = false;
+}
+// ---------------------------------------------
+Uint32 GameTimer::Read() const
+{
+	return time * 1000.0f;
 }
 
-float GameTimer::ReadSec()
+float GameTimer::ReadSec() const
 {
-	if (running && paused)
-	{
-		return (SDL_GetTicks() - started_at - (restarted_at - stopped_at)) / 1000.0f;
-	}
-	else if (running)
-	{
-		return (SDL_GetTicks() - started_at) / 1000.0f;
-	}
-	else
-	{
-		return (stopped_at - started_at) / 1000.0f;
-	}
+	return time;
 }
