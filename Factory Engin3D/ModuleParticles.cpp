@@ -17,6 +17,11 @@ update_status ModuleParticle::Update()
 {
 	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
 
+	for (std::list<ComponentEmitter*>::iterator emitter = emitters.begin(); emitter != emitters.end(); ++emitter)
+	{
+		(*emitter)->Update();
+	}
+
 	int count = 0;
 	float dt = App->time->GetdtGame();
 	for (int i = 0; i < MAX_PARTICLES; ++i)

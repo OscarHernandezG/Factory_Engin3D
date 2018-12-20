@@ -23,8 +23,8 @@ update_status ModuleGameObject::Update()
 {
 	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
 
-	if (rootGameObject)
-		rootGameObject->Update();
+	//if (rootGameObject)
+	//	rootGameObject->Update();
 
 	//App->geometry->Draww(rootGameObject);
 
