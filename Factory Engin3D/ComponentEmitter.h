@@ -45,7 +45,6 @@ struct StartValues
 
 	std::list<ColorTime> color;
 	bool timeColor = false;
-	bool revive = false;
 
 	AABB colision = AABB(float3(-0.5f, -0.5f, -0.5f), float3(0.5f, 0.5f, 0.5f));
 
@@ -66,6 +65,7 @@ struct EmitterInfo : ComponentInfo
 
 	bool loop = true;
 
+	bool revive = false;
 
 	bool burst = false;
 	int minPart = 0;
@@ -83,6 +83,14 @@ struct EmitterInfo : ComponentInfo
 	ResourceTexture* texture = nullptr;
 
 	StartValues startValues;
+
+	bool checkLife = false;
+	bool checkSpeed = false;
+	bool checkAcceleration = false;
+	bool checkSize = false;
+	bool checkRotation = false;
+	bool checkAngularAcceleration = false;
+	bool checkAngularVelocity = false;
 };
 
 class ComponentEmitter : public Component
@@ -100,7 +108,6 @@ public:
 
 	void ShowFloatValue(float2 & value, bool checkBox, const char * name, float v_speed, float v_min, float v_max);
 	void CheckMinMax(float2 & value);
-	void Revive(float3 pos);
 	void ClearEmitter();
 	void SoftClearEmitter();
 	void CreateParticles(int particlesToCreate, float3 pos = float3::zero);
@@ -147,6 +154,9 @@ private:
 	Timer loopTimer;
 	// Warm up the particle emiter (if true the particle emitter will be already started at play-time)
 	bool preWarm = true;
+
+	//Create other particle when he death
+	bool revive = false;
 
 	//Burst options
 	bool burst = false;

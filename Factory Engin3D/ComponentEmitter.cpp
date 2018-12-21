@@ -120,15 +120,6 @@ void ComponentEmitter::Update()
 
 }
 
-void ComponentEmitter::Revive(float3 pos)
-{
-	startValues.revive = false;
-	int particlesToCreate = minPart;
-	if (minPart != maxPart)
-		particlesToCreate = (rand() % (maxPart - minPart)) + minPart;
-	CreateParticles(particlesToCreate, pos);
-
-}
 
 void ComponentEmitter::ClearEmitter()
 {
@@ -327,9 +318,8 @@ void ComponentEmitter::Inspector()
 		}
 		ImGui::Separator();
 
-		ImGui::Checkbox("Revive", &startValues.revive);
 		ImGui::Checkbox("Burst", &burst);
-		if (burst || startValues.revive)
+		if (burst)
 		{
 			ImGui::DragInt("Min particles", &minPart, 1.0f, 0, 100);
 			if (minPart > maxPart)
@@ -341,6 +331,11 @@ void ComponentEmitter::Inspector()
 		}
 		ImGui::Separator();
 
+		if (ImGui::Checkbox("Revive", &revive))
+		{
+			GameObject* subEmiter = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, gameObject, "SubEmition");
+			subEmiter->AddComponent(ComponentType_EMITTER, nullptr);
+		}
 
 		ImGui::Separator();
 		ImGui::Checkbox("Bounding Box", &drawAABB);
@@ -495,6 +490,13 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 
 	json_object_set_number(parent, "Time Created", GetTime());
 
+	json_object_set_boolean(parent, "checkLife", checkLife);
+	json_object_set_boolean(parent, "checkSpeed", checkSpeed);
+	json_object_set_boolean(parent, "checkAcceleration", checkAcceleration);
+	json_object_set_boolean(parent, "checkSize", checkSize);
+	json_object_set_boolean(parent, "checkRotation", checkRotation);
+	json_object_set_boolean(parent, "checkAngularAcceleration", checkAngularAcceleration);
+	json_object_set_boolean(parent, "checkAngularVelocity", checkAngularVelocity);
 
 	json_object_set_number(parent, "lifeMin", startValues.life.x);
 	json_object_set_number(parent, "lifeMax", startValues.life.y);
@@ -539,7 +541,7 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 	// TODO: save colors
 	json_object_set_number(parent, "timeColor", startValues.timeColor);
 
-	json_object_set_number(parent, "revive", startValues.revive);
+	json_object_set_number(parent, "revive", revive);
 
 
 	json_object_set_number(parent, "colisionMinX", startValues.colision.minPoint.x);
@@ -553,9 +555,6 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 	json_object_set_number(parent, "particleDirectionX", startValues.particleDirection.x);
 	json_object_set_number(parent, "particleDirectionY", startValues.particleDirection.y);
 	json_object_set_number(parent, "particleDirectionZ", startValues.particleDirection.z);
-
-
-
 
 	json_object_set_number(parent, "duration", duration);
 

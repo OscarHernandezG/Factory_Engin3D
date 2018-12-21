@@ -58,8 +58,6 @@ private:
 	float acceleration = 0.0f;
 	float3 direction = float3::zero; 
 
-	bool revive = false;
-
 	float rotationSpeed = 0.0f;
 	float angularVelocity = 0.0f;
 	float angularAcceleration = 0.0f;

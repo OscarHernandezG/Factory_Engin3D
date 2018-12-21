@@ -339,7 +339,7 @@ ComponentInfo* GameObject::LoadComponentInfo(JSON_Object* info, ComponentType ty
 
 		startValues->timeColor = json_object_get_number(info, "timeColor");
 
-		startValues->revive = json_object_get_number(info, "revive");
+		emitterInfo->revive = json_object_get_number(info, "revive");
 
 		float3 colMin = float3(
 			json_object_get_number(info, "colisionMinX"),

@@ -27,8 +27,6 @@ Particle::Particle(float3 pos, StartValues data, ResourceTexture** texture)
 	for (std::list<ColorTime>::iterator iter = data.color.begin(); iter != data.color.end(); ++iter)
 		color.push_back(*iter);
 
-	revive = data.revive;
-
 	multicolor = data.timeColor;
 	this->texture = texture;	
 }
@@ -67,8 +65,6 @@ void Particle::SetActive(float3 pos, StartValues data, ResourceTexture ** textur
 
 	for (std::list<ColorTime>::iterator iter = data.color.begin(); iter != data.color.end(); ++iter)
 		color.push_back(*iter);
-
-	revive = data.revive;
 
 	multicolor = data.timeColor;
 	this->texture = texture;
@@ -118,8 +114,6 @@ bool Particle::Update(float dt)
 	{
 		active = false;
 		ret = false;
-		if(revive)
-			owner->Revive(transform.position);
 		owner->particles.remove(this);
 	}
 
