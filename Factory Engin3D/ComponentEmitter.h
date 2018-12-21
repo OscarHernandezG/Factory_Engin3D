@@ -35,12 +35,14 @@ struct ColorTime
 struct StartValues
 {
 	// Start values
-	float2 life = float2(0.0f, 5.0f);
-	float2 speed = float2(1.5f, 3.0f);
+	float2 life = float2(5.0f, 5.0f);
+	float2 speed = float2(3.0f, 3.0f);
 	float2 acceleration = float2(0.0f, 0.0f);
-	float2 size = float2(1.0f, 2.0f);
-	float2 rotation = float2(0.0f, 1.0f);
+	float2 size = float2(1.0f, 1.0f);
+	float2 rotation = float2(0.0f, 0.0f);
 	float2 angularAcceleration = float2(0.0f, 0.0f);
+	float2 angularVelocity = float2(0.0f, 0.0f);
+
 	std::list<ColorTime> color;
 	bool timeColor = false;
 	bool revive = false;
@@ -83,7 +85,7 @@ struct EmitterInfo : ComponentInfo
 	StartValues startValues;
 };
 
-class ComponentEmitter: public Component
+class ComponentEmitter : public Component
 {
 public:
 	ComponentEmitter(GameObject* gameObject);
@@ -96,6 +98,7 @@ public:
 	float3 RandPos();
 	void Inspector();
 
+	void ShowFloatValue(float2 & value, bool checkBox, const char * name, float v_speed, float v_min, float v_max);
 	void CheckMinMax(float2 & value);
 	void Revive(float3 pos);
 	void ClearEmitter();
@@ -129,7 +132,16 @@ private:
 	//---------------------------------------
 	// Duration of the particle emitter
 	float duration = 1.0f;
-	
+
+	//Check box Randomize values
+	bool checkLife = false;
+	bool checkSpeed = false;
+	bool checkAcceleration = false;
+	bool checkSize = false;
+	bool checkRotation = false;
+	bool checkAngularAcceleration = false;
+	bool checkAngularVelocity = false;
+
 	// Loop the particle (if true the particle emitter will never stop)
 	bool loop = true;
 	Timer loopTimer;
@@ -163,6 +175,6 @@ private:
 	int rateOverTime = 10;
 	float timeToParticle = 0.0f;
 	//---------------------------------------
-	
+
 };
 #endif // !__Emitter_H__

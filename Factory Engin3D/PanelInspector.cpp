@@ -15,7 +15,7 @@ void ModuleImGui::CreateInspector(float2 scale)
 	{
 		char name[50];
 		strcpy_s(name, 50, currObject->name.c_str());
-		if (ImGui::InputText("", name, 50, ImGuiInputTextFlags_EnterReturnsTrue))
+		if (ImGui::InputText("##Name", name, 50, ImGuiInputTextFlags_EnterReturnsTrue))
 			currObject->name = name;
 
 		if (ImGui::Checkbox("Active", currObject->GetActiveReference()))
