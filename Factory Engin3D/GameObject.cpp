@@ -313,6 +313,29 @@ ComponentInfo* GameObject::LoadComponentInfo(JSON_Object* info, ComponentType ty
 		startValues->angularAcceleration.y = json_object_get_number(info, "angularAccelerationMax");
 
 		// TODO: Load colors
+		JSON_Array* colorArray = json_object_get_array(info, "Colors");
+
+		int numColors = json_array_get_count(colorArray);
+
+		startValues->color.clear();
+		startValues->color.resize(numColors);
+		int i = 0;
+		for (std::list<ColorTime>::iterator iterator = startValues->color.begin(); iterator != startValues->color.end(); ++iterator, ++i)
+		{
+			JSON_Object* currCol = json_array_get_object(colorArray, i);
+
+			(*iterator).color = float4(
+				json_object_get_number(currCol, "colorX"),
+				json_object_get_number(currCol, "colorY"),
+				json_object_get_number(currCol, "colorZ"),
+				json_object_get_number(currCol, "colorW")
+			);
+
+			(*iterator).position = json_object_get_number(currCol, "position");
+
+			(*iterator).name = json_object_get_string(currCol, "name");
+		}
+
 
 		startValues->timeColor = json_object_get_number(info, "timeColor");
 
