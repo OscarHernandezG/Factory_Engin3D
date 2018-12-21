@@ -29,14 +29,19 @@ update_status ModuleParticle::Update()
 		dt = App->time->Getdt();
 	else
 		dt = App->time->GetdtGame();
+
+	partVec.resize(activeParticles);
+	
+	int j = 0;
 	for (int i = 0; i < MAX_PARTICLES; ++i)
 	{
 		if (allParticles[i].active)
 		{
-			allParticles[i].Update(dt);
+			allParticles[i].Update(dt); //Particles can be created here, they sould not be updated yet
 			++count;
 			allParticles[i].SetCamDistance();
-			partQueue.push(&allParticles[i]);
+			//partQueue.push(&allParticles[i]);
+			partVec[j++] = &allParticles[i];
 		}
 		else
 		{
@@ -61,24 +66,30 @@ void ModuleParticle::DrawParticles()
 {
 	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
 
-	while (!partQueue.empty())
+	//while (!partQueue.empty())
+	//{
+	//	Particle* currPart = partQueue.top();
+
+	//	//if (currPart->owner && currPart->owner->gameObject->canDraw)
+	//		currPart->Draw();
+
+	//	partQueue.pop();
+	//}
+
+	for (int i = 0; i < partVec.size(); ++i)
 	{
-		Particle* currPart = partQueue.top();
-
-		//if (currPart->owner && currPart->owner->gameObject->canDraw)
-			currPart->Draw();
-
-		partQueue.pop();
+		if (partVec[i]->owner && partVec[i]->owner->gameObject->canDraw)
+			partVec[i]->Draw();
 	}
 }
 
-/*void ModuleParticle::SortParticles()
+void ModuleParticle::SortParticles()
 {
 	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
 
-	std::sort(&allParticles[0], &allParticles[MAX_PARTICLES]);
+	std::sort(partVec.begin(), partVec.end(), particleCompare());
 }
-*/
+
 bool ModuleParticle::GetParticle(int& id)
 {
 	for (int i = lastUsedParticle; i < MAX_PARTICLES; ++i) 

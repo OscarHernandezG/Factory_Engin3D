@@ -1,7 +1,7 @@
 #ifndef __MouduleParticle_H__
 #define __MouduleParticle_H__
 
-#define MAX_PARTICLES 1
+#define MAX_PARTICLES 1000
 
 #include "Application.h"
 
@@ -20,6 +20,7 @@ public:
 
 	void Draw();
 	void DrawParticles();
+	void SortParticles();
 	//void SortParticles();
 	bool GetParticle(int& id);
 	void ClearEmitters();
@@ -34,9 +35,13 @@ public:
 
 	ParticlePlane* plane = nullptr;
 
+	int activeParticles = 0;
 private:
 	
 	std::priority_queue<Particle*, std::vector<Particle*>,particleCompare> partQueue;
+
+	std::vector<Particle*> partVec;
+
 	int lastUsedParticle = 0;
 };
 
