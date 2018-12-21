@@ -35,12 +35,14 @@ struct ColorTime
 struct StartValues
 {
 	// Start values
-	float2 life = float2(0.0f, 5.0f);
-	float2 speed = float2(1.5f, 3.0f);
+	float2 life = float2(5.0f, 5.0f);
+	float2 speed = float2(3.0f, 3.0f);
 	float2 acceleration = float2(0.0f, 0.0f);
-	float2 size = float2(1.0f, 2.0f);
-	float2 rotation = float2(0.0f, 1.0f);
+	float2 size = float2(1.0f, 1.0f);
+	float2 rotation = float2(0.0f, 0.0f);
 	float2 angularAcceleration = float2(0.0f, 0.0f);
+	float2 angularVelocity = float2(0.0f, 0.0f);
+
 	std::list<ColorTime> color;
 	bool timeColor = false;
 	bool revive = false;
@@ -138,6 +140,7 @@ private:
 	bool checkSize = false;
 	bool checkRotation = false;
 	bool checkAngularAcceleration = false;
+	bool checkAngularVelocity = false;
 
 	// Loop the particle (if true the particle emitter will never stop)
 	bool loop = true;

@@ -61,6 +61,7 @@ private:
 	bool revive = false;
 
 	float rotationSpeed = 0.0f;
+	float angularVelocity = 0.0f;
 	float angularAcceleration = 0.0f;
 
 

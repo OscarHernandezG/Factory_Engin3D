@@ -216,10 +216,13 @@ void ComponentEmitter::Inspector()
 		ShowFloatValue(startValues.acceleration, checkAcceleration, "Acceleration", 0.25f, -5.0f, 5.0f);
 
 		ImGui::Checkbox("##Rotation", &checkRotation);
-		ShowFloatValue(startValues.rotation, checkRotation, "Rotation", 0.25f, -720.0f, 720.0f);
+		ShowFloatValue(startValues.rotation, checkRotation, "Initial Rotation", 0.25f, -360.0f, 360.0f);
+
+		ImGui::Checkbox("##AngularVelocity", &checkAngularVelocity);
+		ShowFloatValue(startValues.angularVelocity, checkAngularVelocity, "Angular Velocity", 0.25f, -45.0f, 45.0f);
 
 		ImGui::Checkbox("##AngularAcceleration", &checkAngularAcceleration);
-		ShowFloatValue(startValues.angularAcceleration, checkAngularAcceleration, "AngularAcceleration", 0.25f, -45.0f, 45.0f);
+		ShowFloatValue(startValues.angularAcceleration, checkAngularAcceleration, "Angular Acceleration", 0.25f, -45.0f, 45.0f);
 
 		ImGui::Checkbox("##Lifetime", &checkLife);
 		ShowFloatValue(startValues.life, checkLife, "Lifetime", 0.5f, 1.0f, 20.0f);

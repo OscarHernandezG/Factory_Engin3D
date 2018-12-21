@@ -16,6 +16,7 @@ Particle::Particle(float3 pos, StartValues data, ResourceTexture** texture)
 	direction = data.particleDirection;
 
 	rotation = CreateRandomNum(data.rotation) * DEGTORAD;
+	angularVelocity = CreateRandomNum(data.angularVelocity) * DEGTORAD;
 	angularAcceleration = CreateRandomNum(data.angularAcceleration) * DEGTORAD;
 
 	transform.position = pos;
@@ -53,7 +54,8 @@ void Particle::SetActive(float3 pos, StartValues data, ResourceTexture ** textur
 	acceleration = CreateRandomNum(data.acceleration);
 	direction = data.particleDirection;
 
-	rotation = CreateRandomNum(data.rotation) * DEGTORAD;
+	angle = CreateRandomNum(data.rotation) * DEGTORAD;
+	angularVelocity = CreateRandomNum(data.angularVelocity) * DEGTORAD;
 	angularAcceleration = CreateRandomNum(data.angularAcceleration) * DEGTORAD;
 
 	transform.position = pos;
@@ -108,8 +110,8 @@ bool Particle::Update(float dt)
 		else
 			currentColor = color[index].color;
 
-		rotation += angularAcceleration * dt;
-		angle += rotation * dt;
+		angularVelocity += angularAcceleration * dt;
+		angle += angularVelocity * dt;
 		transform.rotation = transform.rotation.Mul(Quat::RotateZ(angle));
 	}
 	else
