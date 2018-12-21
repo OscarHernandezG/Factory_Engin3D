@@ -227,6 +227,9 @@ void ModuleGameObject::LoadNewSceneGO(int numObjects, JSON_Array * objArray, std
 
 void ModuleGameObject::DeletePreviousScene()
 {
+	// Clear all emitters from module particles
+	App->particle->ClearEmitters();
+
 	rootGameObject->RealDelete();
 	delete rootGameObject;
 
@@ -235,8 +238,6 @@ void ModuleGameObject::DeletePreviousScene()
 	//App->geometry->plane = nullptr;
 	App->sceneIntro->octree.Clear();
 
-	// Clear all emitters from module particles
-	App->particle->ClearEmitters();
 }
 
 GameObject* ModuleGameObject::FindByID(uint UUID)
