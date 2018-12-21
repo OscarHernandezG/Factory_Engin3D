@@ -56,6 +56,8 @@ void Particle::SetActive(float3 pos, StartValues data, ResourceTexture ** textur
 	active = true;
 	subEmiter = data.subEmiter;
 	index = 0;
+
+	App->particle->activeParticles++;
 }
 
 bool Particle::Update(float dt)
@@ -131,6 +133,7 @@ void Particle::EndParticle(bool &ret)
 	active = false;
 	ret = false;
 	owner->particles.remove(this);
+	App->particle->activeParticles--;
 }
 
 void Particle::LookAtCamera()
