@@ -50,6 +50,8 @@ struct StartValues
 
 	float3 particleDirection = float3::unitY;
 
+	bool subEmiter = false;
+
 	StartValues()
 	{
 		ColorTime colorTime;
@@ -64,8 +66,6 @@ struct EmitterInfo : ComponentInfo
 	float duration = 1.0f;
 
 	bool loop = true;
-
-	bool revive = false;
 
 	bool burst = false;
 	int minPart = 0;
@@ -91,6 +91,8 @@ struct EmitterInfo : ComponentInfo
 	bool checkRotation = false;
 	bool checkAngularAcceleration = false;
 	bool checkAngularVelocity = false;
+
+	GameObject* subEmiter = nullptr;
 };
 
 class ComponentEmitter : public Component
@@ -117,6 +119,7 @@ public:
 
 	void SaveComponent(JSON_Object * parent);
 
+	int GetEmition() const;
 public:
 	Timer timer;
 	Timer burstTime;
@@ -134,6 +137,7 @@ public:
 	GameState simulatedGame = GameState_NONE;
 	GameTimer timeSimulating;
 
+	GameObject* subEmiter = nullptr;
 private:
 	// General info
 	//---------------------------------------
@@ -156,7 +160,6 @@ private:
 	bool preWarm = true;
 
 	//Create other particle when he death
-	bool revive = false;
 
 	//Burst options
 	bool burst = false;

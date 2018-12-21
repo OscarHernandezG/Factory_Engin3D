@@ -148,7 +148,7 @@ void ComponentEmitter::CreateParticles(int particlesToCreate, float3 pos)
 		int particleId = 0;
 		if (App->particle->GetParticle(particleId))
 		{
-			pos = RandPos();
+			pos += RandPos();
 
 			App->particle->allParticles[particleId].SetActive(pos, startValues, &texture);
 
@@ -331,12 +331,21 @@ void ComponentEmitter::Inspector()
 		}
 		ImGui::Separator();
 
-		if (ImGui::Checkbox("Revive", &revive))
+		if (ImGui::Checkbox("SubEmiter", &startValues.subEmiter))
 		{
-			GameObject* subEmiter = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, gameObject, "SubEmition");
-			subEmiter->AddComponent(ComponentType_EMITTER, nullptr);
+			if (startValues.subEmiter)
+			{
+				if (subEmiter)
+					subEmiter->SetActive(true);
+				else
+				{
+					subEmiter = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, gameObject, "SubEmition");
+					subEmiter->AddComponent(ComponentType_EMITTER, nullptr);
+				}
+			}
+			else
+				subEmiter->SetActive(false);
 		}
-
 		ImGui::Separator();
 		ImGui::Checkbox("Bounding Box", &drawAABB);
 		if (drawAABB)
@@ -541,7 +550,7 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 	// TODO: save colors
 	json_object_set_number(parent, "timeColor", startValues.timeColor);
 
-	json_object_set_number(parent, "revive", revive);
+	json_object_set_boolean(parent, "subEmiter", startValues.subEmiter);
 
 
 	json_object_set_number(parent, "colisionMinX", startValues.colision.minPoint.x);
@@ -581,6 +590,11 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 	else
 	json_object_set_string(parent, "texture", "noTexture");
 
+}
+
+int ComponentEmitter::GetEmition() const
+{
+	return rateOverTime;
 }
 
 // todo event system to delete texture

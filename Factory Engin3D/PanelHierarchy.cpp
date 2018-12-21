@@ -43,7 +43,7 @@ void ModuleImGui::CreateGameObjectHierarchy(float2 scale)
 		{
 			str = "Random Object ";
 			str.append(std::to_string(rand() % 100));
-			App->gameObject->CreateEmptyGameObject(objectSelected, str.data());
+			App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, objectSelected, str.data());
 		}
 		if (ImGui::MenuItem("Delete"))
 			objectSelected->Delete();

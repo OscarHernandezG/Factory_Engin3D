@@ -28,7 +28,8 @@ Particle::Particle(float3 pos, StartValues data, ResourceTexture** texture)
 		color.push_back(*iter);
 
 	multicolor = data.timeColor;
-	this->texture = texture;	
+	this->texture = texture;
+	subEmiter = data.subEmiter;
 }
 
 Particle::Particle()
@@ -42,6 +43,7 @@ Particle::~Particle()
 
 void Particle::SetActive(float3 pos, StartValues data, ResourceTexture ** texture)
 {
+
 	plane = App->particle->plane;
 
 	lifeTime = CreateRandomNum(data.life);
@@ -70,6 +72,7 @@ void Particle::SetActive(float3 pos, StartValues data, ResourceTexture ** textur
 	this->texture = texture;
 
 	active = true;
+	subEmiter = data.subEmiter;
 }
 
 bool Particle::Update(float dt)
@@ -112,6 +115,12 @@ bool Particle::Update(float dt)
 	}
 	else
 	{
+		color.clear();
+		if (subEmiter && owner->subEmiter && owner->subEmiter->HasComponent(ComponentType_EMITTER))
+		{
+			ComponentEmitter* emiter = (ComponentEmitter*)owner->subEmiter->GetComponent(ComponentType_EMITTER);
+			emiter->CreateParticles(emiter->GetEmition(), transform.position);		
+		}
 		active = false;
 		ret = false;
 		owner->particles.remove(this);
