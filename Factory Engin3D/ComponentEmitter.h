@@ -45,11 +45,12 @@ struct StartValues
 
 	std::list<ColorTime> color;
 	bool timeColor = false;
-	bool revive = false;
 
 	AABB colision = AABB(float3(-0.5f, -0.5f, -0.5f), float3(0.5f, 0.5f, 0.5f));
 
 	float3 particleDirection = float3::unitY;
+
+	bool subEmiter = false;
 
 	StartValues()
 	{
@@ -65,7 +66,6 @@ struct EmitterInfo : ComponentInfo
 	float duration = 1.0f;
 
 	bool loop = true;
-
 
 	bool burst = false;
 	int minPart = 0;
@@ -83,6 +83,16 @@ struct EmitterInfo : ComponentInfo
 	ResourceTexture* texture = nullptr;
 
 	StartValues startValues;
+
+	bool checkLife = false;
+	bool checkSpeed = false;
+	bool checkAcceleration = false;
+	bool checkSize = false;
+	bool checkRotation = false;
+	bool checkAngularAcceleration = false;
+	bool checkAngularVelocity = false;
+
+	GameObject* subEmiter = nullptr;
 };
 
 class ComponentEmitter : public Component
@@ -95,21 +105,21 @@ public:
 	void StartEmitter();
 
 	void Update();
-	float3 RandPos();
-	void Inspector();
 
+	void Inspector();
+	float3 RandPos(ShapeType shapeType);
 	void ShowFloatValue(float2 & value, bool checkBox, const char * name, float v_speed, float v_min, float v_max);
 	void CheckMinMax(float2 & value);
-	void Revive(float3 pos);
 	void ClearEmitter();
 	void SoftClearEmitter();
-	void CreateParticles(int particlesToCreate, float3 pos = float3::zero);
+	void CreateParticles(int particlesToCreate, ShapeType shapeType, float3 pos = float3::zero);
 	bool EditColor(ColorTime & colorTime, bool first = true);
 
 	ImVec4 EqualsFloat4(const float4 float4D);
 
 	void SaveComponent(JSON_Object * parent);
 
+	int GetEmition() const;
 public:
 	Timer timer;
 	Timer burstTime;
@@ -128,6 +138,9 @@ public:
 	GameTimer timeSimulating;
 
 	bool dieOnAnimation = false;
+
+	GameObject* subEmiter = nullptr;
+	ShapeType normalShapeType = ShapeType_BOX;
 private:
 	// General info
 	//---------------------------------------
@@ -149,6 +162,8 @@ private:
 	// Warm up the particle emiter (if true the particle emitter will be already started at play-time)
 	bool preWarm = true;
 
+	//Create other particle when he death
+
 	//Burst options
 	bool burst = false;
 	int minPart = 0;
@@ -162,7 +177,8 @@ private:
 	AABB boxCreation = AABB(float3(-0.5f, -0.5f, -0.5f), float3(0.5f, 0.5f, 0.5f));
 	Sphere SphereCreation = Sphere(float3::zero, 1.0f);
 
-	ShapeType shapeType = ShapeType_BOX;
+	ShapeType burstType = ShapeType_BOX;
+	std::string burstTypeName = "Box Burst";
 
 	int nextPos = 100;
 	float4 nextColor = float4::zero;

@@ -6,32 +6,7 @@
 #include "pcg-c-basic-0.9/pcg_basic.h"
 
 Particle::Particle(float3 pos, StartValues data, ResourceTexture** texture)
-{
-	plane = App->particle->plane;
-
-	lifeTime = CreateRandomNum(data.life);
-
-	speed = CreateRandomNum(data.speed);
-	acceleration = CreateRandomNum(data.acceleration);
-	direction = data.particleDirection;
-
-	rotation = CreateRandomNum(data.rotation) * DEGTORAD;
-	angularVelocity = CreateRandomNum(data.angularVelocity) * DEGTORAD;
-	angularAcceleration = CreateRandomNum(data.angularAcceleration) * DEGTORAD;
-
-	transform.position = pos;
-	transform.rotation = Quat::FromEulerXYZ(0, 0, 0); //Start rotation
-	transform.scale = float3::one * CreateRandomNum(data.size);
-	LOG("size %f", transform.scale.x);
-
-	for (std::list<ColorTime>::iterator iter = data.color.begin(); iter != data.color.end(); ++iter)
-		color.push_back(*iter);
-
-	revive = data.revive;
-
-	multicolor = data.timeColor;
-	this->texture = texture;	
-}
+{}
 
 Particle::Particle()
 {
@@ -69,8 +44,6 @@ void Particle::SetActive(float3 pos, StartValues data, ResourceTexture ** textur
 	for (std::list<ColorTime>::iterator iter = data.color.begin(); iter != data.color.end(); ++iter)
 		color.push_back(*iter);
 
-	revive = data.revive;
-
 	multicolor = data.timeColor;
 	this->texture = texture;
 
@@ -81,6 +54,8 @@ void Particle::SetActive(float3 pos, StartValues data, ResourceTexture ** textur
 	currentFrame = 0u;
 
 	active = true;
+	subEmiter = data.subEmiter;
+	index = 0;
 }
 
 bool Particle::Update(float dt)
@@ -89,7 +64,7 @@ bool Particle::Update(float dt)
 	if (owner->simulatedGame == GameState_PAUSE)
 		dt = 0;
 	life += dt;
-	if (life < lifeTime)
+	if (life < lifeTime || owner->dieOnAnimation)
 	{
 		speed += acceleration * dt;
 		transform.position += direction * (speed * dt);
@@ -142,16 +117,19 @@ bool Particle::Update(float dt)
 		EndParticle(ret);
 	}
 
-
 	return ret;
 }
 
 void Particle::EndParticle(bool &ret)
 {
+	color.clear();
+	if (subEmiter && owner->subEmiter && owner->subEmiter->HasComponent(ComponentType_EMITTER))
+	{
+		ComponentEmitter* emiter = (ComponentEmitter*)owner->subEmiter->GetComponent(ComponentType_EMITTER);
+		emiter->CreateParticles(emiter->GetEmition(), emiter->normalShapeType, transform.position);
+	}
 	active = false;
 	ret = false;
-	if (revive)
-		owner->Revive(transform.position);
 	owner->particles.remove(this);
 }
 
@@ -176,7 +154,7 @@ void Particle::SetCamDistance()
 
 void Particle::Draw() const
 {
-	if (plane && texture && animation->size() > currentFrame)
+	if (plane && texture)
 		plane->Render(transform.GetMatrix(), *texture, animation->at(currentFrame), currentColor);
 }
 

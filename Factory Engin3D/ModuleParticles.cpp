@@ -65,7 +65,7 @@ void ModuleParticle::DrawParticles()
 	{
 		Particle* currPart = partQueue.top();
 
-		if (currPart->owner && currPart->owner->gameObject->canDraw)
+		//if (currPart->owner && currPart->owner->gameObject->canDraw)
 			currPart->Draw();
 
 		partQueue.pop();
@@ -81,26 +81,26 @@ void ModuleParticle::DrawParticles()
 */
 bool ModuleParticle::GetParticle(int& id)
 {
-	for (int i = lastUsedParticle; i < MAX_PARTICLES; i++) 
+	for (int i = lastUsedParticle; i < MAX_PARTICLES; ++i) 
 	{
 		if (!allParticles[i].active) 
 		{
-			lastUsedParticle = i;
+			lastUsedParticle = 0;
 			id = i;
 			return true;
 		}
 	}
 
-	for (int i = 0; i < lastUsedParticle; i++) 
+	for (int i = 0; i < lastUsedParticle; ++i) 
 	{
 		if (!allParticles[i].active) 
 		{
-			lastUsedParticle = i;
+			lastUsedParticle = 0;
 			id = i;
 			return true;
 		}
 	}
-
+	lastUsedParticle = 0;
 	return false;
 }
 

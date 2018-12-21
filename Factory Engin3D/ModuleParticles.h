@@ -1,7 +1,7 @@
 #ifndef __MouduleParticle_H__
 #define __MouduleParticle_H__
 
-#define MAX_PARTICLES 1000
+#define MAX_PARTICLES 1
 
 #include "Application.h"
 

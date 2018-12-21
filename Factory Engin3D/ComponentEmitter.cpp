@@ -34,7 +34,7 @@ ComponentEmitter::ComponentEmitter(GameObject* gameObject, EmitterInfo* info) : 
 		// boxCreation
 		// SphereCreation
 
-		shapeType = info->shapeType;
+		normalShapeType = info->shapeType;
 		texture = info->texture;
 
 		startValues = info->startValues;
@@ -68,7 +68,7 @@ void ComponentEmitter::Update()
 			if (App->time->gameState == GameState_PLAYING || simulatedGame == GameState_PLAYING)
 			{
 				int particlesToCreate = (time / (1.0f / rateOverTime));
-				CreateParticles(particlesToCreate);
+				CreateParticles(particlesToCreate, normalShapeType);
 
 				timeToParticle = (1.0f / rateOverTime);
 
@@ -85,7 +85,7 @@ void ComponentEmitter::Update()
 			int particlesToCreate = minPart;
 			if (minPart != maxPart)
 				particlesToCreate = (rand() % (maxPart - minPart)) + minPart;
-			CreateParticles(particlesToCreate);
+			CreateParticles(particlesToCreate, burstType);
 			//LOG("%i", particlesToCreate);
 		}
 		burstTime.Start();
@@ -120,15 +120,6 @@ void ComponentEmitter::Update()
 
 }
 
-void ComponentEmitter::Revive(float3 pos)
-{
-	startValues.revive = false;
-	int particlesToCreate = minPart;
-	if (minPart != maxPart)
-		particlesToCreate = (rand() % (maxPart - minPart)) + minPart;
-	CreateParticles(particlesToCreate, pos);
-
-}
 
 void ComponentEmitter::ClearEmitter()
 {
@@ -147,7 +138,7 @@ void ComponentEmitter::SoftClearEmitter()
 }
 
 
-void ComponentEmitter::CreateParticles(int particlesToCreate, float3 pos)
+void ComponentEmitter::CreateParticles(int particlesToCreate, ShapeType shapeType ,float3 pos)
 {
 	if (particlesToCreate == 0)
 		++particlesToCreate;
@@ -157,7 +148,7 @@ void ComponentEmitter::CreateParticles(int particlesToCreate, float3 pos)
 		int particleId = 0;
 		if (App->particle->GetParticle(particleId))
 		{
-			pos = RandPos();
+			pos += RandPos(shapeType);
 
 			App->particle->allParticles[particleId].SetActive(pos, startValues, &texture, &particleAnimation.textureIDs, animationSpeed);
 
@@ -169,13 +160,14 @@ void ComponentEmitter::CreateParticles(int particlesToCreate, float3 pos)
 	}
 }
 
-float3 ComponentEmitter::RandPos()
+float3 ComponentEmitter::RandPos(ShapeType shapeType)
 {
 	float3 spawn = float3::zero;
 	switch (shapeType)
 	{
 	case ShapeType_BOX:
 		spawn = boxCreation.RandomPointInside(App->randomMath);
+		startValues.particleDirection = float3::unitY;
 		break;
 
 	case ShapeType_SPHERE:
@@ -241,18 +233,15 @@ void ComponentEmitter::Inspector()
 		if (ImGui::BeginMenu("Change Shape"))
 		{
 			if (ImGui::MenuItem("Box"))
-			{
-				shapeType = ShapeType_BOX;
-				startValues.particleDirection = float3::unitY;
-			}
+				normalShapeType = ShapeType_BOX;
 			else if (ImGui::MenuItem("Sphere"))
-				shapeType = ShapeType_SPHERE;
+				normalShapeType = ShapeType_SPHERE;
 			ImGui::End();
 		}
 
 
 		float3 pos;
-		switch (shapeType)
+		switch (normalShapeType)
 		{
 		case ShapeType_BOX:
 			ImGui::Text("Box");
@@ -269,14 +258,14 @@ void ComponentEmitter::Inspector()
 
 			ImGui::Text("Particle emision from:");
 
-			if (ImGui::RadioButton("Random", shapeType == ShapeType_SPHERE))
-				shapeType = ShapeType_SPHERE;
+			if (ImGui::RadioButton("Random", normalShapeType == ShapeType_SPHERE))
+				normalShapeType = ShapeType_SPHERE;
 			ImGui::SameLine();
-			if (ImGui::RadioButton("Center", shapeType == ShapeType_SPHERE_CENTER))
-				shapeType = ShapeType_SPHERE_CENTER;
+			if (ImGui::RadioButton("Center", normalShapeType == ShapeType_SPHERE_CENTER))
+				normalShapeType = ShapeType_SPHERE_CENTER;
 			ImGui::SameLine();
-			if (ImGui::RadioButton("Border", shapeType == ShapeType_SPHERE_BORDER))
-				shapeType = ShapeType_SPHERE_BORDER;
+			if (ImGui::RadioButton("Border", normalShapeType == ShapeType_SPHERE_BORDER))
+				normalShapeType = ShapeType_SPHERE_BORDER;
 
 			ImGui::DragFloat("Sphere Size", &SphereCreation.r, 0.25f, 1.0f, 20.0f, "%.2f");
 
@@ -327,10 +316,23 @@ void ComponentEmitter::Inspector()
 		}
 		ImGui::Separator();
 
-		ImGui::Checkbox("Revive", &startValues.revive);
 		ImGui::Checkbox("Burst", &burst);
-		if (burst || startValues.revive)
+		if (burst)
 		{
+			if (ImGui::BeginMenu(burstTypeName.data()))
+			{
+				if (ImGui::MenuItem("Box"))
+				{
+					burstType = ShapeType_BOX;
+					burstTypeName = "Box Burst";
+				}
+				else if (ImGui::MenuItem("Sphere"))
+				{
+					burstType = ShapeType_SPHERE_CENTER;
+					burstTypeName = "Sphere Burst";
+				}
+				ImGui::End();
+			}
 			ImGui::DragInt("Min particles", &minPart, 1.0f, 0, 100);
 			if (minPart > maxPart)
 				maxPart = minPart;
@@ -341,7 +343,21 @@ void ComponentEmitter::Inspector()
 		}
 		ImGui::Separator();
 
-
+		if (ImGui::Checkbox("SubEmiter", &startValues.subEmiter))
+		{
+			if (startValues.subEmiter)
+			{
+				if (subEmiter)
+					subEmiter->SetActive(true);
+				else
+				{
+					subEmiter = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, gameObject, "SubEmition");
+					subEmiter->AddComponent(ComponentType_EMITTER, nullptr);
+				}
+			}
+			else
+				subEmiter->SetActive(false);
+		}
 		ImGui::Separator();
 		ImGui::Checkbox("Bounding Box", &drawAABB);
 		if (drawAABB)
@@ -507,6 +523,13 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 
 	json_object_set_number(parent, "Time Created", GetTime());
 
+	json_object_set_boolean(parent, "checkLife", checkLife);
+	json_object_set_boolean(parent, "checkSpeed", checkSpeed);
+	json_object_set_boolean(parent, "checkAcceleration", checkAcceleration);
+	json_object_set_boolean(parent, "checkSize", checkSize);
+	json_object_set_boolean(parent, "checkRotation", checkRotation);
+	json_object_set_boolean(parent, "checkAngularAcceleration", checkAngularAcceleration);
+	json_object_set_boolean(parent, "checkAngularVelocity", checkAngularVelocity);
 
 	json_object_set_number(parent, "lifeMin", startValues.life.x);
 	json_object_set_number(parent, "lifeMax", startValues.life.y);
@@ -551,7 +574,7 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 	// TODO: save colors
 	json_object_set_number(parent, "timeColor", startValues.timeColor);
 
-	json_object_set_number(parent, "revive", startValues.revive);
+	json_object_set_boolean(parent, "subEmiter", startValues.subEmiter);
 
 
 	json_object_set_number(parent, "colisionMinX", startValues.colision.minPoint.x);
@@ -565,9 +588,6 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 	json_object_set_number(parent, "particleDirectionX", startValues.particleDirection.x);
 	json_object_set_number(parent, "particleDirectionY", startValues.particleDirection.y);
 	json_object_set_number(parent, "particleDirectionZ", startValues.particleDirection.z);
-
-
-
 
 	json_object_set_number(parent, "duration", duration);
 
@@ -587,13 +607,18 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 
 	json_object_set_number(parent, "SphereCreation", SphereCreation.r);
 
-	json_object_set_number(parent, "shapeType", shapeType);
+	json_object_set_number(parent, "shapeType", normalShapeType);
 
 	if (texture)
 	json_object_set_string(parent, "texture", texture->file.data());
 	else
 	json_object_set_string(parent, "texture", "noTexture");
 
+}
+
+int ComponentEmitter::GetEmition() const
+{
+	return rateOverTime;
 }
 
 // todo event system to delete texture
