@@ -207,21 +207,26 @@ void ComponentEmitter::Inspector()
 {
 	if (ImGui::CollapsingHeader("Particle System", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ImGui::PushItemWidth(150.0f);
-		if (ImGui::DragFloat2("Speed", &startValues.speed.x, 0.25f, 0.25f, 20.0f, "%.2f"))
-			CheckMinMax(startValues.speed);
-		if(ImGui::DragFloat2("Acceleration", &startValues.acceleration.x, 0.25f, -5.0f, 5.0f, "%.2f"))
-			CheckMinMax(startValues.acceleration);
+		ImGui::ShowHelpMarker("Active checkBox if you want a random number");
 
-		if(ImGui::DragFloat2("Rotation", &startValues.rotation.x, 0.25f, -720.0f, 720.0f, "%.2f"))
-			CheckMinMax(startValues.rotation);
-		if(ImGui::DragFloat2("Angular acceleration", &startValues.angularAcceleration.x, 0.25f, -45.0f, 45.0f, "%.2f"))
-			CheckMinMax(startValues.angularAcceleration);
+		ImGui::Checkbox("##Speed", &checkSpeed);
+		ShowFloatValue(startValues.speed, checkSpeed, "Speed", 0.25f, 0.25f, 20.0f);
 
-		if(ImGui::DragFloat2("Lifetime", &startValues.life.x, 0.5f, 1.0f, 20.0f, "%.2f"))
-			CheckMinMax(startValues.life);
-		if(ImGui::DragFloat2("Size", &startValues.size.x, 0.1f, 0.1f, 5.0f, "%.2f"))
-			CheckMinMax(startValues.size);
+		ImGui::Checkbox("##Acceleration", &checkAcceleration);
+		ShowFloatValue(startValues.acceleration, checkAcceleration, "Acceleration", 0.25f, -5.0f, 5.0f);
+
+		ImGui::Checkbox("##Rotation", &checkRotation);
+		ShowFloatValue(startValues.rotation, checkRotation, "Rotation", 0.25f, -720.0f, 720.0f);
+
+		ImGui::Checkbox("##AngularAcceleration", &checkAngularAcceleration);
+		ShowFloatValue(startValues.angularAcceleration, checkAngularAcceleration, "AngularAcceleration", 0.25f, -45.0f, 45.0f);
+
+		ImGui::Checkbox("##Lifetime", &checkLife);
+		ShowFloatValue(startValues.life, checkLife, "Lifetime", 0.5f, 1.0f, 20.0f);
+
+		ImGui::Checkbox("##Size", &checkSize);
+		ShowFloatValue(startValues.size, checkSize, "Size", 0.1f, 0.1f, 5.0f);
+
 		ImGui::DragInt("Emition", &rateOverTime, 1.0f, 0.0f, 300.0f, "%.2f");
 
 		ImGui::Separator();
@@ -278,7 +283,6 @@ void ComponentEmitter::Inspector()
 		}
 
 		ImGui::Separator();
-		ImGui::PopItemWidth();
 		ImGui::Text("Particle Color");
 		ImGui::SameLine(); 
 		ImGui::ShowHelpMarker("Click color square for change it");
@@ -414,6 +418,29 @@ void ComponentEmitter::Inspector()
 		if (ImGui::Button("Remove Particles", ImVec2(150, 25)))
 			toDelete = true;
 	}
+}
+
+void ComponentEmitter::ShowFloatValue(float2& value, bool checkBox, const char* name, float v_speed, float v_min, float v_max)
+{
+	ImGui::SameLine();
+	if (checkBox)
+	{
+		ImGui::PushItemWidth(70.0f);
+		std::string str = "##";
+		str.append(name);
+		if (ImGui::DragFloat(str.data(), &value.x, v_speed, v_min, v_max, "%.2f"))
+			CheckMinMax(value);
+		ImGui::SameLine();
+		if (ImGui::DragFloat(name, &value.y, v_speed, v_min, v_max, "%.2f"))
+			CheckMinMax(value);
+	}
+	else
+	{
+		ImGui::PushItemWidth(148.0f);
+		if (ImGui::DragFloat(name, &value.x, v_speed, v_min, v_max, "%.2f"))
+			value.y = value.x;
+	}
+	ImGui::PopItemWidth();
 }
 
 void ComponentEmitter::CheckMinMax(float2& value)

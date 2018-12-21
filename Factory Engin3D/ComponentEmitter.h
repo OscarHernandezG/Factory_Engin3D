@@ -83,7 +83,7 @@ struct EmitterInfo : ComponentInfo
 	StartValues startValues;
 };
 
-class ComponentEmitter: public Component
+class ComponentEmitter : public Component
 {
 public:
 	ComponentEmitter(GameObject* gameObject);
@@ -96,6 +96,7 @@ public:
 	float3 RandPos();
 	void Inspector();
 
+	void ShowFloatValue(float2 & value, bool checkBox, const char * name, float v_speed, float v_min, float v_max);
 	void CheckMinMax(float2 & value);
 	void Revive(float3 pos);
 	void ClearEmitter();
@@ -129,7 +130,15 @@ private:
 	//---------------------------------------
 	// Duration of the particle emitter
 	float duration = 1.0f;
-	
+
+	//Check box Randomize values
+	bool checkLife = false;
+	bool checkSpeed = false;
+	bool checkAcceleration = false;
+	bool checkSize = false;
+	bool checkRotation = false;
+	bool checkAngularAcceleration = false;
+
 	// Loop the particle (if true the particle emitter will never stop)
 	bool loop = true;
 	Timer loopTimer;
@@ -163,6 +172,6 @@ private:
 	int rateOverTime = 10;
 	float timeToParticle = 0.0f;
 	//---------------------------------------
-	
+
 };
 #endif // !__Emitter_H__
