@@ -105,14 +105,14 @@ public:
 	void StartEmitter();
 
 	void Update();
-	float3 RandPos();
-	void Inspector();
 
+	void Inspector();
+	float3 RandPos(ShapeType shapeType);
 	void ShowFloatValue(float2 & value, bool checkBox, const char * name, float v_speed, float v_min, float v_max);
 	void CheckMinMax(float2 & value);
 	void ClearEmitter();
 	void SoftClearEmitter();
-	void CreateParticles(int particlesToCreate, float3 pos = float3::zero);
+	void CreateParticles(int particlesToCreate, ShapeType shapeType, float3 pos = float3::zero);
 	bool EditColor(ColorTime & colorTime, bool first = true);
 
 	ImVec4 EqualsFloat4(const float4 float4D);
@@ -138,6 +138,7 @@ public:
 	GameTimer timeSimulating;
 
 	GameObject* subEmiter = nullptr;
+	ShapeType normalShapeType = ShapeType_BOX;
 private:
 	// General info
 	//---------------------------------------
@@ -174,7 +175,8 @@ private:
 	AABB boxCreation = AABB(float3(-0.5f, -0.5f, -0.5f), float3(0.5f, 0.5f, 0.5f));
 	Sphere SphereCreation = Sphere(float3::zero, 1.0f);
 
-	ShapeType shapeType = ShapeType_BOX;
+	ShapeType burstType = ShapeType_BOX;
+	std::string burstTypeName = "Box Burst";
 
 	int nextPos = 100;
 	float4 nextColor = float4::zero;

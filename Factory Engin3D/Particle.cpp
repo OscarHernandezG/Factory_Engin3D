@@ -95,7 +95,7 @@ bool Particle::Update(float dt)
 		if (subEmiter && owner->subEmiter && owner->subEmiter->HasComponent(ComponentType_EMITTER))
 		{
 			ComponentEmitter* emiter = (ComponentEmitter*)owner->subEmiter->GetComponent(ComponentType_EMITTER);
-			emiter->CreateParticles(emiter->GetEmition(), transform.position);		
+			emiter->CreateParticles(emiter->GetEmition(), emiter->normalShapeType, transform.position);
 		}
 		active = false;
 		ret = false;
