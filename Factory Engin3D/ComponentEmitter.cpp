@@ -159,7 +159,7 @@ void ComponentEmitter::CreateParticles(int particlesToCreate, float3 pos)
 		{
 			pos = RandPos();
 
-			App->particle->allParticles[particleId].SetActive(pos, startValues, &texture);
+			App->particle->allParticles[particleId].SetActive(pos, startValues, &texture, &particleAnimation.textureIDs, animationSpeed);
 
 			App->particle->allParticles[particleId].owner = this;
 			particles.push_back(&App->particle->allParticles[particleId]);
@@ -416,6 +416,18 @@ void ComponentEmitter::Inspector()
 				ImGui::End();
 			}
 			ImGui::Separator();
+		}
+
+		ImGui::Separator();
+		ImGui::DragFloat("Animation Speed", &animationSpeed, 0.05f, 0.0f, 5.0f, "%.2f");
+		ImGui::DragInt("Rows", &rows, 1, 1, 10);
+		ImGui::DragInt("Columns", &columns, 1, 1, 10);
+
+		ImGui::Checkbox("Kill particle with animation", &dieOnAnimation);
+
+		if(ImGui::Button("Calc Animation", ImVec2(150.0f, 25.0f)))
+		{
+			particleAnimation = App->resources->LoadTextureUV(rows, columns);
 		}
 
 		if (ImGui::Button("Remove Particles", ImVec2(150, 25)))

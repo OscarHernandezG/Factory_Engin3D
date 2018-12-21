@@ -127,6 +127,7 @@ public:
 	GameState simulatedGame = GameState_NONE;
 	GameTimer timeSimulating;
 
+	bool dieOnAnimation = false;
 private:
 	// General info
 	//---------------------------------------
@@ -176,5 +177,10 @@ private:
 	float timeToParticle = 0.0f;
 	//---------------------------------------
 
+	ParticleUV particleAnimation;
+	float animationSpeed = 0.1f;
+
+	int rows = 0;
+	int columns = 0;
 };
 #endif // !__Emitter_H__

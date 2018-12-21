@@ -9,6 +9,14 @@
 #include "ResourceMesh.h"
 
 
+struct ParticleUV
+{
+	std::vector<uint> textureIDs;
+	uint rows = 0;
+	uint columns = 0;
+};
+
+
 class ModuleResources: public Module
 {
 public:
@@ -35,6 +43,10 @@ public:
 
 	void GetResources(std::vector<Resource*> &resource, ResourceType type);
 
+	ParticleUV LoadTextureUV(int rows, int columns);
+
+	bool FindTextureUV(int rows, int columns, ParticleUV& textureUV);
+
 private:
 	bool RealLoadMesh(char * buffer, ResourceMesh*& mesh, const char* name);
 	void LoadColorGPU(char * &cursor, uint &bytes, ResourceMesh * bufferImporter);
@@ -46,5 +58,9 @@ private:
 
 public:
 	std::list<Resource*> resources;
+
+private:
+	ParticleUV defaultTextureUV;
+	std::list<ParticleUV> particleTextureUV;
 };
 #endif // !__ModuleResource__H

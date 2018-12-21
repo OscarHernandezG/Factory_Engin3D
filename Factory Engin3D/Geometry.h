@@ -74,8 +74,8 @@ public :
 
 public:
 	float3 size;
-	uint myIndices = 0u;
-	uint myVertices = 0u;
+	uint indexID = 0u;
+	uint vertexID = 0u;
 };
 
 //// ============================================
@@ -141,8 +141,8 @@ public:
 
 public:
 	float3 size;
-	uint myIndices = 0u;
-	uint myVertices = 0u;
+	uint indexID = 0u;
+	uint vertexID = 0u;
 
 };
 #endif // !__ModuleGeometry_H__

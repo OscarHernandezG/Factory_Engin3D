@@ -25,6 +25,27 @@ ModuleResources::~ModuleResources()
 
 bool ModuleResources::Start()
 {
+	uint textureID = 0;
+	float texture[]
+	{
+		0.0f, 0.0f,
+		1.0f, 0.0f,
+		0.0f, 1.0f,
+		1.0f, 1.0f,
+	};
+
+	glGenBuffers(1, (GLuint*)&(textureID));
+	glBindBuffer(GL_ARRAY_BUFFER, textureID);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, texture, GL_STATIC_DRAW);
+	//12 = All vertex positions (2 * 6) 2 = vertices and 6 = pos x-y
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	defaultTextureUV.textureIDs.push_back(textureID);
+
+	defaultTextureUV.columns = defaultTextureUV.rows = 1;
+
+	particleTextureUV.push_back(defaultTextureUV);
+
 	return true;
 }
 
@@ -376,4 +397,58 @@ void ModuleResources::GetResources(std::vector<Resource*> &resource, ResourceTyp
 			resource.push_back(*iterator);
 		}
 	}
+}
+
+
+ParticleUV ModuleResources::LoadTextureUV(int rows, int columns)
+{
+	ParticleUV ret;
+	if (!FindTextureUV(rows, columns, ret))
+	{
+		uint textureID = 0;
+
+		ret.rows = rows;
+		ret.columns = columns;
+
+		float rowsScale = 1.0f / rows;
+		float columnsScale = 1.0f / columns;
+
+		for (int i = 0; i < rows; ++i)
+		{
+			for (int j = 0; j < columns; ++j)
+			{
+				float texture[]
+				{
+					j * columnsScale,					1.0f - (i * rowsScale + rowsScale),
+					j * columnsScale + columnsScale,	1.0f - (i *rowsScale + rowsScale),
+					j * columnsScale,					1.0f - i * rowsScale,
+					j * columnsScale + columnsScale,	1.0f - i * rowsScale,
+				};
+
+
+				LOG("Texture UV: \n%.2f %.2f\n%.2f %.2f\n%.2f %.2f\n%.2f %.2f\n", texture[0], texture[1], texture[2], texture[3], texture[4], texture[5], texture[6], texture[7])
+
+				glGenBuffers(1, (GLuint*)&(textureID));
+				glBindBuffer(GL_ARRAY_BUFFER, textureID);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, texture, GL_STATIC_DRAW);
+				glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+				ret.textureIDs.push_back(textureID);
+			}
+		}
+	}
+		return ret;
+}
+
+bool ModuleResources::FindTextureUV(int rows, int columns, ParticleUV& textureUV)
+{
+	for (std::list<ParticleUV>::const_iterator iterator = particleTextureUV.begin(); iterator != particleTextureUV.end(); ++iterator)
+	{
+		if ((*iterator).rows == rows && (*iterator).columns == columns)
+		{
+			textureUV = *iterator;
+			return true;
+		}
+	}
+	return false;
 }

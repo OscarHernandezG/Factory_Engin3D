@@ -11,9 +11,8 @@ ParticlePlane::ParticlePlane()
 
 ParticlePlane::~ParticlePlane()
 {
-	glDeleteBuffers(1, (GLuint*)&(myIndices));
-	glDeleteBuffers(1, (GLuint*)&(myVertices));
-	glDeleteBuffers(1, (GLuint*)&(myTexture));
+	glDeleteBuffers(1, (GLuint*)&(indexID));
+	glDeleteBuffers(1, (GLuint*)&(vertexID));
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
@@ -28,8 +27,8 @@ void ParticlePlane::LoadPlaneBuffers()
 	 0.5f,  0.5f, 0.0f,//d
 	};
 
-	glGenBuffers(1, (GLuint*)&(myIndices));
-	glBindBuffer(GL_ARRAY_BUFFER, myIndices);
+	glGenBuffers(1, (GLuint*)&(indexID));
+	glBindBuffer(GL_ARRAY_BUFFER, indexID);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, indicesQuad, GL_STATIC_DRAW);
 	// 12 = All vertex positions (4 * 3) 4 = posibleVertex and 3 = pos x-y-z
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -42,45 +41,30 @@ void ParticlePlane::LoadPlaneBuffers()
 		1, 3, 2, // BDC
 	};
 
-	glGenBuffers(1, (GLuint*)&(myVertices));
-	glBindBuffer(GL_ARRAY_BUFFER, myVertices);
+	glGenBuffers(1, (GLuint*)&(vertexID));
+	glBindBuffer(GL_ARRAY_BUFFER, vertexID);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * 6, vertices, GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-
-	float texture[]
-	{
-		0.0f, 0.0f,
-		1.0f, 0.0f,
-		0.0f, 1.0f,
-		1.0f, 1.0f,
-	};
-
-	glGenBuffers(1, (GLuint*)&(myTexture));
-	glBindBuffer(GL_ARRAY_BUFFER, myTexture);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, texture, GL_STATIC_DRAW);
-	//12 = All vertex positions (2 * 6) 2 = vertices and 6 = pos x-y
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void ParticlePlane::Render(float4x4 matrix, ResourceTexture* texture, float4 color) const
+void ParticlePlane::Render(float4x4 matrix, ResourceTexture* texture, uint textureUV, float4 color) const
 {
 	glPushMatrix();
 	
 	glMultMatrixf(matrix.ptr());
 
-	DrawPlane(texture, color);
+	DrawPlane(texture, textureUV, color);
 
 	glPopMatrix();
 }
 
-void ParticlePlane::DrawPlane(ResourceTexture* texture, math::float4 &color) const
+void ParticlePlane::DrawPlane(ResourceTexture* texture,uint textureUV, math::float4 &color) const
 {
 	glEnableClientState(GL_VERTEX_ARRAY);
 
 	//Load vertex and index
-	glBindBuffer(GL_ARRAY_BUFFER, myIndices);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, myVertices);
+	glBindBuffer(GL_ARRAY_BUFFER, indexID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vertexID);
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 
 	if (texture != nullptr)
@@ -90,7 +74,7 @@ void ParticlePlane::DrawPlane(ResourceTexture* texture, math::float4 &color) con
 
 		//Load Texture UV
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		glBindBuffer(GL_ARRAY_BUFFER, myTexture);
+		glBindBuffer(GL_ARRAY_BUFFER, textureUV);
 		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
 		//glColor4f(color.x, color.y, color.z, color.w);

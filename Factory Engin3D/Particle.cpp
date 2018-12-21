@@ -35,6 +35,7 @@ Particle::Particle(float3 pos, StartValues data, ResourceTexture** texture)
 
 Particle::Particle()
 {
+
 }
 
 Particle::~Particle()
@@ -42,7 +43,7 @@ Particle::~Particle()
 	//delete plane;
 }
 
-void Particle::SetActive(float3 pos, StartValues data, ResourceTexture ** texture)
+void Particle::SetActive(float3 pos, StartValues data, ResourceTexture ** texture, std::vector<uint>* animation, float animationSpeed)
 {
 	plane = App->particle->plane;
 
@@ -72,6 +73,12 @@ void Particle::SetActive(float3 pos, StartValues data, ResourceTexture ** textur
 
 	multicolor = data.timeColor;
 	this->texture = texture;
+
+
+	this->animation = animation;
+	this->animationSpeed = animationSpeed;
+	animationTime.Start();
+	currentFrame = 0u;
 
 	active = true;
 }
@@ -113,18 +120,39 @@ bool Particle::Update(float dt)
 		angularVelocity += angularAcceleration * dt;
 		angle += angularVelocity * dt;
 		transform.rotation = transform.rotation.Mul(Quat::RotateZ(angle));
+
+		if (animationTime.ReadSec() > animationSpeed)
+		{
+			if (animation->size() > currentFrame + 1)
+			{
+				currentFrame++;
+			}
+			else if (owner->dieOnAnimation)
+			{
+				EndParticle(ret);
+			}
+			else
+				currentFrame = 0;
+
+			animationTime.Start();
+		}
 	}
 	else
 	{
-		active = false;
-		ret = false;
-		if(revive)
-			owner->Revive(transform.position);
-		owner->particles.remove(this);
+		EndParticle(ret);
 	}
 
 
 	return ret;
+}
+
+void Particle::EndParticle(bool &ret)
+{
+	active = false;
+	ret = false;
+	if (revive)
+		owner->Revive(transform.position);
+	owner->particles.remove(this);
 }
 
 void Particle::LookAtCamera()
@@ -148,9 +176,8 @@ void Particle::SetCamDistance()
 
 void Particle::Draw() const
 {
-	if (plane && texture)
-		plane->Render(transform.GetMatrix(), *texture, currentColor);
-	
+	if (plane && texture && animation->size() > currentFrame)
+		plane->Render(transform.GetMatrix(), *texture, animation->at(currentFrame), currentColor);
 }
 
 

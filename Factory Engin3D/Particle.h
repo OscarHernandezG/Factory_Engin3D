@@ -31,9 +31,11 @@ public:
 		return camDistance > particle2.camDistance;
 	}
 
-	void SetActive(float3 pos, StartValues data, ResourceTexture** texture);
+	void SetActive(float3 pos, StartValues data, ResourceTexture ** texture, std::vector<uint>* animation, float animationSpeed);
 
 	bool Update(float dt);
+
+	void EndParticle(bool &ret);
 
 	void LookAtCamera();
 
@@ -77,6 +79,12 @@ private:
 
 	float rotation = 0.0f;
 	float angle = 0.0f;
+
+	std::vector<uint>* animation = nullptr;
+	uint currentFrame = 0;
+	float animationSpeed = 0.1f;
+
+	GameTimer animationTime;
 };
 
 struct particleCompare

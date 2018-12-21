@@ -29,6 +29,7 @@ public:
 
 	Particle allParticles[MAX_PARTICLES];
 
+	ParticleUV particleAnimation;
 
 
 	ParticlePlane* plane = nullptr;
