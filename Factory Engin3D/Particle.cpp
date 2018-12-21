@@ -6,31 +6,7 @@
 #include "pcg-c-basic-0.9/pcg_basic.h"
 
 Particle::Particle(float3 pos, StartValues data, ResourceTexture** texture)
-{
-	plane = App->particle->plane;
-
-	lifeTime = CreateRandomNum(data.life);
-
-	speed = CreateRandomNum(data.speed);
-	acceleration = CreateRandomNum(data.acceleration);
-	direction = data.particleDirection;
-
-	rotation = CreateRandomNum(data.rotation) * DEGTORAD;
-	angularVelocity = CreateRandomNum(data.angularVelocity) * DEGTORAD;
-	angularAcceleration = CreateRandomNum(data.angularAcceleration) * DEGTORAD;
-
-	transform.position = pos;
-	transform.rotation = Quat::FromEulerXYZ(0, 0, 0); //Start rotation
-	transform.scale = float3::one * CreateRandomNum(data.size);
-	LOG("size %f", transform.scale.x);
-
-	for (std::list<ColorTime>::iterator iter = data.color.begin(); iter != data.color.end(); ++iter)
-		color.push_back(*iter);
-
-	multicolor = data.timeColor;
-	this->texture = texture;
-	subEmiter = data.subEmiter;
-}
+{}
 
 Particle::Particle()
 {
@@ -43,7 +19,6 @@ Particle::~Particle()
 
 void Particle::SetActive(float3 pos, StartValues data, ResourceTexture ** texture)
 {
-
 	plane = App->particle->plane;
 
 	lifeTime = CreateRandomNum(data.life);
@@ -73,6 +48,7 @@ void Particle::SetActive(float3 pos, StartValues data, ResourceTexture ** textur
 
 	active = true;
 	subEmiter = data.subEmiter;
+	index = 0;
 }
 
 bool Particle::Update(float dt)
