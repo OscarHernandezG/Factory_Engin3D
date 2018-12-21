@@ -23,7 +23,7 @@ public:
 	ModuleResources(Application* app, bool start_enabled = true);
 	~ModuleResources();
 
-	bool Start();
+	bool Init();
 	update_status Update();
 	bool CleanUp();
 

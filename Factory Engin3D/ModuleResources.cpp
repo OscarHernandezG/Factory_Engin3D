@@ -4,6 +4,8 @@
 
 #include "glew-2.1.0/include/GL/glew.h"
 
+#include "ModuleParticles.h"
+
 #pragma comment( lib, "DevIL/libx86/DevIL.lib" )
 #pragma comment( lib, "DevIL/libx86/ILU.lib" )
 #pragma comment( lib, "DevIL/libx86/ILUT.lib" )
@@ -23,35 +25,39 @@ ModuleResources::~ModuleResources()
 {
 }
 
-bool ModuleResources::Start()
+
+
+bool ModuleResources::Init()
 {
-	uint textureID = 0;
-	float texture[]
-	{
-		0.0f, 0.0f,
-		1.0f, 0.0f,
-		0.0f, 1.0f,
-		1.0f, 1.0f,
-	};
-
-	glGenBuffers(1, (GLuint*)&(textureID));
-	glBindBuffer(GL_ARRAY_BUFFER, textureID);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, texture, GL_STATIC_DRAW);
-	//12 = All vertex positions (2 * 6) 2 = vertices and 6 = pos x-y
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	defaultTextureUV.textureIDs.push_back(textureID);
-
-	defaultTextureUV.columns = defaultTextureUV.rows = 1;
-
-	particleTextureUV.push_back(defaultTextureUV);
-
 	return true;
 }
 
 update_status ModuleResources::Update()
 {
+	if (particleTextureUV.empty())
+	{
+		uint textureID = 0;
+		float texture[]
+		{
+			0.0f, 0.0f,
+			1.0f, 0.0f,
+			0.0f, 1.0f,
+			1.0f, 1.0f,
+		};
 
+		glGenBuffers(1, (GLuint*)&(textureID));
+		glBindBuffer(GL_ARRAY_BUFFER, textureID);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, texture, GL_STATIC_DRAW);
+		//12 = All vertex positions (2 * 6) 2 = vertices and 6 = pos x-y
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		defaultTextureUV.textureIDs.push_back(textureID);
+
+		defaultTextureUV.columns = defaultTextureUV.rows = 1;
+
+		App->particle->particleAnimation = defaultTextureUV;
+		particleTextureUV.push_back(defaultTextureUV);
+	}
 	return UPDATE_CONTINUE;
 }
 
