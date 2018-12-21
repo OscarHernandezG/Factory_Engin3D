@@ -196,7 +196,7 @@ private:
 	ParticleUV particleAnimation;
 	float animationSpeed = 0.1f;
 
-	int rows = 0;
-	int columns = 0;
+	int rows = 1;
+	int columns = 1;
 };
 #endif // !__Emitter_H__

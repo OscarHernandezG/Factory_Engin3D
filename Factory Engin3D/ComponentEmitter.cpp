@@ -38,7 +38,12 @@ ComponentEmitter::ComponentEmitter(GameObject* gameObject, EmitterInfo* info) : 
 		texture = info->texture;
 
 		startValues = info->startValues;
+
 	}
+
+	rows = 1;
+	columns = 1;
+	particleAnimation = App->particle->particleAnimation;
 	App->sceneIntro->octree.Insert(gameObject);
 }
 
