@@ -484,6 +484,28 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 	json_object_set_number(parent, "angularAccelerationMin", startValues.angularAcceleration.x);
 	json_object_set_number(parent, "angularAccelerationMax", startValues.angularAcceleration.y);
 
+
+	JSON_Value* colorValue = json_value_init_array();
+	JSON_Array* color = json_value_get_array(colorValue);
+
+	for (std::list<ColorTime>::const_iterator iterator = startValues.color.begin(); iterator != startValues.color.end(); ++iterator)
+	{
+		JSON_Value* newColor = json_value_init_object();
+		JSON_Object* objCol = json_value_get_object(newColor);
+
+		json_object_set_number(objCol, "colorX", (*iterator).color.x);
+		json_object_set_number(objCol, "colorY", (*iterator).color.y);
+		json_object_set_number(objCol, "colorZ", (*iterator).color.z);
+		json_object_set_number(objCol, "colorW", (*iterator).color.w);
+
+		json_object_set_number(objCol, "position", (*iterator).position);
+		json_object_set_string(objCol, "name", (*iterator).name.data());
+
+
+		json_array_append_value(color, newColor);
+	}
+		json_object_set_value(parent, "Colors", colorValue);
+
 	// TODO: save colors
 	json_object_set_number(parent, "timeColor", startValues.timeColor);
 
