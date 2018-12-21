@@ -367,7 +367,7 @@ void ComponentEmitter::Inspector()
 			ImGui::Text("Loaded texture '%s'", name.data());
 			ImGui::Text("Texture used %i times", texture->usage);
 
-			ImGui::Image((void*)(intptr_t)texture->GetID(), ImVec2(256, 256));
+			ImGui::Image((void*)(intptr_t)texture->GetID(), ImVec2(256.0f, 256.0f), ImVec2(0.0f, 1.0f), ImVec2(1.0f, 0.0f));
 
 			if (ImGui::BeginMenu("Change Texture"))
 			{
