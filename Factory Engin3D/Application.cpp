@@ -102,13 +102,14 @@ void Application::PrepareUpdate()
 void Application::FinishUpdate()
 {
 	if (!renderer3D->vsync && toCap) {
-		float toVsync = App->time->Getdt();
+		float dt = App->time->Getdt() * 1000.0f;
+		float toVsync = dt;
 	
 		if (capFrames > 0)
-			toVsync = 1000 / capFrames;
+			toVsync = 1000.0f / capFrames;
 	
-		if (App->time->Getdt() < toVsync)
-			SDL_Delay(toVsync - App->time->Getdt());
+		if (dt < toVsync)
+			SDL_Delay(toVsync - dt);
 	}
 }
 
