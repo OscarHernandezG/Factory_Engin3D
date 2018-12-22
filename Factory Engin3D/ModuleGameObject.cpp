@@ -182,7 +182,7 @@ void ModuleGameObject::LoadScene(const char* name)
 			ComponentEmitter* emitter = (ComponentEmitter*)(*it)->GetComponent(ComponentType_EMITTER);
 			if (emitter)
 			{
-				emitter->subEmiter = FindByID(emitter->subEmiterUUID);
+				emitter->subEmitter = FindByID(emitter->subEmiterUUID);
 			}
 		}
 	}
