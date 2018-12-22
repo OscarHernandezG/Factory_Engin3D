@@ -98,6 +98,9 @@ struct EmitterInfo : ComponentInfo
 	bool dieOnAnimation = false;
 
 	GameObject* subEmiter = nullptr;
+	uint subEmiterUUID = 0u;
+
+	int rateOverTime = 0;
 };
 
 class ComponentEmitter : public Component
@@ -153,6 +156,7 @@ public:
 	bool dieOnAnimation = false;
 
 	GameObject* subEmiter = nullptr;
+	uint subEmiterUUID = 0u;
 	ShapeType normalShapeType = ShapeType_BOX;
 
 	std::list<float3> newPositions;
