@@ -46,7 +46,7 @@ bool ModuleImGui::Start()
 	sceneSize = float2(254.0f, 575.0f);
 	playSize = float2(185.0f, 40.0f);
 	playCountSize = float2(205.0f, 0.0f);
-	inspectorSize = float2(310.0f, 852.0f);
+	inspectorSize = float2(310.0f, 845.0f);
 	dockWindowSize = float2(970.0f, 270.0f);
 	//--------------------------
 

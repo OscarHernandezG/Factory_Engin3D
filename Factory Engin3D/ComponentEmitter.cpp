@@ -239,6 +239,7 @@ float3 ComponentEmitter::RandPos(ShapeType shapeType)
 		circleCreation.pos = (float3::unitY * gameObject->transform->GetRotation().ToFloat3x3()).Normalized();
 		circleCreation.normal = -circleCreation.pos;
 		startValues.particleDirection = (circleCreation.GetPoint(angle,centerDist)).Normalized();
+		break;
 	default:
 		break;
 	}
@@ -247,6 +248,7 @@ float3 ComponentEmitter::RandPos(ShapeType shapeType)
 	if (gameObject)
 		global = gameObject->GetGlobalPos();
 
+	LOG("%.2f,%.2f,%.2f",spawn.x,spawn.y,spawn.z);
 	return spawn + global;
 }
 

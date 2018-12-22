@@ -252,7 +252,7 @@ update_status ModuleRenderer3D::PostUpdate()
 
 		//Draw camera frustrum always when its selected
 		Camera* cam = App->geometry->GetPlayingCamera();
-		if ((Camera*)App->geometry->currentGameObject->GetComponent(ComponentType_CAMERA) == cam)
+		if ((Camera*)App->geometry->currentGameObject->GetComponent(ComponentType_CAMERA) == cam && App->time->gameState == GameState_NONE)
 		{
 			cam->UpdateFrust();
 			static float3 corners[8];
