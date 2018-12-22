@@ -676,6 +676,9 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 	json_object_set_number(parent, "angularVelocityMax", startValues.angularVelocity.y);
 
 
+	json_object_set_boolean(parent, "subEmitterActive", startValues.subEmitter);
+
+
 	json_object_set_number(parent, "rateOverTime", rateOverTime);
 
 	JSON_Value* colorValue = json_value_init_array();
