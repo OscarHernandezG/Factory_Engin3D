@@ -121,6 +121,8 @@ void ComponentEmitter::Update()
 		{
 			CreateParticles(rateOverTime, normalShapeType, *iterator);
 		}
+
+		newPositions.clear();
 	}
 
 	// Use this condition to remove all particles from the component Emitter
@@ -706,6 +708,9 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 	json_object_set_boolean(parent, "dieOnAnimation", dieOnAnimation);
 
 	json_object_set_boolean(parent, "drawAABB", drawAABB);
+	
+	
+	json_object_set_number(parent, "SubEmitter", subEmiter->GetUID());
 }
 
 int ComponentEmitter::GetEmition() const
