@@ -60,7 +60,13 @@ ComponentEmitter::ComponentEmitter(GameObject* gameObject, EmitterInfo* info) : 
 
 		drawAABB = info->drawAABB;
 
-		isSubEmiter = info->isSubEmiter;
+		isSubEmiter = info->isSubEmitter;
+		subEmitter = info->subEmitter;
+		subEmiterUUID = info->subEmiterUUID;
+
+		rateOverTime = info->rateOverTime;
+
+		startValues.subEmitterActive = info->subEmitterActive;
 	}
 
 	gameObject->transform->UpdateBoundingBox();
@@ -147,11 +153,16 @@ void ComponentEmitter::ClearEmitter()
 		(*iterator)->active = false;
 		(*iterator)->owner = nullptr;
 	}
+
+	App->particle->activeParticles -= particles.size();
+
 	particles.clear();
 }
 
 void ComponentEmitter::SoftClearEmitter()
 {
+	App->particle->activeParticles -= particles.size();
+
 	particles.clear();
 }
 
@@ -536,22 +547,22 @@ void ComponentEmitter::ParticleTexture()
 
 void ComponentEmitter::ParticleSubEmiter()
 {
-	if (ImGui::Checkbox("SubEmiter", &startValues.subEmiter))
+	if (ImGui::Checkbox("SubEmiter", &startValues.subEmitterActive))
 	{
-		if (startValues.subEmiter)
+		if (startValues.subEmitterActive)
 		{
-			if (subEmiter)
-				subEmiter->SetActive(true);
+			if (subEmitter)
+				subEmitter->SetActive(true);
 			else
 			{
-				subEmiter = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, gameObject, "SubEmition");
+				subEmitter = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, gameObject, "SubEmition");
 				EmitterInfo info;
-				info.isSubEmiter = true;
-				subEmiter->AddComponent(ComponentType_EMITTER, &info);
+				info.isSubEmitter = true;
+				subEmitter->AddComponent(ComponentType_EMITTER, &info);
 			}
 		}
 		else
-			subEmiter->SetActive(false);
+			subEmitter->SetActive(false);
 	}
 	ImGui::Separator();
 }
@@ -667,6 +678,12 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 	json_object_set_number(parent, "angularVelocityMin", startValues.angularVelocity.x);
 	json_object_set_number(parent, "angularVelocityMax", startValues.angularVelocity.y);
 
+
+	json_object_set_boolean(parent, "subEmitterActive", startValues.subEmitterActive);
+
+
+	json_object_set_number(parent, "rateOverTime", rateOverTime);
+
 	JSON_Value* colorValue = json_value_init_array();
 	JSON_Array* color = json_value_get_array(colorValue);
 
@@ -691,7 +708,7 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 	// TODO: save colors
 	json_object_set_number(parent, "timeColor", startValues.timeColor);
 
-	json_object_set_boolean(parent, "subEmiter", startValues.subEmiter);
+	json_object_set_boolean(parent, "subEmitterActive", startValues.subEmitterActive);
 
 	json_object_set_number(parent, "particleDirectionX", startValues.particleDirection.x);
 	json_object_set_number(parent, "particleDirectionY", startValues.particleDirection.y);
@@ -741,8 +758,10 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 
 	json_object_set_boolean(parent, "drawAABB", drawAABB);
 	
-	json_object_set_boolean(parent, "isSubEmiter", isSubEmiter);
-	json_object_set_number(parent, "SubEmitter", subEmiter->GetUID());
+	json_object_set_boolean(parent, "isSubEmitter", isSubEmiter);
+	if(subEmitter)
+	json_object_set_number(parent, "SubEmitter", subEmitter->GetUID());
+
 }
 
 int ComponentEmitter::GetEmition() const
