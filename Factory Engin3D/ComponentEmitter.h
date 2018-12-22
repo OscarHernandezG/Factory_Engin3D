@@ -107,6 +107,13 @@ public:
 	void Update();
 
 	void Inspector();
+	void ParticleTexture();
+	void ParticleAABB();
+	void ParticleSubEmiter();
+	void ParticleBurst();
+	void ParticleColor();
+	void ParticleValues();
+	void ParticleShape();
 	void SetNewAnimation(int row, int col);
 	float3 RandPos(ShapeType shapeType);
 	void ShowFloatValue(float2 & value, bool checkBox, const char * name, float v_speed, float v_min, float v_max);
@@ -143,7 +150,7 @@ public:
 	GameObject* subEmiter = nullptr;
 	ShapeType normalShapeType = ShapeType_BOX;
 
-	std::queue<float3> newPositions;
+	std::list<float3> newPositions;
 private:
 	// General info
 	//---------------------------------------

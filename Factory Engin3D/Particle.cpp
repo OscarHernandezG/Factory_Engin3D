@@ -62,6 +62,7 @@ void Particle::SetActive(float3 pos, StartValues data, ResourceTexture ** textur
 
 bool Particle::Update(float dt)
 {
+	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
 	bool ret = true;
 	if (owner->simulatedGame == GameState_PAUSE)
 		dt = 0;
@@ -124,11 +125,12 @@ bool Particle::Update(float dt)
 
 void Particle::EndParticle(bool &ret)
 {
+	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
 	color.clear();
 	if (subEmiter && owner->subEmiter && owner->subEmiter->HasComponent(ComponentType_EMITTER))
 	{
 		ComponentEmitter* emiter = (ComponentEmitter*)owner->subEmiter->GetComponent(ComponentType_EMITTER);
-		emiter->newPositions.push(transform.position);
+		emiter->newPositions.push_back(transform.position);
 	}
 	active = false;
 	ret = false;

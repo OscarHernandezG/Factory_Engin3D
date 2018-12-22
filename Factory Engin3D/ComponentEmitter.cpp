@@ -97,11 +97,12 @@ void ComponentEmitter::Update()
 	}
 
 	//Used for SubEmiter. Create particles from ParticleEmiter death (On Emiter update because need to resize before Particle update)
-	while(!newPositions.empty())
+	if (!newPositions.empty())
 	{
-		float3 pos = newPositions.front();
-		CreateParticles(rateOverTime, normalShapeType, pos);
-		newPositions.pop();
+		for (std::list<float3>::const_iterator iterator = newPositions.begin(); iterator != newPositions.end(); ++iterator)
+		{
+			CreateParticles(rateOverTime, normalShapeType, *iterator);
+		}
 	}
 
 	// Use this condition to remove all particles from the component Emitter
@@ -194,6 +195,29 @@ void ComponentEmitter::Inspector()
 {
 	if (ImGui::CollapsingHeader("Particle System", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		ParticleValues();
+
+		ParticleShape();
+
+		ParticleColor();
+
+		ParticleBurst();
+
+		ParticleAABB();
+
+		ParticleTexture();
+
+		ParticleSubEmiter();
+
+		if (ImGui::Button("Remove Particles", ImVec2(150, 25)))
+			toDelete = true;
+	}
+}
+
+void ComponentEmitter::ParticleValues()
+{
+	if (ImGui::CollapsingHeader("Particle Values", ImGuiTreeNodeFlags_DefaultOpen))
+	{
 		ImGui::ShowHelpMarker("Active checkBox if you want a random number");
 
 		ImGui::Checkbox("##Speed", &checkSpeed);
@@ -223,7 +247,13 @@ void ComponentEmitter::Inspector()
 		if (ImGui::Checkbox("Loop", &loop))
 			loopTimer.Start();
 		ImGui::DragFloat("Duration", &duration, 0.5f, 0.5f, 20.0f, "%.2f");
+	}
+}
 
+void ComponentEmitter::ParticleShape()
+{
+	if (ImGui::CollapsingHeader("Particle Shape"))
+	{
 		ImGui::Separator();
 		if (ImGui::BeginMenu("Change Shape"))
 		{
@@ -268,10 +298,16 @@ void ComponentEmitter::Inspector()
 		default:
 			break;
 		}
+	}
+}
 
-		ImGui::Separator();
+void ComponentEmitter::ParticleColor()
+{
+	if (ImGui::CollapsingHeader("Particle Color"))
+
+	{
 		ImGui::Text("Particle Color");
-		ImGui::SameLine(); 
+		ImGui::SameLine();
 		ImGui::ShowHelpMarker("Click color square for change it");
 		std::vector<ColorTime> deleteColor;
 		std::list<ColorTime>::iterator iter = startValues.color.begin();
@@ -309,51 +345,44 @@ void ComponentEmitter::Inspector()
 				startValues.color.sort();
 			}
 		}
-		ImGui::Separator();
+	}
+}
 
+void ComponentEmitter::ParticleBurst()
+{
+	if (ImGui::CollapsingHeader("Particle Burst"))
+	{
 		ImGui::Checkbox("Burst", &burst);
-		if (burst)
+		if (ImGui::BeginMenu(burstTypeName.data()))
 		{
-			if (ImGui::BeginMenu(burstTypeName.data()))
+			if (ImGui::MenuItem("Box"))
 			{
-				if (ImGui::MenuItem("Box"))
-				{
-					burstType = ShapeType_BOX;
-					burstTypeName = "Box Burst";
-				}
-				else if (ImGui::MenuItem("Sphere"))
-				{
-					burstType = ShapeType_SPHERE_CENTER;
-					burstTypeName = "Sphere Burst";
-				}
-				ImGui::End();
+				burstType = ShapeType_BOX;
+				burstTypeName = "Box Burst";
 			}
-			ImGui::DragInt("Min particles", &minPart, 1.0f, 0, 100);
-			if (minPart > maxPart)
-				maxPart = minPart;
-			ImGui::DragInt("Max Particles", &maxPart, 1.0f, 0, 100);
-			if (maxPart < minPart)
-				minPart = maxPart;
-			ImGui::DragFloat("Repeat Time", &repeatTime, 0.5f, 0.0f, 0.0f, "%.1f");
+			else if (ImGui::MenuItem("Sphere"))
+			{
+				burstType = ShapeType_SPHERE_CENTER;
+				burstTypeName = "Sphere Burst";
+			}
+			ImGui::End();
 		}
-		ImGui::Separator();
+		ImGui::DragInt("Min particles", &minPart, 1.0f, 0, 100);
+		if (minPart > maxPart)
+			maxPart = minPart;
+		ImGui::DragInt("Max Particles", &maxPart, 1.0f, 0, 100);
+		if (maxPart < minPart)
+			minPart = maxPart;
+		ImGui::DragFloat("Repeat Time", &repeatTime, 0.5f, 0.0f, 0.0f, "%.1f");
 
-		if (ImGui::Checkbox("SubEmiter", &startValues.subEmiter))
-		{
-			if (startValues.subEmiter)
-			{
-				if (subEmiter)
-					subEmiter->SetActive(true);
-				else
-				{
-					subEmiter = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, gameObject, "SubEmition");
-					subEmiter->AddComponent(ComponentType_EMITTER, nullptr);
-				}
-			}
-			else
-				subEmiter->SetActive(false);
-		}
 		ImGui::Separator();
+	}
+}
+
+void ComponentEmitter::ParticleAABB()
+{
+	if (ImGui::CollapsingHeader("Particle BoundingBox"))
+	{
 		ImGui::Checkbox("Bounding Box", &drawAABB);
 		if (drawAABB)
 		{
@@ -364,15 +393,19 @@ void ComponentEmitter::Inspector()
 				gameObject->transform->UpdateBoundingBox();
 			}
 
-			if(ImGui::DragFloat3("Pos", &posDifAABB.x, 1.0f, 0.0f, 0.0f, "%.0f"))
+			if (ImGui::DragFloat3("Pos", &posDifAABB.x, 1.0f, 0.0f, 0.0f, "%.0f"))
 			{
 				gameObject->transform->originalBoundingBox.SetFromCenterAndSize(posDifAABB, size);
 				gameObject->transform->UpdateBoundingBox();
 			}
 		}
+	}
+}
 
-
-		//Particle Texture
+void ComponentEmitter::ParticleTexture()
+{
+	if (ImGui::CollapsingHeader("Particle Texture", ImGuiTreeNodeFlags_FramePadding))
+	{
 		if (texture)
 		{
 			std::string name = texture->file;
@@ -426,16 +459,15 @@ void ComponentEmitter::Inspector()
 				}
 				ImGui::End();
 			}
-			ImGui::Separator();
 		}
 
 		ImGui::Separator();
 		if (ImGui::Checkbox("Animated sprite", &isParticleAnimated))
 		{
-			if (!isParticleAnimated)			
+			if (!isParticleAnimated)
 				SetNewAnimation(1, 1);
-			
-			else 
+
+			else
 				SetNewAnimation(rows, columns);
 		}
 		if (isParticleAnimated)
@@ -451,10 +483,27 @@ void ComponentEmitter::Inspector()
 				SetNewAnimation(rows, columns);
 			}
 		}
-
-		if (ImGui::Button("Remove Particles", ImVec2(150, 25)))
-			toDelete = true;
 	}
+}
+
+void ComponentEmitter::ParticleSubEmiter()
+{
+	if (ImGui::Checkbox("SubEmiter", &startValues.subEmiter))
+	{
+		if (startValues.subEmiter)
+		{
+			if (subEmiter)
+				subEmiter->SetActive(true);
+			else
+			{
+				subEmiter = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, gameObject, "SubEmition");
+				subEmiter->AddComponent(ComponentType_EMITTER, nullptr);
+			}
+		}
+		else
+			subEmiter->SetActive(false);
+	}
+	ImGui::Separator();
 }
 
 void ComponentEmitter::SetNewAnimation(int row, int col)

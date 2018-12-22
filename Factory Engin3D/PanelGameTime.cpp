@@ -34,7 +34,7 @@ void ModuleImGui::CreateGameTime()
 			if (ImGui::Button("Stop", { 50,25 }))
 			{
 				emitter->simulatedGame = GameState_STOP;
-				emitter->emitterActive = false;
+				emitter->ClearEmitter();
 				emitter->timeSimulating.Stop();
 			}
 
