@@ -336,6 +336,9 @@ ComponentInfo* GameObject::LoadComponentInfo(JSON_Object* info, ComponentType ty
 
 		emitterInfo->subEmitterActive = json_object_get_boolean(info, "subEmitterActive");
 
+		emitterInfo->sizeOBB.x = json_object_get_number(info, "originalBoundingBoxSizeX");
+		emitterInfo->sizeOBB.y = json_object_get_number(info, "originalBoundingBoxSizeY");
+		emitterInfo->sizeOBB.z = json_object_get_number(info, "originalBoundingBoxSizeZ");
 
 		StartValues* startValues = &emitterInfo->startValues;
 
@@ -393,6 +396,8 @@ ComponentInfo* GameObject::LoadComponentInfo(JSON_Object* info, ComponentType ty
 		startValues->particleDirection.x = json_object_get_number(info, "particleDirectionX");
 		startValues->particleDirection.y = json_object_get_number(info, "particleDirectionY");
 		startValues->particleDirection.x = json_object_get_number(info, "particleDirectionZ");
+
+
 
 		ret = emitterInfo;
 	}

@@ -105,6 +105,8 @@ struct EmitterInfo : ComponentInfo
 
 	int rateOverTime = 0;
 	bool subEmitterActive = false;
+
+	float3 sizeOBB = float3::zero;
 };
 
 class ComponentEmitter : public Component

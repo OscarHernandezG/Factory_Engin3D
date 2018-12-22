@@ -30,7 +30,7 @@ public:
 	Component(GameObject* gameObject) : gameObject(gameObject), type(ComponentType_NONE) { timeCreated = time(NULL); }
 	Component(GameObject* gameObject, ComponentType type) : gameObject(gameObject), type(ComponentType_NONE) {}
 
-	~Component() {}
+	virtual ~Component() {}
 
 	virtual void Update() {}
 
