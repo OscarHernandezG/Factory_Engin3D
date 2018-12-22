@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "ModuleImGui.h"
+#include "ModuleParticles.h"
 
 void ModuleImGui::CreateGameManager(float2 scale)
 {
@@ -59,8 +60,10 @@ void ModuleImGui::ChangePlayState(bool show, GameState state)
 
 	std::string direction = "PlayingScene";
 	if (show)
+	{
 		App->gameObject->LoadScene(direction.data());
-
+		App->particle->StartAllEmiters();
+	}
 	else
 		App->gameObject->SaveScene(direction.data());	
 }

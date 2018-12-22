@@ -82,11 +82,14 @@ ComponentEmitter::~ComponentEmitter()
 
 void ComponentEmitter::StartEmitter()
 {
-	timer.Start();
-	burstTime.Start();
-	loopTimer.Start();
+	if (!isSubEmiter)
+	{
+		timer.Start();
+		burstTime.Start();
+		loopTimer.Start();
 
-	timeToParticle = 0.0f;
+		timeToParticle = 0.0f;
+	}
 }
 
 
@@ -221,6 +224,8 @@ float3 ComponentEmitter::RandPos(ShapeType shapeType)
 		angle = (2*pi) * pcg32_random() / MAXUINT;
 		centerDist = (float)pcg32_random() / MAXUINT;
 
+		circleCreation.pos = (float3::unitY * gameObject->transform->GetRotation().ToFloat3x3()).Normalized();
+		circleCreation.normal = -circleCreation.pos;
 		startValues.particleDirection = (circleCreation.GetPoint(angle,centerDist)).Normalized();
 	default:
 		break;

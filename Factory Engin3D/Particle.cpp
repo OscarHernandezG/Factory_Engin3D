@@ -20,6 +20,7 @@ Particle::~Particle()
 
 void Particle::SetActive(float3 pos, StartValues data, ResourceTexture ** texture, std::vector<uint>* animation, float animationSpeed)
 {
+	color.clear();
 	plane = App->particle->plane;
 
 	lifeTime = CreateRandomNum(data.life);
@@ -126,7 +127,6 @@ bool Particle::Update(float dt)
 void Particle::EndParticle(bool &ret)
 {
 	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
-	color.clear();
 	if (subEmitterActive && owner->subEmitter && owner->subEmitter->HasComponent(ComponentType_EMITTER))
 	{
 		ComponentEmitter* emiter = (ComponentEmitter*)owner->subEmitter->GetComponent(ComponentType_EMITTER);
