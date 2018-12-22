@@ -124,7 +124,6 @@ void ComponentEmitter::ClearEmitter()
 		(*iterator)->active = false;
 		(*iterator)->owner = nullptr;
 	}
-
 	particles.clear();
 }
 
