@@ -18,6 +18,8 @@ public:
 
 	update_status Update();
 
+	void StartAllEmiters();
+
 	void Draw();
 	void DrawParticles();
 	void SortParticles();

@@ -22,6 +22,7 @@ update_status ModuleParticle::Update()
 		(*emitter)->Update();
 	}
 
+	StartAllEmiters();
 	int count = 0;
 
 	float dt;
@@ -50,6 +51,14 @@ update_status ModuleParticle::Update()
 	}
 		LOG("Active particles %i", count);
 	return UPDATE_CONTINUE;
+}
+
+void ModuleParticle::StartAllEmiters()
+{
+	for (std::list<ComponentEmitter*>::iterator emitter = emitters.begin(); emitter != emitters.end(); ++emitter)
+	{
+		(*emitter)->StartEmitter();
+	}
 }
 
 void ModuleParticle::Draw()
