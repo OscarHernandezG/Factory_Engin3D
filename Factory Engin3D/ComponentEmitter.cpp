@@ -569,6 +569,7 @@ void ComponentEmitter::ShowFloatValue(float2& value, bool checkBox, const char* 
 		ImGui::PushItemWidth(70.0f);
 		std::string str = "##";
 		str.append(name);
+		str.append("min");
 		if (ImGui::DragFloat(str.data(), &value.x, v_speed, v_min, v_max, "%.2f"))
 			CheckMinMax(value);
 		ImGui::SameLine();
