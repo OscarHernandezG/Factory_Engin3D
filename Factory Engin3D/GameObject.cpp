@@ -327,7 +327,7 @@ ComponentInfo* GameObject::LoadComponentInfo(JSON_Object* info, ComponentType ty
 		emitterInfo->checkAngularAcceleration = json_object_get_boolean(info, "checkAngularAcceleration");
 		emitterInfo->checkAngularVelocity = json_object_get_boolean(info, "checkAngularVelocity");
 
-		emitterInfo->subEmiterUUID = json_object_get_number(info, "SubEmitter");
+		emitterInfo->subEmitterUUID = json_object_get_number(info, "SubEmitter");
 
 		emitterInfo->rateOverTime = json_object_get_number(info, "rateOverTime");
 

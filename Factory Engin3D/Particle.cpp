@@ -129,8 +129,8 @@ void Particle::EndParticle(bool &ret)
 	color.clear();
 	if (subEmitterActive && owner->subEmitter && owner->subEmitter->HasComponent(ComponentType_EMITTER))
 	{
-		ComponentEmitter* emiter = (ComponentEmitter*)owner->subEmitter->GetComponent(ComponentType_EMITTER);
-		emiter->newPositions.push_back(transform.position);
+		ComponentEmitter* emitter = (ComponentEmitter*)owner->subEmitter->GetComponent(ComponentType_EMITTER);
+		emitter->newPositions.push_back(transform.position);
 	}
 	active = false;
 	ret = false;

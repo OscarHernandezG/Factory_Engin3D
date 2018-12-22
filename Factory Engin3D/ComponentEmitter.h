@@ -100,7 +100,7 @@ struct EmitterInfo : ComponentInfo
 
 	bool isSubEmitter = false;
 	GameObject* subEmitter = nullptr;
-	uint subEmiterUUID = 0u;
+	uint subEmitterUUID = 0u;
 
 	int rateOverTime = 0;
 	bool subEmitterActive = false;
@@ -120,7 +120,7 @@ public:
 	void Inspector();
 	void ParticleTexture();
 	void ParticleAABB();
-	void ParticleSubEmiter();
+	void ParticleSubEmitter();
 	void ParticleBurst();
 	void ParticleColor();
 	void ParticleValues();
@@ -159,12 +159,12 @@ public:
 	bool dieOnAnimation = false;
 
 	GameObject* subEmitter = nullptr;
-	uint subEmiterUUID = 0u;
+	uint subEmitterUUID = 0u;
 	ShapeType normalShapeType = ShapeType_BOX;
 
 	std::list<float3> newPositions;
 
-	bool isSubEmiter = false;
+	bool isSubEmitter = false;
 private:
 	// General info
 	//---------------------------------------
@@ -183,7 +183,7 @@ private:
 	// Loop the particle (if true the particle emitter will never stop)
 	bool loop = true;
 	Timer loopTimer;
-	// Warm up the particle emiter (if true the particle emitter will be already started at play-time)
+	// Warm up the particle emitter (if true the particle emitter will be already started at play-time)
 	bool preWarm = true;
 
 	//Create other particle when he death
