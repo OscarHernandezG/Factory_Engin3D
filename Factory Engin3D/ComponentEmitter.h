@@ -129,8 +129,8 @@ public:
 
 	int GetEmition() const;
 public:
-	Timer timer;
-	Timer burstTime;
+	GameTimer timer;
+	GameTimer burstTime;
 
 	// Particle texture
 	ResourceTexture* texture = nullptr;

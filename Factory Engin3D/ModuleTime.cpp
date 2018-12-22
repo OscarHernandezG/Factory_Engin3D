@@ -12,6 +12,7 @@ ModuleTime::ModuleTime(Application* app, bool start_enabled) : Module(app, start
 // Destructor
 ModuleTime::~ModuleTime()
 {
+
 }
 
 // Called before render is available
@@ -31,6 +32,7 @@ bool ModuleTime::Start()
 // Called before quitting
 bool ModuleTime::CleanUp()
 {
+	gameTimerList.clear();
 	return true;
 }
 

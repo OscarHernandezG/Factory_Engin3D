@@ -54,7 +54,7 @@ bool ModuleGeometry::Start()
 void ModuleGeometry::LoadDefaultScene()
 {
 	//App->importer->DistributeFile("assets\\textures\\Baker_house.png");
-	App->importer->DistributeFile("assets\\models\\BakerHouse.fbx");
+	App->importer->DistributeFile("assets\\models\\Street.fbx");
 
 	cameraObject = App->gameObject->CreateGameObject(float3(0,3,-10), Quat::identity, float3::one, App->gameObject->rootGameObject, "Camera");
 	playingCamera = (Camera*)cameraObject->AddComponent(ComponentType_CAMERA, nullptr);
