@@ -280,6 +280,8 @@ ComponentInfo* GameObject::LoadComponentInfo(JSON_Object* info, ComponentType ty
 		emitterInfo->maxPart = json_object_get_number(info, "maxPart");
 		emitterInfo->repeatTime = json_object_get_number(info, "repeatTime");
 
+		emitterInfo->isSubEmiter = json_object_get_boolean(info, "isSubEmiter");
+
 		// posDifAABB
 		float3 posDifAABB = float3(
 			json_object_get_number(info, "posDifAABBX"),

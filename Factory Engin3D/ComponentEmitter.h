@@ -98,6 +98,7 @@ struct EmitterInfo : ComponentInfo
 	bool isParticleAnimated = false;
 	bool dieOnAnimation = false;
 
+	bool isSubEmiter = false;
 	GameObject* subEmiter = nullptr;
 };
 
@@ -157,6 +158,8 @@ public:
 	ShapeType normalShapeType = ShapeType_BOX;
 
 	std::list<float3> newPositions;
+
+	bool isSubEmiter = false;
 private:
 	// General info
 	//---------------------------------------

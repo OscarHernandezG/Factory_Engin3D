@@ -59,6 +59,8 @@ ComponentEmitter::ComponentEmitter(GameObject* gameObject, EmitterInfo* info) : 
 		dieOnAnimation = info->dieOnAnimation;
 
 		drawAABB = info->drawAABB;
+
+		isSubEmiter = info->isSubEmiter;
 	}
 
 	gameObject->transform->UpdateBoundingBox();
@@ -543,7 +545,9 @@ void ComponentEmitter::ParticleSubEmiter()
 			else
 			{
 				subEmiter = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, gameObject, "SubEmition");
-				subEmiter->AddComponent(ComponentType_EMITTER, nullptr);
+				EmitterInfo info;
+				info.isSubEmiter = true;
+				subEmiter->AddComponent(ComponentType_EMITTER, &info);
 			}
 		}
 		else
@@ -737,7 +741,7 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 
 	json_object_set_boolean(parent, "drawAABB", drawAABB);
 	
-	
+	json_object_set_boolean(parent, "isSubEmiter", isSubEmiter);
 	json_object_set_number(parent, "SubEmitter", subEmiter->GetUID());
 }
 
