@@ -10,7 +10,7 @@
 #include "Particle.h"
 
 #include <list>
-
+#include <queue>
 enum ShapeType {
 	ShapeType_BOX,
 	ShapeType_SPHERE,
@@ -142,6 +142,8 @@ public:
 
 	GameObject* subEmiter = nullptr;
 	ShapeType normalShapeType = ShapeType_BOX;
+
+	std::queue<float3> newPositions;
 private:
 	// General info
 	//---------------------------------------

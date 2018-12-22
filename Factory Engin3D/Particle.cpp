@@ -128,7 +128,7 @@ void Particle::EndParticle(bool &ret)
 	if (subEmiter && owner->subEmiter && owner->subEmiter->HasComponent(ComponentType_EMITTER))
 	{
 		ComponentEmitter* emiter = (ComponentEmitter*)owner->subEmiter->GetComponent(ComponentType_EMITTER);
-		emiter->CreateParticles(emiter->GetEmition(), emiter->normalShapeType, transform.position);
+		emiter->newPositions.push(transform.position);
 	}
 	active = false;
 	ret = false;
