@@ -36,7 +36,9 @@ ComponentEmitter::ComponentEmitter(GameObject* gameObject, EmitterInfo* info) : 
 		// boxCreation
 		boxCreation = info->boxCreation;
 		// SphereCreation
-		sphereCreation.r = info->SphereCreation_rad;
+		sphereCreation.r = info->SphereCreationRad;
+
+		circleCreation.r = info->circleCreationRad;
 
 		normalShapeType = info->shapeType;
 		texture = info->texture;
@@ -740,7 +742,9 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 	SaveNumberArray(parent, "boxCreationMin", boxCreation.minPoint.ptr(), 3);
 	SaveNumberArray(parent, "boxCreationMax", boxCreation.maxPoint.ptr(), 3);
 
-	json_object_set_number(parent, "SphereCreation_rad", sphereCreation.r);
+	json_object_set_number(parent, "SphereCreationRad", sphereCreation.r);
+
+	json_object_set_number(parent, "circleCreationRad", circleCreation.r);
 
 	json_object_set_number(parent, "shapeType", normalShapeType);
 

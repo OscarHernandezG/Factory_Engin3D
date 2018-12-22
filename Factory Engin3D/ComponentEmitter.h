@@ -76,7 +76,8 @@ struct EmitterInfo : ComponentInfo
 	float gravity = 0.0f;
 
 	AABB boxCreation = AABB(float3(-0.5f, -0.5f, -0.5f), float3(0.5f, 0.5f, 0.5f));
-	float SphereCreation_rad = 1.0f;
+	float SphereCreationRad = 1.0f;
+	float circleCreationRad = 1.0f;
 
 	ShapeType shapeType = ShapeType_BOX;
 
