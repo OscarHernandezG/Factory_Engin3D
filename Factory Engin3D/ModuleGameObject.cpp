@@ -178,6 +178,12 @@ void ModuleGameObject::LoadScene(const char* name)
 			{
 				SetGOMeshNewScene(itMesh, it);
 			}
+
+			ComponentEmitter* emitter = (ComponentEmitter*)(*it)->GetComponent(ComponentType_EMITTER);
+			if (emitter)
+			{
+				emitter->subEmiter = FindByID(emitter->subEmiterUUID);
+			}
 		}
 	}
 	else
