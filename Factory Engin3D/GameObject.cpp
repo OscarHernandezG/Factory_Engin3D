@@ -305,7 +305,10 @@ ComponentInfo* GameObject::LoadComponentInfo(JSON_Object* info, ComponentType ty
 		emitterInfo->boxCreation = AABB(boxMin, boxMax);
 
 		// SphereCreation
-		emitterInfo->SphereCreation_rad = json_object_get_number(info, "SphereCreation_rad");
+		emitterInfo->SphereCreationRad = json_object_get_number(info, "SphereCreationRad");
+
+
+		emitterInfo->circleCreationRad = json_object_get_number(info, "circleCreationRad");
 
 		emitterInfo->shapeType = (ShapeType)(int)json_object_get_number(info, "shapeType");
 		emitterInfo->texture = App->resources->LoadTexture(json_object_get_string(info, "texture"));
