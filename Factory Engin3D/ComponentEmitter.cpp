@@ -69,8 +69,15 @@ ComponentEmitter::ComponentEmitter(GameObject* gameObject, EmitterInfo* info) : 
 		rateOverTime = info->rateOverTime;
 
 		startValues.subEmitterActive = info->subEmitterActive;
-	}
 
+		if (gameObject && gameObject->transform)
+		{
+			gameObject->transform->originalBoundingBox = AABB::FromCenterAndSize(info->posDifAABB, info->sizeOBB);
+			gameObject->transform->UpdateBoundingBox();
+		}
+
+
+	}
 	gameObject->transform->UpdateBoundingBox();
 	particleAnimation = App->particle->particleAnimation;
 	App->sceneIntro->octree.Insert(gameObject);
@@ -766,6 +773,15 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 	if(subEmitter)
 	json_object_set_number(parent, "SubEmitter", subEmitter->GetUID());
 
+
+	if (gameObject && gameObject->transform)
+	{
+		float3 bb = gameObject->transform->originalBoundingBox.Size();
+
+		json_object_set_number(parent, "originalBoundingBoxSizeX", bb.x);
+		json_object_set_number(parent, "originalBoundingBoxSizeY", bb.y);
+		json_object_set_number(parent, "originalBoundingBoxSizeZ", bb.z);
+	}
 }
 
 int ComponentEmitter::GetEmition() const
