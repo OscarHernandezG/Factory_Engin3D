@@ -58,6 +58,11 @@ ComponentEmitter::ComponentEmitter(GameObject* gameObject, EmitterInfo* info) : 
 		dieOnAnimation = info->dieOnAnimation;
 
 		drawAABB = info->drawAABB;
+
+		subEmiter = info->subEmiter;
+		subEmiterUUID = info->subEmiterUUID;
+
+		rateOverTime = info->rateOverTime;
 	}
 
 	gameObject->transform->UpdateBoundingBox();
@@ -144,11 +149,16 @@ void ComponentEmitter::ClearEmitter()
 		(*iterator)->active = false;
 		(*iterator)->owner = nullptr;
 	}
+
+	App->particle->activeParticles -= particles.size();
+
 	particles.clear();
 }
 
 void ComponentEmitter::SoftClearEmitter()
 {
+	App->particle->activeParticles -= particles.size();
+
 	particles.clear();
 }
 
@@ -640,6 +650,9 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 	json_object_set_number(parent, "angularVelocityMin", startValues.angularVelocity.x);
 	json_object_set_number(parent, "angularVelocityMax", startValues.angularVelocity.y);
 
+
+	json_object_set_number(parent, "rateOverTime", rateOverTime);
+
 	JSON_Value* colorValue = json_value_init_array();
 	JSON_Array* color = json_value_get_array(colorValue);
 
@@ -714,7 +727,7 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 
 	json_object_set_boolean(parent, "drawAABB", drawAABB);
 	
-	
+	if(subEmiter)
 	json_object_set_number(parent, "SubEmitter", subEmiter->GetUID());
 }
 
