@@ -383,7 +383,7 @@ ComponentInfo* GameObject::LoadComponentInfo(JSON_Object* info, ComponentType ty
 
 		startValues->timeColor = json_object_get_number(info, "timeColor");
 
-		startValues->subEmitter = json_object_get_number(info, "subEmitter");
+		startValues->subEmitterActive = json_object_get_number(info, "subEmitterActive");
 
 		startValues->particleDirection.x = json_object_get_number(info, "particleDirectionX");
 		startValues->particleDirection.y = json_object_get_number(info, "particleDirectionY");

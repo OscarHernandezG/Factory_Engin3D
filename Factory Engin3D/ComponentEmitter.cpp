@@ -65,7 +65,7 @@ ComponentEmitter::ComponentEmitter(GameObject* gameObject, EmitterInfo* info) : 
 
 		rateOverTime = info->rateOverTime;
 
-		startValues.subEmitter = info->subEmitterActive;
+		startValues.subEmitterActive = info->subEmitterActive;
 	}
 
 	gameObject->transform->UpdateBoundingBox();
@@ -546,9 +546,9 @@ void ComponentEmitter::ParticleTexture()
 
 void ComponentEmitter::ParticleSubEmiter()
 {
-	if (ImGui::Checkbox("SubEmiter", &startValues.subEmitter))
+	if (ImGui::Checkbox("SubEmiter", &startValues.subEmitterActive))
 	{
-		if (startValues.subEmitter)
+		if (startValues.subEmitterActive)
 		{
 			if (subEmitter)
 				subEmitter->SetActive(true);
@@ -676,7 +676,7 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 	json_object_set_number(parent, "angularVelocityMax", startValues.angularVelocity.y);
 
 
-	json_object_set_boolean(parent, "subEmitterActive", startValues.subEmitter);
+	json_object_set_boolean(parent, "subEmitterActive", startValues.subEmitterActive);
 
 
 	json_object_set_number(parent, "rateOverTime", rateOverTime);
@@ -705,7 +705,7 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 	// TODO: save colors
 	json_object_set_number(parent, "timeColor", startValues.timeColor);
 
-	json_object_set_boolean(parent, "subEmitter", startValues.subEmitter);
+	json_object_set_boolean(parent, "subEmitterActive", startValues.subEmitterActive);
 
 	json_object_set_number(parent, "particleDirectionX", startValues.particleDirection.x);
 	json_object_set_number(parent, "particleDirectionY", startValues.particleDirection.y);

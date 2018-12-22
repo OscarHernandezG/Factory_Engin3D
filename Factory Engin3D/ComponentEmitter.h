@@ -49,7 +49,7 @@ struct StartValues
 
 	float3 particleDirection = float3::unitY;
 
-	bool subEmitter = false;
+	bool subEmitterActive = false;
 
 	StartValues()
 	{

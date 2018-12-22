@@ -54,7 +54,7 @@ void Particle::SetActive(float3 pos, StartValues data, ResourceTexture ** textur
 	currentFrame = 0u;
 
 	active = true;
-	subEmitter = data.subEmitter;
+	subEmitterActive = data.subEmitterActive;
 	index = 0;
 
 	App->particle->activeParticles++;
@@ -127,7 +127,7 @@ void Particle::EndParticle(bool &ret)
 {
 	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
 	color.clear();
-	if (subEmitter && owner->subEmitter && owner->subEmitter->HasComponent(ComponentType_EMITTER))
+	if (subEmitterActive && owner->subEmitter && owner->subEmitter->HasComponent(ComponentType_EMITTER))
 	{
 		ComponentEmitter* emiter = (ComponentEmitter*)owner->subEmitter->GetComponent(ComponentType_EMITTER);
 		emiter->newPositions.push_back(transform.position);

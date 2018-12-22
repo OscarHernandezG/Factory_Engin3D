@@ -65,7 +65,7 @@ private:
 	float angularVelocity = 0.0f;
 	float angularAcceleration = 0.0f;
 
-	bool subEmitter = false;
+	bool subEmitterActive = false;
 
 	std::vector<ColorTime> color;
 	int index = 0;
