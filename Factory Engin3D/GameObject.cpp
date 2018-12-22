@@ -329,6 +329,9 @@ ComponentInfo* GameObject::LoadComponentInfo(JSON_Object* info, ComponentType ty
 
 		emitterInfo->rateOverTime = json_object_get_number(info, "rateOverTime");
 
+		emitterInfo->subEmitterActive = json_object_get_boolean(info, "subEmitterActive");
+
+
 		StartValues* startValues = &emitterInfo->startValues;
 
 		startValues->life.x = json_object_get_number(info, "lifeMin");
@@ -380,7 +383,7 @@ ComponentInfo* GameObject::LoadComponentInfo(JSON_Object* info, ComponentType ty
 
 		startValues->timeColor = json_object_get_number(info, "timeColor");
 
-		startValues->subEmiter = json_object_get_number(info, "subEmiter");
+		startValues->subEmitter = json_object_get_number(info, "subEmitter");
 
 		startValues->particleDirection.x = json_object_get_number(info, "particleDirectionX");
 		startValues->particleDirection.y = json_object_get_number(info, "particleDirectionY");
