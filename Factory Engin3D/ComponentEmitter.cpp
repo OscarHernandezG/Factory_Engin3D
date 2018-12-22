@@ -5,6 +5,7 @@
 #include "ModuleTime.h"
 
 #include <vector>
+#include "pcg-c-basic-0.9/pcg_basic.h"
 
 #include "ModuleParticles.h"
 
@@ -35,7 +36,7 @@ ComponentEmitter::ComponentEmitter(GameObject* gameObject, EmitterInfo* info) : 
 		// boxCreation
 		boxCreation = info->boxCreation;
 		// SphereCreation
-		SphereCreation.r = info->SphereCreation_rad;
+		sphereCreation.r = info->SphereCreation_rad;
 
 		normalShapeType = info->shapeType;
 		texture = info->texture;
@@ -176,6 +177,9 @@ void ComponentEmitter::CreateParticles(int particlesToCreate, ShapeType shapeTyp
 float3 ComponentEmitter::RandPos(ShapeType shapeType)
 {
 	float3 spawn = float3::zero;
+	float angle = 0.0f;
+	float centerDist = 0.0f;
+
 	switch (shapeType)
 	{
 	case ShapeType_BOX:
@@ -184,19 +188,25 @@ float3 ComponentEmitter::RandPos(ShapeType shapeType)
 		break;
 
 	case ShapeType_SPHERE:
-		spawn = SphereCreation.RandomPointInside(App->randomMath);
+		spawn = sphereCreation.RandomPointInside(App->randomMath);
 		startValues.particleDirection = spawn.Normalized();
 		break;
 
 	case ShapeType_SPHERE_CENTER:
-		startValues.particleDirection = SphereCreation.RandomPointInside(App->randomMath).Normalized();
+		startValues.particleDirection = sphereCreation.RandomPointInside(App->randomMath).Normalized();
 		break;
 
 	case ShapeType_SPHERE_BORDER:
-		spawn = SphereCreation.RandomPointOnSurface(App->randomMath);
+		spawn = sphereCreation.RandomPointOnSurface(App->randomMath);
 		startValues.particleDirection = spawn.Normalized();
 		break;
 
+	case ShapeType_CONE:
+
+		angle = (2*pi) * pcg32_random() / MAXUINT;
+		centerDist = (float)pcg32_random() / MAXUINT;
+
+		startValues.particleDirection = (circleCreation.GetPoint(angle,centerDist)).Normalized();
 	default:
 		break;
 	}
@@ -278,6 +288,8 @@ void ComponentEmitter::ParticleShape()
 				normalShapeType = ShapeType_BOX;
 			else if (ImGui::MenuItem("Sphere"))
 				normalShapeType = ShapeType_SPHERE;
+			else if (ImGui::MenuItem("Cone"))
+				normalShapeType = ShapeType_CONE;
 			ImGui::End();
 		}
 
@@ -309,7 +321,12 @@ void ComponentEmitter::ParticleShape()
 			if (ImGui::RadioButton("Border", normalShapeType == ShapeType_SPHERE_BORDER))
 				normalShapeType = ShapeType_SPHERE_BORDER;
 
-			ImGui::DragFloat("Sphere Size", &SphereCreation.r, 0.25f, 1.0f, 20.0f, "%.2f");
+			ImGui::DragFloat("Sphere Size", &sphereCreation.r, 0.25f, 1.0f, 20.0f, "%.2f");
+
+			break;
+		case ShapeType_CONE:
+			ImGui::Text("Cone");
+			ImGui::DragFloat("Sphere Size", &circleCreation.r, 0.25f, 1.0f, 20.0f, "%.2f");
 
 			break;
 		default:
@@ -381,6 +398,11 @@ void ComponentEmitter::ParticleBurst()
 			{
 				burstType = ShapeType_SPHERE_CENTER;
 				burstTypeName = "Sphere Burst";
+			}
+			else if (ImGui::MenuItem("Cone"))
+			{
+				burstType = ShapeType_CONE;
+				burstTypeName = "Cone Burst";
 			}
 			ImGui::End();
 		}
@@ -689,7 +711,7 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 	SaveNumberArray(parent, "boxCreationMin", boxCreation.minPoint.ptr(), 3);
 	SaveNumberArray(parent, "boxCreationMax", boxCreation.maxPoint.ptr(), 3);
 
-	json_object_set_number(parent, "SphereCreation_rad", SphereCreation.r);
+	json_object_set_number(parent, "SphereCreation_rad", sphereCreation.r);
 
 	json_object_set_number(parent, "shapeType", normalShapeType);
 

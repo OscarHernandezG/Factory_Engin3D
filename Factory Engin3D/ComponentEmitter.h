@@ -15,7 +15,8 @@ enum ShapeType {
 	ShapeType_BOX,
 	ShapeType_SPHERE,
 	ShapeType_SPHERE_CENTER,
-	ShapeType_SPHERE_BORDER
+	ShapeType_SPHERE_BORDER,
+	ShapeType_CONE
 };
 
 struct ColorTime
@@ -190,7 +191,8 @@ private:
 
 	//Posibility space where particle is created
 	AABB boxCreation = AABB(float3(-0.5f, -0.5f, -0.5f), float3(0.5f, 0.5f, 0.5f));
-	Sphere SphereCreation = Sphere(float3::zero, 1.0f);
+	Sphere sphereCreation = Sphere(float3::zero, 1.0f);
+	Circle circleCreation = Circle(float3::unitY, float3::unitY, 1.0f);
 
 	ShapeType burstType = ShapeType_BOX;
 	std::string burstTypeName = "Box Burst";
