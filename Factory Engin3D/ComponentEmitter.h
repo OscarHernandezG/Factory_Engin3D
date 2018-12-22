@@ -49,7 +49,7 @@ struct StartValues
 
 	float3 particleDirection = float3::unitY;
 
-	bool subEmiter = false;
+	bool subEmitter = false;
 
 	StartValues()
 	{
@@ -98,10 +98,11 @@ struct EmitterInfo : ComponentInfo
 	bool isParticleAnimated = false;
 	bool dieOnAnimation = false;
 
-	GameObject* subEmiter = nullptr;
+	GameObject* subEmitter = nullptr;
 	uint subEmiterUUID = 0u;
 
 	int rateOverTime = 0;
+	bool subEmitterActive = false;
 };
 
 class ComponentEmitter : public Component
@@ -156,7 +157,7 @@ public:
 
 	bool dieOnAnimation = false;
 
-	GameObject* subEmiter = nullptr;
+	GameObject* subEmitter = nullptr;
 	uint subEmiterUUID = 0u;
 	ShapeType normalShapeType = ShapeType_BOX;
 

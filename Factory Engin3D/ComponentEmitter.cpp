@@ -60,10 +60,12 @@ ComponentEmitter::ComponentEmitter(GameObject* gameObject, EmitterInfo* info) : 
 
 		drawAABB = info->drawAABB;
 
-		subEmiter = info->subEmiter;
+		subEmitter = info->subEmitter;
 		subEmiterUUID = info->subEmiterUUID;
 
 		rateOverTime = info->rateOverTime;
+
+		startValues.subEmitter = info->subEmitterActive;
 	}
 
 	gameObject->transform->UpdateBoundingBox();
@@ -544,20 +546,20 @@ void ComponentEmitter::ParticleTexture()
 
 void ComponentEmitter::ParticleSubEmiter()
 {
-	if (ImGui::Checkbox("SubEmiter", &startValues.subEmiter))
+	if (ImGui::Checkbox("SubEmiter", &startValues.subEmitter))
 	{
-		if (startValues.subEmiter)
+		if (startValues.subEmitter)
 		{
-			if (subEmiter)
-				subEmiter->SetActive(true);
+			if (subEmitter)
+				subEmitter->SetActive(true);
 			else
 			{
-				subEmiter = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, gameObject, "SubEmition");
-				subEmiter->AddComponent(ComponentType_EMITTER, nullptr);
+				subEmitter = App->gameObject->CreateGameObject(float3::zero, Quat::identity, float3::one, gameObject, "SubEmition");
+				subEmitter->AddComponent(ComponentType_EMITTER, nullptr);
 			}
 		}
 		else
-			subEmiter->SetActive(false);
+			subEmitter->SetActive(false);
 	}
 	ImGui::Separator();
 }
@@ -700,7 +702,7 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 	// TODO: save colors
 	json_object_set_number(parent, "timeColor", startValues.timeColor);
 
-	json_object_set_boolean(parent, "subEmiter", startValues.subEmiter);
+	json_object_set_boolean(parent, "subEmitter", startValues.subEmitter);
 
 	json_object_set_number(parent, "particleDirectionX", startValues.particleDirection.x);
 	json_object_set_number(parent, "particleDirectionY", startValues.particleDirection.y);
@@ -750,8 +752,8 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 
 	json_object_set_boolean(parent, "drawAABB", drawAABB);
 	
-	if(subEmiter)
-	json_object_set_number(parent, "SubEmitter", subEmiter->GetUID());
+	if(subEmitter)
+	json_object_set_number(parent, "SubEmitter", subEmitter->GetUID());
 }
 
 int ComponentEmitter::GetEmition() const
