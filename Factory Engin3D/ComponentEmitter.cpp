@@ -122,6 +122,8 @@ void ComponentEmitter::Update()
 		{
 			CreateParticles(rateOverTime, normalShapeType, *iterator);
 		}
+
+		newPositions.clear();
 	}
 
 	// Use this condition to remove all particles from the component Emitter
@@ -516,6 +518,11 @@ void ComponentEmitter::ParticleTexture()
 			ImGui::DragInt("Columns", &textureColumns, 1, 1, 10);
 
 			ImGui::Checkbox("Kill particle with animation", &dieOnAnimation);
+			if (dieOnAnimation)
+			{
+				checkLife = false;
+				startValues.life.x = animationSpeed * particleAnimation.columns * particleAnimation.rows;
+			}
 
 			if (ImGui::Button("Calc Animation", ImVec2(150.0f, 25.0f)))
 			{
@@ -728,6 +735,9 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 	json_object_set_boolean(parent, "dieOnAnimation", dieOnAnimation);
 
 	json_object_set_boolean(parent, "drawAABB", drawAABB);
+	
+	
+	json_object_set_number(parent, "SubEmitter", subEmiter->GetUID());
 }
 
 int ComponentEmitter::GetEmition() const
