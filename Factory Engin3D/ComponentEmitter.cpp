@@ -84,7 +84,7 @@ ComponentEmitter::~ComponentEmitter()
 
 void ComponentEmitter::StartEmitter()
 {
-	if (!isSubEmiter)
+	if (!isSubEmitter)
 	{
 		timer.Start();
 		burstTime.Start();
@@ -102,7 +102,7 @@ void ComponentEmitter::Update()
 		float time = timer.ReadSec();
 		if (time > timeToParticle && (loop || loopTimer.ReadSec() < duration))
 		{
-			if (App->time->gameState == GameState_PLAYING || simulatedGame == GameState_PLAYING)
+			if (App->time->gameState == GameState_PLAYING || simulatedGame == GameState_PLAYING || App->time->gameState == GameState_TICK)
 			{
 				int particlesToCreate = (time / (1.0f / rateOverTime));
 				CreateParticles(particlesToCreate, normalShapeType);
@@ -117,7 +117,7 @@ void ComponentEmitter::Update()
 	float burstT = burstTime.ReadSec();
 	if (burst && burstT > repeatTime)
 	{
-		if (App->time->gameState == GameState_PLAYING || simulatedGame == GameState_PLAYING)
+		if (App->time->gameState == GameState_PLAYING || simulatedGame == GameState_PLAYING || App->time->gameState == GameState_TICK)
 		{
 			int particlesToCreate = minPart;
 			if (minPart != maxPart)

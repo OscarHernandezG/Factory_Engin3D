@@ -8,7 +8,13 @@ void ModuleImGui::CreateGameManager(float2 scale)
 	{
 		SetWindowDim(playPos, playSize, scale, true);
 
-		if (ImGui::Button("Play", { 50,25 }))
+		std::string btnName;
+		if (App->time->gameState == GameState_NONE)
+			btnName = "Play";
+		else
+			btnName = "Stop";
+
+		if (ImGui::Button(btnName.data(), { 50,25 }))
 		{
 			if (App->time->gameState == GameState_NONE)
 				ChangePlayState(false, GameState_PLAYING);
