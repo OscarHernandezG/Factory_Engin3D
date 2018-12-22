@@ -496,6 +496,11 @@ void ComponentEmitter::ParticleTexture()
 			ImGui::DragInt("Columns", &textureColumns, 1, 1, 10);
 
 			ImGui::Checkbox("Kill particle with animation", &dieOnAnimation);
+			if (dieOnAnimation)
+			{
+				checkLife = false;
+				startValues.life.x = animationSpeed * particleAnimation.columns * particleAnimation.rows;
+			}
 
 			if (ImGui::Button("Calc Animation", ImVec2(150.0f, 25.0f)))
 			{
