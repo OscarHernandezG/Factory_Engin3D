@@ -28,7 +28,7 @@ public:
 
 	bool operator<(const Particle& particle2) const
 	{
-		return camDistance > particle2.camDistance;
+		return camDistance < particle2.camDistance;
 	}
 
 	void SetActive(float3 pos, StartValues data, ResourceTexture ** texture, std::vector<uint>* animation, float animationSpeed);
@@ -52,6 +52,7 @@ public:
 
 	ComponentEmitter* owner = nullptr;
 
+	uint currentFrame = 0;
 private:
 	float lifeTime = 0.0f;
 	float life = 0.0f;
@@ -80,7 +81,6 @@ private:
 	float angle = 0.0f;
 
 	std::vector<uint>* animation = nullptr;
-	uint currentFrame = 0;
 	float animationSpeed = 0.1f;
 
 	GameTimer animationTime;
@@ -90,7 +90,7 @@ struct particleCompare
 {
 	bool operator()(const Particle* particle1, const Particle* particle2) const
 	{
-		return particle1->camDistance < particle2->camDistance;
+		return particle1->camDistance > particle2->camDistance;
 	}
 };
 #endif // !__Particle_H__

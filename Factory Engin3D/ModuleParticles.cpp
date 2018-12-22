@@ -59,6 +59,8 @@ void ModuleParticle::Draw()
 	if (plane == nullptr)
 		plane = new ParticlePlane();
 
+	SortParticles();
+
 	DrawParticles();
 }
 
@@ -96,22 +98,21 @@ bool ModuleParticle::GetParticle(int& id)
 	{
 		if (!allParticles[i].active) 
 		{
-			lastUsedParticle = 0;
+			lastUsedParticle = i;
 			id = i;
 			return true;
 		}
 	}
 
-	for (int i = 0; i < lastUsedParticle; ++i) 
+	for (int i = 0; i < lastUsedParticle; ++i)
 	{
-		if (!allParticles[i].active) 
+		if (!allParticles[i].active)
 		{
-			lastUsedParticle = 0;
+			lastUsedParticle = i;
 			id = i;
 			return true;
 		}
 	}
-	lastUsedParticle = 0;
 	return false;
 }
 
