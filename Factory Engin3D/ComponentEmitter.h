@@ -107,6 +107,7 @@ public:
 	void Update();
 
 	void Inspector();
+	void SetNewAnimation(int row, int col);
 	float3 RandPos(ShapeType shapeType);
 	void ShowFloatValue(float2 & value, bool checkBox, const char * name, float v_speed, float v_min, float v_max);
 	void CheckMinMax(float2 & value);
@@ -198,5 +199,7 @@ private:
 
 	int rows = 1;
 	int columns = 1;
+
+	bool isParticleAnimated = false;
 };
 #endif // !__Emitter_H__

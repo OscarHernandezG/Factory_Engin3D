@@ -440,19 +440,39 @@ void ComponentEmitter::Inspector()
 		}
 
 		ImGui::Separator();
-		ImGui::DragFloat("Animation Speed", &animationSpeed, 0.05f, 0.0f, 5.0f, "%.2f");
-		ImGui::DragInt("Rows", &rows, 1, 1, 10);
-		ImGui::DragInt("Columns", &columns, 1, 1, 10);
-
-		ImGui::Checkbox("Kill particle with animation", &dieOnAnimation);
-
-		if(ImGui::Button("Calc Animation", ImVec2(150.0f, 25.0f)))
+		if (ImGui::Checkbox("Animated sprite", &isParticleAnimated))
 		{
-			particleAnimation = App->resources->LoadTextureUV(rows, columns);
+			if (!isParticleAnimated)			
+				SetNewAnimation(1, 1);
+			
+			else 
+				SetNewAnimation(rows, columns);
+		}
+		if (isParticleAnimated)
+		{
+			ImGui::DragFloat("Animation Speed", &animationSpeed, 0.001f, 0.0f, 5.0f, "%.3f");
+			ImGui::DragInt("Rows", &rows, 1, 1, 10);
+			ImGui::DragInt("Columns", &columns, 1, 1, 10);
+
+			ImGui::Checkbox("Kill particle with animation", &dieOnAnimation);
+
+			if (ImGui::Button("Calc Animation", ImVec2(150.0f, 25.0f)))
+			{
+				SetNewAnimation(rows, columns);
+			}
 		}
 
 		if (ImGui::Button("Remove Particles", ImVec2(150, 25)))
 			toDelete = true;
+	}
+}
+
+void ComponentEmitter::SetNewAnimation(int row, int col)
+{
+	particleAnimation = App->resources->LoadTextureUV(row, col);
+	for (std::list<Particle*>::iterator iterator = particles.begin(); iterator != particles.end(); ++iterator)
+	{
+		(*iterator)->currentFrame = 0;
 	}
 }
 
