@@ -53,12 +53,13 @@ ComponentEmitter::ComponentEmitter(GameObject* gameObject, EmitterInfo* info) : 
 		checkAngularAcceleration = info->checkAngularAcceleration;
 		checkAngularVelocity = info->checkAngularVelocity;
 
-		textureRows = info->textureRows;
-		textureColumns = info->textureColumns;
-
-		animationSpeed = info->animationSpeed;
-
 		isParticleAnimated = info->isParticleAnimated;
+		if (isParticleAnimated)
+		{
+			textureRows = info->textureRows;
+			textureColumns = info->textureColumns;
+			animationSpeed = info->animationSpeed;
+		}
 		dieOnAnimation = info->dieOnAnimation;
 
 		drawAABB = info->drawAABB;
