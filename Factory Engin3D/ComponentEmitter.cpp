@@ -36,7 +36,9 @@ ComponentEmitter::ComponentEmitter(GameObject* gameObject, EmitterInfo* info) : 
 		// boxCreation
 		boxCreation = info->boxCreation;
 		// SphereCreation
-		sphereCreation.r = info->SphereCreation_rad;
+		sphereCreation.r = info->SphereCreationRad;
+
+		circleCreation.r = info->circleCreationRad;
 
 		normalShapeType = info->shapeType;
 		texture = info->texture;
@@ -60,9 +62,9 @@ ComponentEmitter::ComponentEmitter(GameObject* gameObject, EmitterInfo* info) : 
 
 		drawAABB = info->drawAABB;
 
-		isSubEmiter = info->isSubEmitter;
+		isSubEmitter = info->isSubEmitter;
 		subEmitter = info->subEmitter;
-		subEmiterUUID = info->subEmiterUUID;
+		subEmitterUUID = info->subEmitterUUID;
 
 		rateOverTime = info->rateOverTime;
 
@@ -126,7 +128,7 @@ void ComponentEmitter::Update()
 		burstTime.Start();
 	}
 
-	//Used for SubEmiter. Create particles from ParticleEmiter death (On Emiter update because need to resize before Particle update)
+	//Used for SubEmitter. Create particles from ParticleEmiter death (On Emiter update because need to resize before Particle update)
 	if (!newPositions.empty())
 	{
 		for (std::list<float3>::const_iterator iterator = newPositions.begin(); iterator != newPositions.end(); ++iterator)
@@ -254,7 +256,7 @@ void ComponentEmitter::Inspector()
 
 		ParticleTexture();
 
-		ParticleSubEmiter();
+		ParticleSubEmitter();
 
 		if (ImGui::Button("Remove Particles", ImVec2(150, 25)))
 			toDelete = true;
@@ -550,9 +552,9 @@ void ComponentEmitter::ParticleTexture()
 	}
 }
 
-void ComponentEmitter::ParticleSubEmiter()
+void ComponentEmitter::ParticleSubEmitter()
 {
-	if (ImGui::Checkbox("SubEmiter", &startValues.subEmitterActive))
+	if (ImGui::Checkbox("SubEmitter", &startValues.subEmitterActive))
 	{
 		if (startValues.subEmitterActive)
 		{
@@ -745,7 +747,9 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 	SaveNumberArray(parent, "boxCreationMin", boxCreation.minPoint.ptr(), 3);
 	SaveNumberArray(parent, "boxCreationMax", boxCreation.maxPoint.ptr(), 3);
 
-	json_object_set_number(parent, "SphereCreation_rad", sphereCreation.r);
+	json_object_set_number(parent, "SphereCreationRad", sphereCreation.r);
+
+	json_object_set_number(parent, "circleCreationRad", circleCreation.r);
 
 	json_object_set_number(parent, "shapeType", normalShapeType);
 
@@ -763,7 +767,7 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 
 	json_object_set_boolean(parent, "drawAABB", drawAABB);
 	
-	json_object_set_boolean(parent, "isSubEmitter", isSubEmiter);
+	json_object_set_boolean(parent, "isSubEmitter", isSubEmitter);
 	if(subEmitter)
 	json_object_set_number(parent, "SubEmitter", subEmitter->GetUID());
 

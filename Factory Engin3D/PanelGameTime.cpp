@@ -7,7 +7,7 @@ void ModuleImGui::CreateGameTime()
 	if (App->time->gameState == GameState_NONE)
 	{
 		ComponentEmitter* emitter = (ComponentEmitter*)App->geometry->currentGameObject->GetComponent(ComponentType_EMITTER);
-		if (!emitter->isSubEmiter)
+		if (!emitter->isSubEmitter)
 		{
 			if (ImGui::Begin("GameSimulate", &gameTimeWindow, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoResize))
 			{
