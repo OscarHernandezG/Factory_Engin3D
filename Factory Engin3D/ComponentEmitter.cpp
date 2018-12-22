@@ -86,12 +86,14 @@ ComponentEmitter::ComponentEmitter(GameObject* gameObject, EmitterInfo* info) : 
 
 ComponentEmitter::~ComponentEmitter()
 {
+	if (App)
+	App->particle->emitters.remove(this);
 	ClearEmitter();
 }
 
 void ComponentEmitter::StartEmitter()
 {
-	if (!isSubEmiter)
+	if (!isSubEmitter)
 	{
 		timer.Start();
 		burstTime.Start();
