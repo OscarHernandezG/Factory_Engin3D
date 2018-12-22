@@ -133,6 +133,7 @@ void ComponentEmitter::ClearEmitter()
 		(*iterator)->active = false;
 		(*iterator)->owner = nullptr;
 	}
+	App->particle->activeParticles -= particles.size();
 
 	particles.clear();
 }
