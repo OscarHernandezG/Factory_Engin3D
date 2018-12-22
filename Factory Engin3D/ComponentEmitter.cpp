@@ -55,6 +55,7 @@ ComponentEmitter::ComponentEmitter(GameObject* gameObject, EmitterInfo* info) : 
 
 		textureRows = info->textureRows;
 		textureColumns = info->textureColumns;
+
 		animationSpeed = info->animationSpeed;
 
 		isParticleAnimated = info->isParticleAnimated;
@@ -79,7 +80,7 @@ ComponentEmitter::ComponentEmitter(GameObject* gameObject, EmitterInfo* info) : 
 
 	}
 	gameObject->transform->UpdateBoundingBox();
-	particleAnimation = App->particle->particleAnimation;
+	SetNewAnimation(textureRows, textureColumns);
 	App->sceneIntro->octree.Insert(gameObject);
 }
 
@@ -768,7 +769,7 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 	json_object_set_string(parent, "texture", "noTexture");
 
 	json_object_set_number(parent, "textureRows", textureRows);
-	json_object_set_number(parent, "textureColums", textureColumns);
+	json_object_set_number(parent, "textureColumns", textureColumns);
 	json_object_set_number(parent, "animationSpeed", animationSpeed);
 
 	json_object_set_boolean(parent, "isParticleAnimated", isParticleAnimated);

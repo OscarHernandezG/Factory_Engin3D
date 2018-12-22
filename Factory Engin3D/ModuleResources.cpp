@@ -408,42 +408,43 @@ void ModuleResources::GetResources(std::vector<Resource*> &resource, ResourceTyp
 
 ParticleUV ModuleResources::LoadTextureUV(int rows, int columns)
 {
-	ParticleUV ret;
-	if (!FindTextureUV(rows, columns, ret))
-	{
-		uint textureID = 0;
-
-		ret.rows = rows;
-		ret.columns = columns;
-
-		float rowsScale = 1.0f / rows;
-		float columnsScale = 1.0f / columns;
-
-		for (int i = 0; i < rows; ++i)
+	ParticleUV ret = defaultTextureUV;
+	if (rows > 0 && rows > 0)
+		if (!FindTextureUV(rows, columns, ret))
 		{
-			for (int j = 0; j < columns; ++j)
+			uint textureID = 0;
+			ret.textureIDs.clear();
+			ret.rows = rows;
+			ret.columns = columns;
+
+			float rowsScale = 1.0f / rows;
+			float columnsScale = 1.0f / columns;
+
+			for (int i = 0; i < rows; ++i)
 			{
-				float texture[]
+				for (int j = 0; j < columns; ++j)
 				{
-					j * columnsScale,					1.0f - (i * rowsScale + rowsScale),
-					j * columnsScale + columnsScale,	1.0f - (i *rowsScale + rowsScale),
-					j * columnsScale,					1.0f - i * rowsScale,
-					j * columnsScale + columnsScale,	1.0f - i * rowsScale,
-				};
+					float texture[]
+					{
+						j * columnsScale,					1.0f - (i * rowsScale + rowsScale),
+						j * columnsScale + columnsScale,	1.0f - (i *rowsScale + rowsScale),
+						j * columnsScale,					1.0f - i * rowsScale,
+						j * columnsScale + columnsScale,	1.0f - i * rowsScale,
+					};
 
 
-				LOG("Texture UV: \n%.2f %.2f\n%.2f %.2f\n%.2f %.2f\n%.2f %.2f\n", texture[0], texture[1], texture[2], texture[3], texture[4], texture[5], texture[6], texture[7])
+					LOG("Texture UV: \n%.2f %.2f\n%.2f %.2f\n%.2f %.2f\n%.2f %.2f\n", texture[0], texture[1], texture[2], texture[3], texture[4], texture[5], texture[6], texture[7])
 
-				glGenBuffers(1, (GLuint*)&(textureID));
-				glBindBuffer(GL_ARRAY_BUFFER, textureID);
-				glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, texture, GL_STATIC_DRAW);
-				glBindBuffer(GL_ARRAY_BUFFER, 0);
+						glGenBuffers(1, (GLuint*)&(textureID));
+					glBindBuffer(GL_ARRAY_BUFFER, textureID);
+					glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, texture, GL_STATIC_DRAW);
+					glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-				ret.textureIDs.push_back(textureID);
+					ret.textureIDs.push_back(textureID);
+				}
 			}
 		}
-	}
-		return ret;
+	return ret;
 }
 
 bool ModuleResources::FindTextureUV(int rows, int columns, ParticleUV& textureUV)

@@ -59,7 +59,7 @@ update_status ModuleCamera3D::Update()
 		}
 
 		// Focus gameObject
-		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
+		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN && App->geometry->currentGameObject)
 			Look(App->geometry->currentGameObject->GetBBPos(), App->geometry->GetCurrentMeshPivot(), false);
 
 
