@@ -325,6 +325,10 @@ ComponentInfo* GameObject::LoadComponentInfo(JSON_Object* info, ComponentType ty
 		emitterInfo->checkAngularAcceleration = json_object_get_boolean(info, "checkAngularAcceleration");
 		emitterInfo->checkAngularVelocity = json_object_get_boolean(info, "checkAngularVelocity");
 
+		emitterInfo->subEmiterUUID = json_object_get_number(info, "SubEmitter");
+
+		emitterInfo->rateOverTime = json_object_get_number(info, "rateOverTime");
+
 		StartValues* startValues = &emitterInfo->startValues;
 
 		startValues->life.x = json_object_get_number(info, "lifeMin");
@@ -350,7 +354,6 @@ ComponentInfo* GameObject::LoadComponentInfo(JSON_Object* info, ComponentType ty
 
 		startValues->angularAcceleration.y = json_object_get_number(info, "angularAccelerationMax");
 
-		// TODO: Load colors
 		JSON_Array* colorArray = json_object_get_array(info, "Colors");
 
 		int numColors = json_array_get_count(colorArray);
