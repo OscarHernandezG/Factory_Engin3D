@@ -96,6 +96,14 @@ void ComponentEmitter::Update()
 		burstTime.Start();
 	}
 
+	//Used for SubEmiter. Create particles from ParticleEmiter death (On Emiter update because need to resize before Particle update)
+	while(!newPositions.empty())
+	{
+		float3 pos = newPositions.front();
+		CreateParticles(rateOverTime, normalShapeType, pos);
+		newPositions.pop();
+	}
+
 	// Use this condition to remove all particles from the component Emitter
 	if (!emitterActive)
 	{
@@ -106,25 +114,7 @@ void ComponentEmitter::Update()
 
 		particles.clear();
 	}
-
-
-	//std::vector<Particle*> particleDelete;
-	//for (std::list<Particle*>::iterator iterator = particles.begin(); iterator != particles.end(); ++iterator)
-	//{
-	//	if (!(*iterator)->Update(App->time->GetdtGame()) || toDelete)
-	//		particleDelete.push_back(*iterator);
-	//}
-
-	//for (std::vector<Particle*>::iterator iterator = particleDelete.begin(); iterator != particleDelete.end(); ++iterator)
-	//{
-	//	particles.remove(*iterator);
-	//	App->particle->particleList.remove(*iterator);
-
-	//	delete *iterator;
-	//}
-
 }
-
 
 void ComponentEmitter::ClearEmitter()
 {
