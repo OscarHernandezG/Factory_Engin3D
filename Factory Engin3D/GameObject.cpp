@@ -281,13 +281,49 @@ ComponentInfo* GameObject::LoadComponentInfo(JSON_Object* info, ComponentType ty
 		emitterInfo->repeatTime = json_object_get_number(info, "repeatTime");
 
 		// posDifAABB
+		float3 posDifAABB = float3(
+			json_object_get_number(info, "posDifAABBX"),
+			json_object_get_number(info, "posDifAABBY"),
+			json_object_get_number(info, "posDifAABBZ"));
+		emitterInfo->posDifAABB = posDifAABB;
+
 		emitterInfo->gravity = json_object_get_number(info, "gravity");
 
 		// boxCreation
+		float3 boxMin = float3(
+			json_object_get_number(info, "boxCreationMinX"),
+			json_object_get_number(info, "boxCreationMinY"),
+			json_object_get_number(info, "boxCreationMinZ"));
+
+		float3 boxMax = float3(
+			json_object_get_number(info, "boxCreationMaxX"),
+			json_object_get_number(info, "boxCreationMaxY"),
+			json_object_get_number(info, "boxCreationMaxZ"));
+
+		emitterInfo->boxCreation = AABB(boxMin, boxMax);
+
 		// SphereCreation
+		emitterInfo->SphereCreation_rad = json_object_get_number(info, "SphereCreation_rad");
 
 		emitterInfo->shapeType = (ShapeType)(int)json_object_get_number(info, "shapeType");
 		emitterInfo->texture = App->resources->LoadTexture(json_object_get_string(info, "texture"));
+		
+		emitterInfo->isParticleAnimated = json_object_get_boolean(info, "isParticleAnimated");
+		emitterInfo->dieOnAnimation = json_object_get_boolean(info, "dieOnAnimation");
+		emitterInfo->textureColumns = json_object_get_number(info, "textureColumns");
+		emitterInfo->textureRows = json_object_get_number(info, "textureRows");
+		emitterInfo->animationSpeed = json_object_get_number(info, "animationSpeed");
+
+		//AABB Colision
+		emitterInfo->drawAABB = json_object_get_boolean(info, "drawAABB");
+
+		emitterInfo->checkLife = json_object_get_boolean(info, "checkLife");
+		emitterInfo->checkSpeed = json_object_get_boolean(info, "checkSpeed");
+		emitterInfo->checkAcceleration = json_object_get_boolean(info, "checkAcceleration");
+		emitterInfo->checkSize = json_object_get_boolean(info, "checkSize");
+		emitterInfo->checkRotation = json_object_get_boolean(info, "checkRotation");
+		emitterInfo->checkAngularAcceleration = json_object_get_boolean(info, "checkAngularAcceleration");
+		emitterInfo->checkAngularVelocity = json_object_get_boolean(info, "checkAngularVelocity");
 
 		StartValues* startValues = &emitterInfo->startValues;
 
@@ -306,9 +342,11 @@ ComponentInfo* GameObject::LoadComponentInfo(JSON_Object* info, ComponentType ty
 		startValues->rotation.x = json_object_get_number(info, "rotationMin");
 		startValues->rotation.y = json_object_get_number(info, "rotationMax");
 
+		startValues->angularVelocity.x = json_object_get_number(info, "angularVelocityMin");
+		startValues->angularVelocity.y = json_object_get_number(info, "angularVelocityMax");
+
 		startValues->angularAcceleration.x = json_object_get_number(info, "angularAccelerationMin");
 		startValues->angularAcceleration.y = json_object_get_number(info, "angularAccelerationMax");
-
 
 		startValues->angularAcceleration.y = json_object_get_number(info, "angularAccelerationMax");
 
@@ -340,19 +378,6 @@ ComponentInfo* GameObject::LoadComponentInfo(JSON_Object* info, ComponentType ty
 		startValues->timeColor = json_object_get_number(info, "timeColor");
 
 		startValues->subEmiter = json_object_get_number(info, "subEmiter");
-
-		float3 colMin = float3(
-			json_object_get_number(info, "colisionMinX"),
-			json_object_get_number(info, "colisionMinY"),
-			json_object_get_number(info, "colisionMinZ"));
-
-		float3 colMax = float3(
-			json_object_get_number(info, "colisionMaxX"),
-			json_object_get_number(info, "colisionMaxY"),
-			json_object_get_number(info, "colisionMaxZ"));
-
-		startValues->colision = AABB(colMin, colMax);
-
 
 		startValues->particleDirection.x = json_object_get_number(info, "particleDirectionX");
 		startValues->particleDirection.y = json_object_get_number(info, "particleDirectionY");

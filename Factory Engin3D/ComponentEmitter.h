@@ -46,8 +46,6 @@ struct StartValues
 	std::list<ColorTime> color;
 	bool timeColor = false;
 
-	AABB colision = AABB(float3(-0.5f, -0.5f, -0.5f), float3(0.5f, 0.5f, 0.5f));
-
 	float3 particleDirection = float3::unitY;
 
 	bool subEmiter = false;
@@ -72,11 +70,12 @@ struct EmitterInfo : ComponentInfo
 	int maxPart = 10;
 	float repeatTime = 1.0f;
 
+	bool drawAABB = false;
 	float3 posDifAABB = float3::zero;
 	float gravity = 0.0f;
 
 	AABB boxCreation = AABB(float3(-0.5f, -0.5f, -0.5f), float3(0.5f, 0.5f, 0.5f));
-	Sphere SphereCreation = Sphere(float3::zero, 1.0f);
+	float SphereCreation_rad = 1.0f;
 
 	ShapeType shapeType = ShapeType_BOX;
 
@@ -91,6 +90,12 @@ struct EmitterInfo : ComponentInfo
 	bool checkRotation = false;
 	bool checkAngularAcceleration = false;
 	bool checkAngularVelocity = false;
+
+	int textureRows = 1;
+	int textureColumns = 1;
+	float animationSpeed = 0.1f;
+	bool isParticleAnimated = false;
+	bool dieOnAnimation = false;
 
 	GameObject* subEmiter = nullptr;
 };
@@ -206,8 +211,8 @@ private:
 	ParticleUV particleAnimation;
 	float animationSpeed = 0.1f;
 
-	int rows = 1;
-	int columns = 1;
+	int textureRows = 1;
+	int textureColumns = 1;
 
 	bool isParticleAnimated = false;
 };

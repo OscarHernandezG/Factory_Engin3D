@@ -29,20 +29,38 @@ ComponentEmitter::ComponentEmitter(GameObject* gameObject, EmitterInfo* info) : 
 		repeatTime = info->repeatTime;
 
 		// posDifAABB
+		posDifAABB = info->posDifAABB;
 		gravity = info->gravity;
 
 		// boxCreation
+		boxCreation = info->boxCreation;
 		// SphereCreation
+		SphereCreation.r = info->SphereCreation_rad;
 
 		normalShapeType = info->shapeType;
 		texture = info->texture;
 
 		startValues = info->startValues;
 
+		checkLife = info->checkLife;
+		checkSpeed = info->checkSpeed;
+		checkAcceleration = info->checkAcceleration;
+		checkSize = info->checkSize;
+		checkRotation = info->checkRotation;
+		checkAngularAcceleration = info->checkAngularAcceleration;
+		checkAngularVelocity = info->checkAngularVelocity;
+
+		textureRows = info->textureRows;
+		textureColumns = info->textureColumns;
+		animationSpeed = info->animationSpeed;
+
+		isParticleAnimated = info->isParticleAnimated;
+		dieOnAnimation = info->dieOnAnimation;
+
+		drawAABB = info->drawAABB;
 	}
 
-	rows = 1;
-	columns = 1;
+	gameObject->transform->UpdateBoundingBox();
 	particleAnimation = App->particle->particleAnimation;
 	App->sceneIntro->octree.Insert(gameObject);
 }
@@ -467,19 +485,19 @@ void ComponentEmitter::ParticleTexture()
 				SetNewAnimation(1, 1);
 
 			else
-				SetNewAnimation(rows, columns);
+				SetNewAnimation(textureRows, textureColumns);
 		}
 		if (isParticleAnimated)
 		{
 			ImGui::DragFloat("Animation Speed", &animationSpeed, 0.001f, 0.0f, 5.0f, "%.3f");
-			ImGui::DragInt("Rows", &rows, 1, 1, 10);
-			ImGui::DragInt("Columns", &columns, 1, 1, 10);
+			ImGui::DragInt("Rows", &textureRows, 1, 1, 10);
+			ImGui::DragInt("Columns", &textureColumns, 1, 1, 10);
 
 			ImGui::Checkbox("Kill particle with animation", &dieOnAnimation);
 
 			if (ImGui::Button("Calc Animation", ImVec2(150.0f, 25.0f)))
 			{
-				SetNewAnimation(rows, columns);
+				SetNewAnimation(textureRows, textureColumns);
 			}
 		}
 	}
@@ -612,6 +630,8 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 	json_object_set_number(parent, "angularAccelerationMin", startValues.angularAcceleration.x);
 	json_object_set_number(parent, "angularAccelerationMax", startValues.angularAcceleration.y);
 
+	json_object_set_number(parent, "angularVelocityMin", startValues.angularVelocity.x);
+	json_object_set_number(parent, "angularVelocityMax", startValues.angularVelocity.y);
 
 	JSON_Value* colorValue = json_value_init_array();
 	JSON_Array* color = json_value_get_array(colorValue);
@@ -639,15 +659,6 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 
 	json_object_set_boolean(parent, "subEmiter", startValues.subEmiter);
 
-
-	json_object_set_number(parent, "colisionMinX", startValues.colision.minPoint.x);
-	json_object_set_number(parent, "colisionMinY", startValues.colision.minPoint.y);
-	json_object_set_number(parent, "colisionMinZ", startValues.colision.minPoint.z);
-	
-	json_object_set_number(parent, "colisionMaxX", startValues.colision.maxPoint.x);
-	json_object_set_number(parent, "colisionMaxY", startValues.colision.maxPoint.y);
-	json_object_set_number(parent, "colisionMaxZ", startValues.colision.maxPoint.z);
-
 	json_object_set_number(parent, "particleDirectionX", startValues.particleDirection.x);
 	json_object_set_number(parent, "particleDirectionY", startValues.particleDirection.y);
 	json_object_set_number(parent, "particleDirectionZ", startValues.particleDirection.z);
@@ -661,14 +672,24 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 	json_object_set_number(parent, "maxPart", maxPart);
 	json_object_set_number(parent, "repeatTime", repeatTime);
 
-	SaveNumberArray(parent, "posDifAABB", posDifAABB.ptr(), 3);
+	json_object_set_number(parent, "posDifAABBX",posDifAABB.x);
+	json_object_set_number(parent, "posDifAABBY",posDifAABB.y);
+	json_object_set_number(parent, "posDifAABBZ",posDifAABB.z);
 
 	json_object_set_number(parent, "gravity", gravity);
 
+	json_object_set_number(parent, "boxCreationMinX", boxCreation.minPoint.x);
+	json_object_set_number(parent, "boxCreationMinY", boxCreation.minPoint.y);
+	json_object_set_number(parent, "boxCreationMinZ", boxCreation.minPoint.z);
+
+	json_object_set_number(parent, "boxCreationMaxX", boxCreation.maxPoint.x);
+	json_object_set_number(parent, "boxCreationMaxY", boxCreation.maxPoint.y);
+	json_object_set_number(parent, "boxCreationMaxZ", boxCreation.maxPoint.z);
+	
 	SaveNumberArray(parent, "boxCreationMin", boxCreation.minPoint.ptr(), 3);
 	SaveNumberArray(parent, "boxCreationMax", boxCreation.maxPoint.ptr(), 3);
 
-	json_object_set_number(parent, "SphereCreation", SphereCreation.r);
+	json_object_set_number(parent, "SphereCreation_rad", SphereCreation.r);
 
 	json_object_set_number(parent, "shapeType", normalShapeType);
 
@@ -677,6 +698,14 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 	else
 	json_object_set_string(parent, "texture", "noTexture");
 
+	json_object_set_number(parent, "textureRows", textureRows);
+	json_object_set_number(parent, "textureColums", textureColumns);
+	json_object_set_number(parent, "animationSpeed", animationSpeed);
+
+	json_object_set_boolean(parent, "isParticleAnimated", isParticleAnimated);
+	json_object_set_boolean(parent, "dieOnAnimation", dieOnAnimation);
+
+	json_object_set_boolean(parent, "drawAABB", drawAABB);
 }
 
 int ComponentEmitter::GetEmition() const

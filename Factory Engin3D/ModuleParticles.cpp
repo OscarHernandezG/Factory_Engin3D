@@ -130,5 +130,6 @@ void ModuleParticle::ClearEmitters()
 		allParticles[i].owner = nullptr;		
 	}
 
+	activeParticles = 0;
 	lastUsedParticle = 0;
 }
