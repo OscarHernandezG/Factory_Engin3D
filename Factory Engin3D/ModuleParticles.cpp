@@ -22,7 +22,6 @@ update_status ModuleParticle::Update()
 		(*emitter)->Update();
 	}
 
-	StartAllEmiters();
 	int count = 0;
 
 	float dt;
