@@ -116,7 +116,7 @@ void ComponentEmitter::Update()
 			if (App->time->gameState == GameState_PLAYING || simulatedGame == GameState_PLAYING || App->time->gameState == GameState_TICK)
 			{
 				int particlesToCreate = (time / (1.0f / rateOverTime));
-				CreateParticles(particlesToCreate, normalShapeType);
+				CreateParticles(particlesToCreate, normalShapeType,float3::zero);
 
 				timeToParticle = (1.0f / rateOverTime);
 
@@ -133,7 +133,7 @@ void ComponentEmitter::Update()
 			int particlesToCreate = minPart;
 			if (minPart != maxPart)
 				particlesToCreate = (rand() % (maxPart - minPart)) + minPart;
-			CreateParticles(particlesToCreate, burstType);
+			CreateParticles(particlesToCreate, burstType, float3::zero);
 			//LOG("%i", particlesToCreate);
 		}
 		burstTime.Start();
@@ -183,7 +183,7 @@ void ComponentEmitter::SoftClearEmitter()
 }
 
 
-void ComponentEmitter::CreateParticles(int particlesToCreate, ShapeType shapeType ,float3 pos)
+void ComponentEmitter::CreateParticles(int particlesToCreate, ShapeType shapeType, float3 pos)
 {
 	if (particlesToCreate == 0)
 		++particlesToCreate;
@@ -193,7 +193,14 @@ void ComponentEmitter::CreateParticles(int particlesToCreate, ShapeType shapeTyp
 		int particleId = 0;
 		if (App->particle->GetParticle(particleId))
 		{
+			if(pos.x < -50.0f)
+				LOG("WTFF!!!");
+
+			LOG("_________________");
+			LOG("%.2f,%.2f,%.2f", pos.x, pos.y, pos.z);
+			LOG("-----------------");
 			pos += RandPos(shapeType);
+			LOG("%.2f,%.2f,%.2f", pos.x, pos.y, pos.z);
 
 			App->particle->allParticles[particleId].SetActive(pos, startValues, &texture, &particleAnimation.textureIDs, animationSpeed);
 
@@ -249,7 +256,7 @@ float3 ComponentEmitter::RandPos(ShapeType shapeType)
 	if (gameObject)
 		global = gameObject->GetGlobalPos();
 
-	LOG("%.2f,%.2f,%.2f",spawn.x,spawn.y,spawn.z);
+	LOG("%.2f,%.2f,%.2f", global.x, global.y, global.z);
 	return spawn + global;
 }
 

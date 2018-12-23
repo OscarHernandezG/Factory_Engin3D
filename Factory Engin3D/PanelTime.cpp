@@ -60,8 +60,8 @@ void ModuleImGui::CreateGameManager(float2 scale)
 
 void ModuleImGui::ChangePlayState(bool show, GameState state)
 {
-	assetsWindow = show;
-	hierarchyWindow = show;
+	//assetsWindow = show;
+	//hierarchyWindow = show;
 	App->time->gameState = state;
 
 	std::string direction = "PlayingScene";
