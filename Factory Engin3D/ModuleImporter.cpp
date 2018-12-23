@@ -21,7 +21,6 @@ bool ModuleImporter::Init()
 	CreateDirectory("Llibrary",NULL);
 	CreateDirectory("Llibrary/Meshes", NULL);
 	CreateDirectory("Llibrary/Textures", NULL);
-	CreateDirectory("Llibrary/Scenes", NULL);
 
 	return true;
 }
@@ -179,7 +178,7 @@ void ModuleImporter::MeshDirection(std::string &filePath, std::string &goodFile,
 
 void ModuleImporter::SceneDirection(std::string &filePath, std::string &goodFile)
 {
-	goodFile += "Scenes/";
+	goodFile = "Assets/Scenes/";
 
 	uint initialPos = filePath.find_last_of("\\") + 1;
 	uint finalPos = filePath.find_last_of(".");

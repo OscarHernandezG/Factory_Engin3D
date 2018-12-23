@@ -1,0 +1,2767 @@
+[
+    {
+        "name": "Scene",
+        "UUID": 355248013,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 1
+                }
+            }
+        ]
+    },
+    {
+        "name": "Street",
+        "UUID": 614244829,
+        "Parent UUID": 355248013,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 1
+                }
+            }
+        ]
+    },
+    {
+        "name": "Sky001_$AssimpFbx$_Translation",
+        "UUID": 1090169701,
+        "Parent UUID": 614244829,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 18.153732299804688,
+                    "Y": 0,
+                    "Z": 58.960910797119141
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 1
+                }
+            }
+        ]
+    },
+    {
+        "name": "Sky001_$AssimpFbx$_PreRotation",
+        "UUID": 895707205,
+        "Parent UUID": 1090169701,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": -0.7071068286895752,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 0.7071068286895752
+                }
+            }
+        ]
+    },
+    {
+        "name": "Sky001_$AssimpFbx$_PostRotation",
+        "UUID": 2437635107,
+        "Parent UUID": 895707205,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": -0.7071068286895752,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 0.7071068286895752
+                }
+            }
+        ]
+    },
+    {
+        "name": "Sky001",
+        "UUID": 4022725338,
+        "Parent UUID": 2437635107,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 1
+                }
+            }
+        ]
+    },
+    {
+        "name": "Dummy001_$AssimpFbx$_PreRotation",
+        "UUID": 1436730512,
+        "Parent UUID": 614244829,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": -0.7071068286895752,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 0.7071068286895752
+                }
+            }
+        ]
+    },
+    {
+        "name": "Dummy001_$AssimpFbx$_Rotation",
+        "UUID": 4129906274,
+        "Parent UUID": 1436730512,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 1
+                }
+            }
+        ]
+    },
+    {
+        "name": "Dummy001",
+        "UUID": 3698314635,
+        "Parent UUID": 4129906274,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 1
+                }
+            }
+        ]
+    },
+    {
+        "name": "City_building_004",
+        "UUID": 204791295,
+        "Parent UUID": 3698314635,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": -41.47589111328125,
+                    "Y": 21.01409912109375,
+                    "Z": 0
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 1
+                }
+            },
+            {
+                "Type": 2,
+                "Geometry type": 7,
+                "UUID": 4186697710,
+                "Time Created": 1545595926
+            },
+            {
+                "Type": 4,
+                "UUID": 0,
+                "Time Created": 1545595926,
+                "Name": "Assets\\textures\\building03_c.tga"
+            }
+        ]
+    },
+    {
+        "name": "City_building_001",
+        "UUID": 4178460746,
+        "Parent UUID": 3698314635,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 17.707164764404297,
+                    "Y": 20.053276062011719,
+                    "Z": 2.1210729528320371e-07
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 1
+                }
+            },
+            {
+                "Type": 2,
+                "Geometry type": 7,
+                "UUID": 2766312848,
+                "Time Created": 1545595926
+            },
+            {
+                "Type": 4,
+                "UUID": 0,
+                "Time Created": 1545595926,
+                "Name": "Assets\\textures\\Building_V02_C.png"
+            }
+        ]
+    },
+    {
+        "name": "City_building_007",
+        "UUID": 823422164,
+        "Parent UUID": 3698314635,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 16.010492324829102,
+                    "Y": 37.4932861328125,
+                    "Z": -1.5106878663573298e-06
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 1
+                }
+            },
+            {
+                "Type": 2,
+                "Geometry type": 7,
+                "UUID": 244073593,
+                "Time Created": 1545595926
+            },
+            {
+                "Type": 4,
+                "UUID": 0,
+                "Time Created": 1545595926,
+                "Name": "Assets\\textures\\building_016_c.tga"
+            }
+        ]
+    },
+    {
+        "name": "City_building_008",
+        "UUID": 645003266,
+        "Parent UUID": 3698314635,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 40.979995727539063,
+                    "Y": 18.270824432373047,
+                    "Z": -2.0522466002148576e-06
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0.7071068286895752,
+                    "W": 0.7071068286895752
+                }
+            },
+            {
+                "Type": 2,
+                "Geometry type": 7,
+                "UUID": 2877266143,
+                "Time Created": 1545595926
+            },
+            {
+                "Type": 4,
+                "UUID": 0,
+                "Time Created": 1545595926,
+                "Name": "Assets\\textures\\building_025_c.tga"
+            }
+        ]
+    },
+    {
+        "name": "Line002",
+        "UUID": 2526454406,
+        "Parent UUID": 3698314635,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": -2.1597719192504883,
+                    "Y": 1.8538382053375244,
+                    "Z": 0
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": -0.7071068286895752,
+                    "W": 0.7071068286895752
+                }
+            },
+            {
+                "Type": 2,
+                "Geometry type": 7,
+                "UUID": 1184322546,
+                "Time Created": 1545595926
+            }
+        ]
+    },
+    {
+        "name": "Plane001",
+        "UUID": 3509776525,
+        "Parent UUID": 3698314635,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": -0.02860260009765625,
+                    "Y": 0.026032090187072754,
+                    "Z": 0
+                },
+                "Scale": {
+                    "X": 0.99663525819778442,
+                    "Y": 0.97061645984649658,
+                    "Z": 0.99663525819778442
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 1
+                }
+            },
+            {
+                "Type": 2,
+                "Geometry type": 7,
+                "UUID": 2371563018,
+                "Time Created": 1545595926
+            }
+        ]
+    },
+    {
+        "name": "City_building_010",
+        "UUID": 4107129836,
+        "Parent UUID": 3698314635,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 25.154010772705078,
+                    "Y": -39.153720855712891,
+                    "Z": 8.5538641769744572e-07
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0.7071068286895752,
+                    "W": 0.7071068286895752
+                }
+            },
+            {
+                "Type": 2,
+                "Geometry type": 7,
+                "UUID": 2775510717,
+                "Time Created": 1545595926
+            },
+            {
+                "Type": 4,
+                "UUID": 0,
+                "Time Created": 1545595926,
+                "Name": "Assets\\textures\\building 01_c.tga"
+            }
+        ]
+    },
+    {
+        "name": "City_building_011",
+        "UUID": 3922399141,
+        "Parent UUID": 3698314635,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 30.134540557861328,
+                    "Y": 37.4932861328125,
+                    "Z": -1.5106878663573298e-06
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 1
+                }
+            },
+            {
+                "Type": 2,
+                "Geometry type": 7,
+                "UUID": 244073593,
+                "Time Created": 1545595926
+            },
+            {
+                "Type": 4,
+                "UUID": 0,
+                "Time Created": 1545595926,
+                "Name": "Assets\\textures\\building_016_c.tga"
+            }
+        ]
+    },
+    {
+        "name": "City_building_013",
+        "UUID": 653642738,
+        "Parent UUID": 3698314635,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": -42.288055419921875,
+                    "Y": 33.201576232910156,
+                    "Z": 5.0146070407208754e-07
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0.7071068286895752,
+                    "W": 0.7071068286895752
+                }
+            },
+            {
+                "Type": 2,
+                "Geometry type": 7,
+                "UUID": 4050342750,
+                "Time Created": 1545595926
+            },
+            {
+                "Type": 4,
+                "UUID": 0,
+                "Time Created": 1545595926,
+                "Name": "Assets\\textures\\building 06_ c.tga"
+            }
+        ]
+    },
+    {
+        "name": "City_building_014",
+        "UUID": 3249837479,
+        "Parent UUID": 3698314635,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": -19.439706802368164,
+                    "Y": 32.061729431152344,
+                    "Z": 0
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 1,
+                    "W": -4.3711388286737929e-08
+                }
+            },
+            {
+                "Type": 2,
+                "Geometry type": 7,
+                "UUID": 3716035715,
+                "Time Created": 1545595926
+            },
+            {
+                "Type": 4,
+                "UUID": 0,
+                "Time Created": 1545595926,
+                "Name": "Assets\\textures\\building03_c.tga"
+            }
+        ]
+    },
+    {
+        "name": "City_building_016",
+        "UUID": 2398397536,
+        "Parent UUID": 3698314635,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 34.270423889160156,
+                    "Y": -41.972747802734375,
+                    "Z": 8.5538641769744572e-07
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 1,
+                    "W": -4.3711388286737929e-08
+                }
+            },
+            {
+                "Type": 2,
+                "Geometry type": 7,
+                "UUID": 2775510717,
+                "Time Created": 1545595926
+            },
+            {
+                "Type": 4,
+                "UUID": 0,
+                "Time Created": 1545595926,
+                "Name": "Assets\\textures\\building 01_c.tga"
+            }
+        ]
+    },
+    {
+        "name": "City_building_017",
+        "UUID": 3738301241,
+        "Parent UUID": 3698314635,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 44.260082244873047,
+                    "Y": -39.153720855712891,
+                    "Z": 8.5538641769744572e-07
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0.7071068286895752,
+                    "W": 0.7071068286895752
+                }
+            },
+            {
+                "Type": 2,
+                "Geometry type": 7,
+                "UUID": 2775510717,
+                "Time Created": 1545595926
+            },
+            {
+                "Type": 4,
+                "UUID": 0,
+                "Time Created": 1545595926,
+                "Name": "Assets\\textures\\building 01_c.tga"
+            }
+        ]
+    },
+    {
+        "name": "City_building_022",
+        "UUID": 2570732908,
+        "Parent UUID": 3698314635,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": -20.831323623657227,
+                    "Y": -27.426488876342773,
+                    "Z": 0
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 1,
+                    "W": 1.9470718370939721e-07
+                }
+            },
+            {
+                "Type": 2,
+                "Geometry type": 7,
+                "UUID": 816378163,
+                "Time Created": 1545595926
+            },
+            {
+                "Type": 4,
+                "UUID": 0,
+                "Time Created": 1545595926,
+                "Name": "Assets\\textures\\building05 _c.tga"
+            }
+        ]
+    },
+    {
+        "name": "City_building_023",
+        "UUID": 2176776956,
+        "Parent UUID": 3698314635,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 42.130641937255859,
+                    "Y": 37.4932861328125,
+                    "Z": -1.5106878663573298e-06
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 1
+                }
+            },
+            {
+                "Type": 2,
+                "Geometry type": 7,
+                "UUID": 244073593,
+                "Time Created": 1545595926
+            },
+            {
+                "Type": 4,
+                "UUID": 0,
+                "Time Created": 1545595926,
+                "Name": "Assets\\textures\\building_016_c.tga"
+            }
+        ]
+    },
+    {
+        "name": "City_building_024",
+        "UUID": 2736351652,
+        "Parent UUID": 3698314635,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": -20.572771072387695,
+                    "Y": 43.060829162597656,
+                    "Z": -0.069194458425045013
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 1,
+                    "W": 4.3711388286737929e-08
+                }
+            },
+            {
+                "Type": 2,
+                "Geometry type": 7,
+                "UUID": 2877266143,
+                "Time Created": 1545595926
+            },
+            {
+                "Type": 4,
+                "UUID": 0,
+                "Time Created": 1545595926,
+                "Name": "Assets\\textures\\building_025_c.tga"
+            }
+        ]
+    },
+    {
+        "name": "City_building_026",
+        "UUID": 2930978309,
+        "Parent UUID": 3698314635,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 31.51188850402832,
+                    "Y": -16.446016311645508,
+                    "Z": 0
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 1,
+                    "W": 4.3711388286737929e-08
+                }
+            },
+            {
+                "Type": 2,
+                "Geometry type": 7,
+                "UUID": 3161013302,
+                "Time Created": 1545595926
+            },
+            {
+                "Type": 4,
+                "UUID": 0,
+                "Time Created": 1545595926,
+                "Name": "Assets\\textures\\building05 _c.tga"
+            }
+        ]
+    },
+    {
+        "name": "City_building_028",
+        "UUID": 1165333716,
+        "Parent UUID": 3698314635,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 13.38798999786377,
+                    "Y": -33.755039215087891,
+                    "Z": -9.3834518111179932e-07
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 1
+                }
+            },
+            {
+                "Type": 2,
+                "Geometry type": 7,
+                "UUID": 3845770805,
+                "Time Created": 1545595926
+            },
+            {
+                "Type": 4,
+                "UUID": 0,
+                "Time Created": 1545595926,
+                "Name": "Assets\\textures\\Building_V01_C.png"
+            }
+        ]
+    },
+    {
+        "name": "Object010",
+        "UUID": 1487852408,
+        "Parent UUID": 3698314635,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": -2.5033531188964844,
+                    "Y": 15.800846099853516,
+                    "Z": 0
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 1
+                }
+            },
+            {
+                "Type": 2,
+                "Geometry type": 7,
+                "UUID": 129174977,
+                "Time Created": 1545595926
+            }
+        ]
+    },
+    {
+        "name": "City_building_030",
+        "UUID": 1164626680,
+        "Parent UUID": 3698314635,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": -42.807239532470703,
+                    "Y": -41.835563659667969,
+                    "Z": -9.3834518111179932e-07
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": -0.7071068286895752,
+                    "W": 0.7071068286895752
+                }
+            },
+            {
+                "Type": 2,
+                "Geometry type": 7,
+                "UUID": 3845770805,
+                "Time Created": 1545595926
+            },
+            {
+                "Type": 4,
+                "UUID": 0,
+                "Time Created": 1545595926,
+                "Name": "Assets\\textures\\Building_V01_C.png"
+            }
+        ]
+    },
+    {
+        "name": "City_building_031",
+        "UUID": 1549787828,
+        "Parent UUID": 3698314635,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": -34.679481506347656,
+                    "Y": -41.835563659667969,
+                    "Z": -9.3834518111179932e-07
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": -0.7071068286895752,
+                    "W": 0.7071068286895752
+                }
+            },
+            {
+                "Type": 2,
+                "Geometry type": 7,
+                "UUID": 3845770805,
+                "Time Created": 1545595926
+            },
+            {
+                "Type": 4,
+                "UUID": 0,
+                "Time Created": 1545595926,
+                "Name": "Assets\\textures\\Building_V01_C.png"
+            }
+        ]
+    },
+    {
+        "name": "City_building_032",
+        "UUID": 360306106,
+        "Parent UUID": 3698314635,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": -29.478403091430664,
+                    "Y": 21.01409912109375,
+                    "Z": 0
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 1
+                }
+            },
+            {
+                "Type": 2,
+                "Geometry type": 7,
+                "UUID": 4186697710,
+                "Time Created": 1545595926
+            },
+            {
+                "Type": 4,
+                "UUID": 0,
+                "Time Created": 1545595926,
+                "Name": "Assets\\textures\\building03_c.tga"
+            }
+        ]
+    },
+    {
+        "name": "City_building_033",
+        "UUID": 3591261467,
+        "Parent UUID": 3698314635,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": -32.361495971679688,
+                    "Y": 42.37042236328125,
+                    "Z": 5.0146070407208754e-07
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 1
+                }
+            },
+            {
+                "Type": 2,
+                "Geometry type": 7,
+                "UUID": 4001647129,
+                "Time Created": 1545595926
+            },
+            {
+                "Type": 4,
+                "UUID": 0,
+                "Time Created": 1545595926,
+                "Name": "Assets\\textures\\building 06_ c.tga"
+            }
+        ]
+    },
+    {
+        "name": "City_building_034",
+        "UUID": 2645339202,
+        "Parent UUID": 3698314635,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 16.049516677856445,
+                    "Y": -16.696884155273438,
+                    "Z": 0
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": -0.7071068286895752,
+                    "W": 0.70710670948028564
+                }
+            },
+            {
+                "Type": 2,
+                "Geometry type": 7,
+                "UUID": 2608800537,
+                "Time Created": 1545595926
+            },
+            {
+                "Type": 4,
+                "UUID": 0,
+                "Time Created": 1545595926,
+                "Name": "Assets\\textures\\building05 _c.tga"
+            }
+        ]
+    },
+    {
+        "name": "City_building_035",
+        "UUID": 782777903,
+        "Parent UUID": 3698314635,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 13.38798999786377,
+                    "Y": -40.802516937255859,
+                    "Z": -9.3834518111179932e-07
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 1
+                }
+            },
+            {
+                "Type": 2,
+                "Geometry type": 7,
+                "UUID": 3845770805,
+                "Time Created": 1545595926
+            },
+            {
+                "Type": 4,
+                "UUID": 0,
+                "Time Created": 1545595926,
+                "Name": "Assets\\textures\\Building_V01_C.png"
+            }
+        ]
+    },
+    {
+        "name": "City_building_036",
+        "UUID": 738809246,
+        "Parent UUID": 3698314635,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": -31.216331481933594,
+                    "Y": 33.201576232910156,
+                    "Z": 5.0146070407208754e-07
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": -0.7071068286895752,
+                    "W": 0.7071068286895752
+                }
+            },
+            {
+                "Type": 2,
+                "Geometry type": 7,
+                "UUID": 4050342750,
+                "Time Created": 1545595926
+            },
+            {
+                "Type": 4,
+                "UUID": 0,
+                "Time Created": 1545595926,
+                "Name": "Assets\\textures\\building 06_ c.tga"
+            }
+        ]
+    },
+    {
+        "name": "City_building_037",
+        "UUID": 59288998,
+        "Parent UUID": 3698314635,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": -20.317693710327148,
+                    "Y": -16.163608551025391,
+                    "Z": 0
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 1,
+                    "W": 1.9470718370939721e-07
+                }
+            },
+            {
+                "Type": 2,
+                "Geometry type": 7,
+                "UUID": 1386311776,
+                "Time Created": 1545595926
+            },
+            {
+                "Type": 4,
+                "UUID": 0,
+                "Time Created": 1545595926,
+                "Name": "Assets\\textures\\building05 _c.tga"
+            }
+        ]
+    },
+    {
+        "name": "City_building_038",
+        "UUID": 945223377,
+        "Parent UUID": 3698314635,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": -41.649002075195313,
+                    "Y": -16.495393753051758,
+                    "Z": 0
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": -0.7071068286895752,
+                    "W": 0.70710670948028564
+                }
+            },
+            {
+                "Type": 2,
+                "Geometry type": 7,
+                "UUID": 3127032067,
+                "Time Created": 1545595926
+            },
+            {
+                "Type": 4,
+                "UUID": 0,
+                "Time Created": 1545595926,
+                "Name": "Assets\\textures\\building05 _c.tga"
+            }
+        ]
+    },
+    {
+        "name": "City_building_039",
+        "UUID": 256472291,
+        "Parent UUID": 3698314635,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": -42.807239532470703,
+                    "Y": -30.643888473510742,
+                    "Z": -9.3834518111179932e-07
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": -0.7071068286895752,
+                    "W": 0.7071068286895752
+                }
+            },
+            {
+                "Type": 2,
+                "Geometry type": 7,
+                "UUID": 3845770805,
+                "Time Created": 1545595926
+            },
+            {
+                "Type": 4,
+                "UUID": 0,
+                "Time Created": 1545595926,
+                "Name": "Assets\\textures\\Building_V01_C.png"
+            }
+        ]
+    },
+    {
+        "name": "City_building_040",
+        "UUID": 1235115363,
+        "Parent UUID": 3698314635,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": -34.679481506347656,
+                    "Y": -30.643888473510742,
+                    "Z": -9.3834518111179932e-07
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": -0.7071068286895752,
+                    "W": 0.7071068286895752
+                }
+            },
+            {
+                "Type": 2,
+                "Geometry type": 7,
+                "UUID": 3845770805,
+                "Time Created": 1545595926
+            },
+            {
+                "Type": 4,
+                "UUID": 0,
+                "Time Created": 1545595926,
+                "Name": "Assets\\textures\\Building_V01_C.png"
+            }
+        ]
+    },
+    {
+        "name": "City_building_041",
+        "UUID": 1082116256,
+        "Parent UUID": 3698314635,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 30.695278167724609,
+                    "Y": 21.612646102905273,
+                    "Z": 2.1210729528320371e-07
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0.7071068286895752,
+                    "W": 0.7071068286895752
+                }
+            },
+            {
+                "Type": 2,
+                "Geometry type": 7,
+                "UUID": 2766312848,
+                "Time Created": 1545595926
+            },
+            {
+                "Type": 4,
+                "UUID": 0,
+                "Time Created": 1545595926,
+                "Name": "Assets\\textures\\Building_V02_C.png"
+            }
+        ]
+    },
+    {
+        "name": "Camera001_$AssimpFbx$_Translation",
+        "UUID": 3755998641,
+        "Parent UUID": 614244829,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": -78.312431335449219,
+                    "Y": 45.251216888427734,
+                    "Z": -97.031112670898438
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 1
+                }
+            }
+        ]
+    },
+    {
+        "name": "Camera001_$AssimpFbx$_PreRotation",
+        "UUID": 300917651,
+        "Parent UUID": 3755998641,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": -0.7071068286895752,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 0.7071068286895752
+                }
+            }
+        ]
+    },
+    {
+        "name": "Camera001_$AssimpFbx$_Rotation",
+        "UUID": 610689600,
+        "Parent UUID": 300917651,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 0.99999994039535522,
+                    "Z": 0.99999994039535522
+                },
+                "Rotation": {
+                    "X": -0.19855600595474243,
+                    "Y": 0.56070476770401001,
+                    "Z": 0.75774872303009033,
+                    "W": -0.26833298802375793
+                }
+            }
+        ]
+    },
+    {
+        "name": "Camera001",
+        "UUID": 4143930107,
+        "Parent UUID": 610689600,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 1
+                }
+            }
+        ]
+    },
+    {
+        "name": "Camera001.Target_$AssimpFbx$_Translation",
+        "UUID": 130006893,
+        "Parent UUID": 614244829,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": -28.132621765136719,
+                    "Y": 20.873329162597656,
+                    "Z": -35.064212799072266
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 1
+                }
+            }
+        ]
+    },
+    {
+        "name": "Camera001.Target_$AssimpFbx$_PreRotation",
+        "UUID": 3960047109,
+        "Parent UUID": 130006893,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": -0.7071068286895752,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 0.7071068286895752
+                }
+            }
+        ]
+    },
+    {
+        "name": "Camera001.Target_$AssimpFbx$_Rotation",
+        "UUID": 911890535,
+        "Parent UUID": 3960047109,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 0.99999994039535522,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": -0.19855606555938721,
+                    "Y": 0.56070470809936523,
+                    "Z": 0.75774872303009033,
+                    "W": -0.26833304762840271
+                }
+            }
+        ]
+    },
+    {
+        "name": "Camera001.Target",
+        "UUID": 2946034406,
+        "Parent UUID": 911890535,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 1
+                }
+            }
+        ]
+    },
+    {
+        "name": "Spot001_$AssimpFbx$_Translation",
+        "UUID": 1438891320,
+        "Parent UUID": 614244829,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": -66.721267700195313,
+                    "Y": 141.93412780761719,
+                    "Z": 6.2041376622801181e-06
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 1
+                }
+            }
+        ]
+    },
+    {
+        "name": "Spot001_$AssimpFbx$_PreRotation",
+        "UUID": 2609889679,
+        "Parent UUID": 1438891320,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": -0.7071068286895752,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 0.7071068286895752
+                }
+            }
+        ]
+    },
+    {
+        "name": "Spot001_$AssimpFbx$_Rotation",
+        "UUID": 2768628885,
+        "Parent UUID": 2609889679,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0.15443940460681915,
+                    "Y": -0.15443935990333557,
+                    "Z": -0.69003510475158691,
+                    "W": 0.69003516435623169
+                }
+            }
+        ]
+    },
+    {
+        "name": "Spot001_$AssimpFbx$_PostRotation",
+        "UUID": 3312425511,
+        "Parent UUID": 2768628885,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": -0.7071068286895752,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 0.7071068286895752
+                }
+            }
+        ]
+    },
+    {
+        "name": "Spot001",
+        "UUID": 3518890517,
+        "Parent UUID": 3312425511,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 1
+                }
+            }
+        ]
+    },
+    {
+        "name": "Spot001.Target_$AssimpFbx$_Translation",
+        "UUID": 944278137,
+        "Parent UUID": 614244829,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 28.890945434570313,
+                    "Y": -60.963882446289063,
+                    "Z": -2.6648158382158726e-06
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 1
+                }
+            }
+        ]
+    },
+    {
+        "name": "Spot001.Target_$AssimpFbx$_PreRotation",
+        "UUID": 3350698266,
+        "Parent UUID": 944278137,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": -0.7071068286895752,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 0.7071068286895752
+                }
+            }
+        ]
+    },
+    {
+        "name": "Spot001.Target_$AssimpFbx$_Rotation",
+        "UUID": 2318401871,
+        "Parent UUID": 3350698266,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0.7071068286895752,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 0.70710670948028564
+                }
+            }
+        ]
+    },
+    {
+        "name": "Spot001.Target",
+        "UUID": 1532348951,
+        "Parent UUID": 2318401871,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 1
+                }
+            }
+        ]
+    },
+    {
+        "name": "Camera",
+        "UUID": 617922379,
+        "Parent UUID": 355248013,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": -21.479141235351563,
+                    "Y": 11.603801727294922,
+                    "Z": -18.929824829101563
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0.93450081348419189,
+                    "Z": 0,
+                    "W": -0.35596099495887756
+                }
+            },
+            {
+                "Type": 3,
+                "UUID": 0,
+                "Time Created": 1545595926,
+                "pos": [
+                    -21.479141235351563,
+                    11.603801727294922,
+                    -18.929824829101563
+                ],
+                "Position": {
+                    "X": -21.479141235351563,
+                    "Y": 11.603801727294922,
+                    "Z": -18.929824829101563
+                },
+                "nearPlaneDistance": 1,
+                "farPlaneDistance": 1000,
+                "verticalFov": 1.0471975803375244,
+                "horizontalFov": 1.4186019897460938
+            }
+        ]
+    },
+    {
+        "name": "Particle Systems",
+        "UUID": 2347233540,
+        "Parent UUID": 355248013,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 1
+                }
+            }
+        ]
+    },
+    {
+        "name": "Smoke 1",
+        "UUID": 774307806,
+        "Parent UUID": 2347233540,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": -30.339170455932617,
+                    "Y": 7.2126245498657227,
+                    "Z": -33.769451141357422
+                },
+                "Scale": {
+                    "X": 1.0000002384185791,
+                    "Y": 1.0000001192092896,
+                    "Z": 1.0000001192092896
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 1
+                }
+            },
+            {
+                "Type": 7,
+                "UUID": 0,
+                "Time Created": 0,
+                "checkLife": false,
+                "checkSpeed": true,
+                "checkAcceleration": true,
+                "checkSize": true,
+                "checkRotation": false,
+                "checkAngularAcceleration": true,
+                "checkAngularVelocity": true,
+                "lifeMin": 6,
+                "lifeMax": 6,
+                "speedMin": 0.5,
+                "speedMax": 1,
+                "accelerationMin": 0,
+                "accelerationMax": 0.15000000596046448,
+                "sizeMin": 1,
+                "sizeMax": 1.2000000476837158,
+                "rotationMin": 0,
+                "rotationMax": 0,
+                "angularAccelerationMin": -10,
+                "angularAccelerationMax": 10,
+                "angularVelocityMin": -45,
+                "angularVelocityMax": 45,
+                "subEmitterActive": false,
+                "rateOverTime": 15,
+                "Colors": [
+                    {
+                        "colorX": 1,
+                        "colorY": 1,
+                        "colorZ": 1,
+                        "colorW": 1,
+                        "position": 0,
+                        "name": "Start Color"
+                    },
+                    {
+                        "colorX": 1,
+                        "colorY": 0.99998998641967773,
+                        "colorZ": 0.99998998641967773,
+                        "colorW": 0,
+                        "position": 1,
+                        "name": "100%"
+                    }
+                ],
+                "timeColor": 1,
+                "particleDirectionX": 0,
+                "particleDirectionY": 0.98190480470657349,
+                "particleDirectionZ": 0,
+                "duration": 1,
+                "loop": 1,
+                "burst": 0,
+                "minPart": 0,
+                "maxPart": 10,
+                "repeatTime": 1,
+                "posDifAABBX": 0,
+                "posDifAABBY": 0,
+                "posDifAABBZ": 0,
+                "gravity": 0,
+                "boxCreationMinX": -0.05000000074505806,
+                "boxCreationMinY": -0.05000000074505806,
+                "boxCreationMinZ": -0.05000000074505806,
+                "boxCreationMaxX": 0.05000000074505806,
+                "boxCreationMaxY": 0.05000000074505806,
+                "boxCreationMaxZ": 0.05000000074505806,
+                "boxCreationMin": [
+                    -0.05000000074505806,
+                    -0.05000000074505806,
+                    -0.05000000074505806
+                ],
+                "boxCreationMax": [
+                    0.05000000074505806,
+                    0.05000000074505806,
+                    0.05000000074505806
+                ],
+                "SphereCreationRad": 1,
+                "circleCreationRad": 0.25,
+                "shapeType": 4,
+                "texture": "Assets\\textures\\Smoke30Frames_0.png",
+                "textureRows": 5,
+                "textureColumns": 6,
+                "animationSpeed": 0.20000000298023224,
+                "isParticleAnimated": true,
+                "dieOnAnimation": true,
+                "drawAABB": false,
+                "isSubEmitter": false,
+                "originalBoundingBoxSizeX": 1,
+                "originalBoundingBoxSizeY": 1,
+                "originalBoundingBoxSizeZ": 1
+            }
+        ]
+    },
+    {
+        "name": "Smoke 2",
+        "UUID": 138406317,
+        "Parent UUID": 2347233540,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": -40.617244720458984,
+                    "Y": 7.2126250267028809,
+                    "Z": -43.19677734375
+                },
+                "Scale": {
+                    "X": 1.0000002384185791,
+                    "Y": 1.0000001192092896,
+                    "Z": 1.0000001192092896
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 1
+                }
+            },
+            {
+                "Type": 7,
+                "UUID": 0,
+                "Time Created": 0,
+                "checkLife": false,
+                "checkSpeed": true,
+                "checkAcceleration": true,
+                "checkSize": true,
+                "checkRotation": false,
+                "checkAngularAcceleration": true,
+                "checkAngularVelocity": true,
+                "lifeMin": 6,
+                "lifeMax": 6,
+                "speedMin": 0.5,
+                "speedMax": 1,
+                "accelerationMin": 0,
+                "accelerationMax": 0.15000000596046448,
+                "sizeMin": 1,
+                "sizeMax": 1.2000000476837158,
+                "rotationMin": 0,
+                "rotationMax": 0,
+                "angularAccelerationMin": -10,
+                "angularAccelerationMax": 10,
+                "angularVelocityMin": -45,
+                "angularVelocityMax": 45,
+                "subEmitterActive": false,
+                "rateOverTime": 15,
+                "Colors": [
+                    {
+                        "colorX": 1,
+                        "colorY": 1,
+                        "colorZ": 1,
+                        "colorW": 1,
+                        "position": 0,
+                        "name": "Start Color"
+                    },
+                    {
+                        "colorX": 9.9999999747524271e-07,
+                        "colorY": 9.9998999303352321e-07,
+                        "colorZ": 9.9998999303352321e-07,
+                        "colorW": 0,
+                        "position": 1,
+                        "name": "100%"
+                    }
+                ],
+                "timeColor": 1,
+                "particleDirectionX": 0,
+                "particleDirectionY": 0.98205310106277466,
+                "particleDirectionZ": 0,
+                "duration": 1,
+                "loop": 1,
+                "burst": 0,
+                "minPart": 0,
+                "maxPart": 10,
+                "repeatTime": 1,
+                "posDifAABBX": 0,
+                "posDifAABBY": 0,
+                "posDifAABBZ": 0,
+                "gravity": 0,
+                "boxCreationMinX": -0.05000000074505806,
+                "boxCreationMinY": -0.05000000074505806,
+                "boxCreationMinZ": -0.05000000074505806,
+                "boxCreationMaxX": 0.05000000074505806,
+                "boxCreationMaxY": 0.05000000074505806,
+                "boxCreationMaxZ": 0.05000000074505806,
+                "boxCreationMin": [
+                    -0.05000000074505806,
+                    -0.05000000074505806,
+                    -0.05000000074505806
+                ],
+                "boxCreationMax": [
+                    0.05000000074505806,
+                    0.05000000074505806,
+                    0.05000000074505806
+                ],
+                "SphereCreationRad": 1,
+                "circleCreationRad": 0.25,
+                "shapeType": 4,
+                "texture": "Assets\\textures\\Smoke30Frames_0.png",
+                "textureRows": 5,
+                "textureColumns": 6,
+                "animationSpeed": 0.20000000298023224,
+                "isParticleAnimated": true,
+                "dieOnAnimation": true,
+                "drawAABB": false,
+                "isSubEmitter": false,
+                "originalBoundingBoxSizeX": 1,
+                "originalBoundingBoxSizeY": 1,
+                "originalBoundingBoxSizeZ": 1
+            }
+        ]
+    },
+    {
+        "name": "Smoke 3",
+        "UUID": 3387594929,
+        "Parent UUID": 2347233540,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": -43.163787841796875,
+                    "Y": 7.3958826065063477,
+                    "Z": -32.65509033203125
+                },
+                "Scale": {
+                    "X": 1.0000002384185791,
+                    "Y": 1.0000001192092896,
+                    "Z": 1.0000001192092896
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 1
+                }
+            },
+            {
+                "Type": 7,
+                "UUID": 0,
+                "Time Created": 0,
+                "checkLife": false,
+                "checkSpeed": true,
+                "checkAcceleration": true,
+                "checkSize": true,
+                "checkRotation": false,
+                "checkAngularAcceleration": true,
+                "checkAngularVelocity": true,
+                "lifeMin": 6,
+                "lifeMax": 6,
+                "speedMin": 0.5,
+                "speedMax": 1,
+                "accelerationMin": 0,
+                "accelerationMax": 0.15000000596046448,
+                "sizeMin": 1,
+                "sizeMax": 1.2000000476837158,
+                "rotationMin": 0,
+                "rotationMax": 0,
+                "angularAccelerationMin": -10,
+                "angularAccelerationMax": 10,
+                "angularVelocityMin": -45,
+                "angularVelocityMax": 45,
+                "subEmitterActive": false,
+                "rateOverTime": 15,
+                "Colors": [
+                    {
+                        "colorX": 1,
+                        "colorY": 1,
+                        "colorZ": 1,
+                        "colorW": 1,
+                        "position": 0,
+                        "name": "Start Color"
+                    },
+                    {
+                        "colorX": 1,
+                        "colorY": 0.99998998641967773,
+                        "colorZ": 0.99998998641967773,
+                        "colorW": 0,
+                        "position": 1,
+                        "name": "100%"
+                    }
+                ],
+                "timeColor": 1,
+                "particleDirectionX": 0,
+                "particleDirectionY": 0.9953758716583252,
+                "particleDirectionZ": 0,
+                "duration": 1,
+                "loop": 1,
+                "burst": 0,
+                "minPart": 0,
+                "maxPart": 10,
+                "repeatTime": 1,
+                "posDifAABBX": 0,
+                "posDifAABBY": 0,
+                "posDifAABBZ": 0,
+                "gravity": 0,
+                "boxCreationMinX": -0.05000000074505806,
+                "boxCreationMinY": -0.05000000074505806,
+                "boxCreationMinZ": -0.05000000074505806,
+                "boxCreationMaxX": 0.05000000074505806,
+                "boxCreationMaxY": 0.05000000074505806,
+                "boxCreationMaxZ": 0.05000000074505806,
+                "boxCreationMin": [
+                    -0.05000000074505806,
+                    -0.05000000074505806,
+                    -0.05000000074505806
+                ],
+                "boxCreationMax": [
+                    0.05000000074505806,
+                    0.05000000074505806,
+                    0.05000000074505806
+                ],
+                "SphereCreationRad": 1,
+                "circleCreationRad": 0.25,
+                "shapeType": 4,
+                "texture": "Assets\\textures\\Particle-Sprite-Smoke-1.png",
+                "textureRows": 1,
+                "textureColumns": 1,
+                "animationSpeed": 0.10000000149011612,
+                "isParticleAnimated": false,
+                "dieOnAnimation": false,
+                "drawAABB": false,
+                "isSubEmitter": false,
+                "originalBoundingBoxSizeX": 1,
+                "originalBoundingBoxSizeY": 1,
+                "originalBoundingBoxSizeZ": 1
+            }
+        ]
+    },
+    {
+        "name": "Smoke 4",
+        "UUID": 799558794,
+        "Parent UUID": 2347233540,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": -32.943267822265625,
+                    "Y": 7.3958826065063477,
+                    "Z": -43.19677734375
+                },
+                "Scale": {
+                    "X": 1.0000002384185791,
+                    "Y": 1.0000001192092896,
+                    "Z": 1.0000001192092896
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 1
+                }
+            },
+            {
+                "Type": 7,
+                "UUID": 0,
+                "Time Created": 0,
+                "checkLife": false,
+                "checkSpeed": true,
+                "checkAcceleration": true,
+                "checkSize": true,
+                "checkRotation": false,
+                "checkAngularAcceleration": true,
+                "checkAngularVelocity": true,
+                "lifeMin": 6,
+                "lifeMax": 6,
+                "speedMin": 0.5,
+                "speedMax": 1,
+                "accelerationMin": 0,
+                "accelerationMax": 0.15000000596046448,
+                "sizeMin": 1,
+                "sizeMax": 1.2000000476837158,
+                "rotationMin": 0,
+                "rotationMax": 0,
+                "angularAccelerationMin": -10,
+                "angularAccelerationMax": 10,
+                "angularVelocityMin": -45,
+                "angularVelocityMax": 45,
+                "subEmitterActive": false,
+                "rateOverTime": 15,
+                "Colors": [
+                    {
+                        "colorX": 1,
+                        "colorY": 1,
+                        "colorZ": 1,
+                        "colorW": 1,
+                        "position": 0,
+                        "name": "Start Color"
+                    },
+                    {
+                        "colorX": 9.9999999747524271e-07,
+                        "colorY": 9.9998999303352321e-07,
+                        "colorZ": 9.9998999303352321e-07,
+                        "colorW": 0,
+                        "position": 1,
+                        "name": "100%"
+                    }
+                ],
+                "timeColor": 1,
+                "particleDirectionX": 0,
+                "particleDirectionY": 0.99946779012680054,
+                "particleDirectionZ": 0,
+                "duration": 1,
+                "loop": 1,
+                "burst": 0,
+                "minPart": 0,
+                "maxPart": 10,
+                "repeatTime": 1,
+                "posDifAABBX": 0,
+                "posDifAABBY": 0,
+                "posDifAABBZ": 0,
+                "gravity": 0,
+                "boxCreationMinX": -0.05000000074505806,
+                "boxCreationMinY": -0.05000000074505806,
+                "boxCreationMinZ": -0.05000000074505806,
+                "boxCreationMaxX": 0.05000000074505806,
+                "boxCreationMaxY": 0.05000000074505806,
+                "boxCreationMaxZ": 0.05000000074505806,
+                "boxCreationMin": [
+                    -0.05000000074505806,
+                    -0.05000000074505806,
+                    -0.05000000074505806
+                ],
+                "boxCreationMax": [
+                    0.05000000074505806,
+                    0.05000000074505806,
+                    0.05000000074505806
+                ],
+                "SphereCreationRad": 1,
+                "circleCreationRad": 0.25,
+                "shapeType": 4,
+                "texture": "Assets\\textures\\Particle-Sprite-Smoke-1.png",
+                "textureRows": 1,
+                "textureColumns": 1,
+                "animationSpeed": 0.10000000149011612,
+                "isParticleAnimated": false,
+                "dieOnAnimation": false,
+                "drawAABB": false,
+                "isSubEmitter": false,
+                "originalBoundingBoxSizeX": 1,
+                "originalBoundingBoxSizeY": 1,
+                "originalBoundingBoxSizeZ": 1
+            }
+        ]
+    },
+    {
+        "name": "Firework",
+        "UUID": 1286662325,
+        "Parent UUID": 2347233540,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": -74,
+                    "Y": 1.8694656773732277e-06,
+                    "Z": -68.220001220703125
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 1
+                }
+            },
+            {
+                "Type": 7,
+                "UUID": 0,
+                "Time Created": 0,
+                "checkLife": false,
+                "checkSpeed": true,
+                "checkAcceleration": false,
+                "checkSize": true,
+                "checkRotation": false,
+                "checkAngularAcceleration": false,
+                "checkAngularVelocity": false,
+                "lifeMin": 1,
+                "lifeMax": 1,
+                "speedMin": 20,
+                "speedMax": 25,
+                "accelerationMin": 0,
+                "accelerationMax": 0,
+                "sizeMin": 0.30000001192092896,
+                "sizeMax": 0.60000002384185791,
+                "rotationMin": 0,
+                "rotationMax": 0,
+                "angularAccelerationMin": 0,
+                "angularAccelerationMax": 0,
+                "angularVelocityMin": 0,
+                "angularVelocityMax": 0,
+                "subEmitterActive": true,
+                "rateOverTime": 1,
+                "Colors": [
+                    {
+                        "colorX": 1,
+                        "colorY": 0,
+                        "colorZ": 0,
+                        "colorW": 1,
+                        "position": 0,
+                        "name": "Start Color"
+                    },
+                    {
+                        "colorX": 1,
+                        "colorY": 0,
+                        "colorZ": 0,
+                        "colorW": 1,
+                        "position": 0.80000001192092896,
+                        "name": "80%"
+                    },
+                    {
+                        "colorX": 1,
+                        "colorY": 0,
+                        "colorZ": 0,
+                        "colorW": 0,
+                        "position": 1,
+                        "name": "100%"
+                    }
+                ],
+                "timeColor": 1,
+                "particleDirectionX": 0,
+                "particleDirectionY": 0.45130163431167603,
+                "particleDirectionZ": 0,
+                "duration": 1,
+                "loop": 0,
+                "burst": 0,
+                "minPart": 0,
+                "maxPart": 10,
+                "repeatTime": 1,
+                "posDifAABBX": 0,
+                "posDifAABBY": 0,
+                "posDifAABBZ": 0,
+                "gravity": 0,
+                "boxCreationMinX": -0.5,
+                "boxCreationMinY": -0.5,
+                "boxCreationMinZ": -0.5,
+                "boxCreationMaxX": 0.5,
+                "boxCreationMaxY": 0.5,
+                "boxCreationMaxZ": 0.5,
+                "boxCreationMin": [
+                    -0.5,
+                    -0.5,
+                    -0.5
+                ],
+                "boxCreationMax": [
+                    0.5,
+                    0.5,
+                    0.5
+                ],
+                "SphereCreationRad": 1,
+                "circleCreationRad": 2,
+                "shapeType": 4,
+                "texture": "noTexture",
+                "textureRows": 1,
+                "textureColumns": 1,
+                "animationSpeed": 0.10000000149011612,
+                "isParticleAnimated": false,
+                "dieOnAnimation": false,
+                "drawAABB": false,
+                "isSubEmitter": false,
+                "SubEmitter": 1112972389,
+                "originalBoundingBoxSizeX": 1,
+                "originalBoundingBoxSizeY": 1,
+                "originalBoundingBoxSizeZ": 1
+            }
+        ]
+    },
+    {
+        "name": "SubEmition",
+        "UUID": 1112972389,
+        "Parent UUID": 1286662325,
+        "isActive": 1,
+        "Components": [
+            {
+                "Type": 1,
+                "UUID": 0,
+                "Time Created": 0,
+                "Position": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0
+                },
+                "Scale": {
+                    "X": 1,
+                    "Y": 1,
+                    "Z": 1
+                },
+                "Rotation": {
+                    "X": 0,
+                    "Y": 0,
+                    "Z": 0,
+                    "W": 1
+                }
+            },
+            {
+                "Type": 7,
+                "UUID": 0,
+                "Time Created": 0,
+                "checkLife": false,
+                "checkSpeed": false,
+                "checkAcceleration": false,
+                "checkSize": true,
+                "checkRotation": false,
+                "checkAngularAcceleration": true,
+                "checkAngularVelocity": true,
+                "lifeMin": 2,
+                "lifeMax": 2,
+                "speedMin": 3,
+                "speedMax": 3,
+                "accelerationMin": 0,
+                "accelerationMax": 0,
+                "sizeMin": 0.30000001192092896,
+                "sizeMax": 0.80000001192092896,
+                "rotationMin": 0,
+                "rotationMax": 0,
+                "angularAccelerationMin": -15,
+                "angularAccelerationMax": 15,
+                "angularVelocityMin": -45,
+                "angularVelocityMax": 45,
+                "subEmitterActive": false,
+                "rateOverTime": 100,
+                "Colors": [
+                    {
+                        "colorX": 1,
+                        "colorY": 1,
+                        "colorZ": 0,
+                        "colorW": 1,
+                        "position": 0,
+                        "name": "Start Color"
+                    },
+                    {
+                        "colorX": 0.39215686917304993,
+                        "colorY": 0.12223070859909058,
+                        "colorZ": 0,
+                        "colorW": 0,
+                        "position": 1,
+                        "name": "100%"
+                    }
+                ],
+                "timeColor": 1,
+                "particleDirectionX": 0,
+                "particleDirectionY": -0.22346648573875427,
+                "particleDirectionZ": 0,
+                "duration": 1,
+                "loop": 1,
+                "burst": 0,
+                "minPart": 0,
+                "maxPart": 10,
+                "repeatTime": 1,
+                "posDifAABBX": 0,
+                "posDifAABBY": 0,
+                "posDifAABBZ": 0,
+                "gravity": 0,
+                "boxCreationMinX": -0.5,
+                "boxCreationMinY": -0.5,
+                "boxCreationMinZ": -0.5,
+                "boxCreationMaxX": 0.5,
+                "boxCreationMaxY": 0.5,
+                "boxCreationMaxZ": 0.5,
+                "boxCreationMin": [
+                    -0.5,
+                    -0.5,
+                    -0.5
+                ],
+                "boxCreationMax": [
+                    0.5,
+                    0.5,
+                    0.5
+                ],
+                "SphereCreationRad": 1,
+                "circleCreationRad": 1,
+                "shapeType": 2,
+                "texture": "Assets\\textures\\star.png",
+                "textureRows": 1,
+                "textureColumns": 1,
+                "animationSpeed": 0.10000000149011612,
+                "isParticleAnimated": false,
+                "dieOnAnimation": false,
+                "drawAABB": false,
+                "isSubEmitter": true,
+                "originalBoundingBoxSizeX": 1,
+                "originalBoundingBoxSizeY": 1,
+                "originalBoundingBoxSizeZ": 1
+            }
+        ]
+    }
+] 

@@ -139,7 +139,7 @@ void ModuleGameObject::LoadScene(const char* name)
 	{
 		fileName = fileName.substr(fileName.find_last_of("\\") + 1);
 
-		direction = "Llibrary/Scenes/";
+		direction = "Assets/Scenes/";
 		direction.append(fileName);
 		direction.append(".json");
 	}

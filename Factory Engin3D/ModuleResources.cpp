@@ -95,7 +95,7 @@ void ModuleResources::ReadFolder(const char * path, std::vector<AssetsHierarchy*
 		if ((file = FindFirstFile(currPath.data(), &data)) != INVALID_HANDLE_VALUE)
 		{
 			do {
-				if (strcmp(data.cFileName, "..") && strcmp(data.cFileName, "."))
+				if (strcmp(data.cFileName, "..") && strcmp(data.cFileName, ".") && strcmp(data.cFileName, "Scenes"))
 				{
 					int vector = filesStr.size();
 
