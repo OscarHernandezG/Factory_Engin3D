@@ -66,7 +66,8 @@ void ModuleParticle::StartAllEmiters()
 {
 	for (std::list<ComponentEmitter*>::iterator emitter = emitters.begin(); emitter != emitters.end(); ++emitter)
 	{
-		(*emitter)->StartEmitter();
+		if((*emitter) != firework)
+			(*emitter)->StartEmitter();
 	}
 }
 
