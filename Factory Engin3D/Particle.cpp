@@ -131,7 +131,7 @@ void Particle::EndParticle(bool &ret)
 	if (subEmitterActive && owner->subEmitter && owner->subEmitter->HasComponent(ComponentType_EMITTER))
 	{
 		ComponentEmitter* emitter = (ComponentEmitter*)owner->subEmitter->GetComponent(ComponentType_EMITTER);
-		emitter->newPositions.push_back(transform.position);
+		emitter->newPositions.push_back((transform.position - owner->subEmitter->transform->GetGlobalPos()));
 	}
 	active = false;
 	ret = false;
