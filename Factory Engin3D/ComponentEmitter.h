@@ -103,7 +103,7 @@ struct EmitterInfo : ComponentInfo
 	GameObject* subEmitter = nullptr;
 	uint subEmitterUUID = 0u;
 
-	int rateOverTime = 0;
+	int rateOverTime = 10;
 	bool subEmitterActive = false;
 
 	float3 sizeOBB = float3::zero;
