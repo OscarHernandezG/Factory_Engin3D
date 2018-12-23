@@ -17,6 +17,16 @@ update_status ModuleParticle::Update()
 {
 	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
 
+	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
+	{
+		if (firework)
+		{
+			firework->StartEmitter();
+			LOG("Firework comming!");
+		}
+	}
+
+
 	for (std::list<ComponentEmitter*>::iterator emitter = emitters.begin(); emitter != emitters.end(); ++emitter)
 	{
 		(*emitter)->Update();

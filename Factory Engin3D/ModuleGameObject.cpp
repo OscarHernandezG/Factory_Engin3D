@@ -183,6 +183,8 @@ void ModuleGameObject::LoadScene(const char* name)
 			if (emitter)
 			{
 				emitter->subEmitter = FindByID(emitter->subEmitterUUID);
+				if ((*it)->GetUID() == FIREWORK)
+					App->particle->firework = emitter;
 			}
 		}
 	}

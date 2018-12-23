@@ -39,6 +39,7 @@ enum update_status
 #define WIN_FULLSCREEN_DESKTOP false
 #define VSYNC false
 #define TITLE "Factory Engin3D"
+#define FIREWORK 1286662325
 
 //class JSON_Object;
 #include "parson/parson.h"

@@ -40,6 +40,7 @@ public:
 	ParticlePlane* plane = nullptr;
 
 	int activeParticles = 0;
+	ComponentEmitter* firework = nullptr;
 private:
 	
 	std::priority_queue<Particle*, std::vector<Particle*>,particleCompare> partQueue;

@@ -39,7 +39,7 @@ update_status ModuleSceneIntro::PreUpdate()
 
 	update_status status = UPDATE_CONTINUE;
 
-	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)//Debug Draw
+	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)//Debug Draw
 		App->renderer3D->debugQuad = !App->renderer3D->debugQuad;
 
 	if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN) //Camera Culling

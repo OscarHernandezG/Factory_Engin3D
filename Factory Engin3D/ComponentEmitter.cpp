@@ -565,8 +565,10 @@ void ComponentEmitter::ParticleTexture()
 		if (ImGui::Checkbox("Animated sprite", &isParticleAnimated))
 		{
 			if (!isParticleAnimated)
+			{
 				SetNewAnimation(1, 1);
-
+				dieOnAnimation = false;
+			}
 			else
 				SetNewAnimation(textureRows, textureColumns);
 		}
