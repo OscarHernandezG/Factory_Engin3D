@@ -443,11 +443,11 @@ bool ModuleImGui::CreateOptions()
 		if (ImGui::MenuItem("Load Scene"))
 			App->gameObject->LoadScene("scene");
 
-		if (ImGui::MenuItem("Save", "Ctrl+S"))
+		/*if (ImGui::MenuItem("Save", "Ctrl+S"))
 			App->canSave = true;
 
 		else if (ImGui::MenuItem("Load", "Ctrl+L"))
-			App->canLoad = true;
+			App->canLoad = true;*/
 
 		else if (ImGui::MenuItem("Exit", "ESC"))
 			exitOption = true;
@@ -473,14 +473,8 @@ void ModuleImGui::CheckShortCuts()
 		else if (App->input->GetKey(SDL_SCANCODE_E) == KEY_DOWN)
 			exampleWindow = !exampleWindow;
 
-		else if (App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
-			App->canLoad = true;
-
 		else if (App->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN)
 			mathGeoLibWindow = !mathGeoLibWindow;
-
-		else if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
-			App->canSave = true;
 
 		else if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
 			randomNumberWindow = !randomNumberWindow;
