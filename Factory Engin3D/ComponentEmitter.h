@@ -168,6 +168,8 @@ public:
 
 	std::list<float3> newPositions;
 
+	StartValues startValues;
+
 	bool isSubEmitter = false;
 private:
 	// General info
@@ -212,7 +214,6 @@ private:
 	int nextPos = 100;
 	float4 nextColor = float4(0.0f, 0.0f, 0.0f, 1.0f);
 
-	StartValues startValues;
 	//---------------------------------------
 
 	// Emission info
