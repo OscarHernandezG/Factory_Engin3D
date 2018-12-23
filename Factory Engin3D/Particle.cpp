@@ -51,7 +51,7 @@ void Particle::SetActive(float3 pos, StartValues data, ResourceTexture ** textur
 
 	this->animation = animation;
 	this->animationSpeed = animationSpeed;
-	animationTime.Start();
+	animationTime = 0.0f;
 	currentFrame = 0u;
 
 	active = true;
@@ -100,7 +100,8 @@ bool Particle::Update(float dt)
 		angle += angularVelocity * dt;
 		transform.rotation = transform.rotation.Mul(Quat::RotateZ(angle));
 
-		if (animationTime.ReadSec() > animationSpeed)
+		animationTime += dt;
+		if (animationTime > animationSpeed)
 		{
 			if (animation->size() > currentFrame + 1)
 			{
@@ -113,7 +114,7 @@ bool Particle::Update(float dt)
 			else
 				currentFrame = 0;
 
-			animationTime.Start();
+			animationTime = 0.0f;
 		}
 	}
 	else

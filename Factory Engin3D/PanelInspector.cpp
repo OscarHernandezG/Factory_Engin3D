@@ -83,7 +83,7 @@ void ModuleImGui::CreateInspector(float2 scale)
 
 
 		ImGui::Separator();
-		if (ImGui::Button("Delete", ImVec2(100, 20)))
+		if (ImGui::Button("Delete GameObject", ImVec2(150, 25)))
 		{
 			currObject->Delete();
 			App->geometry->currentGameObject = nullptr;

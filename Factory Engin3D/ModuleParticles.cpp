@@ -48,7 +48,7 @@ update_status ModuleParticle::Update()
 			allParticles[i].camDistance = -1;
 		}
 	}
-		//LOG("Active particles %i", count);
+		LOG("Active particles %i", count);
 	return UPDATE_CONTINUE;
 }
 

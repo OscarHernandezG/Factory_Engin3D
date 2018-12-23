@@ -13,10 +13,7 @@ GameTimer::GameTimer()
 }
 
 GameTimer::~GameTimer()
-{
-	// Remove timer from app!
-	//App->time->gameTimerList.remove(this);
-}
+{}
 
 void GameTimer::Update(float dt)
 {
@@ -27,7 +24,7 @@ void GameTimer::Update(float dt)
 // ---------------------------------------------
 void GameTimer::Start()
 {
-	if (!(std::find(App->time->gameTimerList.begin(), App->time->gameTimerList.end(), this) != App->time->gameTimerList.end()))
+	if ((std::find(App->time->gameTimerList.begin(), App->time->gameTimerList.end(), this) == App->time->gameTimerList.end()))
 		App->time->gameTimerList.push_back(this);
 
 	running = true;

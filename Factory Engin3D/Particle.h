@@ -83,7 +83,7 @@ private:
 	std::vector<uint>* animation = nullptr;
 	float animationSpeed = 0.1f;
 
-	GameTimer animationTime;
+	float animationTime = 0.0f;
 };
 
 struct particleCompare

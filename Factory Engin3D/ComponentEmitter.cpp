@@ -89,7 +89,13 @@ ComponentEmitter::ComponentEmitter(GameObject* gameObject, EmitterInfo* info) : 
 ComponentEmitter::~ComponentEmitter()
 {
 	if (App)
-	App->particle->emitters.remove(this);
+	{
+		App->particle->emitters.remove(this);
+		App->time->gameTimerList.remove(&timer);
+		App->time->gameTimerList.remove(&burstTime);
+		App->time->gameTimerList.remove(&loopTimer);
+		App->time->gameTimerList.remove(&timeSimulating);
+	}			
 	ClearEmitter();
 }
 
@@ -111,6 +117,7 @@ void ComponentEmitter::Update()
 	if (rateOverTime > 0)
 	{
 		float time = timer.ReadSec();
+		LOG("%.3f", time);
 		if (time > timeToParticle && (loop || loopTimer.ReadSec() < duration))
 		{
 			if (App->time->gameState == GameState_PLAYING || simulatedGame == GameState_PLAYING || App->time->gameState == GameState_TICK)
@@ -119,7 +126,8 @@ void ComponentEmitter::Update()
 				CreateParticles(particlesToCreate, normalShapeType,float3::zero);
 
 				timeToParticle = (1.0f / rateOverTime);
-
+				LOG("%.3f particle", timeToParticle);
+				
 				timer.Start();
 			}
 
@@ -510,7 +518,7 @@ void ComponentEmitter::ParticleTexture()
 				}
 				ImGui::End();
 			}
-			if (ImGui::Button("Remove", ImVec2(50, 25)))
+			if (ImGui::Button("Remove Texture", ImVec2(125, 25)))
 			{
 				App->resources->Remove(texture);
 				texture = nullptr;
@@ -564,6 +572,7 @@ void ComponentEmitter::ParticleTexture()
 				SetNewAnimation(textureRows, textureColumns);
 			}
 		}
+		ImGui::Separator();
 	}
 }
 

@@ -70,7 +70,7 @@ void Texture::Inspector()
 				ImGui::End();
 			}
 
-			if (ImGui::Button("Remove", ImVec2(50, 25)))
+			if (ImGui::Button("Remove Texture", ImVec2(125, 25)))
 			{
 				App->resources->Remove(texture);
 				texture = nullptr;
