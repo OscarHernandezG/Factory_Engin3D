@@ -235,6 +235,7 @@ void ModuleGameObject::DeletePreviousScene()
 {
 	// Clear all emitters from module particles
 	App->particle->ClearEmitters();
+	App->geometry->currentMeshes.clear();
 
 	rootGameObject->RealDelete();
 	delete rootGameObject;
