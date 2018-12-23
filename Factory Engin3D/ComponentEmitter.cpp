@@ -51,6 +51,7 @@ ComponentEmitter::ComponentEmitter(GameObject* gameObject, EmitterInfo* info) : 
 		checkSize = info->checkSize;
 		checkRotation = info->checkRotation;
 		checkAngularAcceleration = info->checkAngularAcceleration;
+		checkSizeOverTime = info->checkSizeOverTime;
 		checkAngularVelocity = info->checkAngularVelocity;
 
 		isParticleAnimated = info->isParticleAnimated;
@@ -321,6 +322,9 @@ void ComponentEmitter::ParticleValues()
 
 		ImGui::Checkbox("##Size", &checkSize);
 		ShowFloatValue(startValues.size, checkSize, "Size", 0.1f, 0.1f, 5.0f);
+
+		ImGui::Checkbox("##SizeOverTime", &checkSizeOverTime);
+		ShowFloatValue(startValues.sizeOverTime, checkSizeOverTime, "SizeOverTime", 0.25f, -1.0f, 1.0f);
 
 		ImGui::DragInt("Emition", &rateOverTime, 1.0f, 0.0f, 300.0f, "%.2f");
 
@@ -704,6 +708,7 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 	json_object_set_boolean(parent, "checkSpeed", checkSpeed);
 	json_object_set_boolean(parent, "checkAcceleration", checkAcceleration);
 	json_object_set_boolean(parent, "checkSize", checkSize);
+	json_object_set_boolean(parent, "checkSizeOverTime", checkSizeOverTime);
 	json_object_set_boolean(parent, "checkRotation", checkRotation);
 	json_object_set_boolean(parent, "checkAngularAcceleration", checkAngularAcceleration);
 	json_object_set_boolean(parent, "checkAngularVelocity", checkAngularVelocity);
@@ -719,6 +724,9 @@ void ComponentEmitter::SaveComponent(JSON_Object* parent)
 
 	json_object_set_number(parent, "sizeMin", startValues.size.x);
 	json_object_set_number(parent, "sizeMax", startValues.size.y);
+
+	json_object_set_number(parent, "sizeOverTimeMin", startValues.sizeOverTime.x);
+	json_object_set_number(parent, "sizeOverTimeMax", startValues.sizeOverTime.y);
 
 	json_object_set_number(parent, "rotationMin", startValues.rotation.x);
 	json_object_set_number(parent, "rotationMax", startValues.rotation.y);

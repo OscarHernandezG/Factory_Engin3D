@@ -35,6 +35,8 @@ void Particle::SetActive(float3 pos, StartValues data, ResourceTexture ** textur
 	angularVelocity = CreateRandomNum(data.angularVelocity) * DEGTORAD;
 	angularAcceleration = CreateRandomNum(data.angularAcceleration) * DEGTORAD;
 
+	sizeOverTime = CreateRandomNum(data.sizeOverTime);
+
 	transform.position = pos;
 	transform.rotation = Quat::FromEulerXYZ(0, 0, 0); //Start rotation
 	transform.scale = float3::one * CreateRandomNum(data.size);
@@ -95,6 +97,10 @@ bool Particle::Update(float dt)
 		}
 		else
 			currentColor = color[index].color;
+
+		transform.scale.x += sizeOverTime * dt;
+		transform.scale.y += sizeOverTime * dt;
+		transform.scale.z += sizeOverTime * dt;
 
 		angularVelocity += angularAcceleration * dt;
 		angle += angularVelocity * dt;

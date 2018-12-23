@@ -336,6 +336,7 @@ ComponentInfo* GameObject::LoadComponentInfo(JSON_Object* info, ComponentType ty
 		emitterInfo->checkSpeed = json_object_get_boolean(info, "checkSpeed");
 		emitterInfo->checkAcceleration = json_object_get_boolean(info, "checkAcceleration");
 		emitterInfo->checkSize = json_object_get_boolean(info, "checkSize");
+		emitterInfo->checkSizeOverTime = json_object_get_boolean(info, "checkSizeOverTime");
 		emitterInfo->checkRotation = json_object_get_boolean(info, "checkRotation");
 		emitterInfo->checkAngularAcceleration = json_object_get_boolean(info, "checkAngularAcceleration");
 		emitterInfo->checkAngularVelocity = json_object_get_boolean(info, "checkAngularVelocity");
@@ -373,7 +374,8 @@ ComponentInfo* GameObject::LoadComponentInfo(JSON_Object* info, ComponentType ty
 		startValues->angularAcceleration.x = json_object_get_number(info, "angularAccelerationMin");
 		startValues->angularAcceleration.y = json_object_get_number(info, "angularAccelerationMax");
 
-		startValues->angularAcceleration.y = json_object_get_number(info, "angularAccelerationMax");
+		startValues->sizeOverTime.x = json_object_get_number(info, "sizeOverTimeMin");
+		startValues->sizeOverTime.y = json_object_get_number(info, "sizeOverTimeMax");
 
 		JSON_Array* colorArray = json_object_get_array(info, "Colors");
 

@@ -39,6 +39,7 @@ struct StartValues
 	float2 life = float2(5.0f, 5.0f);
 	float2 speed = float2(3.0f, 3.0f);
 	float2 acceleration = float2(0.0f, 0.0f);
+	float2 sizeOverTime = float2(0.0f, 0.0f);
 	float2 size = float2(1.0f, 1.0f);
 	float2 rotation = float2(0.0f, 0.0f);
 	float2 angularAcceleration = float2(0.0f, 0.0f);
@@ -89,6 +90,7 @@ struct EmitterInfo : ComponentInfo
 	bool checkSpeed = false;
 	bool checkAcceleration = false;
 	bool checkSize = false;
+	bool checkSizeOverTime = false;
 	bool checkRotation = false;
 	bool checkAngularAcceleration = false;
 	bool checkAngularVelocity = false;
@@ -181,6 +183,7 @@ private:
 	bool checkLife = false;
 	bool checkSpeed = false;
 	bool checkAcceleration = false;
+	bool checkSizeOverTime = false;
 	bool checkSize = false;
 	bool checkRotation = false;
 	bool checkAngularAcceleration = false;
