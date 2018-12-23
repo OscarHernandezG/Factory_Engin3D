@@ -137,8 +137,10 @@ void OctreeNode::GetBoxLimits(std::vector<const OctreeNode*>& nodes) const
 void OctreeNode::GetGameObjects(std::vector<GameObject*>& object) const
 {
 	for (std::list<GameObject*>::const_iterator iterator = objectsList.begin(); iterator != objectsList.end(); ++iterator)
-			object.push_back(*iterator);
-	
+	{
+		object.push_back(*iterator);
+	}
+
 	for (int i = 0; i < 8; i++)
 	{
 		if (childs[i] != nullptr)

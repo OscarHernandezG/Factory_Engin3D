@@ -134,7 +134,7 @@ public:
 	void CheckMinMax(float2 & value);
 	void ClearEmitter();
 	void SoftClearEmitter();
-	void CreateParticles(int particlesToCreate, ShapeType shapeType, float3 pos = float3::zero);
+	void CreateParticles(int particlesToCreate, ShapeType shapeType, const float3& pos = float3::zero);
 	bool EditColor(ColorTime & colorTime, bool first = true);
 
 	ImVec4 EqualsFloat4(const float4 float4D);

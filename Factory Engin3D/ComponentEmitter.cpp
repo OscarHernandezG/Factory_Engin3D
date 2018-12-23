@@ -183,26 +183,21 @@ void ComponentEmitter::SoftClearEmitter()
 }
 
 
-void ComponentEmitter::CreateParticles(int particlesToCreate, ShapeType shapeType, float3 pos)
+void ComponentEmitter::CreateParticles(int particlesToCreate, ShapeType shapeType, const float3& pos)
 {
 	if (particlesToCreate == 0)
 		++particlesToCreate;
+
 
 	for (int i = 0; i < particlesToCreate; ++i)
 	{
 		int particleId = 0;
 		if (App->particle->GetParticle(particleId))
 		{
-			if(pos.x < -50.0f)
-				LOG("WTFF!!!");
+			float3 spawnPos = pos;
+			spawnPos += RandPos(shapeType);
 
-			LOG("_________________");
-			LOG("%.2f,%.2f,%.2f", pos.x, pos.y, pos.z);
-			LOG("-----------------");
-			pos += RandPos(shapeType);
-			LOG("%.2f,%.2f,%.2f", pos.x, pos.y, pos.z);
-
-			App->particle->allParticles[particleId].SetActive(pos, startValues, &texture, &particleAnimation.textureIDs, animationSpeed);
+			App->particle->allParticles[particleId].SetActive(spawnPos, startValues, &texture, &particleAnimation.textureIDs, animationSpeed);
 
 			App->particle->allParticles[particleId].owner = this;
 			particles.push_back(&App->particle->allParticles[particleId]);
@@ -256,7 +251,6 @@ float3 ComponentEmitter::RandPos(ShapeType shapeType)
 	if (gameObject)
 		global = gameObject->GetGlobalPos();
 
-	LOG("%.2f,%.2f,%.2f", global.x, global.y, global.z);
 	return spawn + global;
 }
 
