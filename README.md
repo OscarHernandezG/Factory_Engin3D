@@ -4,8 +4,14 @@ Factory engin3D is a 3D game engine createt by Òscar Hernàndez and Aleix Gabar
 - Óscar Hernández [Github account](https://github.com/OscarHernandezG)
 - Aleix Gabarró [Github account](https://github.com/aleixgab)
 - Factory Engin3D [Github repository](https://github.com/OscarHernandezG/Factory_Engin3D)
+- Our [Webside](https://factoryengin3d.github.io)
+
 
 ## Features
+We have implemented a high-level particle system for our engine to create beautifull particle effects.
+You can add a component Billboard to any GameObject to orient it to the camera.
+Transparency can be aplied to Particles and GameObjects.
+You can edit the Particle values, shape, color, burst, texture, animation and SubEmitter among others.
 
 We use an Octree to acelerate the drawing prosess of static GameObjects.
 You can Save and Load scenes from the options menu.
@@ -16,7 +22,7 @@ You can edit the components of a GameObject from the Inspector window.
 You can remove components from the Inspector window.
 You can load assets from the Assets window.
 You can enter GameMode using the Play, Pause and Tick buttons.
-
+If you want to know more in detail, please check out [our webside](https://factoryengin3d.github.io)
 
 ## Inputs & Shortcuts
 
@@ -34,15 +40,12 @@ You can enter GameMode using the Play, Pause and Tick buttons.
 
 - Mouse wheel click: Select GameObject
 
-- 1: Debug draw
+- 1: Launch a firework in game mode or while particle playing
+- 2: Debug draw
 - 3: Activate camera culling
 - 0: Create empty random GameObjct
 - C: Select camera component (To edit components from play mode)
 
-
-#### Save and load
-- Ctrl+S: Save
-- Ctrl+L: Load
 
 #### Open and close windows:
 - Ctrl+A: About window
@@ -59,7 +62,7 @@ You can enter GameMode using the Play, Pause and Tick buttons.
 
 ## External Libreries
 - ImGui
--	SDL
+- SDL
 - OPENGL
 - MathGeoLib
 - PCG
