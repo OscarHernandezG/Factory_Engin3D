@@ -135,7 +135,7 @@ public:
 	void ClearEmitter();
 	void SoftClearEmitter();
 	void CreateParticles(int particlesToCreate, ShapeType shapeType, const float3& pos = float3::zero);
-	bool EditColor(ColorTime & colorTime, bool first = true);
+	bool EditColor(ColorTime & colorTime, uint pos = 0u);
 
 	ImVec4 EqualsFloat4(const float4 float4D);
 
@@ -209,7 +209,7 @@ private:
 	std::string burstTypeName = "Box Burst";
 
 	int nextPos = 100;
-	float4 nextColor = float4::zero;
+	float4 nextColor = float4(0.0f, 0.0f, 0.0f, 1.0f);
 
 	StartValues startValues;
 	//---------------------------------------

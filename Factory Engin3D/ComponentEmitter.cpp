@@ -371,7 +371,7 @@ void ComponentEmitter::ParticleShape()
 			break;
 		case ShapeType_CONE:
 			ImGui::Text("Cone");
-			ImGui::DragFloat("Sphere Size", &circleCreation.r, 0.25f, 1.0f, 20.0f, "%.2f");
+			ImGui::DragFloat("Sphere Size", &circleCreation.r, 0.25f, 0.25f, 20.0f, "%.2f");
 
 			break;
 		default:
@@ -390,22 +390,25 @@ void ComponentEmitter::ParticleColor()
 		ImGui::ShowHelpMarker("Click color square for change it");
 		std::vector<ColorTime> deleteColor;
 		std::list<ColorTime>::iterator iter = startValues.color.begin();
+		uint posList = 0u;
 		while (iter != startValues.color.end())
 		{
 			//TODO: they must be able to change position
 			if ((iter) == startValues.color.begin())
 			{//Cant delete 1st color
+				
 				if (!EditColor(*iter))
 					break;
 				iter++;
 			}
 			else
 			{
-				if (!EditColor(*iter, false))
+				if (!EditColor(*iter, posList))
 					startValues.color.erase(iter++);
 				else
 					iter++;
 			}
+			++posList;
 		}
 		ImGui::Separator();
 		ImGui::Checkbox("Color time", &startValues.timeColor);
@@ -637,7 +640,7 @@ void ComponentEmitter::CheckMinMax(float2& value)
 		value.y = value.x;
 }
 
-bool ComponentEmitter::EditColor(ColorTime &colorTime, bool first)
+bool ComponentEmitter::EditColor(ColorTime &colorTime, uint pos)
 {
 	bool ret = true;
 	ImVec4 color = EqualsFloat4(colorTime.color);
@@ -648,10 +651,12 @@ bool ComponentEmitter::EditColor(ColorTime &colorTime, bool first)
 	{
 		ImGui::SameLine();
 		ImGui::TextUnformatted(colorTime.name.data());
-		if (!first)
+		if (pos > 0)
 		{
+			std::string colorStr = "Remove Color ";
+			colorStr.append(std::to_string(pos));
 			ImGui::SameLine();
-			if (ImGui::Button("Remove Color", ImVec2(100, 25)))
+			if (ImGui::Button(colorStr.data(), ImVec2(125, 25)))
 				ret = false;
 		}
 		else if (!startValues.timeColor)
