@@ -76,7 +76,7 @@ private:
 
 public:
 
-	bool toCap = true;
+	bool toCap = false;
 	bool canSave = false;
 	bool canLoad = false;
 	bool isMaximized = false;
