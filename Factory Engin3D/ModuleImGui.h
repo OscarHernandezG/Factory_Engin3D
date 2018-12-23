@@ -22,7 +22,14 @@ enum GameState;
 struct AssetsHierarchy
 {
 	std::string file;
-	std::vector<AssetsHierarchy> childFiles;
+	std::vector<AssetsHierarchy*> childFiles;
+
+	AssetsHierarchy() {}
+
+	AssetsHierarchy(std::string file)
+	{
+		this->file = file;
+	}
 };
 class ModuleImGui : public Module
 {
@@ -99,7 +106,7 @@ public:
 
 	//Panel Resources
 	void CreateAssetsWindow(float2 scale);
-	void DrawAssets(AssetsHierarchy& assets);
+	void DrawAssets(AssetsHierarchy* assets);
 	void RefreshAssets(const char * path);
 	
 public:
@@ -161,7 +168,7 @@ public:
 	bool warningDialoge = false;
 
 	//Resource Panel
-	AssetsHierarchy assetsHierarchy;
+	AssetsHierarchy* assetsHierarchy = nullptr;
 	Timer contRefresh;
 	bool popRecource = false;
 	std::string pathClicked;

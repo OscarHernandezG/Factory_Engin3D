@@ -188,6 +188,7 @@ void ComponentEmitter::CreateParticles(int particlesToCreate, ShapeType shapeTyp
 	if (particlesToCreate == 0)
 		++particlesToCreate;
 
+	LOG("Particles to create %i", particlesToCreate);
 
 	for (int i = 0; i < particlesToCreate; ++i)
 	{

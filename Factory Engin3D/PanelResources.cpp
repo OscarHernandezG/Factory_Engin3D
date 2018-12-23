@@ -35,15 +35,15 @@ void ModuleImGui::CreateAssetsWindow(float2 scale)
 
 }
 
-void ModuleImGui::DrawAssets(AssetsHierarchy& assets)
+void ModuleImGui::DrawAssets(AssetsHierarchy* assets)
 {
-	for (std::vector<AssetsHierarchy>::iterator iter = assets.childFiles.begin(); iter != assets.childFiles.end(); ++iter)
+	for (std::vector<AssetsHierarchy*>::iterator iter = assets->childFiles.begin(); iter != assets->childFiles.end(); ++iter)
 	{
 		ImGuiTreeNodeFlags_ flag = ImGuiTreeNodeFlags_None;
-		if ((*iter).childFiles.empty())
+		if ((*iter)->childFiles.empty())
 			flag = ImGuiTreeNodeFlags_Leaf;
 
-		if (ImGui::TreeNodeEx((*iter).file.data(), flag))
+		if (ImGui::TreeNodeEx((*iter)->file.data(), flag))
 		{
 			DrawAssets(*iter);
 			ImGui::TreePop();
@@ -51,7 +51,7 @@ void ModuleImGui::DrawAssets(AssetsHierarchy& assets)
 
 		if (ImGui::IsItemClicked(1) && !popRecource)
 		{
-			pathClicked = (*iter).file.data();
+			pathClicked = (*iter)->file.data();
 			popRecource = true;
 		}
 	}
@@ -59,6 +59,6 @@ void ModuleImGui::DrawAssets(AssetsHierarchy& assets)
 
 void ModuleImGui::RefreshAssets(const char* path)
 {
-	assetsHierarchy.file = "Assets";
-	App->resources->ReadFolder(path, assetsHierarchy.childFiles);
+	assetsHierarchy->file = "Assets";
+	App->resources->ReadFolder(path, assetsHierarchy->childFiles);
 }

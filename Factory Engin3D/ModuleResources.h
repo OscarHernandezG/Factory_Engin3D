@@ -28,7 +28,7 @@ public:
 	bool CleanUp();
 
 	bool ExistFile(const char* path);
-	void ReadFolder(const char * path, std::vector<AssetsHierarchy>& filesStr);
+	void ReadFolder(const char * path, std::vector<AssetsHierarchy*>& filesStr);
 
 	void Remove(Resource* resource);
 

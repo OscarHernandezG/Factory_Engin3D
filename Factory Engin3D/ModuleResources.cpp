@@ -77,8 +77,13 @@ bool ModuleResources::ExistFile(const char * path)
 	return ret;
 }
 
-void ModuleResources::ReadFolder(const char * path, std::vector<AssetsHierarchy>& filesStr)
+void ModuleResources::ReadFolder(const char * path, std::vector<AssetsHierarchy*>& filesStr)
 {
+	for (std::vector<AssetsHierarchy*>::iterator iterator = filesStr.begin(); iterator != filesStr.end(); ++iterator)
+	{
+		delete *iterator;
+	}
+
 	filesStr.clear();
 	string currPath(path);
 	
@@ -94,15 +99,14 @@ void ModuleResources::ReadFolder(const char * path, std::vector<AssetsHierarchy>
 				{
 					int vector = filesStr.size();
 
-					AssetsHierarchy internal;
-					internal.file = (data.cFileName);								//Set Name
+					AssetsHierarchy* internal = new AssetsHierarchy(data.cFileName); //Set Name
 					filesStr.push_back(internal);									//Push empty childs
 
 					string newPath(path);
 					newPath.append(data.cFileName);
 					newPath += "\\";
 
-					ReadFolder(newPath.data(), filesStr[vector].childFiles);		//Get childs
+					ReadFolder(newPath.data(), filesStr[vector]->childFiles);		//Get childs
 				}
 			} while (FindNextFile(file, &data) != 0);
 		}
