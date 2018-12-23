@@ -117,6 +117,7 @@ public:
 	~ComponentEmitter();
 
 	void StartEmitter();
+	void ChangeGameState(GameState state);
 
 	void Update();
 

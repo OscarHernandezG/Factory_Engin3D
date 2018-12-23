@@ -20,7 +20,7 @@ void ModuleImGui::CreateGameTime()
 					else
 						emitter->timeSimulating.Start();
 
-					emitter->simulatedGame = GameState_PLAYING;
+					emitter->ChangeGameState(GameState_PLAYING);
 					emitter->StartEmitter();
 				}
 
@@ -28,15 +28,14 @@ void ModuleImGui::CreateGameTime()
 
 				if (ImGui::Button("Pause", { 50,25 }))
 				{
-					emitter->simulatedGame = GameState_PAUSE;
+					emitter->ChangeGameState(GameState_PAUSE);
 					emitter->timeSimulating.Pause();
 				}
 				ImGui::SameLine();
 
 				if (ImGui::Button("Stop", { 50,25 }))
 				{
-					emitter->simulatedGame = GameState_STOP;
-					emitter->ClearEmitter();
+					emitter->ChangeGameState(GameState_STOP);
 					emitter->timeSimulating.Stop();
 				}
 

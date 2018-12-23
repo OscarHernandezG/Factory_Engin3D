@@ -111,6 +111,18 @@ void ComponentEmitter::StartEmitter()
 	}
 }
 
+void ComponentEmitter::ChangeGameState(GameState state)
+{
+	simulatedGame = state;
+	if (state == GameState_PLAYING)
+		state = GameState_NONE;
+	else if (state == GameState_STOP)
+		ClearEmitter();
+
+	if (subEmitter && subEmitter->HasComponent(ComponentType_EMITTER))
+		((ComponentEmitter*)(subEmitter->GetComponent(ComponentType_EMITTER)))->ChangeGameState(state);
+}
+
 
 void ComponentEmitter::Update()
 {
@@ -593,6 +605,10 @@ void ComponentEmitter::ParticleSubEmitter()
 				EmitterInfo info;
 				info.isSubEmitter = true;
 				subEmitter->AddComponent(ComponentType_EMITTER, &info);
+				AABB boundingBox = AABB();
+				boundingBox.SetFromCenterAndSize(subEmitter->GetPos(), float3::one);
+				subEmitter->SetABB(boundingBox);
+				App->sceneIntro->octree.Insert(subEmitter);
 			}
 		}
 		else
