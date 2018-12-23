@@ -133,6 +133,16 @@ bool GameObject::SetParent(GameObject* parent)
 		if(father)
 			father->childs.remove(this);
 
+		for (std::list<GameObject*>::iterator child = childs.begin(); child != childs.end(); ++child)
+		{
+			if (parent == *child)
+			{
+			this->childs.remove(parent);
+
+			parent->SetParent(this->father);
+			}
+		}
+
 		this->father = parent;
 		parent->childs.push_back(this);
 		ret = true;
