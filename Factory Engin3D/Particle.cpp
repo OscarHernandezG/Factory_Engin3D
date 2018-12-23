@@ -160,7 +160,7 @@ void Particle::SetCamDistance()
 
 void Particle::Draw() const
 {
-	if (plane && texture)
+	if (plane && texture && animation->size() >currentFrame)
 		plane->Render(transform.GetMatrix(), *texture, animation->at(currentFrame), currentColor);
 }
 
