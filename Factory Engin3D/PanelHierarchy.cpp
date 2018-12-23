@@ -113,10 +113,11 @@ void ModuleImGui::DragDropGO(GameObject* &object)
 	if (ImGui::BeginDragDropTarget())
 	{
 		const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Change GO hierarchy");
-			if (payload)
+		if (payload)
 		{
 			GameObject* childObject = *(GameObject**)payload->Data;
-			if (childObject && !objectDrag)
+				
+			if (childObject &&  childObject != App->gameObject->rootGameObject &&!objectDrag)
 			{
 				objectDrag = true; //Enter one time, only the child
 
