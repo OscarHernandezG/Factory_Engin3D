@@ -130,7 +130,6 @@ void ComponentEmitter::Update()
 	if (rateOverTime > 0)
 	{
 		float time = timer.ReadSec();
-		LOG("%.3f", time);
 		if (time > timeToParticle && (loop || loopTimer.ReadSec() < duration))
 		{
 			if (App->time->gameState == GameState_PLAYING || simulatedGame == GameState_PLAYING || App->time->gameState == GameState_TICK)
@@ -139,7 +138,6 @@ void ComponentEmitter::Update()
 				CreateParticles(particlesToCreate, normalShapeType,float3::zero);
 
 				timeToParticle = (1.0f / rateOverTime);
-				LOG("%.3f particle", timeToParticle);
 				
 				timer.Start();
 			}
@@ -208,8 +206,6 @@ void ComponentEmitter::CreateParticles(int particlesToCreate, ShapeType shapeTyp
 {
 	if (particlesToCreate == 0)
 		++particlesToCreate;
-
-	LOG("Particles to create %i", particlesToCreate);
 
 	for (int i = 0; i < particlesToCreate; ++i)
 	{
