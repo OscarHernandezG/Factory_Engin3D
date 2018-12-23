@@ -64,6 +64,8 @@ void ModuleGeometry::LoadDefaultScene()
 
 	GeometryInfo planeInfo(new PrimitivePlane());
 	plane->AddComponent(ComponentType_GEOMETRY, &planeInfo);
+
+	App->gameObject->LoadScene("particleDemoScene");
 }
 
 update_status ModuleGeometry::PostUpdate()
