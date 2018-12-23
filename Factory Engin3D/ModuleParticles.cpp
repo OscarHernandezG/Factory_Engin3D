@@ -141,3 +141,20 @@ void ModuleParticle::ClearEmitters()
 	activeParticles = 0;
 	lastUsedParticle = 0;
 }
+
+void ModuleParticle::RemoveEmitter(ComponentEmitter * emitter)
+{
+	emitters.remove(emitter);
+
+	if (emitter->isSubEmitter)
+	{
+		for (std::list<ComponentEmitter*>::iterator iterator = emitters.begin(); iterator != emitters.end(); ++iterator)
+		{
+			if ((*iterator)->subEmitter == emitter->gameObject)
+			{
+				(*iterator)->startValues.subEmitterActive = false;
+				(*iterator)->subEmitter = nullptr;
+			}
+		}
+	}
+}

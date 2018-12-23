@@ -26,6 +26,8 @@ public:
 	//void SortParticles();
 	bool GetParticle(int& id);
 	void ClearEmitters();
+
+	void RemoveEmitter(ComponentEmitter* emitter);
 public:
 
 	std::list<ComponentEmitter*> emitters;
