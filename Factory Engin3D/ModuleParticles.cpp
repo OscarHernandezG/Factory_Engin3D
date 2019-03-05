@@ -107,7 +107,10 @@ void ModuleParticle::SortParticles()
 {
 	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::PapayaWhip);
 
-	std::sort(partVec.begin(), partVec.end(), particleCompare());
+	std::sort(partVec.begin(), partVec.end(), [](const Particle* particle1, const Particle* particle2) 
+	{
+		return particle1->camDistance > particle2->camDistance; 
+	});
 }
 
 bool ModuleParticle::GetParticle(int& id)
